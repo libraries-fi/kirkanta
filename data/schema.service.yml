@@ -1,0 +1,28 @@
+service_instance:
+  owner: user_group
+  id: int
+  name: string | null
+  for_loan: bool
+  price: string
+  units: int | null
+  tags: string[]
+  sticky: bool
+
+service:
+  id: int
+  name: string
+  type: string
+  description: string
+
+# Service hierarchy
+service_category:
+  id: int
+  owner: user_group | null
+  parent: service_category | null
+  name: string
+
+# Item in the service hierarhy
+service_category_item:
+  owner: user_group
+  service_id: int
+  service_tree_id: int

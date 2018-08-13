@@ -1,0 +1,33 @@
+App\Entity\Organisation:
+  attributes:
+    translations:
+      groups: ['default', 'index']
+    id:
+      groups: ['default', 'index', 'pre_render']
+    type:
+      groups: ['default', 'index', 'pre_render']
+    # consortium:
+    #   groups: ['default']
+    # city:
+    #   groups: ['default']
+    # address:
+    #   groups: ['default']
+    # mail_address:
+    #   groups: ['mail_address']
+
+App\Entity\OrganisationData:
+  attributes:
+    slug:
+      groups: ['default', 'index']
+    name:
+      groups: ['default', 'index']
+    short_name:
+      groups: ['default']
+    email:
+      groups: ['default']
+    homepage:
+      groups: ['default']
+    slogan:
+      groups: ['default']
+    description:
+      groups: ['default']

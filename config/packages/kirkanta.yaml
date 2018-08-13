@@ -1,0 +1,172 @@
+parameters:
+    entity_types:
+        organisation:
+            id: organisation
+            label: 'Organisation'
+            label_multiple: 'Organisations'
+            class_name: 'App\Entity\Organisation'
+            list_builder: 'App\Entity\ListBuilder\OrganisationListBuilder'
+            forms:
+                default: 'App\Form\OrganisationForm'
+                search: 'App\Form\OrganisationSearchForm'
+        library:
+            id: library
+            label: 'Library'
+            label_multiple: 'Libraries'
+            class_name: 'App\Entity\Library'
+            list_builder: 'App\Entity\ListBuilder\LibraryListBuilder'
+            forms:
+                default: 'App\Form\LibraryForm'
+                search: 'App\Form\LibrarySearchForm'
+        department:
+            id: department
+            label: 'Department'
+            label_multiple: 'Departments'
+            class_name: 'App\Entity\Department'
+            list_builder: 'App\Entity\ListBuilder\DepartmentListBuilder'
+            forms:
+                default: 'App\Form\DepartmentForm'
+        # custom_data:
+        #     id: custom_data
+        #     label: 'Custom data'
+        #     label_multiple: 'Custom data'
+        #     class_name: 'App\Entity\CustomData'
+        #     forms:
+        #         default: 'App\Form\CustomDataForm'
+        person:
+            id: person
+            label: 'Person'
+            label_multiple: 'Persons'
+            class_name: 'App\Entity\Person'
+            list_builder: 'App\Entity\ListBuilder\PersonListBuilder'
+            forms:
+                default: 'App\Form\PersonForm'
+                search: 'App\Form\PersonSearchForm'
+        period:
+            id: period
+            label: 'Period'
+            label_multiple: 'Periods'
+            class_name: 'App\Entity\Period'
+            list_builder: 'App\Entity\ListBuilder\PeriodListBuilder'
+            forms:
+                default: 'App\Form\PeriodForm'
+                search: 'App\Form\PeriodSearchForm'
+        service_instance:
+            id: service_instance
+            label: 'Service instance'
+            label_multiple: 'Services'
+            class_name: 'App\Entity\ServiceInstance'
+            list_builder: 'App\Entity\ListBuilder\ServiceInstanceListBuilder'
+            forms:
+                default: 'App\Form\ServiceInstanceForm'
+                import: 'App\Form\ResourceImportForm'
+                search: 'App\Form\ServiceInstanceSearchForm'
+        service:
+            id: service
+            label: 'Service'
+            label_multiple: 'Service'
+            class_name: 'App\Entity\Service'
+            list_builder: 'App\Entity\ListBuilder\ServiceListBuilder'
+            forms:
+                default: 'App\Form\ServiceForm'
+                # search: 'App\Form\ServiceTypeSearchForm'
+        city:
+            id: city
+            label: 'City'
+            label_multiple: 'Cities'
+            class_name: 'App\Entity\City'
+            list_builder: 'App\Entity\ListBuilder\CityListBuilder'
+            forms:
+                default: 'App\Form\CityForm'
+                search: 'App\Form\CitySearchForm'
+        consortium:
+            id: consortium
+            label: 'Consortium'
+            label_multiple: 'Consortiums'
+            class_name: 'App\Entity\Consortium'
+            list_builder: 'App\Entity\ListBuilder\ConsortiumListBuilder'
+            forms:
+                default: 'App\Form\ConsortiumForm'
+                search: 'App\Form\ConsortiumSearchForm'
+        notification:
+            id: notification
+            label: 'Notification'
+            label_multiple: 'Notifications'
+            class_name: 'App\Entity\Notification'
+            list_builder: 'App\Entity\ListBuilder\NotificationListBuilder'
+            forms:
+                default: 'App\Form\NotificationForm'
+        region:
+            id: region
+            label: 'Region'
+            label_multiple: 'Regions'
+            class_name: 'App\Entity\Region'
+            list_builder: 'App\Entity\ListBuilder\RegionListBuilder'
+            forms:
+                default: 'App\Form\RegionForm'
+        regional_library:
+            id: regional_library
+            label: 'Regional library'
+            label_multiple: 'Regional libraries'
+            class_name: 'App\Entity\RegionalLibrary'
+            list_builder: 'App\Entity\ListBuilder\RegionalLibraryListBuilder'
+            forms:
+                default: 'App\Form\RegionalLibraryForm'
+        user:
+            id: user
+            label: 'User'
+            label_multiple: 'Users'
+            class_name: 'App\Entity\User'
+            list_builder: 'App\Entity\ListBuilder\UserListBuilder'
+            forms:
+                default: 'App\Form\UserForm'
+                search: 'App\Form\UserSearchForm'
+        user_group:
+            id: user_group
+            label: 'User group'
+            label_multiple: 'User groups'
+            class_name: 'App\Entity\UserGroup'
+            list_builder: 'App\Entity\ListBuilder\UserGroupListBuilder'
+            forms:
+                default: 'App\Form\UserGroupForm'
+                search: 'App\Form\UserGroupSearchForm'
+        organisation_photo:
+            id: organisation_photo
+            label: 'Photo'
+            label_multiple: 'Photos'
+            class_name: 'App\Entity\LibraryPhoto'
+            list_builder: 'App\Entity\ListBuilder\LibraryPhotoListBuilder'
+            forms:
+                default: 'App\Form\LibraryPhotoForm'
+        phone:
+            id: phone
+            label: 'Phone number'
+            label_multiple: 'Phone numbers'
+            class_name: 'App\Entity\PhoneNumber'
+            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
+            forms:
+                default: 'App\Form\PhoneNumberForm'
+        service_category:
+            id: service_category
+            label: 'Service category'
+            label_multiple: 'Service categories'
+            class_name: 'App\Module\ServiceTree\Entity\ServiceCategory'
+            list_builder: 'App\Module\ServiceTree\Entity\ListBuilder\ServiceCategoryListBuilder'
+            forms:
+                default: 'App\Module\ServiceTree\Form\ServiceCategoryForm'
+            # actions:
+            #     entity.list:
+            #         - { route: entity.service_category.add_tree }
+        finna_organisation:
+            id: finna_organisation
+            label: 'Finna organisation'
+            label_multiple: 'Finna organisations'
+            class_name: 'App\Module\Finna\Entity\FinnaAdditions'
+            list_builder: 'App\Module\Finna\Entity\ListBuilder\FinnaAdditionsListBuilder'
+            forms:
+                default: 'App\Module\Finna\Form\FinnaAdditionsForm'
+        ptv_data:
+            id: ptv_data
+            label: 'PTV data'
+            label_multiple: 'PTV data'
+            class_name: 'App\Module\Ptv\Entity\PtvData'

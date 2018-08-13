@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block region_top %}
+  {# Clear this region for index #}
+{% endblock %}
+
+{% block title_text %}
+
+{% endblock %}
+
+{% block content %}
+  <div class="form-section mt-3">
+    {% if notifications is not empty %}
+      <p>
+        <i class="fa fa-bell text-danger"></i>
+        {% transchoice notifications|length %}{1}You have one new notification.|]1,Inf[You have %count% unread notifications.{% endtranschoice %}
+        Most recent: <a href="{{ path('user.show_notification', {"notification": notifications[0].id}) }}">{{ notifications[0].subject }}</a>
+      </p>
+    {% else %}
+      <p><i class="far fa-bell text-muted"></i> {% trans %}No unread notifications.{% endtrans %}</p>
+    {% endif %}
+  </div>
+{% endblock %}

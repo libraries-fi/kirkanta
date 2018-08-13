@@ -1,0 +1,68 @@
+App\Entity\Library:
+  attributes:
+    translations:
+      groups: ['default', 'index']
+    id:
+      groups: ['default', 'index']
+    parent:
+      groups: ['parent']
+    #   groups: ['default', 'index']
+    branch_type:
+      groups: ['default', 'index']
+    consortium:
+      groups: ['default']
+    city:
+      groups: ['default']
+    address:
+      groups: ['default']
+    mail_address:
+      groups: ['mail_address', 'api_cache']
+    departments:
+      groups: ['departments', 'api_cache']
+    phone_numbers:
+      groups: ['phone_numbers', 'api_cache']
+    persons:
+      groups: ['persons', 'api_cache']
+    pictures:
+      groups: ['pictures', 'api_cache']
+    services:
+      groups: ['services', 'api_cache']
+
+App\Entity\LibraryData:
+  attributes:
+    slug:
+      groups: ['default', 'index']
+    name:
+      groups: ['default', 'index']
+    short_name:
+      groups: ['default']
+    email:
+      groups: ['default']
+    homepage:
+      groups: ['default']
+    slogan:
+      groups: ['default']
+    description:
+      groups: ['default']
+
+App\Entity\Address:
+  attributes:
+    translations:
+      groups: ['default']
+    zipcode:
+      groups: ['default']
+    box_number:
+      groups: ['default']
+    coordinates:
+      groups: ['default']
+    city:
+      groups: ['default']
+
+App\Entity\AddressData:
+  attributes:
+    street:
+      groups: ['default']
+    area:
+      groups: ['default']
+    info:
+      groups: ['default']

@@ -1,0 +1,33 @@
+{#
+  This template acts as a trait since we want to use the same form layout
+  on the 'staff' tab of Organisation form.
+#}
+
+{% block form %}
+  {{ form_start(form) }}
+  {{ block("form_header") }}
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Personal details{% endtrans %}</legend>
+    {{ form_row(form.first_name) }}
+    {{ form_row(form.last_name) }}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Contact details{% endtrans %}</legend>
+    {{ form_row(form.email) }}
+    {{ form_row(form.email_public) }}
+    {{ form_row(form.phone) }}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Work info{% endtrans %}</legend>
+    {{ form_row(form.library) }}
+    {{ form_row(form.head) }}
+    {{ form_row(form.job_title) }}
+    {{ form_row(form.responsibility) }}
+    {{ form_row(form.qualities) }}
+  </fieldset>
+
+  {{ form_end(form) }}
+{% endblock %}

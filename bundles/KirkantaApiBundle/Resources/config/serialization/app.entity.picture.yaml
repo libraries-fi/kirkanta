@@ -1,0 +1,18 @@
+App\Entity\Picture:
+  attributes: ~
+
+App\Entity\LibraryPhoto:
+  attributes:
+    translations:
+      groups: ['default']
+    author:
+      groups: ['default']
+    year:
+      groups: ['default']
+
+App\Entity\LibraryPhotoData:
+  attributes:
+    name:
+      groups: ['default']
+    description:
+      groups: ['default']

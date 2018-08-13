@@ -1,0 +1,17 @@
+App\Entity\Period:
+  attributes:
+    translations:
+      groups: ['default', 'index']
+    id:
+      groups: ['default', 'index']
+    valid_until:
+      groups: ['default', 'index']
+    valid_from:
+      groups: ['default', 'index']
+
+App\Entity\PeriodData:
+  attributes:
+    name:
+      groups: ['default', 'index']
+    description:
+      groups: ['default']

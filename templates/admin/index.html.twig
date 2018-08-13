@@ -1,0 +1,20 @@
+{% extends "index.html.twig" %}
+
+{% block region_main %}
+  <div class="row">
+    <div class="col-md-3">
+      <fieldset class="form-section">
+        <legend>{% trans %}Content{% endtrans %}</legend>
+        {{ knp_menu_render("admin", {
+          "vertical": true
+        }) }}
+      </fieldset>
+    </div>
+    <div class="col-md-9">
+      <fieldset class="form-section">
+        <legend>{% trans %}Tools{% endtrans %}</legend>
+        {{ knp_menu_render("admin_tools") }}
+      </fieldset>
+    </div>
+  </div>
+{% endblock %}

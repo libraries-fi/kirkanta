@@ -1,0 +1,183 @@
+form.period_form {
+  button.date-display {
+    margin-left: -1 * $spacer;
+  }
+
+  button.day-description-toggle {
+    margin-left: -1 * $spacer / 2;
+    font-size: small;
+  }
+
+  .fa-minus-circle {
+    color: red;
+  }
+
+  .fa-plus-circle {
+    color: green;
+  }
+
+  // Header part of Schedules fieldset
+  fieldset.period-schedules {
+    // font-size: large;
+    background-color: $table-accent-bg;
+    overflow: hidden;
+
+    > .container-fluid {
+      padding: (2 * $spacer) 0 0;
+      margin: -37px 0 0;
+    }
+
+    #period_form_valid_from,
+    #period_form_valid_until {
+      button {
+        font-size: large;
+        margin-top: -1 * $spacer / 2;
+      }
+    }
+
+    @include media-breakpoint-up("sm") {
+      // #period_form_valid_from:after {
+      //   content: "»";
+      //   color: black;
+      //   font-size: xx-large;
+      //   position: absolute;
+      //   top: 1.5rem;
+      //   right: 0;
+      // }
+    }
+
+    @include media-breakpoint-up("sm") {
+      #period_form_valid_until > label {
+        // visibility: hidden;
+      }
+    }
+  }
+}
+
+#period-form-period-days {
+  margin: 0 (-1 * $spacer);
+  padding-top: 4rem;
+  position: relative;
+  background-color: white;
+
+  legend {
+    position: absolute;
+    top: ($spacer);
+    left: $spacer;
+  }
+
+  .period-day-data:nth-child(even) {
+    background-color: $table-accent-bg;
+    padding-top: $spacer;
+    margin-bottom: $spacer;
+  }
+
+  .period-day-data:last-child {
+    margin-bottom: 0;
+  }
+
+  .period-day-data[data-label]:before {
+    content: attr(data-label);
+    width: 100%;
+    display: block;
+    font-weight: bold;
+    line-height: 2rem;
+    padding-left: $spacer;
+    background-color: gold;
+    position: relative;
+    top: -1rem;
+    margin-top: -1px;
+  }
+
+  .period-day-data:first-child:before {
+    display: none;
+  }
+
+  .period-day-data-time-item {
+    button.btn-add-row {
+      display: none;
+      padding: 0.1rem map-get($spacers, 2);
+      border-radius: 2rem;
+      margin-top: 0.25rem;
+    }
+
+    button.btn-delete-row {
+      position: absolute;
+      margin-left: -3rem;
+      color: red;
+
+      &:hover {
+        color: maroon;
+      }
+    }
+
+    &:last-of-type {
+      button.btn-add-row {
+        display: unset;
+      }
+    }
+  }
+
+  .day-insert-first {
+    font-size: small;
+  }
+
+  .day-description-value {
+    max-width: none;
+  }
+
+  .day-name {
+    position: relative;
+    top: -0.3rem;
+  }
+
+  .checkbox {
+    margin-top: .5rem;
+  }
+
+  @include media-breakpoint-up("sm") {
+    .day-name {
+      // Force splitting day name and date to separate rows on big screen sizes.
+      width: 5rem;
+      display: block;
+    }
+  }
+}
+
+/*
+.period-day-data-times {
+  display: flex;
+  flex-flow: column;
+}
+
+.period-times-header,
+.period-times-row {
+  display: flex;
+  padding: map-get($spacers, 2);
+}
+
+.period-times-cell {
+  display: flex;
+  flex-flow: row;
+
+  .form-control,
+  .checkbox {
+    display: inline-block;
+    margin-right: map-get($spacers, 3);
+  }
+}
+
+.period-times-header > * {
+  width: 7rem;
+  padding: 0 $input-padding-x;
+  margin-right: map-get($spacers, 3);
+}
+
+.period-times-cell > input {
+  width: 7rem;
+}
+
+.period-actions-cell {
+  flex-grow: 1;
+}
+*/

@@ -1,0 +1,15 @@
+App\Entity\City:
+  attributes:
+    id:
+      groups: ['default', 'index']
+    # region:
+      # groups: ['default']
+    consortium:
+      groups: ['default']
+    translations:
+      groups: ['default', 'index']
+
+App\Entity\CityData:
+  attributes:
+    name:
+      groups: ['default', 'index']

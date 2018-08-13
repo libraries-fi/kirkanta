@@ -1,0 +1,45 @@
+table {
+  .drag-handle {
+    // float: right;
+    opacity: .7;
+  }
+
+  .drag-active,
+  .drag-active:hover {
+    background-color: map-get($theme-colors, "warning") !important;
+
+    > * {
+      opacity: 0 !important;
+    }
+  }
+
+  .drop-suggestion,
+  .drag-suggestion:hover {
+    background-color: map-get($theme-colors, "info") !important;
+  }
+}
+
+th {
+  white-space: nowrap;
+
+  &.sortable {
+    > a {
+      color: inherit;
+    }
+
+    > .fa-arrows-v {
+      opacity: .3;
+    }
+  }
+
+  &.expand {
+    width: 100%;
+  }
+}
+
+td {
+  img.icon {
+    height: 1.4em;
+    margin: -0.2em 0;
+  }
+}

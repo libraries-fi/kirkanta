@@ -1,0 +1,7 @@
+# Kirkanta
+
+# Schedules
+[] Merge 'default' and 'selfservice' times together; mark self service with a boolean.
+[] If 'default' and 'selfservice' times overlap, split them to non-overlapping times.
+
+# API

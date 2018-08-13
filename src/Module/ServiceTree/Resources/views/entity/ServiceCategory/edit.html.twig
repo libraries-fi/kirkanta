@@ -1,0 +1,81 @@
+{% extends "entity/edit.html.twig" %}
+
+{% form_theme form _self %}
+
+{% block form %}
+  {{ form_start(form) }}
+  {{ block("form_header") }}
+
+  <div class="row">
+    <div class="col-md-8 col-lg-8">
+      <fieldset class="form-section">
+        <legend>{% trans %}Basic information{% endtrans %}</legend>
+        {{ form_row(form.children.name) }}
+        {{ form_row(form.children.parent) }}
+        {{ form_row(form.children.sticky) }}
+      </fieldset>
+      {% if form.children.items is defined %}
+        <fieldset class="form-section">
+          <legend>{% trans %}Services{% endtrans %}</legend>
+          <div class="form-group form-inline">
+            <div class="input-group">
+              {{ form_widget(form.children.services, {"attr": {"class": "mr-sm-2"}}) }}
+              {{ form_widget(form.children.add_service, {"attr": {"formaction": path("entity.service_category.add_item", {"id": entity.id}) }}) }}
+            </div>
+          </div>
+          {{ form_widget(form.children.items) }}
+        </fieldset>
+      {% endif %}
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <fieldset class="form-section">
+        <legend>{% trans %}Tree{% endtrans %}</legend>
+        <ul class="service-tree">
+          {% set current_category = form.vars.value %}
+          {% set category = current_category.root %}
+          <li>{{ block("category_item") }}</li>
+        </ul>
+      </fieldset>
+    </div>
+  </div>
+  {{ form_end(form) }}
+{% endblock %}
+
+{% block _service_category_form_items_widget %}
+  <ol>
+    {% for row in form %}
+      <li class="form-group">
+        <span class="form-control-static">{{ row.vars.value.name }}</span>
+        {{ form_widget(row.children.remove, {"attr": {
+          "class": "btn-sm",
+          "formaction": path("entity.service_category.remove_item", {
+            "id": row.vars.value.category.id,
+            "item_id": row.vars.value.id
+          })
+        }}) }}
+      </li>
+    {% endfor %}
+  </ol>
+{% endblock %}
+
+{% block category_item %}
+  {% if category == current_category %}
+    <b>{{ category.name }}</b>
+  {% else %}
+    <span>{{ category.name }}</span>
+  {% endif %}
+  <ul class="service-tree--services">
+    {% for service in category.items %}
+      <li>{{ service.name }}</li>
+    {% else %}
+      <li class="service-tree--null">{% trans %}Empty{% endtrans %}</li>
+    {% endfor %}
+  </ul>
+  {% if category.children|length %}
+    <ul>
+      {% for category in category.children %}
+        <li>{{ block("category_item") }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,22 @@
+fos_rest:
+  body_listener: false
+  param_fetcher_listener: force
+  # NOTE: format_listener is disabled in config_dev.yml
+  format_listener:
+    enabled: true
+    rules:
+      - { path: '^/v4', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: true }
+      - { path: '^/', priorities: ['html'], prefer_extension: false }
+  view:
+    view_response_listener: 'force'
+    default_engine: twig
+    templating_formats:
+      html: true
+    force_redirects:
+      html: true
+    formats:
+      html: false
+      json: true
+      jsonp: true
+      xml: true
+      csv: true

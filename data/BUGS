@@ -1,0 +1,3 @@
+[ ] Saving a Period will cause loss of real-time status in generated schedules.
+[ ] PersonForm doesn't populate library options.
+[ ] Validate that Library::$parent is never another Library entity

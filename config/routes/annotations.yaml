@@ -1,0 +1,41 @@
+kirkanta_api:
+    type: annotation
+    resource: '../../bundles/KirkantaApiBundle/Controller/'
+    prefix: '/v4'
+
+translation:
+    type: annotation
+    resource: '../../src/Module/Translation/Controller/'
+
+kirkanta_schedules:
+    type: annotation
+    resource: '../../src/Module/Schedules/Controller/'
+
+kirkanta_service_tree:
+    type: annotation
+    resource: '../../src/Module/ServiceTree/Controller/'
+
+finna_additions:
+    type: annotation
+    resource: '../../src/Module/Finna/Controller/'
+
+user.login:
+    path: '/login'
+    controller: 'UserAccountsBundle:Account:login'
+
+controllers:
+    resource: ../../src/Controller/
+    type: annotation
+
+entity_routes:
+    resource: 'App\Routing\EntityRouteLoader:load'
+    type: entity_routes
+
+# NOTE: Put this last to allow other controllers to override generic functionality.
+entity_controller:
+    resource: ../../src/Controller/EntityController.php
+    type: annotation
+
+api_cache:
+    resource: ../../src/Module/ApiCache/Controller/
+    type: annotation

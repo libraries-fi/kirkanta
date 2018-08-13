@@ -1,0 +1,85 @@
+{% extends "base.html.twig" %}
+
+{% set entity = attribute(_context, entity_type) %}
+{% set entity_is_trashed = entity.deleted|default(false) %}
+
+{% block title_text %}
+  {% if entity is defined %}
+    {% trans with {"%type%": type_label|trans|lower, "%id%": entity.id} %}Edit %type% #%id%{% endtrans %}
+  {% else %}
+    {% trans with {"%type%": type_label|trans|lower} %}Add new %type%{% endtrans %}
+  {% endif %}
+{% endblock %}
+
+{% block region_top %}
+
+{% endblock %}
+
+{% block content_language %}
+  {% if form.content_language is defined %}
+    {{ form_label(form.content_language) }}
+    {{ form_widget(form.content_language, {"attr": {"data-app": "content-language"}}) }}
+  {% endif %}
+{% endblock %}
+
+{% block form_header %}
+  <div class="hud position-sticky">
+    <h1 class="hud-legend">{{ block("title_text") }}</h1>
+
+    {% if form.content_language is defined %}
+      <div class="hud-group">
+        <a href="{{ path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link" aria-label="{{ 'Add translation'|trans }}">
+          <i class="fas fa-plus-circle" aria-hidden="true"></i>
+        </a>
+        {{ form_widget(form.content_language, {"attr": {"data-app": "content-language"}}) }}
+      </div>
+    {% endif %}
+
+    {% if form.state is defined %}
+      <div class="hud-group">
+        {{ form_widget(form.state) }}
+      </div>
+    {% endif %}
+
+    <div class="hud-actions">
+      {% if entity_type and entity.id %}
+        {% if not entity_is_trashed %}
+          <a href="{{ path('entity.%s.delete'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link text-danger">{% trans %}Delete{% endtrans %}</a>
+        {% endif %}
+      {% endif %}
+
+      {{ form_widget(form.children.actions.submit, {label: "Save"}) }}
+    </div>
+  </div>
+
+  {% with {flash_namespace: "form"} %}
+    {{ block("flashes", "common-blocks.html.twig") }}
+  {% endwith %}
+
+  {% if entity_is_trashed %}
+    <div class="alert alert-warning">
+      {% trans %}This record has been removed.{% endtrans %}
+      <button type="submit" name="{{ form.restore.vars.full_name}}" formaction="{{ path('entity.%s.restore'|format(entity_type), {(entity_type): entity.id}) }}" value="1" class="btn btn-link btn-sm" formnovalidate>{% trans %}Restore{% endtrans %}</button>
+
+      {% do form.restore.setRendered(true) %}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% block form %}
+    {{ form_start(form) }}
+    {{ block("form_header") }}
+    {% block form_body %}
+      <fieldset class="form-section">
+        <legend>{% trans %}Basic information{% endtrans %}</legend>
+        {% for name, child in form.children %}
+          {% if name != "actions" %}
+            {{ form_row(child) }}
+          {% endif %}
+        {% endfor %}
+      </fieldset>
+    {% endblock %}
+    {{ form_end(form) }}
+  {% endblock form %}
+{% endblock content %}

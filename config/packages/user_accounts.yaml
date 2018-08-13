@@ -1,0 +1,6 @@
+
+user_accounts:
+    user_entity: 'App\Entity\User'
+    template:
+        login: 'user/login.html.twig'
+        register: 'user/register.html.twig'

@@ -1,0 +1,41 @@
+App\Entity\Service:
+  attributes:
+    translations:
+      groups: ['default', 'index']
+    id:
+      groups: ['default', 'index']
+    # instances:
+      # groups: ['api_cache']
+
+App\Entity\ServiceData:
+  attributes:
+    name:
+      groups: ['default', 'index']
+    description:
+      groups: ['default', 'index']
+
+App\Entity\ServiceInstance:
+  attributes:
+    translations:
+      groups: ['default']
+    for_loan:
+      groups: ['default']
+    phone_number:
+      groups: ['default']
+    email:
+      groups: ['default']
+    template:
+      groups: ['default']
+
+App\Entity\ServiceInstanceData:
+  attributes:
+    name:
+      groups: ['default']
+    description:
+      groups: ['default']
+    short_description:
+      groups: ['default']
+    price:
+      groups: ['default']
+    website:
+      groups: ['default']

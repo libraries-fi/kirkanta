@@ -1,0 +1,27 @@
+App\Entity\Person:
+  attributes:
+    translations:
+      groups: ['default', 'index']
+    id:
+      groups: ['default', 'index']
+    first_name:
+      groups: ['default', 'index']
+    last_name:
+      groups: ['default', 'index']
+    email:
+      groups: ['default']
+    phone:
+      groups: ['default']
+    qualities:
+      groups: ['default']
+    url:
+      groups: ['default']
+    head:
+      groups: ['default']
+
+App\Entity\PersonData:
+  attributes:
+    job_title:
+      groups: ['default']
+    responsibility:
+      groups: ['default']

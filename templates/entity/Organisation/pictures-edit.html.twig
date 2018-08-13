@@ -1,0 +1,40 @@
+{% extends "entity/Organisation/resources-edit.html.twig" %}
+
+{% form_theme form _self %}
+
+{% block _organisation_photo_form_filename_row %}
+  {% if value %}
+    <figure class="kirkanta-form-image size-medium">
+      <img src="{{ asset("/files/images/medium/" ~ value) }}"/>
+    </figure>
+  {% else %}
+    {{ block("form_row") }}
+  {% endif %}
+{% endblock %}
+
+{% block form %}
+  {{ form_start(form) }}
+  {{ block("form_header") }}
+  {{ form_errors(form) }}
+
+  {% if form.filename is defined %}
+    {{ form_row(form.filename) }}
+  {% endif %}
+
+  {% if form.file is defined %}
+    {{ form_row(form.file) }}
+  {% endif %}
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Basic information{% endtrans %}</legend>
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.author) }}
+    {{ form_row(form.year) }}
+  </fieldset>
+  <fieldset class="form-section">
+    <legend>{% trans %}Options{% endtrans %}</legend>
+    {{ form_row(form.default_picture) }}
+  </fieldset>
+  {{ form_end(form) }}
+{% endblock %}

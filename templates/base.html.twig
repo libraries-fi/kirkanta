@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1"/>
+    <meta name="robots" content="noindex,nofollow"/>
+    <title>Kirkanta</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <title>{% if block("title_text")|trim is not empty %}{{ block("title_text")|trim }} – {% endif %}{% block title %}Kirkanta – Kirjastot.fi{% endblock %}</title>
+    <link href="{{ asset("/kirkanta.ico") }}" rel="shortcut icon"/>
+    {% block stylesheets %}
+      <style>
+        /* @import url({{ asset("/node_modules/font-awesome/css/font-awesome.min.css") }}); */
+      </style>
+      <style>
+        @import url("/node_modules/react-widgets/dist/css/react-widgets.css");
+        @import url("/dist/kirkanta.css");
+      </style>
+    {% endblock %}
+  </head>
+  <body>
+    {% block header %}
+      <nav class="navbar navbar-expand-md navbar-dark bg-navbar" id="nav-main">
+        <div class="container">
+          {% if app.user %}
+            <a class="navbar-brand" href="{{ path('front') }}">Kirkanta</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar-main">
+              {{ knp_menu_render('main', {
+                "depth": 1,
+                "template": "component/menu/main.html.twig"
+              }) }}
+
+              <div class="navbar-nav">
+                <div class="nav-item dropdown">
+                  <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fas fa-user"></i>
+                    {{ app.user.username }}
+                  </button>
+                  
+                  <div class="dropdown-menu">
+                    <a href="{{ path('user.profile') }}" class="dropdown-item">{% trans %}Account{% endtrans %}</a>
+                    <a href="{{ path('user.notifications') }}" class="dropdown-item">{% trans %}Notifications{% endtrans %}</a>
+
+                    <div class="dropdown-divider"></div>
+                    <a href="#help" class="dropdown-item">{% trans %}Help{% endtrans %}</a>
+
+                    <div class="dropdown-divider"></div>
+                    <a href="#logout" class="dropdown-item">{% trans %}Logout{% endtrans %}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <a class="navbar-brand" href="{{ path('front') }}">Kirkanta</a>
+          {% endif %}
+        </div>
+      </nav>
+    {% endblock %}
+
+    {% block notifications %}
+      <div class="container" id="l-notifications">
+        {{ block("flashes", "common-blocks.html.twig") }}
+      </div>
+    {% endblock %}
+
+    {% block body %}
+      <div id="l-main" class="container">
+        {% block region_top %}
+          <div class="hud position-sticky">
+            {% block content_top %}
+              {% block page_title %}
+                <h1 class="hud-legend">{% block title_text %}TITLE HERE{% endblock %}</h1>
+              {% endblock %}
+            {% endblock %}
+          </div>
+        {% endblock %}
+
+        {% block region_main %}
+          <div class="row">
+            <main id="l-content" class="col">
+              {% block content %}{% endblock %}
+            </main>
+          </div>
+        {% endblock %}
+      </div>
+    {% endblock %}
+
+    {% block javascripts %}
+      <script src="{{ asset('/node_modules/jquery/dist/jquery.min.js') }}"></script>
+
+      <script src="{{ asset('/node_modules/ckeditor/ckeditor.js') }}"></script>
+      <script src="{{ asset('/node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+      <script src="{{ asset('/node_modules/moment/min/moment-with-locales.min.js') }}"></script>
+
+      <script src="{{ asset('/js/init.ckeditor.js') }}"></script>
+      <script src="{{ asset('/js/content-language.js') }}"></script>
+
+      <script src="{{ asset('/dist/kirkanta.js') }}"></script>
+    {% endblock %}
+  </body>
+</html>

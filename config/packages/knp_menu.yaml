@@ -1,0 +1,15 @@
+knp_menu:
+    twig:
+        template: 'component/menu/menu.html.twig'
+
+
+knp_paginator:
+    page_range: 5
+    default_options:
+        page_name: p
+        # We don't need this right now because we've implemented our own behavior.
+        sort_field_name: false
+        sort_direction_name: false
+    template:
+        pagination: 'component/pager/sliding.html.twig'
+        sortable: '@KnpPaginatorBundle/Pagination/sortable_link.html.twig'

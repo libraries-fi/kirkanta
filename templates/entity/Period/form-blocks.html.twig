@@ -1,0 +1,253 @@
+{% block form %}
+  {{ form_start(form) }}
+  {{ block("form_header") }}
+  <div class="container">
+    <div class="row">
+      <fieldset class="col-lg-6 form-section">
+        <legend>{% trans %}Basic details{% endtrans %}</legend>
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+
+        {% if form.department is defined %}
+          {{ form_row(form.department) }}
+        {% endif %}
+      </fieldset>
+      <fieldset class="col-lg-6 form-section">
+        <legend>{% trans %}Preview{% endtrans %}</legend>
+
+        {% with { library: app.request.get('library') } %}
+          {% if library is null and entity.library %}
+            {% set library = entity.library %}
+          {% endif %}
+
+          {% if library %}
+            <div data-app="organisation-calendar" data-organisation="{{ library.id }}">
+              calendar here...
+            </div>
+          {% endif %}
+        {% endwith %}
+      </fieldset>
+    </div>
+  </div>
+  <fieldset class="form-section period-schedules">
+    <legend>{% trans %}Schedules{% endtrans %}</legend>
+
+    {{ form_row(form.valid_from) }}
+    {{ form_row(form.valid_until) }}
+    {{ form_row(form.days) }}
+  </fieldset>
+  {{ form_end(form) }}
+{% endblock %}
+
+{% block _period_form_valid_from_row %}
+  <fieldset class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 col-lg-4">
+        {{ form_row(form, {"attr": {"data-app": "date-picker"}}) }}
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        {{ form_row(form.parent.valid_until, {"attr": {"data-app": "date-picker"}}) }}
+      </div>
+      <div class="col-md-12 col-lg-4">
+        <div class="form-group">
+          <label>{% trans %}Rotation{% endtrans %}</label>
+          <select data-app="period-slider" class="form-control custom-select">
+            <option value="1">{% trans %}1 week{% endtrans %}</option>
+            <option value="2">{% trans with{"%count%": 2} %}%count% weeks{% endtrans %}</option>
+            <option value="3">{% trans with{"%count%": 3} %}%count% weeks{% endtrans %}</option>
+            <option value="4">{% trans with{"%count%": 4} %}%count% weeks{% endtrans %}</option>
+            <option value="5">{% trans with{"%count%": 5} %}%count% weeks{% endtrans %}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+{% endblock %}
+
+{% block _period_form_days_row %}
+  <fieldset class="form-group" id="period-form-period-days">
+    <legend>{% trans %}Days{% endtrans %}</legend>
+    {{- form_widget(form) -}}
+    {{- form_errors(form) -}}
+  </fieldset>
+{% endblock %}
+
+{% block _period_form_days_widget %}
+  <div class="container-fluid" {%- if attr.id is defined %}id="{{ attr.id }}"{% endif %}{% if prototype is defined %}data-prototype="{{ form_widget(prototype)|escape('html_attr') }}"{% endif %} data-app="period-days">
+  {% for child in form %}
+    {{ form_widget(child) }}
+  {% endfor %}
+</div>
+{% endblock %}
+
+{# NOTE: Using fieldset as a container is not viable because fieldset + flex does not work with Chrome as of now #}
+{% block period_day_widget_NEW %}
+
+  <div class="row period-day-data" id="{{ id }}">
+    <div class="col-sm-3 col-lg-2">
+      <b>{{ name }}</b>
+    </div>
+    <div class="col-sm-9 col-lg-10">
+      <p class="period-day-closed {% if form.times is not empty %}hidden{% endif %}">
+        <b>{% trans %}Library is closed{% endtrans %}</b>
+        <button type="button" class="btn btn-link day-insert-first" data-action="insert-first-time" data-target="#{{ form.times.vars.id }}" data-show="#{{ id }} .period-day-data-times" data-hide="#{{ id }} .period-day-closed">{% trans %}Change{% endtrans %}</button>
+      </p>
+      <div class="period-day-data-times {% if form.times is empty %}hidden{% endif %}">
+
+        <div class="period-times-header">
+          <b>{% trans %}Opens{% endtrans %}</b>
+          <b>{% trans %}Closes{% endtrans %}</b>
+          <b>{% trans %}Staff{% endtrans %}</b>
+        </div>
+
+        {% for time in form.times %}
+          <div class="period-times-row">
+            <div class="period-times-cell">
+              {{ form_widget(time.opens) }}
+              {{ form_widget(time.closes) }}
+              {{ form_widget(time.staff) }}
+            </div>
+            <div class="period-actions-cell">
+              <button type="button" class="btn btn-link btn-delete-row" title="{{ 'Delete row'|trans }}" data-action="delete-time-row" data-target="#{{ time.vars.id }}">
+                <i class="fas fa-minus-circle"></i>
+              </button>
+              <button type="button" class="btn btn-link btn-add-row" title="{{ 'Add row'|trans }}" data-action="add-time-row" data-target="#{{ id }}">
+                <i class="fas fa-plus-circle"></i>
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+
+
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+
+
+
+{% endblock %}
+
+{% block period_day_widget %}
+
+
+
+
+  <div class="row period-day-data" id="{{ id }}" >
+    <div class="col-sm-3 col-lg-2">
+      <b class="col-form-label day-name">{{ name }}</b>
+    </div>
+    <div class="col-sm-9 col-lg-10">
+      <div class="row period-day-closed{% if form.times is not empty %} hidden{% endif %}">
+        <div class="col-8">
+          <p>
+            <strong>{% trans %}Library is closed{% endtrans %}</strong>
+            <button type="button" class="btn btn-link day-insert-first" data-action="insert-first-time" data-target="#{{ form.times.vars.id }}" data-show="#{{ id }} .period-day-data-times" data-hide="#{{ id }} .period-day-closed">{% trans %}Change{% endtrans %}</button>
+          </p>
+        </div>
+      </div>
+      <div class="period-day-data-times{% if form.times is empty %} hidden{% endif %}">
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <div class="col-sm-4 col-md-3 col-lg-2">
+                <b class="col-form-label">{% trans %}Opens{% endtrans %}</b>
+              </div>
+              <div class="col-sm-4 col-md-3 col-lg-2">
+                <b>{% trans %}Closes{% endtrans %}</b>
+              </div>
+            </div>
+
+            {{ form_widget(form.times, {"parent_id": id}) }}
+          </div>
+        </div>
+      </div>
+      <div class="row period-description">
+        <div class="col-8">
+          <div class="form-group day-description-toggle">
+            {%- set button_class = 'btn btn-link day-description-toggle' %}
+            {%- set input_class = 'day-description-value' %}
+            {% if form.info.vars.value|join == "" %}
+              {%- set input_class = input_class ~ " hidden" %}
+            {% else %}
+            {%- set button_class = button_class ~ " hidden" %}
+            {% endif %}
+
+            <button type="button" class="{{ button_class }}" data-action="edit-day-description">{% trans %}Add description{% endtrans %}</button>
+
+            <div class="day-description-value {% if form.info.vars.value|join is empty %}hidden{% endif %}">
+              {{ form_widget(form.info) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block _period_form_days_entry_info_widget %}
+  <fieldset class="tr-group collapsed" data-app-group="content-language">
+    {% for child in form %}
+      {% set langcode = child.vars.langcode %}
+      {% set language_active = form.parent.parent.parent.children.name[langcode].vars.language_active %}
+
+      <div class="tr-language-row" data-content-language="{{ child.vars.langcode }}" {% if not language_active %}style="display: none"{% endif %}>
+        {{- form_row(child) -}}
+      </div>
+    {% endfor %}
+  </fieldset>
+
+{% endblock %}
+
+{% block _period_form_days_entry_times_widget %}
+  {% if prototype is defined %}
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype, {"parent_id": parent_id}) }) -%}
+  {% endif %}
+
+  <div {{ block('widget_container_attributes') }}>
+    {%- if form.parent is empty -%}
+      {{ form_errors(form) }}
+    {%- endif -%}
+    {% for child in form %}
+      {{- form_row(child, {"parent_id": parent_id}) -}}
+    {% endfor %}
+    {{- form_rest(form) -}}
+  </div>
+{% endblock %}
+
+{% block period_day_time_row %}
+  <div class="row period-day-data-time-item" id="{{ id }}">
+    <div class="col-sm-4 col-md-3 col-lg-2">
+
+      <div class="form-group">
+        <button type="button" class="btn btn-link btn-delete-row" title="{{ 'Delete row'|trans }}" data-action="delete-time-row" data-target="#{{ id }}">
+          <i class="fas fa-times"></i>
+        </button>
+        {{ form_widget(form.opens, {attr: {"data-app": "time-picker"}}) }}
+      </div>
+    </div>
+    <div class="col-sm-4 col-md-3 col-lg-2">
+      <div class="form-group">
+        {{ form_widget(form.closes, {attr: {"data-app": "time-picker"}}) }}
+      </div>
+    </div>
+    <div class="col-sm-4 col-md-3 col-lg-2">
+      <div class="form-group">
+        {{ form_widget(form.staff) }}
+      </div>
+    </div>
+    <div class="col-sm-4 col-md-3 col-lg-2">
+      <!-- <button type="button" class="btn btn-link btn-delete-row" title="{{ 'Delete row'|trans }}" data-action="delete-time-row" data-target="#{{ id }}">
+        <i class="fas fa-minus-circle"></i>
+      </button> -->
+      <button type="button" class="btn btn-success btn-add-row" title="{{ 'Add row'|trans }}" data-action="add-time-row" data-target="#{{ parent_id }}">
+        Add
+      </button>
+    </div>
+  </div>
+{% endblock %}

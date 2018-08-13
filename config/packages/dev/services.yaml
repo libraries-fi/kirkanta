@@ -1,0 +1,8 @@
+services:
+    json.impl.pretty:
+        class: 'Symfony\Component\Serializer\Encoder\JsonEncode'
+        arguments: [448]
+    serializer.encoder.json:
+        class: 'Symfony\Component\Serializer\Encoder\JsonEncoder'
+        arguments: ['@json.impl.pretty']
+        tags: [serializer.encoder]

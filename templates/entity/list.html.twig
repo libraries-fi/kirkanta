@@ -1,0 +1,55 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  {{ type_label|trans }}
+{% endblock %}
+
+{% block region_top %}
+  {{ parent() }}
+  {{ block("search_form") }}
+{% endblock %}
+
+{% block content_top %}
+  {{ block("page_title") }}
+
+  {% if actions is defined %}
+    <div class="hud-actions">
+      {{ block("actions", "common-blocks.html.twig") }}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block _search_form_actions_submit_widget %}
+  {% set attr = attr|merge({ class: "btn btn-primary" }) %}
+  <button {{ block("button_attributes") }}>
+    <i class="fa fa-search"></i>
+    {% trans %}Search{% endtrans %}
+  </button>
+{% endblock %}
+
+{% block search_form %}
+  {% if search_form is defined and search_form is not null %}
+
+  {% form_theme search_form _self %}
+
+   <div class="search-form-container hud">
+     <h2 class="sr-only">{% trans %}Search{% endtrans %}</h2>
+     {{ form_start(search_form, {"attr": {"class": "search-form"}}) }}
+     {% for section in search_form.children|batch(4) %}
+       <div class="row">
+         {% for input in section %}
+           <div class="col-md-3">
+             {{ form_row(input) }}
+           </div>
+         {% endfor %}
+       </div>
+     {% endfor %}
+     {{ form_end(search_form) }}
+   </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {{ table_render(table, {striped: true, hovered: true, drag: true, attr: {class: 'table--' ~ entity_type|replace({'_': '-'})}}) }}
+  {{ knp_pagination_render(table.data) }}
+{% endblock %}

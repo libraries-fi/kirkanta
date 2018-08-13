@@ -1,0 +1,102 @@
+{% extends "@BootstrapFourBundle/fields.html.twig" %}
+
+{% block form_row %}
+  {% if errors|length > 0 %}
+    {% set widget_class = "is-invalid" %}
+  {% else %}
+    {% set widget_class = "" %}
+  {% endif %}
+
+  {% if 'actions' in block_prefixes %}
+    {{ block('form_actions') }}
+  {% elseif 'collection' in block_prefixes %}
+    <fieldset class="form-group">
+      {% if label != false %}
+        <legend>{% if label %}{{ label }}{% else %}{{ name|humanize }}{% endif %}</legend>
+      {% endif %}
+      {{- form_widget(form) -}}
+      {{- form_errors(form) -}}
+    </fieldset>
+  {% else %}
+    <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+      {{- form_label(form) -}}
+      {{- form_widget(form, {attr: {class: widget_class}}) -}}
+      {% if form.vars.langcode is not defined %}
+        {{- form_errors(form) -}}
+      {% endif %}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block tr_group_row %}
+  <fieldset class="tr-group collapsed" data-app-group="content-language">
+    {% for child in form %}
+      <div class="tr-language-row" data-content-language="{{ child.vars.langcode }}" {% if not child.vars.language_active %}style="display: none"{% endif %}>
+        {{ form_row(child) }}
+      </div>
+    {% endfor %}
+  </fieldset>
+{% endblock %}
+
+{% block text_widget %}
+  {% if langcode is defined %}
+    <div class="input-group">
+      <span class="input-group-prepend">
+        <span class="input-group-text">{{ langcode }}</span>
+      </span>
+      {{ block("form_widget") }}
+      {{ block("form_errors") }}
+    </div>
+  {% else %}
+    {{ block("form_widget") }}
+  {% endif %}
+{% endblock %}
+
+{% block url_widget %}
+  {% if langcode is defined %}
+    <div class="input-group">
+      <span class="input-group-prepend">
+        <span class="input-group-text">{{ langcode }}</span>
+      </span>
+      {{ block("form_widget") }}
+    </div>
+  {% else %}
+    {{ block("form_widget") }}
+  {% endif %}
+{% endblock %}
+
+{% block email_widget %}
+  {% if langcode is defined %}
+    <div class="input-group">
+      <span class="input-group-prepend">
+        <span class="input-group-text">{{ langcode }}</span>
+      </span>
+      {{ block("form_widget") }}
+    </div>
+  {% else %}
+    {{ block("form_widget") }}
+  {% endif %}
+{% endblock %}
+
+{% block textarea_widget %}
+  {% if langcode is defined %}
+    <div class="input-group">
+      <span class="input-group-prepend">
+        <span class="input-group-text">{{ langcode }}</span>
+      </span>
+      {{ parent() }}
+    </div>
+  {% else %}
+    {{ parent() }}
+  {% endif %}
+{% endblock %}
+
+{% block form_actions %}
+  <div class="form-actions">
+    {{ form_rest(form) }}
+  </div>
+{% endblock %}
+
+{% block richtext_widget %}
+  {{ block("textarea_widget") }}
+{% endblock %}

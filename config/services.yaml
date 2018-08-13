@@ -1,0 +1,271 @@
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'en'
+    pager_size: 50
+    images_dir: files/images
+    image_sizes:
+        small: 200x200
+        medium: 1000x1000
+        large: 1920x1920
+        huge: 3840x3840
+    content_languages: ['fi', 'sv', 'en', 'ru', 'se']
+    user_entity: 'App\Entity\User'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{Entity,Migrations,Tests}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+    KirjastotFi\KirkantaApiBundle\Controller\:
+        resource: '../bundles/KirkantaApiBundle/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    App\Component\Twig\TableExtension:
+        tags:
+            - { name: twig.extension }
+    App\Component\Twig\FontAwesomeExtension:
+        tags:
+            - { name: twig.extension }
+    App\EventListener\ScaleUploadedImages:
+        arguments: ['@imagine', '%image_sizes%']
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\Module\Schedules\EventListener\UpdateSchedules:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, lazy: true }
+            - { name: doctrine.event_listener, event: preDelete, lazy: true }
+            - { name: doctrine.event_listener, event: preUpdate, lazy: true }
+
+    App\Module\ApiCache\EventListener\CacheEntity:
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate, lazy: true }
+            - { name: doctrine.event_listener, event: postUpdate, lazy: true }
+
+    App\Form\Extension\EntityTypeExtension:
+        tags:
+            - { name: form.type_extension, extended_type: 'Symfony\Bridge\Doctrine\Form\Type\EntityType' }
+    App\Form\Extension\SimpleEntityExtension:
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: form.type_extension, extended_type: 'Symfony\Component\Form\Extension\Core\Type\ChoiceType' }
+    App\Form\Extension\TranslatableTextExtension:
+        tags:
+            - { name: form.type_extension, extended_type: 'Symfony\Component\Form\Extension\Core\Type\TextType' }
+
+    App\Request\ParamConverter\EntityFromTypeAndId:
+        arguments: ['@entity_type_manager']
+        tags:
+            - { name: request.param_converter, converter: entity_from_type_and_id }
+    App\Module\Translation\DatabaseLoader:
+        arguments: ['@database_connection']
+        tags:
+            - { name: translation.loader, alias: db }
+
+
+    App\Routing\EntityRouteLoader:
+        tags: ['routing.loader']
+
+    App\Doctrine\EventListener\AlterRepositoryClassSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+    App\Doctrine\EventListener\CreatedTimeInitializer:
+        tags:
+            - { name: doctrine.event_subscriber }
+    App\Doctrine\EventListener\UpdateModifiedTime:
+        tags:
+            - { name: doctrine.event_subscriber }
+    App\Doctrine\EventListener\GroupOwnershipInitializer:
+        arguments: ['@security.token_storage']
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    entity_type_manager:
+        public: true
+        class: 'App\EntityTypeManager'
+        arguments: ['@doctrine.orm.entity_manager', '@form.factory', '@knp_paginator', '@request_stack', '@security.authorization_checker', '@security.token_storage', '%entity_types%']
+    App\EntityTypeManager: '@entity_type_manager'
+
+    App\Module\Translation\TranslationManagerFlusher:
+        arguments: ['@translation.logger']
+        tags:
+            - { name: kernel.event_listener, event: kernel.terminate }
+
+    App\Module\Ptv\Form\Extension\LibraryFormExtension:
+        tags:
+            - { name: form.type_extension, extended_type: App\Form\LibraryForm }
+    App\Module\Ptv\EventListener\ExportListener:
+        tags:
+            # - { name: doctrine.event_listener, event: preUpdate, lazy: true }
+            - { name: doctrine.event_listener, event: postUpdate, lazy: true }
+
+    translation.manager:
+        class: 'App\Module\Translation\TranslationManager'
+        arguments: ['@database_connection']
+
+    translation.logger:
+        class: 'App\Module\Translation\MissingTranslationLogger'
+        arguments: ['@translation.manager', '@translation.translator.inner']
+
+    translation.translator:
+        class: 'App\Module\Translation\Translator'
+        decorates: translator
+        arguments: ['@translation.translator.inner', '@translation.logger']
+
+
+    menu_builder:
+        class: 'App\Menu\Builder'
+        arguments: ['@knp_menu.factory', '@entity_type_manager']
+    kirkanta.menu.main:
+        public: true
+        class: 'Knp\Menu\MenuItem'
+        factory: ['@menu_builder', 'mainMenu']
+        arguments: ['@request_stack']
+        tags:
+            - { name: knp_menu.menu, alias: main }
+    kirkanta.menu.admin:
+        public: true
+        class: 'Knp\Menu\MenuItem'
+        factory: ['@menu_builder', 'adminMenu']
+        arguments: ['@request_stack']
+        tags:
+            - { name: knp_menu.menu, alias: admin }
+    kirkanta.menu.admin_tools:
+        public: true
+        class: 'Knp\Menu\MenuItem'
+        factory: ['@menu_builder', 'adminTools']
+        arguments: ['@request_stack']
+        tags:
+            - { name: knp_menu.menu, alias: admin_tools }
+    kirkanta.menu.organisation_tabs:
+        public: true
+        class: 'Knp\Menu\MenuItem'
+        factory: ['@menu_builder', 'organisationTabs']
+        arguments: ['@request_stack']
+        tags:
+            - { name: knp_menu.menu, alias: organisation_tabs }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    kirkanta_api.query_compiler:
+        public: true
+        class: 'KirjastotFi\KirkantaApiBundle\QueryCompiler'
+        # arguments: ['@doctrine.orm.entity_manager', '@entity_type_manager']
+    KirjastotFi\KirkantaApiBundle\QueryCompiler: '@kirkanta_api.query_compiler'
+
+    KirjastotFi\KirkantaApiBundle\EventListener\WrapResponseIntoView:
+        arguments: ['@imagine', '%image_sizes%']
+        tags:
+            - { name: kernel.event_subscriber }
+
+    KirjastotFi\KirkantaApiBundle\Extension\Query\BasicQueryCompiler:
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: kirkanta_api.query_extension, priority: -1000 }
+    KirjastotFi\KirkantaApiBundle\Extension\Query\QueryTranslationCompiler:
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: kirkanta_api.query_extension, priority: -1000 }
+    KirjastotFi\KirkantaApiBundle\Extension\Query\OrganisationExtension:
+        tags:
+            - { name: kirkanta_api.query_extension }
+    KirjastotFi\KirkantaApiBundle\Extension\Query\LibraryExtension:
+        tags:
+            - { name: kirkanta_api.query_extension }
+    KirjastotFi\KirkantaApiBundle\Extension\Query\ConsortiumExtension:
+        tags:
+            - { name: kirkanta_api.query_extension }
+    KirjastotFi\KirkantaApiBundle\Extension\Query\ServiceExtension:
+        tags:
+            - { name: kirkanta_api.query_extension }
+    KirjastotFi\KirkantaApiBundle\Extension\Query\PersonExtension:
+        class: 'KirjastotFi\KirkantaApiBundle\Extension\Query\PersonExtension'
+        tags:
+            - { name: kirkanta_api.query_extension }
+    KirjastotFi\KirkantaApiBundle\Validator\Constraints\LanguageAllowedValidator:
+        arguments: ['%content_languages%']
+
+    # NOTE: The built-in object normalizer has a priority -1000 so this must have a higher value.
+    kirkanta_api.normalizer.entity:
+        class: 'KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\EntityNormalizer'
+        factory: ['KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\EntityNormalizer', 'create']
+        arguments: ['@serializer.mapping.class_metadata_factory', '@serializer.property_accessor']
+        tags:
+            - { name: serializer.normalizer, priority: -999}
+
+    KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\PictureNormalizer:
+        arguments: ['@kirkanta_api.normalizer.entity']
+        tags:
+            - { name: serializer.normalizer, priority: -998}
+
+    KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\PersonNormalizer:
+        arguments: ['@kirkanta_api.normalizer.entity']
+        tags:
+            - { name: serializer.normalizer, priority: -998}
+    KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\FinnaOrganisationNormalizer:
+        arguments: ['@kirkanta_api.normalizer.entity']
+        tags:
+            - { name: serializer.normalizer, priority: -998 }
+    KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\CollectionNormalizer:
+        tags:
+            - { name: serializer.normalizer, priority: -998 }
+    KirjastotFi\KirkantaApiBundle\EventListener\ExtractRefsSubscriber:
+        tags:
+            - { name: 'jms_serializer.event_subscriber' }
+
+
+
+
+
+
+
+    UserAccountsBundle\Authentication\Event\UpdateLastLoginSubscriber:
+        arguments: ['@doctrine.orm.entity_manager', '%user_entity%']
+        tags:
+            - { name: kernel.event_subscriber }
+
+
+
+    Jsor\Doctrine\PostGIS\Event\ORMSchemaEventSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+    twig.string_loader_extension:
+        class: 'Twig_Extension_StringLoader'
+        tags:
+            - { name: twig.extension }
+    imagine:
+        class: 'Imagine\Gd\Imagine'

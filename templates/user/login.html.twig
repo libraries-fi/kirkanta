@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}{% endblock %}
+
+{% block body %}
+  <main id="l-main" class="container jumbotron pt-4">
+    <div class="row justify-content-md-center">
+      <div class="col-4">
+        <h1 class="text-center p-0 mb-4">{% trans %}Login required{% endtrans %}</h1>
+        {{ include("@UserAccountsBundle/login.html.twig") }}
+      </div>
+    </div>
+  </main>
+{% endblock %}

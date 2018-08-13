@@ -1,0 +1,40 @@
+.service-tree {
+  padding: 0;
+  margin: 0 0 1rem;
+  overflow-x: hidden;
+
+  > li {
+    list-style-type: none;
+  }
+
+  ul,
+  ul ul,
+  ul ul ul,
+  ul ul ul ul {
+    padding-left: 1.5rem;
+  }
+
+  li li,
+  li li li,
+  li li li li {
+    list-style-position: inside;
+    list-style-type: disc;
+    white-space: nowrap;
+  }
+}
+
+.service-tree--services {
+  color: green;
+
+  li {
+    color: #555;
+    font-weight: 100;
+    list-style-type: circle !important;
+    font-size: 0.8em;
+  }
+
+  li.service-tree--null {
+    font-style: italic;
+    text-transform: lowercase;
+  }
+}

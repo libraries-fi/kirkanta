@@ -1,0 +1,42 @@
+{% block form %}
+  {{ form_start(form) }}
+  {{ block("form_header") }}
+
+  {% if entity is defined %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Standard details{% endtrans %}</legend>
+      <div class="form-group">
+        <span class="form-label">{% trans %}Name{% endtrans %}</span>
+        <p class="form-control-static">{{ entity.standardName }}</p>
+      </div>
+      <div class="form-group">
+        <span class="form-label">{% trans %}Type{% endtrans %}</span>
+        <p class="form-control-static">{{ entity.type }}</p>
+      </div>
+      <p class="text-muted">{% trans %}Changing these details is restricted to administrators.{% endtrans %}</p>
+    </fieldset>
+  {% else %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Service{% endtrans %}</legend>
+      {{ form_row(form.children.template) }}
+    </fieldset>
+  {% endif %}
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Basic details{% endtrans %}</legend>
+    {{ form_row(form.children.name) }}
+    {{ form_row(form.children.short_description) }}
+    {{ form_row(form.children.description) }}
+    {{ form_row(form.children.price) }}
+    {{ form_row(form.children.for_loan) }}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Contact details{% endtrans %}</legend>
+    {{ form_row(form.children.email) }}
+    {{ form_row(form.children.phone_number) }}
+    {{ form_row(form.children.website) }}
+  </fieldset>
+
+  {{ form_end(form) }}
+{% endblock %}

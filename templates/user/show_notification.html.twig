@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  {{ notification.subject}}
+{% endblock %}
+
+{% block content %}
+  <div>{{ notification.message|raw }}</div>
+{% endblock %}

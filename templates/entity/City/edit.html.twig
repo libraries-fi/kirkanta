@@ -1,0 +1,21 @@
+{% extends "entity/edit.html.twig" %}
+
+{% block form %}
+  {{ form_start(form) }}
+  {{ block("form_header") }}
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Basic details{% endtrans %}</legend>
+    {{ form_row(form.name) }}
+    {{ form_row(form.slug) }}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Relationships{% endtrans %}</legend>
+    {{ form_row(form.region) }}
+    {# {{ form_row(form.regional_library) }} #}
+    {# {{ form_row(form.consortium) }} #}
+  </fieldset>
+
+  {{ form_end(form) }}
+{% endblock %}

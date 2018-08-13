@@ -1,0 +1,6 @@
+{% extends "component/menu/menu.html.twig" %}
+
+{% block root %}
+  {%- set listAttributes = item.childrenAttributes|merge({"class": "navbar-nav"}) %}
+  {{ block("list") }}
+{% endblock %}

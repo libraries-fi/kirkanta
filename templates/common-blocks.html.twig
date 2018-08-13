@@ -1,0 +1,35 @@
+{% block flashes %}
+  {% if flash_types is not defined %}
+    {% set flash_types = ["success", "warning", "danger"] %}
+  {% endif %}
+
+  {% for flash_type in flash_types %}
+    {% if flash_namespace|default(null) %}
+      {% set key = "%s.%s"|format(flash_namespace, flash_type) %}
+    {% else %}
+      {% set key = flash_type %}
+    {% endif %}
+
+    {% set messages = app.flashes(key) %}
+
+    {% if messages is not empty %}
+      <ul class="alert alert-{{ flash_type }}">
+        {% for message in messages %}
+          <li>{{ message|trans }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+  {% endfor %}
+{% endblock %}
+
+{% block actions %}
+  {% for key, action in actions|reverse %}
+    <a href="{{ path(action.route, action.params|default({})) }}" class="btn btn-secondary action--{{ key }}">
+      {%- if action.icon is defined %}
+        <i class="{{ action.icon }}"></i>
+      {% endif -%}
+      {{ action.title|trans }}
+    </a>
+  {% endfor %}
+{% endblock %}

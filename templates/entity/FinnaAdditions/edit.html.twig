@@ -1,0 +1,28 @@
+{% extends "entity/edit.html.twig" %}
+
+{% block form %}
+
+  {{ form_start(form) }}
+  {{ block("form_header") }}
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Basic information{% endtrans %}</legend>
+
+    {% with { form: form.children.consortium } %}
+      {{ form_row(form.children.name) }}
+      {{ form_row(form.children.slug) }}
+      {{ form_row(form.children.homepage) }}
+      {{ form_row(form.children.description) }}
+      {{ form_row(form.children.logo) }}
+
+      {% do form.setRendered(true) %}
+    {% endwith %}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Finna information{% endtrans %}</legend>
+    {{ form_rest(form) }}
+  </fieldset>
+
+  {{ form_end(form) }}
+{% endblock %}

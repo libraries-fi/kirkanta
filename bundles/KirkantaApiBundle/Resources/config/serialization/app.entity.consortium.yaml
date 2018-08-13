@@ -1,0 +1,17 @@
+App\Entity\Consortium:
+  attributes:
+    translations:
+      groups: ['default', 'index']
+    id:
+      groups: ['default', 'index']
+    logo:
+      groups: ['default', 'index']
+
+App\Entity\ConsortiumData:
+  attributes:
+    name:
+      groups: ['default', 'index']
+    homepage:
+      groups: ['default']
+    description:
+      groups: ['default']

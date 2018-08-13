@@ -1,0 +1,35 @@
+security:
+    access_decision_manager:
+        strategy: affirmative
+    encoders:
+        App\Entity\User: bcrypt
+    providers:
+        user_db:
+            entity: { class: App\Entity\User, property: username }
+        # current_user:
+        #     id: 'KirjastotFi\KirkantaBundle\Security\CurrentUserProvider'
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        api:
+            pattern: ^/v4/
+            security: false
+        main:
+            pattern: ^
+            provider: user_db
+            http_basic: ~
+            anonymous: ~
+            form_login:
+                login_path: user.login
+                check_path: user.login
+                default_target_path: front
+            logout:
+                path: /logout
+                target: /
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # - { path: }
+        # - { path: ^/admin, roles: [ ROLE_ADMIN] }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

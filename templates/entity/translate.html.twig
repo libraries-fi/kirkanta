@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% set entity_type = app.request.get('entity_type') %}
+{% set entity_id = app.request.get(entity_type) %}
+
+{% block title_text %}
+  {{ "Add translation to %s #%d"|trans|format(type_label, entity_id) }}
+{% endblock %}
+
+{% block content %}
+  {{ form(form) }}
+{% endblock %}

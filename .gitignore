@@ -1,0 +1,11 @@
+
+###> symfony/framework-bundle ###
+.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+/public/vendor/
+.sass-cache
+node_modules
+.tmp-globalize-webpack

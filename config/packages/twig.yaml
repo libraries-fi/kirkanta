@@ -1,0 +1,12 @@
+twig:
+    paths:
+        '%kernel.project_dir%/templates': 'app'
+        '%kernel.project_dir%/src/Module/ServiceTree/Resources/views': 'ServiceTree'
+        '%kernel.project_dir%/bundles/BootstrapFourBundle/Resources/views': 'BootstrapFourBundle'
+        '%kernel.project_dir%/bundles/UserAccountsBundle/Resources/views/User': 'UserAccountsBundle'
+        '%kernel.project_dir%/vendor/knplabs/knp-menu-bundle/src/Resources/views': 'KnpMenuBundle'
+        '%kernel.project_dir%/vendor/knplabs/knp-paginator-bundle/Resources/views': 'KnpPaginatorBundle'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    form_themes:
+        - 'component/form/fields.html.twig'

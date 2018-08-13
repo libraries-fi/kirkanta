@@ -1,0 +1,59 @@
+{% set classes = attr.class|default([]) %}
+
+{% if options.striped %}
+  {% set classes = classes ~ ' table-striped' %}
+{% endif %}
+
+{% if options.hovered %}
+  {% set classes = classes ~ ' table-hover' %}
+{% endif %}
+
+<table class="table {{ classes }}" {% if options.drag %}data-app="table-drag"{% endif %}>
+  <thead class="thead-dark">
+    <tr>
+      {% for column in table.columns %}
+        {% set column_class = [] %}
+
+        {% if column.sortable %}
+          {% set column_class = column_class|merge(["sortable"]) %}
+        {% endif %}
+
+        {% if column.sorting %}
+          {% set column_class = column_class|merge(["sorted--" ~ column.sorting]) %}
+        {% endif %}
+
+        {% if column.expand %}
+          {% set column_class = column_class|merge(["expand"]) %}
+        {% endif %}
+
+        {% if column.sortable %}
+          <th class="{{ column_class|join(' ') }}">
+            <a href="?s={{ column.key }}&amp;d={% if column.sorting == 'desc' %}asc{% else %}desc{% endif %}">{{ column.label|trans }}</a>
+            {% if column.sorting %}
+              <i class="fa fa-long-arrow-alt-{% if column.sorting == 'desc' %}down{% else %}up{% endif %}"></i>
+            {% else %}
+              <i class="fa fa-arrows-alt-v"></i>
+            {% endif %}
+          </th>
+        {% else %}
+          <th class="{{ column_class|join(' ') }}">{{ column.label|trans }}</th>
+        {% endif %}
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in table %}
+      <tr>
+        {% for value in row %}
+          {% if table.columnIsTemplate %}
+            <td>{{ include(template_from_string(value)) }}</td>
+          {% else %}
+            <td>{{ value }}</td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {% else %}
+      <tr><td colspan="{{ table.columns|length }}">{% trans %}Nothing here{% endtrans %}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>

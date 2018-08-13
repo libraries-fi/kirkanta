@@ -1,0 +1,120 @@
+{% extends "entity/edit.html.twig" %}
+
+{%- if form is defined %}
+  {% form_theme form _self %}
+{% endif %}
+
+{% block page_title %}
+  <div class="row">
+    <div class="col">
+      <h1>{{ block("title_text") }}</h1>
+    </div>
+    <div class="col-3">
+      <div class="form-inline pull-right">
+        {{ block("content_language") }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block form_header %}
+  {{ parent() }}
+
+  {% block form_tabs %}
+    {% if entity is defined %}
+      <nav class="nav-form-tabs">
+        {{ knp_menu_render('organisation_tabs', {"depth": 1}) }}
+      </nav>
+    {% endif %}
+  {% endblock %}
+{% endblock %}
+
+{% block form_body %}
+  <fieldset class="form-section">
+    <legend>{% trans %}Basic information{% endtrans %}</legend>
+    <div class="row">
+      <div class="col">
+        {{ form_row(form.name) }}
+        {{ form_row(form.short_name) }}
+        {# {{ form_row(form.slug) }} #}
+        {{ form_row(form.type) }}
+        {{ form_row(form.branch_type) }}
+        {{ form_row(form.consortium) }}
+        {{ form_row(form.isil) }}
+        {{ form_row(form.identificator) }}
+      </div>
+      <aside class="col">
+        <div class="form-sidebar">
+          {{ form_row(form.state) }}
+          {{ form_row(form.slug) }}
+        </div>
+      </aside>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Location{% endtrans %}</legend>
+    <div class="row">
+      <div class="col-md-6 col-highlight">
+        {{ form_row(form.address) }}
+      </div>
+      <div class="col-md-6">
+        {{ form_row(form.mail_address) }}
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}E-contact{% endtrans %}</legend>
+    {{ form_row(form.email) }}
+    {{ form_row(form.homepage) }}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Introduction{% endtrans %}</legend>
+    {{ form_row(form.slogan) }}
+    {{ form_row(form.description) }}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Arrival guide{% endtrans %}</legend>
+    {{ form_row(form.buses) }}
+    {{ form_row(form.trams) }}
+    {{ form_row(form.trains) }}
+    {{ form_row(form.transit_directions) }}
+    {{ form_row(form.parking_instructions) }}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Building information{% endtrans %}</legend>
+    {{ form_row(form.building_name) }}
+    {{ form_row(form.construction_year) }}
+    {{ form_row(form.building_architect) }}
+    {{ form_row(form.interior_designer) }}
+  </fieldset>
+{% endblock %}
+
+{% block _organisation_form_transit_directions_label %}
+  <i class="fa fa-info-circle"></i>
+  {{ block("form_label") }}
+{% endblock %}
+
+{% block _organisation_form_buses_label %}
+  <i class="fa fa-bus"></i>
+  {{ block("form_label") }}
+{% endblock %}
+
+{% block _organisation_form_trams_label %}
+  <i class="fa fa-subway"></i>
+  {{ block("form_label") }}
+{% endblock %}
+
+{% block _organisation_form_trains_label %}
+  <i class="fa fa-train"></i>
+  {{ block("form_label") }}
+{% endblock %}
+
+{% block _organisation_form_parking_instructions_label %}
+  <i class="fa fa-car"></i>
+  {{ block("form_label") }}
+{% endblock %}

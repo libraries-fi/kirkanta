@@ -1,0 +1,32 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  Käytön tuki.
+{% endblock %}
+
+{% block content %}
+  <h2>Palaute</h2>
+  <p>Kirjastohakemiston hallintaliittymän toiminnasta voi antaa palautetta Kirjastot.fi:n <a href="http://www.kirjastot.fi/palaute">palautelomakkeella</a>. Saat vastauksen suoraan sähköpostiisi.</p>
+  <p>Voit myös halutessasi ottaa yhteyttä toimitukseen puhelimitse tai sähköpostitse.</p>
+
+  <h2>Ylläpidon yhteystiedot</h2>
+  <dl>
+    <dt>Kirjastot.fi-toimitus</dt>
+    <dd><a href="mailto:toimitus@kirjastot.fi">toimitus@kirjastot.fi</a></dd>
+    <dd><a href="tel:+358931085280">(09) 3108 5280</a>
+  </dl>
+
+  <h2>Käyttöohjeet</h2>
+  <dl>
+    <dt>Suomeksi</dt>
+    <dd>
+      <img src="{{ asset('/images/icons/64/application-pdf.png') }}" alt=""/>
+      <a href="#kayttoohje">Käyttöohje.pdf</a>
+    </dd>
+    <dt>Ruotsiksi</dt>
+    <dd>
+      <img src="{{ asset('/images/icons/64/application-pdf.png') }}" alt=""/>
+      <a href="#manual">Manual.pdf</a>
+    </dd>
+  </dl>
+{% endblock %}

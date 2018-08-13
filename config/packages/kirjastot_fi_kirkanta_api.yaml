@@ -1,0 +1,18 @@
+kirjastot_fi_kirkanta_api:
+    entity_types:
+        - organisation
+        - consortium
+        - library
+        - person
+        - service
+    entity_forms:
+        consortium:
+            get: 'KirjastotFi\KirkantaApiBundle\Form\ConsortiumForm'
+        library:
+            get: 'KirjastotFi\KirkantaApiBundle\Form\LibraryForm'
+        organisation:
+            get: 'KirjastotFi\KirkantaApiBundle\Form\OrganisationForm'
+        person:
+            get: 'KirjastotFi\KirkantaApiBundle\Form\PersonForm'
+        service:
+            get: 'KirjastotFi\KirkantaApiBundle\Form\ServiceForm'

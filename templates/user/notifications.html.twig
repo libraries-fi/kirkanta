@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  {% trans %}Notifications{% endtrans %}
+{% endblock %}
+
+{% block content %}
+  {{ table_render(table) }}
+{% endblock %}

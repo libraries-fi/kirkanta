@@ -1,0 +1,19 @@
+App\Module\Finna\Entity\FinnaAdditions:
+  attributes:
+    translations:
+      groups: ['default', 'index']
+    id:
+      groups: ['default', 'index']
+    service_point:
+      groups: ['default']
+    finna_coverage:
+      groups: ['default']
+    consortium:
+      groups: ['default']
+
+App\Module\Finna\Entity\FinnaAdditionsData:
+  attributes:
+    usage_info:
+      groups: ['default']
+    notification:
+      groups: ['default']

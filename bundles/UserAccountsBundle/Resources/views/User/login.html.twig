@@ -1,0 +1,16 @@
+{% if error %}
+  <div class="alert alert-danger">
+    <p>{{ error }}</p>
+  </div>
+{% endif %}
+<form method="post">
+  <div class="form-group form-required">
+    <label for="input-username">{{ "Username"|trans }}</label>
+    <input id="input-username" type="text" name="_username" class="form-control" required autofocus/>
+  </div>
+  <div class="form-group form-required">
+    <label for="input-password">{{ "Password"|trans }}</label>
+    <input id="input-password" type="password" name="_password" class="form-control" required/>
+  </div>
+  <button type="submit" class="btn btn-primary">{{ "Login"|trans }}</button>
+</form>

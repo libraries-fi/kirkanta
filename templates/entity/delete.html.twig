@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form _self %}
+
+{% set entity = attribute(_context, entity_type) %}
+
+{% block title_text %}
+  {% trans with {"%type%": type_label|trans|lower, "%id%": entity.id} %}Delete %type% #%id%{% endtrans %}
+{% endblock %}
+
+{% block content %}
+  <p>{% trans %}Do you really wish to delete this record?{% endtrans %}</p>
+  {{ form(form) }}
+{% endblock %}
+
+{% block _form_submit_widget %}
+  {# These variables won't inherit from template scope #}
+  {% set entity_type = app.request.get('entity_type') %}
+  {% set entity_id = app.request.get(entity_type) %}
+
+  {{ form_widget(form) }}
+  <a href="{{ path('entity.%s.edit'|format(entity_type), {(entity_type): entity_id}) }}" class="btn btn-link text-body">{% trans %}Cancel{% endtrans %}</a>
+{% endblock %}

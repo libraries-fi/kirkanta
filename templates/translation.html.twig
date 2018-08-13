@@ -1,0 +1,65 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form _self %}
+
+{% block title_text %}
+  {% trans %}Manage translations{% endtrans %}
+{% endblock %}
+
+{% block content %}
+  <fieldset class="form-section search-form-container">
+    <legend>{% trans %}Filter{% endtrans %}</legend>
+    {{ form_start(search_form) }}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          {{ form_row(search_form.locale) }}
+        </div>
+        <div class="col-md-3">
+          {{ form_row(search_form.text) }}
+        </div>
+        <div class="col-md-3">
+          <p class="form-control-static">&nbsp;</p>
+          {{ form_row(search_form.only_null) }}
+        </div>
+        <div class="col-md-3">
+          {{ form_widget(search_form.actions.children.submit) }}
+        </div>
+      </div>
+    </div>
+    {{ form_end(search_form) }}
+  </fieldset>
+  <div class="form-section">
+    {{ form(form) }}
+  </div>
+{% endblock %}
+
+{% block _translation_form_translations_widget %}
+  {% if form.children|length == 0 %}
+    <p>{% trans %}Nothing found.{% endtrans %}</p>
+  {% else %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <b>{% trans %}Source{% endtrans %}</b>
+        </div>
+        <div class="col-md-6">
+          <b>{% trans %}Message{% endtrans %}</b>
+        </div>
+      </div>
+
+      {{ block("form_widget") }}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block _translation_form_translations_entry_row %}
+  <div class="row">
+    <div class="col-md-6">
+      <pre class="form-control-static">{{ form.source.vars.value }}</pre>
+    </div>
+    <div class="col-md-6">
+      {{ form_row(form.message) }}
+    </div>
+  </div>
+{% endblock %}
