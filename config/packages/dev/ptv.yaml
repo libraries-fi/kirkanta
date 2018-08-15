@@ -1,5 +1,5 @@
 parameters:
     ptv.username: '%env(PTV_USERNAME)%'
     ptv.password: '%env(PTV_PASSWORD)%'
-    ptv.api: 'https://api.palvelutietovaranto.trn.suomi.fi/api/V6/'
+    ptv.api: 'https://api.palvelutietovaranto.trn.suomi.fi/api/V8/'
     ptv.auth_url: 'https://palvelutietovaranto.trn.suomi.fi/connect/token'

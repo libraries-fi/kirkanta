@@ -7,6 +7,7 @@ use App\Entity\Library;
 use App\Module\Ptv\Util\Address;
 use App\Module\Ptv\Util\Html;
 use App\Module\Ptv\Util\Language;
+use App\Module\Ptv\Util\Municipalities;
 use App\Module\Ptv\Util\OpeningTimes;
 use App\Module\Ptv\Util\PhoneNumber;
 use App\Module\Ptv\Util\Text;
@@ -15,10 +16,12 @@ use App\Module\Schedules\ScheduleManager;
 class LibraryConverter implements Converter
 {
     private $schedules;
+    private $municipalities;
 
-    public function __construct(ScheduleManager $schedules)
+    public function __construct(ScheduleManager $schedules, Municipalities $municipalities)
     {
         $this->schedules = $schedules;
+        $this->municipalities = $municipalities;
     }
 
     public function supports($entity) : bool
@@ -33,12 +36,14 @@ class LibraryConverter implements Converter
 
     public function convert($library) : array
     {
+        $city_name = $library->getCity()->getTranslation('fi')->getName();
+
         $doc = [
-            'organizationId' => null,
-            'sourceId' => 'kirkanta:' . $library->getId(),
-            'publishingStatus' => 'Published',
+            // 'organizationId' => null,
             'organizationType' => 'Municipality',
-            'municipality' => 'RESOLVED_ID_HERE',
+            'publishingStatus' => 'Published',
+            'sourceId' => 'kirkanta--' . $library->getId(),
+            'municipality' => $this->municipalities->nameToId($city_name),
         ];
 
         $languages = [];
@@ -59,17 +64,21 @@ class LibraryConverter implements Converter
                 'value' => $translation->getEmail(),
             ];
 
-            $doc['serviceChannelDescriptions'][] = [
-                'type' => 'Description',
-                'language' => $langcode,
-                'value' => Html::toPlainText($translation->getDescription(), 4000),
-            ];
+            if ($translation->getDescription()) {
+                $doc['serviceChannelDescriptions'][] = [
+                    'type' => 'Description',
+                    'language' => $langcode,
+                    'value' => Html::toPlainText($translation->getDescription(), 4000),
+                ];
+            }
 
-            $doc['serviceChannelDescriptions'][] = [
-                'type' => 'ShortDescription',
-                'language' => $langcode,
-                'value' => Text::truncate($translation->getSlogan(), 150)
-            ];
+            if ($translation->getSlogan()) {
+                $doc['serviceChannelDescriptions'][] = [
+                    'type' => 'Summary',
+                    'language' => $langcode,
+                    'value' => Text::truncate($translation->getSlogan(), 150)
+                ];
+            }
         }
 
         foreach ($library->getPhoneNumbers() as $number) {
@@ -89,8 +98,11 @@ class LibraryConverter implements Converter
 
         if ($address = $library->getAddress()) {
             $doc['addresses'][0] = [
-                'type' => 'Visiting',
-                'postalCode' => $address->getZipCode(),
+                'type' => 'Location',
+                'subtype' => 'Single',
+                'streetAddress' => [
+                    'postalCode' => $address->getZipCode(),
+                ]
             ];
 
             foreach ($address->getTranslations() as $langcode => $translation) {
@@ -100,19 +112,19 @@ class LibraryConverter implements Converter
 
                 list($street, $number) = Address::parseStreetAndNumber($translation->getStreet());
 
-                $doc['addresses'][0]['streetAddress'][] = [
+                $doc['addresses'][0]['streetAddress']['street'][] = [
                     'language' => $langcode,
                     'value' => $street,
                 ];
 
                 if ($number) {
-                    $doc['addresses'][0]['streetNumber'] = $number;
+                    $doc['addresses'][0]['streetAddress']['streetNumber'] = $number;
                 }
             }
 
             if ($coords = $address->getCoordinates()) {
                 list($lat, $lon) = explode(',', $coords);
-                $doc['addresses'][0] += [
+                $doc['addresses'][0]['streetAddress'] += [
                     'latitude' => (float)$lat,
                     'longitude' => (float)$lon,
                 ];
@@ -122,11 +134,13 @@ class LibraryConverter implements Converter
         if ($address = $library->getMailAddress()) {
             $doc['addresses'][1] = [
                 'type' => 'Postal',
-                'postalCode' => $address->getZipcode(),
+                'subtype' => 'Street',
             ];
 
             if ($pbox = $address->getBoxNumber()) {
-                $doc['addresses'][1]['postOfficeBox'] = [
+                $doc['addresses'][1]['subtype'] = 'PostOfficeBox';
+                $doc['addresses'][1]['postOfficeBoxAddress']['postalCode'] = $address->getZipcode();
+                $doc['addresses'][1]['postOfficeBoxAddress']['postOfficeBox'] = [
                     [
                         'language' => 'fi',
                         'value' => "PL {$pbox}"
@@ -140,31 +154,35 @@ class LibraryConverter implements Converter
                         'value' => "PB {$pbox}",
                     ]
                 ];
-            }
-
-            foreach ($address->getTranslations() as $langcode => $translation) {
-                if (!Language::isAllowed($langcode)) {
-                    continue;
-                }
-
-                if ($translation->getStreet()) {
-                    list($street, $number) = Address::parseStreetAndNumber($translation->getStreet());
-                    $doc['addresses'][1]['streetAddress'][] = [
-                        'language' => $langcode,
-                        'value' => $street,
-                    ];
-
-                    if ($number) {
-                        $doc['addresses'][1]['streetNumber'] = $number;
+            } else {
+                foreach ($address->getTranslations() as $langcode => $translation) {
+                    if (!Language::isAllowed($langcode)) {
+                        continue;
                     }
-                } else {
-                    $doc['addresses'][1]['streetAddress'][] = [
-                        'language' => $langcode,
-                        'value' => $translation->getArea(),
-                    ];
+
+                    if ($translation->getStreet()) {
+                        list($street, $number) = Address::parseStreetAndNumber($translation->getStreet());
+                        $doc['addresses'][1]['streetAddress']['street'][] = [
+                            'language' => $langcode,
+                            'value' => $street,
+                        ];
+
+                        if ($number) {
+                            $doc['addresses'][1]['streetNumber'] = $number;
+                        }
+                    } else {
+                        $doc['addresses'][1]['streetAddress'][] = [
+                            'language' => $langcode,
+                            'value' => $translation->getArea(),
+                        ];
+                    }
                 }
             }
         }
+
+        // header('Content-Type: text/plain');
+        // print_r($doc['addresses']);
+        // exit;
 
         $last_period_begins = null;
 
@@ -182,7 +200,7 @@ class LibraryConverter implements Converter
 
             $schedules = [
                 'publishingStatus' => 'Published',
-                'serviceHourtype' => $period->isContinuous() ? 'Standard' : 'Exception',
+                'serviceHourtype' => $period->isContinuous() ? 'DaysOfTheWeek' : 'Exceptional',
                 'validFrom' => $period->getValidFrom()->format(DateTime::RFC3339)
             ];
 

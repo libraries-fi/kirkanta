@@ -6,8 +6,8 @@ use App\EntityTypeManager;
 use App\Module\Ptv\Converter\Converter as ConverterInterface;
 use App\Module\Ptv\Converter\LibraryConverter;
 use App\Module\Ptv\Exception\AuthenticationException;
-use App\Module\Schedules\ScheduleManager;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use InvalidArgumentException;
 use Symfony\Component\Cache\Simple\ApcuCache;
@@ -24,14 +24,17 @@ class Client
     private $password;
     private $authUrl;
 
-    public function __construct(EntityTypeManager $types, ScheduleManager $schedules, ParameterBagInterface $parameters)
+    /**
+     * FIXME: Lazily passing LibraryConverter as an argument and letting Symfony do the initialization.
+     */
+    public function __construct(EntityTypeManager $types, LibraryConverter $library_converter, ParameterBagInterface $parameters)
     {
         $this->types = $types;
 
         // Auth tokens are valid for 24 hours so expire them a bit earlier.
         $this->cache = new ApcuCache('kirkanta.ptv', 3600 * 23);
         $this->http = new HttpClient(['base_uri' => $parameters->get('ptv.api')]);
-        $this->converters[] = new Converter\LibraryConverter($schedules);
+        $this->converters[] = $library_converter;
 
         $this->username = $parameters->get('ptv.username');
         $this->password = $parameters->get('ptv.password');
@@ -61,18 +64,49 @@ class Client
             $converter = $this->getConverter($entity);
             $document = $converter->convert($entity);
             $type = $converter->getDocumentType($entity);
-            $this->push($type, $document);
+            $ptv_id = $this->push($type, $document, $meta->getPtvIdentifier());
+
+            if (!$meta->getPtvIdentifier()) {
+                $meta->setPtvIdentifier($ptv_id);
+            }
         }
     }
 
 
-    public function push(string $type, array $document) : void
+    public function push(string $type, array $document, ?string $id = null) : string
     {
         $token = $this->authenticate();
 
-        header('Content-Type: text/plain; charset=utf-8');
-        print json_encode($document, JSON_PRETTY_PRINT);
-        exit('send data to PTV');
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => "Bearer {$token}",
+        ];
+
+        try {
+            if ($id) {
+                $response = $this->http->request('PUT', "{$type}/{$id}", [
+                    'headers' => $headers,
+                    'json' => $document,
+                ]);
+
+                return json_decode((string)$response->getBody())->id;
+            } else {
+                $response = $this->http->request('POST', $type, [
+                    'headers' => $headers,
+                    'json' => $document,
+                ]);
+
+                $result = json_decode((string)$response->getBody());
+
+                var_dump($result);
+                exit;
+            }
+        } catch (ClientException $e) {
+            header('Content-Type: application/json');
+            $source = (string)$e->getResponse()->getBody();
+            print(json_encode(json_decode($source), JSON_PRETTY_PRINT));
+            exit;
+        }
     }
 
     private function authenticate() : string

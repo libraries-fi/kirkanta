@@ -29,6 +29,11 @@ trait TranslatableTrait
         $this->translations = $data;
     }
 
+    public function getTranslation(string $langcode)
+    {
+        return $this->translations[$langcode];
+    }
+
     public function hasTranslation(string $langcode) : bool
     {
         return $this->translations->containsKey($langcode);
