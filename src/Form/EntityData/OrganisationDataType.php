@@ -36,12 +36,12 @@ class OrganisationDataType extends EntityDataType
                 'entity_type' => 'library',
             ])
             ->add('slogan', null, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Slogan',
                 'langcode' => $options['langcode']
             ])
             ->add('description', RichtextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Description',
                 'langcode' => $options['langcode']
             ])

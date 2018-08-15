@@ -87,6 +87,16 @@ class Address extends EntityBase implements Translatable
         $this->translations[$this->langcode]->setArea($area);
     }
 
+    public function getInfo() : ?string
+    {
+        return $this->translations[$this->langcode]->getInfo();
+    }
+
+    public function setInfo(?string $info) : void
+    {
+        $this->translations[$this->langcode]->setInfo($info);
+    }
+
     public function getZipcode() : ?string
     {
         return $this->zipcode;

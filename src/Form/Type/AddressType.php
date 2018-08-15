@@ -19,6 +19,9 @@ class AddressType extends AbstractType
             ->add('area', null, [
                 'required' => false
             ])
+            ->add('info', null, [
+                'required' => false,
+            ])
             ->add('zipcode')
             ->add('city', EntityType::class, [
                 'placeholder' => '-- Select --',

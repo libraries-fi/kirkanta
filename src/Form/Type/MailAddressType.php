@@ -12,7 +12,7 @@ class MailAddressType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $builder
-            ->add('street')
+            ->add('street') 
             ->add('box_number')
             ->add('zipcode')
             ->add('area')
