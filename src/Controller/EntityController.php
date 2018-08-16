@@ -113,6 +113,11 @@ class EntityController extends Controller
         $form = $this->entityTypeManager->getForm($entity_type, 'edit', $entity);
         $form->handleRequest($request);
 
+        if (!empty($_POST)) {
+            // var_dump($form->get('ptv')->getData());
+            // exit;
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityTypeManager->getEntityManager()->flush();
             $this->addFlash('form.success', 'Changes were saved.');
@@ -136,7 +141,7 @@ class EntityController extends Controller
             'form' => $form->createView(),
             'entity_type' => $entity_type,
             $entity_type => $entity,
-        ]);
+        ])->setStatusCode($form->isSubmitted() ? 422 : 200);
     }
 
     /**

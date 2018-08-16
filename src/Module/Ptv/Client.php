@@ -5,7 +5,9 @@ namespace App\Module\Ptv;
 use App\EntityTypeManager;
 use App\Module\Ptv\Converter\Converter as ConverterInterface;
 use App\Module\Ptv\Converter\LibraryConverter;
+use App\Module\Ptv\Entity\PtvData;
 use App\Module\Ptv\Exception\AuthenticationException;
+use DateTime;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
@@ -51,7 +53,7 @@ class Client
         }
     }
 
-    public function store($entity) : void
+    public function store($entity) : PtvData
     {
         $type_id = $this->types->getTypeId(get_class($entity));
 
@@ -66,10 +68,14 @@ class Client
             $type = $converter->getDocumentType($entity);
             $ptv_id = $this->push($type, $document, $meta->getPtvIdentifier());
 
+            $meta->setLastExport(new DateTime);
+
             if (!$meta->getPtvIdentifier()) {
                 $meta->setPtvIdentifier($ptv_id);
             }
         }
+
+        return $meta;
     }
 
 
@@ -96,10 +102,7 @@ class Client
                     'json' => $document,
                 ]);
 
-                $result = json_decode((string)$response->getBody());
-
-                var_dump($result);
-                exit;
+                return json_decode((string)$response->getBody())->id;
             }
         } catch (ClientException $e) {
             header('Content-Type: application/json');

@@ -8,7 +8,9 @@ import "@fortawesome/fontawesome-free-solid";
 import "./configure.dependencies";
 import "./table.drag";
 import "./widget.sluggable";
+import "./widget.radio-collapse";
 import "./period.widgets";
 import "./period.edit";
+
 
 // import "../scss/kirkanta.scss";

@@ -52,7 +52,7 @@
     <aside class="col-md-6">
       {% if form.ptv is defined %}
         <fieldset class="form-section">
-          <legend>{% trans %}PTV information{% endtrans %}</legend>
+          <legend>{% trans %}PTV export{% endtrans %}</legend>
           {{ form_widget(form.ptv) }}
         </fieldset>
       {% endif %}
@@ -108,27 +108,62 @@
   </fieldset>
 {% endblock %}
 
-{% block _organisation_form_transit_directions_label %}
+{% block _library_form_transit_directions_label %}
   <i class="fa fa-info-circle"></i>
   {{ block("form_label") }}
 {% endblock %}
 
-{% block _organisation_form_buses_label %}
+{% block _library_form_buses_label %}
   <i class="fa fa-bus"></i>
   {{ block("form_label") }}
 {% endblock %}
 
-{% block _organisation_form_trams_label %}
+{% block _library_form_trams_label %}
   <i class="fa fa-subway"></i>
   {{ block("form_label") }}
 {% endblock %}
 
-{% block _organisation_form_trains_label %}
+{% block _library_form_trains_label %}
   <i class="fa fa-train"></i>
   {{ block("form_label") }}
 {% endblock %}
 
-{% block _organisation_form_parking_instructions_label %}
+{% block _library_form_parking_instructions_label %}
   <i class="fa fa-car"></i>
   {{ block("form_label") }}
+{% endblock %}
+
+{% block _library_form_ptv_widget %}
+  {% if value.ptvIdentifier %}
+    <div class="d-none">{{ form_widget(form.ptv_identifier) }}</div>
+    {{ form_widget(form) }}
+    <p>ID: {{ form.ptv_identifier.vars.value }}</p>
+  {% else %}
+    <div>
+      <label>
+        <input type="radio" name="{{ form.enabled.vars.full_name }}" value="0" checked/>
+        <span>{% trans %}Disabled{% endtrans %}</span>
+      </label>
+    </div>
+    <div>
+      <label>
+        <input type="radio" name="{{ form.enabled.vars.full_name }}" value="{{ form.enabled.vars.value }}"/>
+        <span>{% trans %}Create a new Service location{% endtrans %}</span>
+      </label>
+    </div>
+    <div>
+      <label>
+        <input type="radio" name="{{ form.enabled.vars.full_name }}" value="{{ form.enabled.vars.value }}" data-app="radio-collapse" data-target="#ptv-identifier-row"/>
+        <span>{% trans %}Link to an existing Service location{% endtrans %}</span>
+      </label>
+    </div>
+
+    <div id="ptv-identifier-row" class="collapse">
+      <div class="form-group">
+        {{ form_label(form.ptv_identifier) }}
+        {{ form_widget(form.ptv_identifier) }}
+        <small class="form-text text-muted">PTV » Lisätiedot » Tunnistetiedot » PTV-tunniste</small>
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}

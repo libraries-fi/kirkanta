@@ -113,10 +113,9 @@ services:
     App\Module\Ptv\Form\Extension\LibraryFormExtension:
         tags:
             - { name: form.type_extension, extended_type: App\Form\LibraryForm }
-    App\Module\Ptv\EventListener\ExportListener:
+    App\Module\Ptv\EventListener\ExportLibraryListener:
         tags:
-            # - { name: doctrine.event_listener, event: preUpdate, lazy: true }
-            - { name: doctrine.event_listener, event: postUpdate, lazy: true }
+            - { name: kernel.event_listener, event: kernel.response }
 
     translation.manager:
         class: 'App\Module\Translation\TranslationManager'

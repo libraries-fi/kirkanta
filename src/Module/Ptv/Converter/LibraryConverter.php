@@ -39,7 +39,10 @@ class LibraryConverter implements Converter
         $city_name = $library->getCity()->getTranslation('fi')->getName();
 
         $doc = [
-            // 'organizationId' => null,
+            // FIXME: Replace with a configurable ID.
+            // VAASA == 7fdd7f84-e52a-4c17-a59a-d7c2a3095ed5
+            'organizationId' => '7fdd7f84-e52a-4c17-a59a-d7c2a3095ed5',
+
             'organizationType' => 'Municipality',
             'publishingStatus' => 'Published',
             'sourceId' => 'kirkanta--' . $library->getId(),
@@ -155,6 +158,7 @@ class LibraryConverter implements Converter
                     ]
                 ];
             } else {
+                $doc['addresses'][1]['streetAddress']['postalCode'] = $address->getZipcode();
                 foreach ($address->getTranslations() as $langcode => $translation) {
                     if (!Language::isAllowed($langcode)) {
                         continue;
@@ -168,10 +172,10 @@ class LibraryConverter implements Converter
                         ];
 
                         if ($number) {
-                            $doc['addresses'][1]['streetNumber'] = $number;
+                            $doc['addresses'][1]['streetAddress']['streetNumber'] = $number;
                         }
                     } else {
-                        $doc['addresses'][1]['streetAddress'][] = [
+                        $doc['addresses'][1]['streetAddress']['street'][] = [
                             'language' => $langcode,
                             'value' => $translation->getArea(),
                         ];

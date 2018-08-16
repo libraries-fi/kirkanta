@@ -9652,7 +9652,7 @@ module.exports = setMonth
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(130);
-module.exports = __webpack_require__(303);
+module.exports = __webpack_require__(304);
 
 
 /***/ }),
@@ -9669,12 +9669,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__table_drag___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__table_drag__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__widget_sluggable__ = __webpack_require__(300);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__widget_sluggable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__widget_sluggable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__period_widgets__ = __webpack_require__(301);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__period_edit__ = __webpack_require__(302);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__period_edit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__period_edit__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__widget_radio_collapse__ = __webpack_require__(301);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__widget_radio_collapse___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__widget_radio_collapse__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__period_widgets__ = __webpack_require__(302);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__period_edit__ = __webpack_require__(303);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__period_edit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__period_edit__);
 
 
 // import "bootstrap";
+
+
 
 
 
@@ -45176,6 +45180,25 @@ $('input[type="text"][data-sluggable]').sluggable();
 
 /***/ }),
 /* 301 */
+/***/ (function(module, exports) {
+
+$.fn.radioCollapse = function() {
+  return this.each((i, input) => {
+    $(`input[name="${input.name}"]`).on("change", (event) => {
+      $(input.dataset.target).collapse(input.checked ? "show" : "hide");
+    });
+
+    // $(input).on("change", () => {
+    //   console.log("STATE", input.checked);
+    // });
+  });
+}
+
+$('[data-app="radio-collapse"]').radioCollapse();
+
+
+/***/ }),
+/* 302 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45272,7 +45295,7 @@ $("[data-app=\"organisation-calendar\"]").periodCalendar();
 
 
 /***/ }),
-/* 302 */
+/* 303 */
 /***/ (function(module, exports) {
 
 (function($) {
@@ -45446,7 +45469,7 @@ $("[data-app=\"organisation-calendar\"]").periodCalendar();
 
 
 /***/ }),
-/* 303 */
+/* 304 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
