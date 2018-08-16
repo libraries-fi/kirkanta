@@ -2,9 +2,9 @@ const path = require("path");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-  entry: ["./js/kirkanta.js", "./scss/kirkanta.scss"],
+  entry: ["./public/js/kirkanta.js", "./public/scss/kirkanta.scss"],
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "public/dist"),
     filename: "kirkanta.js"
   },
   module: {
