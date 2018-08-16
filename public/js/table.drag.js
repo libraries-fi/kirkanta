@@ -1,4 +1,3 @@
-
 $.fn.tableDrag = function() {
   function findDropTarget(event) {
     for (let row of event.target.parentElement.children) {

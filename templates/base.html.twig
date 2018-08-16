@@ -11,11 +11,7 @@
     <link href="{{ asset("/kirkanta.ico") }}" rel="shortcut icon"/>
     {% block stylesheets %}
       <style>
-        /* @import url({{ asset("/node_modules/font-awesome/css/font-awesome.min.css") }}); */
-      </style>
-      <style>
-        @import url("/node_modules/react-widgets/dist/css/react-widgets.css");
-        @import url("/dist/kirkanta.css");
+        @import url("/dist/style.css");
       </style>
     {% endblock %}
   </head>
@@ -40,7 +36,7 @@
                     <i class="fas fa-user"></i>
                     {{ app.user.username }}
                   </button>
-                  
+
                   <div class="dropdown-menu">
                     <a href="{{ path('user.profile') }}" class="dropdown-item">{% trans %}Account{% endtrans %}</a>
                     <a href="{{ path('user.notifications') }}" class="dropdown-item">{% trans %}Notifications{% endtrans %}</a>
@@ -90,16 +86,7 @@
     {% endblock %}
 
     {% block javascripts %}
-      <script src="{{ asset('/node_modules/jquery/dist/jquery.min.js') }}"></script>
-
-      <script src="{{ asset('/node_modules/ckeditor/ckeditor.js') }}"></script>
-      <script src="{{ asset('/node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-      <script src="{{ asset('/node_modules/moment/min/moment-with-locales.min.js') }}"></script>
-
-      <script src="{{ asset('/js/init.ckeditor.js') }}"></script>
-      <script src="{{ asset('/js/content-language.js') }}"></script>
-
-      <script src="{{ asset('/dist/kirkanta.js') }}"></script>
+      <script src="{{ asset('/dist/script.js') }}"></script>
     {% endblock %}
   </body>
 </html>
