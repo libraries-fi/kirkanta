@@ -5,7 +5,7 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-/public/vendor/
 .sass-cache
 node_modules
 .tmp-globalize-webpack
+/public/dist/*
