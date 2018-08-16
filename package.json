@@ -5,7 +5,10 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx webpack --watch",
+    "build": "webpack --config webpack.prod.js",
+    "deploy": "npm run build && git commit -am 'PRODUCTION BUILD'"
   },
   "author": "Kirjastot.fi",
   "license": "MIT",

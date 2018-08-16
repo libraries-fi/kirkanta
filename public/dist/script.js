@@ -3493,17 +3493,6 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 
 /***/ }),
 
-/***/ "./public/js/assets.js":
-/*!*****************************!*\
-  !*** ./public/js/assets.js ***!
-  \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("\n\n//# sourceURL=webpack:///./public/js/assets.js?");
-
-/***/ }),
-
 /***/ "./public/js/configure.dependencies.js":
 /*!*********************************************!*\
   !*** ./public/js/configure.dependencies.js ***!
@@ -3607,13 +3596,13 @@ eval("/* WEBPACK VAR INJECTION */(function($) {class TimeoutLock {\n  constructo
 /***/ }),
 
 /***/ 0:
-/*!***********************************************************!*\
-  !*** multi ./public/js/assets.js ./public/js/kirkanta.js ***!
-  \***********************************************************/
+/*!*************************************!*\
+  !*** multi ./public/js/kirkanta.js ***!
+  \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("__webpack_require__(/*! ./public/js/assets.js */\"./public/js/assets.js\");\nmodule.exports = __webpack_require__(/*! ./public/js/kirkanta.js */\"./public/js/kirkanta.js\");\n\n\n//# sourceURL=webpack:///multi_./public/js/assets.js_./public/js/kirkanta.js?");
+eval("module.exports = __webpack_require__(/*! ./public/js/kirkanta.js */\"./public/js/kirkanta.js\");\n\n\n//# sourceURL=webpack:///multi_./public/js/kirkanta.js?");
 
 /***/ })
 

@@ -6,10 +6,7 @@ const webpack = require("webpack");
 module.exports = {
   mode: "development",
   entry: {
-    script: [
-      "./public/js/assets.js",
-      "./public/js/kirkanta.js"
-    ],
+    script: ["./public/js/kirkanta.js"],
     style: ["./public/scss/kirkanta.scss"],
   },
   output: {
@@ -35,10 +32,6 @@ module.exports = {
       {
         test: /\.css$/,
         loader: "style-loader!css-loader",
-      },
-      {
-        test: /\.vue$/,
-        loader: "vue-loader",
       }
     ],
   },
