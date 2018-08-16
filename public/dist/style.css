@@ -6983,3 +6983,218 @@ form.period_form fieldset.period-schedules {
 #ui-datepicker-div {
   z-index: 999 !important; }
 
+/*
+ * FIXME: variables.scss is copied here in-line due to pending issues.
+ *
+ * https://github.com/jquense/react-widgets/issues/812
+ */
+.rw-btn,
+.rw-input-reset {
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  background: none;
+  background-image: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  touch-action: manipulation; }
+
+.rw-btn::-moz-focus-inner {
+  padding: 0;
+  border: 0; }
+
+select.rw-input {
+  text-transform: none; }
+
+html input[type="button"].rw-input {
+  -webkit-appearance: button;
+  cursor: pointer; }
+
+textarea.rw-input {
+  overflow: auto;
+  resize: vertical; }
+
+button[disabled].rw-input,
+fieldset[disabled] .rw-input,
+html input[disabled].rw-input {
+  cursor: not-allowed; }
+
+button.rw-input::-moz-focus-inner,
+input.rw-input::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0; }
+
+/* -------------- */
+@font-face {
+  font-family: 'RwWidgets';
+  font-weight: normal;
+  font-style: normal;
+  src: url("~react-widgets/lib/fonts/rw-widgets.eot?v=4.1.0");
+  src: url("~react-widgets/lib/fonts/rw-widgets.eot?#iefix&v=4.1.0") format("embedded-opentype"), url("~react-widgets/lib/fonts/rw-widgets.woff?v=4.1.0") format("woff"), url("~react-widgets/lib/fonts/rw-widgets.ttf?v=4.1.0") format("truetype"), url("~react-widgets/lib/fonts/rw-widgets.svg?v=4.1.0#fontawesomeregular") format("svg"); }
+
+.rw-i {
+  display: inline-block;
+  color: inherit;
+  font-family: RwWidgets;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased; }
+
+.rw-i-caret-down:before {
+  content: '\E803'; }
+
+.rw-i-caret-up:before {
+  content: '\E800'; }
+
+.rw-i-chevron-left:before {
+  content: '\F104'; }
+
+.rw-i-chevron-right:before {
+  content: '\F105'; }
+
+.rw-i-clock-o:before {
+  content: '\E805'; }
+
+.rw-i-calendar:before {
+  content: '\E804'; }
+
+.rw-i-search:before {
+  content: '\E801'; }
+
+.rw-calendar-popup {
+  right: auto;
+  min-width: 0;
+  width: 18em; }
+
+.rw-calendar {
+  border-radius: 0.25rem;
+  background-color: #fff;
+  border: #ccc 1px solid;
+  overflow: hidden; }
+  .rw-calendar.rw-popup {
+    border-color: #ccc; }
+
+.rw-calendar-now {
+  font-weight: bold; }
+
+.rw-calendar-btn-left,
+.rw-calendar-btn-right {
+  width: 12.5%; }
+
+.rw-calendar-btn-view {
+  width: 75%; }
+
+.rw-calendar-footer {
+  border-top: 1px solid #ccc; }
+
+.rw-calendar-grid {
+  outline: none;
+  height: 200 / 14em;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  background-color: #fff; }
+
+.rw-head-cell {
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+  padding: 0.25em; }
+
+.rw-cell {
+  color: #333333;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  line-height: normal;
+  text-align: center;
+  border: 1px solid transparent;
+  padding: 0.25em; }
+  .rw-cell:hover {
+    background-color: #e6e6e6;
+    border-color: #e6e6e6;
+    color: #333333; }
+  .rw-cell.rw-state-focus, .rw-cell.rw-state-focus:hover {
+    background-color: transparent;
+    border-color: #66afe9;
+    color: #333333; }
+  .rw-cell.rw-state-selected, .rw-cell.rw-state-selected:hover {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: white; }
+  .rw-cell.rw-state-disabled {
+    color: #999999;
+    filter: alpha(opacity=7);
+    opacity: .7; }
+    .rw-cell.rw-state-disabled:hover {
+      background: none;
+      border-color: transparent; }
+  .rw-calendar-month .rw-cell {
+    text-align: center; }
+
+.rw-cell-off-range {
+  color: #999999; }
+
+.rw-calendar-transition-group {
+  position: relative; }
+
+.rw-calendar-transition {
+  transition: -webkit-transform 300ms;
+  transition: transform 300ms;
+  transition: transform 300ms, -webkit-transform 300ms;
+  overflow: hidden; }
+
+.rw-calendar-transition-top {
+  -webkit-transform: translateY(-100%);
+          transform: translateY(-100%); }
+
+.rw-calendar-transition-bottom {
+  -webkit-transform: translateY(100%);
+          transform: translateY(100%); }
+
+.rw-calendar-transition-right {
+  -webkit-transform: translateX(-100%);
+          transform: translateX(-100%); }
+
+.rw-calendar-transition-left {
+  -webkit-transform: translateX(100%);
+          transform: translateX(100%); }
+
+.rw-calendar-transition-entering.rw-calendar-transition-top, .rw-calendar-transition-entering.rw-calendar-transition-bottom,
+.rw-calendar-transition-entered.rw-calendar-transition-top,
+.rw-calendar-transition-entered.rw-calendar-transition-bottom {
+  -webkit-transform: translateY(0);
+          transform: translateY(0); }
+
+.rw-calendar-transition-entering.rw-calendar-transition-right, .rw-calendar-transition-entering.rw-calendar-transition-left,
+.rw-calendar-transition-entered.rw-calendar-transition-right,
+.rw-calendar-transition-entered.rw-calendar-transition-left {
+  -webkit-transform: translateX(0);
+          transform: translateX(0); }
+
+.rw-calendar-transition-exiting.rw-calendar-transition-top {
+  -webkit-transform: translateY(100%);
+          transform: translateY(100%); }
+
+.rw-calendar-transition-exiting.rw-calendar-transition-bottom {
+  -webkit-transform: translateY(-100%);
+          transform: translateY(-100%); }
+
+.rw-calendar-transition-exiting.rw-calendar-transition-right {
+  -webkit-transform: translateX(100%);
+          transform: translateX(100%); }
+
+.rw-calendar-transition-exiting.rw-calendar-transition-left {
+  -webkit-transform: translateX(-100%);
+          transform: translateX(-100%); }
+
