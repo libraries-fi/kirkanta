@@ -64,7 +64,6 @@ class LibraryFormExtension extends AbstractTypeExtension
 
                 if ($data->isEnabled() || $data->getPtvIdentifier()) {
                     $this->types->getEntityManager()->persist($data);
-                    $this->types->getEntityManager()->flush($data);
                 }
             }
         });

@@ -40,12 +40,6 @@ class ExportLibraryListener
                     $this->entities->flush($ptv_data);
                     $this->flashes->add('form.success', 'Library synced with PTV');
                 }
-            } catch (InvalidArgumentException $e) {
-                /*
-                 * This exception could be thrown from this class or the PTV client.
-                 *
-                 * It means that the entity should not be pushed to PTV so we can drop it.
-                 */
             } catch (AuthenticationException $e) {
                 $this->flashes->add('form.danger', $e->getMessage());
 
@@ -53,8 +47,11 @@ class ExportLibraryListener
                     $response = json_decode($previous->getResponse()->getBody())->message;
                     $this->flashes->add('danger', $response);
                 }
+            } catch (InvalidArgumentException $e) {
+                /*
+                 * This exception means that the entity should not be pushed to PTV so we can drop it.
+                 */
             }
-
         }
     }
 }

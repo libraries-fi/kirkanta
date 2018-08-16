@@ -15,7 +15,7 @@ class PtvData extends EntityBase
     const DRAFT = 0;
     const PUBLISHED = 1;
 
-    //
+    // NOTE: Overriding to clear Doctrine binding.
     protected $id;
 
     /**
