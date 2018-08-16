@@ -22,7 +22,7 @@ module.exports = {
           {
             loader: "css-loader",
             options: {
-              url: false,
+              // url: false,
             }
           },
           {
@@ -37,11 +37,22 @@ module.exports = {
       {
         test: /\.css$/,
         loader: "style-loader!css-loader",
+      },
+      {
+        test: /\.(png|jpg|gif|eot|woff|ttf|svg)$/,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 200,
+            }
+          }
+        ]
       }
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin({filename: "[name].css"}),
+    new MiniCssExtractPlugin,
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery",

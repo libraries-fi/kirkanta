@@ -7037,8 +7037,8 @@ input[type="radio"] {
   font-family: 'RwWidgets';
   font-weight: normal;
   font-style: normal;
-  src: url("~react-widgets/lib/fonts/rw-widgets.eot?v=4.1.0");
-  src: url("~react-widgets/lib/fonts/rw-widgets.eot?#iefix&v=4.1.0") format("embedded-opentype"), url("~react-widgets/lib/fonts/rw-widgets.woff?v=4.1.0") format("woff"), url("~react-widgets/lib/fonts/rw-widgets.ttf?v=4.1.0") format("truetype"), url("~react-widgets/lib/fonts/rw-widgets.svg?v=4.1.0#fontawesomeregular") format("svg"); }
+  src: url(bc7c4a59f924cf037aad6e1f9edba366.eot);
+  src: url(bc7c4a59f924cf037aad6e1f9edba366.eot?#iefix&v=4.1.0) format("embedded-opentype"), url(12f0820c451bdc75f4d1ef97732bf6e8.woff) format("woff"), url(eceddf474df95d8d4a7e316668c3be85.ttf) format("truetype"), url(792dcd18baf5f544aabcad1883d673c2.svg#fontawesomeregular) format("svg"); }
 
 .rw-i {
   display: inline-block;
