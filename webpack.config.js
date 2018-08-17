@@ -6,7 +6,7 @@ const webpack = require("webpack");
 module.exports = {
   mode: "development",
   entry: {
-    script: ["./public/js/kirkanta.js"],
+    script: ["./public/js/init.webpack.js"],
     style: ["./public/scss/kirkanta.scss"],
   },
   output: {

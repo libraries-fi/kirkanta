@@ -2,16 +2,6 @@
   "name": "kirkanta",
   "version": "1.0.0",
   "description": "Administration interface for hakemisto.kirjastot.fi",
-  "main": "index.js",
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx webpack --watch",
-    "build": "webpack --config webpack.prod.js",
-    "deploy": "npm run build && git commit -am 'PRODUCTION BUILD'"
-  },
-  "author": "Kirjastot.fi",
-  "license": "MIT",
   "devDependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-regular": "^5.0.13",
@@ -41,5 +31,13 @@
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
     "webpack-merge": "^4.1.4"
-  }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx webpack --watch",
+    "build": "webpack --config webpack.prod.js",
+    "deploy": "npm run build && git commit -am 'PRODUCTION BUILD'"
+  },
+  "author": "Kirjastot.fi",
+  "license": "MIT"
 }
