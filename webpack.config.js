@@ -1,6 +1,6 @@
-const path = require("path");
-const autoprefixer = require("autoprefixer");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const autoprefixer = require("autoprefixer");
+const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
@@ -19,12 +19,7 @@ module.exports = {
         test: /\.scss/,
         use: [
           MiniCssExtractPlugin.loader,
-          {
-            loader: "css-loader",
-            options: {
-              // url: false,
-            }
-          },
+          "css-loader",
           {
             loader: "postcss-loader",
             options: {
