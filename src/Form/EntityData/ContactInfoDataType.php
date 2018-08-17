@@ -15,7 +15,7 @@ class ContactInfoDataType extends EntityDataType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         parent::buildForm($builder, $options);
-        
+
         $builder
             ->add('name', null, [
                 'langcode' => $options['langcode'],
