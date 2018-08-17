@@ -98,5 +98,6 @@
 {% endblock %}
 
 {% block richtext_widget %}
+  {% set attr = attr|merge({class: "richtext"}) %}
   {{ block("textarea_widget") }}
 {% endblock %}

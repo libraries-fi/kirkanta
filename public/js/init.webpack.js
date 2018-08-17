@@ -3,7 +3,6 @@ import "@fortawesome/fontawesome-free-regular";
 import "@fortawesome/fontawesome-free-solid";
 
 import "jquery/dist/jquery.min";
-import "ckeditor";
 import "moment/min/locales.min";
 import "moment/min/moment-with-locales.min";
 import "bootstrap/dist/js/bootstrap.min";

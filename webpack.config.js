@@ -1,3 +1,4 @@
+const CKEditorWebpackPlugin = require("@ckeditor/ckeditor5-dev-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const autoprefixer = require("autoprefixer");
 const path = require("path");
@@ -47,6 +48,10 @@ module.exports = {
     ],
   },
   plugins: [
+    new CKEditorWebpackPlugin({
+      language: "fi",
+      additionalLanguages: ["sv"]
+    }),
     new MiniCssExtractPlugin,
     new webpack.ProvidePlugin({
       $: "jquery",

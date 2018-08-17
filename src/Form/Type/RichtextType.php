@@ -23,16 +23,4 @@ class RichtextType extends TextareaType
     {
         return 'richtext';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        if (empty($view->vars['attr']['class'])) {
-            $view->vars['attr']['class'] = 'richtext';
-        } else {
-            $view->vars['attr']['class'] .= ' richtext';
-        }
-    }
 }
