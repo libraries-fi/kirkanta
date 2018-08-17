@@ -1,0 +1,11 @@
+.input-group > .ck {
+  flex: 1 1;
+
+  > label {
+    @extend .sr-only;
+  }
+}
+
+.ck-editor__editable {
+  min-height: 16rem;
+}
