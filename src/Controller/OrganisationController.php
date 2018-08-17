@@ -175,7 +175,7 @@ class OrganisationController extends Controller
      * @Route("/library/{library}/{resource}/{resource_id}", name="entity.library.edit_resource", requirements={"library": "\d+", "resource_id": "\d+", "resource": "departments|periods|persons|phone_numbers|pictures|services"})
      * @ParamConverter("library", class="App:Library")
      */
-    public function editResourceAction(Request $request, string $resource, int $resource_id)
+    public function editResourceAction(Request $request, Library $library, string $resource, int $resource_id)
     {
         $type_id = $this->resources[$resource];
         $types = $this->get('entity_type_manager');
@@ -188,7 +188,7 @@ class OrganisationController extends Controller
           $this->addFlash('success', 'Changes were saved.');
 
           return $this->redirectToRoute('entity.library.list_resources', [
-            'id' => $id,
+            'library' => $library->getId(),
             'resource' => $resource,
           ]);
         }
