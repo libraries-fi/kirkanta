@@ -46,7 +46,7 @@ class Client
     public function isSupported($entity) : bool
     {
         try {
-            $this->getConverter();
+            $this->getConverter($entity);
             return true;
         } catch (InvalidArgumentException $e) {
             return false;
@@ -62,7 +62,11 @@ class Client
             'entity_id' => $entity->getId(),
         ]);
 
-        if ($meta && $meta->isEnabled()) {
+        if (!$meta) {
+            throw new InvalidArgumentException('This entity is not supported');
+        }
+
+        if ($meta->isEnabled()) {
             $converter = $this->getConverter($entity);
             $document = $converter->convert($entity);
             $type = $converter->getDocumentType($entity);
