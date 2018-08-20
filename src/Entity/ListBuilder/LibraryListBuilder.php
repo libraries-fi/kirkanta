@@ -21,9 +21,14 @@ class LibraryListBuilder extends EntityListBuilder
             $builder->setParameter('name', '%' . $search['name'] . '%');
         }
 
-        if (isset($search['type'])) {
-            $builder->andWhere('e.type = :type');
-            $builder->setParameter('type', $search['type']);
+        if (isset($search['branch_type'])) {
+            $builder->andWhere('e.branch_type = :branch_type');
+            $builder->setParameter('branch_type', $search['branch_type']);
+        }
+
+        if (isset($search['group'])) {
+            $builder->andWhere('e.group = :group');
+            $builder->setParameter('group', $search['group']);
         }
 
         if (isset($search['state'])) {

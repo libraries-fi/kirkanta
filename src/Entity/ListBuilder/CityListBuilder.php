@@ -37,7 +37,7 @@ class CityListBuilder extends EntityListBuilder
         $search = $this->getSearch();
 
         if (isset($search['name'])) {
-            $builder->andWhere('d.name = :name');
+            $builder->andWhere('LOWER(d.name) LIKE LOWER(:name)');
             $builder->setParameter('name', '%' . $search['name'] . '%');
         }
 

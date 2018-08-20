@@ -16,10 +16,6 @@ class LibrarySearchForm extends SearchFormType
     {
         $builder
             ->add('name')
-            ->add('type', ChoiceType::class, [
-                'placeholder' => '-- Any --',
-                'choices' => new OrganisationTypes
-            ])
             ->add('branch_type', ChoiceType::class, [
                 'placeholder' => '-- Any --',
                 'choices' => new OrganisationBranchTypes
@@ -28,7 +24,7 @@ class LibrarySearchForm extends SearchFormType
                 'placeholder' => '-- Any --',
                 'choices' => [
                     'Published' => 1,
-                    'Hidden' => 0,
+                    'Draft' => 0,
                 ]
             ])
             ->add('group', EntityType::class, [

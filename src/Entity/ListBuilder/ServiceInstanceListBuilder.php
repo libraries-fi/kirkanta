@@ -27,7 +27,7 @@ class ServiceInstanceListBuilder extends EntityListBuilder
         }
 
         if (isset($search['name'])) {
-            $builder->andWhere('LOWER(d.name) LIKE LOWER(:name)');
+            $builder->andWhere('(LOWER(d.name) LIKE LOWER(:name)) OR (LOWER(td.name) LIKE LOWER(:name))');
             $builder->setParameter('name', '%' . $search['name'] . '%');
         }
 

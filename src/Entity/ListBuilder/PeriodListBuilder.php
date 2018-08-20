@@ -18,13 +18,15 @@ class PeriodListBuilder extends EntityListBuilder
         $search = $this->getSearch();
 
         if (isset($search['name'])) {
-            $builder->andWhere('d.name = :name');
+            $builder->andWhere('LOWER(d.name) LIKE LOWER(:name)');
             $builder->setParameter('name', '%' . $search['name'] . '%');
         }
 
-        if (isset($search['only_valid'])) {
+        // CheckboxType always returns a value.
+        if ($search['only_valid'] ?? false) {
             $builder->andWhere('e.valid_from >= :now OR e.valid_until >= :now');
             $builder->setParameter('now', new DateTime);
+            exit;
         }
 
         return $builder;
