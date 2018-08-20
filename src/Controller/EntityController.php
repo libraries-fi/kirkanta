@@ -13,6 +13,7 @@ use App\Util\FormData;
 use App\Util\Slugger;
 use App\Util\SystemLanguages;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use InvalidArgumentException;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -150,29 +151,62 @@ class EntityController extends Controller
      */
     public function translate(Request $request, string $entity_type, $entity)
     {
-        $form = $this->createForm(EntityTranslationForm::class, null, [
-            'existing_translations' => $entity->getTranslations()->getKeys()
-        ]);
+        $languages = (new SystemLanguages)->getData();
+        $available = array_diff($languages, $entity->getTranslations()->getKeys());
+        $protected_translations = ['fi'];
 
-        $form->handleRequest($request);
+        // $form = $this->createForm(EntityTranslationForm::class, null, [
+        //     'existing_translations' => $entity->getTranslations()->getKeys()
+        // ]);
+        // $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->redirectToRoute("entity.{$entity_type}.edit", [
-                $entity_type => $entity->getId(),
-                'langcode' => $form->get('langcode')->getData(),
-            ]);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     return $this->redirectToRoute("entity.{$entity_type}.edit", [
+        //         $entity_type => $entity->getId(),
+        //         'langcode' => $form->get('langcode')->getData(),
+        //     ]);
+        // }
+
+        if ($request->isMethod('post')) {
+            $langcode = $request->request->get('langcode');
+
+            switch($request->request->get('action')) {
+                case 'delete':
+                    $translation = $entity->getTranslations()->remove($langcode);
+                    $this->entityTypeManager->getEntityManager()->remove($translation);
+                    $this->entityTypeManager->getEntityManager()->flush($translation);
+
+                    $this->addFlash('success', 'Translation was removed.');
+
+                    return $this->redirectToRoute("entity.{$entity_type}.edit", [
+                        $entity_type => $entity->getId(),
+                    ]);
+
+                case 'add':
+                    return $this->redirectToRoute("entity.{$entity_type}.edit", [
+                        $entity_type => $entity->getId(),
+                        'langcode' => $langcode,
+                    ]);
+
+            }
+            exit('POST');
         }
 
         $template = $this->resolveTemplate('translate', $entity_type);
+        // $form_choices = $form->get('langcode')->getConfig()->getOptions()['choices'];
 
         return $this->render($template, [
-            'form' => $form->createView(),
+            // 'form' => $form->createView(),
             'type_label' => $this->entityTypeManager->getTypeLabel($entity_type),
             'entity_type' => $entity_type,
             $entity_type => $entity,
 
             // Here this should be OK as there should be no variants of this route.
             'entity' => $entity,
+            'translations' => $entity->getTranslations(),
+            'available_translations' => $available,
+            'protected_translations' => $protected_translations,
+            'can_add_more' => !empty($form_choices)
         ]);
     }
 

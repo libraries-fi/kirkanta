@@ -19,7 +19,7 @@ class MailAddressType extends BaseType
             ->add('area')
             ;
 
-        $builder->get('area')->addModelTransformer(new CallbackTransformer('strtoupper', 'strtoupper'));
+        $builder->get('area')->addModelTransformer(new CallbackTransformer('mb_strtoupper', 'mb_strtoupper'));
     }
 
     public function configureOptions(OptionsResolver $options) : void

@@ -66,6 +66,13 @@ class EntityRouteLoader extends Loader
                 $type_id => '\d+'
             ]);
 
+            $delete_translation = new Route("{$base_path}/{{$type_id}}/translation/{langcode}/delete", $defaults + [
+                '_controller' => sprintf('%s:deleteTranslation', EntityController::class),
+            ], [
+                $type_id => '\d+',
+                'langcode' => '[a-z]{2}'
+            ]);
+
             if (is_a($definition['class_name'], StateAwareness::class, true)) {
                 $recycled = new Route("{$base_path}/recycled", $defaults + [
                     '_controller' => sprintf('%s::collection', EntityController::class),
@@ -85,6 +92,7 @@ class EntityRouteLoader extends Loader
             $routes->add("entity.{$type_id}.edit", $edit);
             $routes->add("entity.{$type_id}.delete", $delete);
             $routes->add("entity.{$type_id}.translate", $translate);
+            $routes->add("entity.{$type_id}.delete_translation", $delete_translation);
         }
 
         $this->loaded = true;

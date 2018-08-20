@@ -7,6 +7,7 @@ use App\Entity\UserGroup;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\CallbackTransformer;
 
 class ConsortiumSearchForm extends SearchFormType
 {
@@ -14,16 +15,12 @@ class ConsortiumSearchForm extends SearchFormType
     {
         $builder
             ->add('name')
-            ->add('group', EntityType::class, [
-                'placeholder' => '-- Any --',
-                'class' => UserGroup::class,
-            ])
-            ->add('special', ChoiceType::class, [
-                'label' => 'Type',
+            ->add('finna_extension', ChoiceType::class, [
+                'label' => 'Shared to Finna',
                 'placeholder' => '-- Any --',
                 'choices' => [
-                    'Consortiums' => 0,
-                    'Special Finna consortiums' => 1,
+                    'No' => 0,
+                    'Yes' => 1,
                 ]
             ])
             ;

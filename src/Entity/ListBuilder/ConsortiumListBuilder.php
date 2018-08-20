@@ -18,13 +18,16 @@ class ConsortiumListBuilder extends EntityListBuilder
         $search = $this->getSearch();
 
         if (isset($search['name'])) {
-            $builder->andWhere('d.name = :name');
-            $builder->setParameter('name', '%' . $search['name'] . '%');
+            $builder->andWhere('LOWER(d.name) LIKE LOWER(:name)');
+            $builder->setParameter('name', "%{$search['name']}%");
         }
 
-        if (isset($search['group'])) {
-            $builder->andWhere('e.group = :group');
-            $builder->setParameter('group', $search['group']);
+        if (isset($search['finna_extension'])) {
+            if ($search['finna_extension']) {
+                $builder->join('e.finna_data', 'finna');
+            } else {
+                $builder->andWhere('e.finna_data IS NULL');
+            }
         }
 
         return $builder;

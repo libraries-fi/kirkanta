@@ -31,8 +31,9 @@
 
     {% if form.content_language is defined and entity is defined %}
       <div class="hud-group">
-        <a href="{{ path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link" aria-label="{{ 'Add translation'|trans }}">
-          <i class="fas fa-plus-circle" aria-hidden="true"></i>
+        <a href="{{ path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link" aria-label="{{ 'Manage translations'|trans }}" title="{{ 'Manage translations'|trans }}">
+          {# <i class="fas fa-plus-circle" aria-hidden="true"></i> #}
+          <i class="fas fa-cog" aria-hidden="true"></i>
         </a>
         {{ form_widget(form.content_language, {"attr": {"data-app": "content-language"}}) }}
       </div>

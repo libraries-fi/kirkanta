@@ -3,10 +3,58 @@
 {% set entity_type = app.request.get('entity_type') %}
 {% set entity_id = app.request.get(entity_type) %}
 
+{% set languages = {
+  fi: "Finnish",
+  en: "English",
+  sv: "Swedish",
+  se: "Sami",
+  ru: "Russian"
+} %}
+
 {% block title_text %}
-  {{ "Add translation to %s #%d"|trans|format(type_label, entity_id) }}
+  {% trans %}Manage translations{% endtrans %}
 {% endblock %}
 
 {% block content %}
-  {{ form(form) }}
+  <form class="border p-3 mb-3" action="{{ path('entity.' ~ entity_type ~ '.translate', {(entity_type): entity_id}) }}" method="post">
+    <input type="hidden" name="action" value="delete"/>
+
+    <h3>{% trans %}Existing translations{% endtrans %}</h3>
+    <ul class="list-group mt-3">
+      {% for langcode in translations.keys %}
+        <li class="list-group-item">
+          <button type="submit" class="btn btn-link p-0" title="{{ 'Delete'|trans }}" name="langcode" value="{{ langcode }}" {% if langcode in protected_translations %}disabled{% endif %}><i class="fas fa-trash"></i> {% trans %}Delete{% endtrans %}</button>
+          <span class="ml-3">{{ attribute(languages, langcode) }} – {{ langcode }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </form>
+
+  <form class="border p-3 mb-3" action="{{ path('entity.' ~ entity_type ~ '.translate', {(entity_type): entity_id}) }}" method="post">
+    <input type="hidden" name="action" value="add"/>
+
+    <h3>{% trans %}Available translations{% endtrans %}</h3>
+    <ul class="list-group mt-3">
+      {% for langcode in available_translations %}
+        <li class="list-group-item">
+          <button type="submit" class="btn btn-link p-0" title="{{ 'Create translation'|trans }}" name="langcode" value="{{ langcode }}"><i class="fas fa-plus-circle"></i> {% trans %}Add{% endtrans %}</button>
+          <span class="ml-3">{{ attribute(languages, langcode) }} – {{ langcode }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </form>
+
+  {#
+  <div class="border p-3">
+    {% if can_add_more %}
+      <h3>{% trans %}Add new translation{% endtrans %}</h3>
+      {{ form(form) }}
+    {% else %}
+      <p class="mb-0">
+        <i class="fas fa-exclamation-circle"></i>
+        <span class="ml-3">{% trans %}No languages to add.{% endtrans %}</span>
+      </p>
+    {% endif %}
+  </div>
+  #}
 {% endblock %}
