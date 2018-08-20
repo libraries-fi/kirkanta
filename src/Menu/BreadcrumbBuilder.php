@@ -47,7 +47,7 @@ class BreadcrumbBuilder
         return $menu;
     }
 
-    private function resolveRouteTitle(string $route_name, array $parameters) : string
+    private function resolveRouteTitle(string $route_name, array $parameters) : ?string
     {
         if (preg_match('/^entity\.\w+\.(collection|edit|delete)$/', $route_name, $match)) {
             list($_, $action) = $match;
@@ -68,16 +68,18 @@ class BreadcrumbBuilder
                         }
                     }
                     return '#' . $entity->getId();
-
-                case 'delete':
-                    return 'Delete';
             }
         } elseif ($route_name == 'entity.library.resource_collection') {
             $resource = $parameters['resource'];
             $type_id = OrganisationController::$resources[$resource];
             return $this->types->getTypeLabel($type_id, true);
+        } else {
+            switch ($route_name) {
+                case 'admin':
+                    return 'Administration';
+            }
         }
 
-        return '';
+        return null;
     }
 }
