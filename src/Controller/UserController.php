@@ -38,14 +38,11 @@ class UserController extends Controller
 
             $this->addFlash('success', 'User created.');
 
-            return $this->redirectToRoute('entity.edit', [
-                'type' => self::USER_ENTITY_TYPE,
-                'id' => $user->getId(),
+            return $this->redirectToRoute('entity.user.edit', [
+                'user' => $user->getId(),
             ]);
         } else {
-            return $this->redirectToRoute('entity.add', [
-                'type' => 'user'
-            ]);
+            return $this->redirectToRoute('entity.user.add');
         }
     }
 }

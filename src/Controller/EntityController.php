@@ -92,9 +92,8 @@ class EntityController extends Controller
             $this->entityTypeManager->getEntityManager()->flush();
             $this->addFlash('form.success', 'Record was created.');
 
-            return $this->redirectToRoute('entity.edit', [
-                'entity_type' => $entity_type,
-                'id' => $entity->getId(),
+            return $this->redirectToRoute("entity.{$entity_type}.edit", [
+                $entity_type => $entity->getId(),
             ]);
         }
 

@@ -26,7 +26,7 @@ class ServiceCategoryListBuilder extends EntityListBuilder
             ->useAsTemplate('name')
             ->useAsTemplate('items')
             ->transform('name', function() {
-                return '<a href="{{ path("entity.edit", {"type": "service_category", "id": row.id}) }}">{{ row.name }}</a>';
+                return '<a href="{{ path("entity.service_category.edit", {"service_category": row.id}) }}">{{ row.name }}</a>';
             })
             ->transform('parent', function($category) {
                 if ($parent = $category->getParent()) {
