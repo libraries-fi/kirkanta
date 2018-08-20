@@ -24,7 +24,7 @@
       {% for langcode in translations.keys %}
         <li class="list-group-item">
           <button type="submit" class="btn btn-link p-0 mb-1" title="{{ 'Delete'|trans }}" name="langcode" value="{{ langcode }}" {% if langcode in protected_translations %}disabled{% endif %}><i class="fas fa-trash"></i> {% trans %}Delete{% endtrans %}</button>
-          <span class="ml-3">{{ attribute(languages, langcode) }} – {{ langcode }}</span>
+          <span class="ml-3">{{ attribute(languages, langcode)|trans }} – {{ langcode }}</span>
         </li>
       {% endfor %}
     </ul>
@@ -38,7 +38,7 @@
       {% for langcode in available_translations %}
         <li class="list-group-item">
           <button type="submit" class="btn btn-link p-0 mb-1" title="{{ 'Create translation'|trans }}" name="langcode" value="{{ langcode }}"><i class="fas fa-plus-circle"></i> {% trans %}Add{% endtrans %}</button>
-          <span class="ml-3">{{ attribute(languages, langcode) }} – {{ langcode }}</span>
+          <span class="ml-3">{{ attribute(languages, langcode)|trans }} – {{ langcode }}</span>
         </li>
       {% endfor %}
     </ul>
