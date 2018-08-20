@@ -3,13 +3,14 @@
 namespace App\Menu;
 
 use App\EntityTypeManager;
-use Knp\Menu\FactoryInterface;
 use Knp\Menu\Factory\ExtensionInterface;
+use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Builder implements ContainerAwareInterface, ExtensionInterface
 {
@@ -41,7 +42,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         return $menu;
     }
 
-    public function mainMenu($request_stack) : ItemInterface
+    public function mainMenu(RequestStack $request_stack) : ItemInterface
     {
         $menu = $this->factory->createItem('root');
         $request = $request_stack->getCurrentRequest();
@@ -105,7 +106,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         return $this->filterMenuItems($menu);
     }
 
-    public function organisationTabs($request_stack) : ItemInterface
+    public function organisationTabs(RequestStack $request_stack) : ItemInterface
     {
         $request = $request_stack->getCurrentRequest();
         $library = $request->attributes->get('library');

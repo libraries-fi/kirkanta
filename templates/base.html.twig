@@ -65,6 +65,13 @@
 
     {% block body %}
       <div id="l-main" class="container">
+        {% block breadcrumb %}
+          {{ knp_menu_render('breadcrumb', {
+            depth: 1,
+            template: "component/menu/breadcrumb.html.twig"
+          })}}
+        {% endblock %}
+
         {% block region_top %}
           <div class="hud position-sticky">
             {% block content_top %}
