@@ -52,7 +52,12 @@
         {% endif %}
       {% endif %}
 
-      {{ form_widget(form.children.actions.submit, {label: "Save"}) }}
+      {% do form.actions.submit.setRendered(true) %}
+
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i>
+        {% trans %}Save{% endtrans %}
+      </button>
     </div>
   </div>
 
