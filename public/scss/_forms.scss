@@ -129,23 +129,6 @@
   }
 }
 
-.custom-file {
-  max-width: 25rem;
-  display: block !important;
-}
-
-.custom-file-label:active {
-
-}
-
-.custom-file-input:active + .custom-file-label::after {
-  @include gradient-bg(darken($custom-file-button-bg, 20%));
-}
-
-.custom-select {
-  display: block;
-}
-
 .nav-form-tabs {
   margin: 0 0 $spacer;
   text-align: center;
@@ -169,8 +152,7 @@
 @include media-breakpoint-up("lg") {
   select,
   input.form-control,
-  select.form-control,
-  .custom-file {
+  select.form-control {
     max-width: 30rem;
   }
 

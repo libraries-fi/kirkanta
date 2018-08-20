@@ -1,0 +1,24 @@
+@import "~bootstrap/scss/custom-forms";
+
+.custom-file {
+  max-width: 25rem;
+  display: block !important;
+}
+
+.custom-file-label:active {
+
+}
+
+.custom-file-input:active + .custom-file-label::after {
+  @include gradient-bg(darken($custom-file-button-bg, 20%));
+}
+
+.custom-select {
+  display: block;
+}
+
+@include media-breakpoint-up("lg") {
+  .custom-file {
+    max-width: 30rem;
+  }
+}
