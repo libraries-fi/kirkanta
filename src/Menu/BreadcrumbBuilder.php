@@ -2,6 +2,7 @@
 
 namespace App\Menu;
 
+use App\Controller\OrganisationController;
 use App\EntityTypeManager;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -71,6 +72,10 @@ class BreadcrumbBuilder
                 case 'delete':
                     return 'Delete';
             }
+        } elseif ($route_name == 'entity.library.resource_collection') {
+            $resource = $parameters['resource'];
+            $type_id = OrganisationController::$resources[$resource];
+            return $this->types->getTypeLabel($type_id, true);
         }
 
         return '';

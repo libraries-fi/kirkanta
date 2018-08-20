@@ -134,7 +134,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
 
         foreach ($resources as $resource => $label) {
             $item = $menu->addChild($label, [
-                'route' => 'entity.library.list_resources',
+                'route' => 'entity.library.resource_collection',
                 'routeParameters' => [
                     'library' => $library->getId(),
                     'resource' => $resource,

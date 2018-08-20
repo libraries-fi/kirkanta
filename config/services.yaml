@@ -168,6 +168,9 @@ services:
         factory: ['@breadcrumb_builder', 'build']
         tags:
             - { name: knp_menu.menu, alias: breadcrumb }
+    App\Menu\Matcher\PathTraceVoter:
+        tags:
+            - { name: knp_menu.voter }
 
 
 

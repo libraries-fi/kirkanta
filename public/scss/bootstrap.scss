@@ -1,3 +1,8 @@
+
+@function spacing($size) {
+  @return map-get($spacers, $size);
+}
+
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
@@ -18,7 +23,7 @@
 @import "nav";
 @import "~bootstrap/scss/navbar";
 @import "~bootstrap/scss/card";
-@import "~bootstrap/scss/breadcrumb";
+@import "breadcrumb";
 @import "~bootstrap/scss/pagination";
 @import "~bootstrap/scss/badge";
 @import "~bootstrap/scss/jumbotron";
@@ -33,7 +38,3 @@
 @import "~bootstrap/scss/carousel";
 @import "~bootstrap/scss/utilities";
 @import "~bootstrap/scss/print";
-
-@function spacing($size) {
-  @return map-get($spacers, $size);
-}

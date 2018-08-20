@@ -16,7 +16,7 @@ class OrganisationController extends Controller
 {
     use Feature\ProvideEntityTypeManager;
 
-    private $resources = [
+    public static $resources = [
         'departments' => 'department',
         'periods' => 'period',
         'persons' => 'person',
@@ -26,7 +26,7 @@ class OrganisationController extends Controller
     ];
 
     /**
-     * @Route("/library/{library}/{resource}", name="entity.library.list_resources", requirements={"library": "\d+", "resource": "departments|periods|persons|phone_numbers|pictures|services"})
+     * @Route("/library/{library}/{resource}", name="entity.library.resource_collection", requirements={"library": "\d+", "resource": "departments|periods|persons|phone_numbers|pictures|services"})
      * @ParamConverter("library", class="App:Library")
      * @Template("entity/Library/resources-list.html.twig")
      */
@@ -137,7 +137,7 @@ class OrganisationController extends Controller
      */
     public function addResourceAction(Request $request, Library $library, string $resource)
     {
-        $type_id = $this->resources[$resource];
+        $type_id = self::$resources[$resource];
         $types = $this->get('entity_type_manager');
         $form = $types->getForm($type_id, 'edit', ['library' => $library]);
         $form->handleRequest($request);
@@ -177,7 +177,7 @@ class OrganisationController extends Controller
      */
     public function editResourceAction(Request $request, Library $library, string $resource, int $resource_id)
     {
-        $type_id = $this->resources[$resource];
+        $type_id = self::$resources[$resource];
         $types = $this->get('entity_type_manager');
         $entity = $types->getRepository($type_id)->findOneBy(['id' => $resource_id]);
         $form = $types->getForm($type_id, 'edit', $entity);
@@ -218,7 +218,7 @@ class OrganisationController extends Controller
      */
     public function createResourceFromTemplate(Request $request, Library $library, string $resource)
     {
-        $type_id = $this->resources[$resource];
+        $type_id = self::$resources[$resource];
         $types = $this->get('entity_type_manager');
         $entity_class = $types->getEntityClass($type_id);
         $template = $this->resolveTemplate('import', $resource);
@@ -288,7 +288,7 @@ class OrganisationController extends Controller
     {
         $ids = $request->request->get('rows') ?: [];
         $ids = array_map('intval', $ids);
-        $entities = $manager->getRepository($this->resources[$resource])->findById($ids);
+        $entities = $manager->getRepository(self::$resources[$resource])->findById($ids);
 
         if ($entities) {
             usort($entities, function($a, $b) {
