@@ -50,9 +50,9 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
 
         $types = [
             'library' => null,
-            'consortium' => null,
-            'finna_organisation' => null,
-            'person' => null,
+            // 'consortium' => null,
+            // 'finna_organisation' => null,
+            'person' => 'Staff',
             'service_instance' => 'Service templates',
             'period' => 'Period templates'
         ];
@@ -117,12 +117,12 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         }
 
         $resources = [
-          'periods' => 'Periods',
-          'services' => 'Services',
-          'pictures' => 'Pictures',
-          'persons' => 'Staff',
-          'departments' => 'Departments',
-          'phone_numbers' => 'Phone Numbers',
+            'periods' => 'Periods',
+            'services' => 'Services',
+            'pictures' => 'Pictures',
+            'persons' => 'Staff',
+            'departments' => 'Departments',
+            'phone_numbers' => 'Phone Numbers',
         ];
 
         $menu->addChild('Basic details', [
@@ -176,7 +176,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
 
     public function adminMenu() : ItemInterface
     {
-        $entities = ['city', 'region', 'regional_library', 'service', 'user', 'user_group'];
+        $entities = ['consortium', 'finna_organisation', 'city', 'region', 'regional_library', 'service', 'user', 'user_group'];
         $menu = $this->factory->createItem('root');
 
         foreach ($entities as $type_id) {
