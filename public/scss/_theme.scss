@@ -1,5 +1,3 @@
-@import "~bootstrap/scss/bootstrap";
-
 html {
   font-size: 14px;
 }
@@ -110,11 +108,7 @@ label.required:after {
 }
 
 @import "actions";
-@import "alert";
-@import "form";
 @import "icons";
-@import "nav";
-@import "table";
 @import "period/period-edit";
 @import "service_tree/service-tree-edit";
 @import "hacks";

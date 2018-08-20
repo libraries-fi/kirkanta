@@ -180,4 +180,16 @@ $multiselect-tag-color-hover:          $state-color-hover !default;
 @import "~react-widgets/lib/scss/mixins";
 @import "~react-widgets/lib/scss/normalize";
 @import "~react-widgets/lib/scss/icons";
-@import "~react-widgets/lib/scss/calendar";
+
+@import "~react-widgets/lib/scss/button.scss";
+@import "~react-widgets/lib/scss/widget.scss";
+@import "~react-widgets/lib/scss/list.scss";
+@import "~react-widgets/lib/scss/dropdown-list.scss";
+@import "~react-widgets/lib/scss/number-picker.scss";
+@import "~react-widgets/lib/scss/calendar.scss";
+@import "~react-widgets/lib/scss/select-list.scss";
+@import "~react-widgets/lib/scss/multiselect.scss";
+@import "~react-widgets/lib/scss/autocomplete.scss";
+
+@import "~react-widgets/lib/scss/popup.scss";
+@import "~react-widgets/lib/scss/state.scss";
