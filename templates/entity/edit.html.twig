@@ -1,6 +1,9 @@
 {% extends "base.html.twig" %}
 
-{% set entity = attribute(_context, entity_type) %}
+{% if attribute(_context, entity_type) is defined %}
+  {% set entity = attribute(_context, entity_type) %}
+{% endif %}
+
 {% set entity_is_trashed = entity.deleted|default(false) %}
 
 {% block title_text %}
@@ -26,7 +29,7 @@
   <div class="hud position-sticky">
     <h1 class="hud-legend">{{ block("title_text") }}</h1>
 
-    {% if form.content_language is defined %}
+    {% if form.content_language is defined and entity is defined %}
       <div class="hud-group">
         <a href="{{ path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link" aria-label="{{ 'Add translation'|trans }}">
           <i class="fas fa-plus-circle" aria-hidden="true"></i>
@@ -42,7 +45,7 @@
     {% endif %}
 
     <div class="hud-actions">
-      {% if entity_type and entity.id %}
+      {% if entity is defined and entity_type and entity.id %}
         {% if not entity_is_trashed %}
           <a href="{{ path('entity.%s.delete'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link text-danger">{% trans %}Delete{% endtrans %}</a>
         {% endif %}

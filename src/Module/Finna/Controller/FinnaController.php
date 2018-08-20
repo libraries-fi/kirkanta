@@ -24,7 +24,7 @@ class FinnaController extends Controller
     }
 
     /**
-     * @Route("/consortium/{consortium}/add-finna", name="entity.consortium.add_finna")
+     * @Route("/consortium/{consortium}/add-finna", name="entity.consortium.add_finna", defaults={"entity_type": "consortium"})
      * @ParamConverter("consortium", class="App:Consortium")
      * @Template("entity/FinnaAdditions/edit.html.twig")
      */
@@ -36,6 +36,8 @@ class FinnaController extends Controller
         $form = $this->entityTypeManager->getForm(self::FINNA_ENTITY_TYPE, 'edit', new FormData([
             'consortium' => $consortium
         ]));
+        
+        $form->remove('exclusive');
 
         // $form->get('consortium')->setData($consortium);
         $form->handleRequest($request);
@@ -58,6 +60,8 @@ class FinnaController extends Controller
         return [
             'form' => $form,
             'type_label' => $this->entityTypeManager->getTypeLabel(self::FINNA_ENTITY_TYPE),
+            'entity_type' => 'consortium',
+            'consortium' => $consortium
         ];
     }
 
