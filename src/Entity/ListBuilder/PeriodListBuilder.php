@@ -26,7 +26,6 @@ class PeriodListBuilder extends EntityListBuilder
         if ($search['only_valid'] ?? false) {
             $builder->andWhere('e.valid_from >= :now OR e.valid_until >= :now');
             $builder->setParameter('now', new DateTime);
-            exit;
         }
 
         return $builder;
