@@ -35,10 +35,12 @@ class BreadcrumbBuilder
             $match = $this->matcher->match($path);
             $title = $this->resolveRouteTitle($match['_route'], $match);
 
-            $menu->addChild($title, [
+            if ($title) {
+              $menu->addChild($title, [
                 'route' => $match['_route'],
                 'routeParameters' => array_filter($match, function($v, $k) { return $k[0] != '_'; }, ARRAY_FILTER_USE_BOTH),
-            ]);
+              ]);
+            }
         }
 
         return $menu;
