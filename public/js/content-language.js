@@ -19,6 +19,9 @@
 
     // Expand translatable fields to allow native error popups to show up.
     $(input.form).find(":input").on("invalid", (event) => {
+      input.querySelectorAll("option").forEach((option, i) => {
+        option.selected = (i == 0);
+      });
       toggle_active_language(input.form, null);
     });
   });
