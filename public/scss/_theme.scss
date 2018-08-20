@@ -30,7 +30,7 @@ label.required:after {
 }
 
 #nav-main {
-  $highlight: darken(map-get($theme-colors, "navbar"), 20%);
+  $highlight: darken(theme-color("navbar"), 20%);
 
   position: sticky;
   top: -1px;
@@ -57,12 +57,12 @@ label.required:after {
 #l-notifications {
   .alert {
     margin-bottom: 0;
-    margin-top: map-get($spacers, 3);
+    margin-top: spacing(3);
   }
 }
 
 #l-content-top {
-  background-color: map-get($theme-colors, "panel");
+  background-color: theme-color("panel");
   color: black;
   border: 1px solid $input-border-color;
   border-top-width: 0;

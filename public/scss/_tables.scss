@@ -8,7 +8,7 @@ table {
 
   .drag-active,
   .drag-active:hover {
-    background-color: map-get($theme-colors, "warning") !important;
+    background-color: theme-color("warning") !important;
 
     > * {
       opacity: 0 !important;
@@ -17,7 +17,7 @@ table {
 
   .drop-suggestion,
   .drag-suggestion:hover {
-    background-color: map-get($theme-colors, "info") !important;
+    background-color: theme-color("info") !important;
   }
 }
 

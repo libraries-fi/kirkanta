@@ -33,3 +33,7 @@
 @import "~bootstrap/scss/carousel";
 @import "~bootstrap/scss/utilities";
 @import "~bootstrap/scss/print";
+
+@function spacing($size) {
+  @return map-get($spacers, $size);
+}

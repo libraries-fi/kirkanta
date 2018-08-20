@@ -96,7 +96,7 @@ form.period_form {
   .period-day-data-time-item {
     button.btn-add-row {
       display: none;
-      padding: 0.1rem map-get($spacers, 2);
+      padding: 0.1rem spacing(2);
       border-radius: 2rem;
       margin-top: 0.25rem;
     }
@@ -143,41 +143,3 @@ form.period_form {
     }
   }
 }
-
-/*
-.period-day-data-times {
-  display: flex;
-  flex-flow: column;
-}
-
-.period-times-header,
-.period-times-row {
-  display: flex;
-  padding: map-get($spacers, 2);
-}
-
-.period-times-cell {
-  display: flex;
-  flex-flow: row;
-
-  .form-control,
-  .checkbox {
-    display: inline-block;
-    margin-right: map-get($spacers, 3);
-  }
-}
-
-.period-times-header > * {
-  width: 7rem;
-  padding: 0 $input-padding-x;
-  margin-right: map-get($spacers, 3);
-}
-
-.period-times-cell > input {
-  width: 7rem;
-}
-
-.period-actions-cell {
-  flex-grow: 1;
-}
-*/

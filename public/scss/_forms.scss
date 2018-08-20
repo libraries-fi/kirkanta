@@ -12,12 +12,10 @@
 }
 
 .hud {
-  background-color: map-get($theme-colors, "panel");
+  background-color: theme-color("panel");
   border: 1px solid $input-border-color;
-  // border-top-width: 0;
   padding: $spacer $spacer 0;
   margin-bottom: $spacer;
-  margin-top: $spacer;
   display: flex;
   flex-wrap: wrap;
 
@@ -49,7 +47,7 @@
 }
 
 .form-sidebar {
-  background-color: map-get($theme-colors, "panel");
+  background-color: theme-color("panel");
 }
 
 .search-form-container {
