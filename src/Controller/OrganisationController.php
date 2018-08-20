@@ -276,6 +276,7 @@ class OrganisationController extends Controller
         }
 
         return $this->render($template, [
+            'entity_type' => 'service_instance',
             'type_label' => $types->getTypeLabel($type_id),
             'form' => $form->createView(),
         ]);
