@@ -104,8 +104,8 @@ class OrganisationController extends Controller
 
                 $actions['import'] = [
                     'title' => 'From template',
-                    'route' => 'entity.library.resource_from_template',
-                    'params' => ['library' => $library->getId(), 'resource' => $resource],
+                    'route' => "entity.{$entity_type}.resource_from_template",
+                    'params' => [$entity_type => $library->getId(), 'resource' => $resource],
                     'icon' => 'fas fa-copy',
                 ];
                 break;
@@ -209,11 +209,11 @@ class OrganisationController extends Controller
     }
 
     /**
-     * @Route("/library/{library}/{resource}/import", name="entity.library.resource_from_template", requirements={"library": "\d+", "resource": "[a-z]\w+"})
+     * @Route("/library/{library}/{resource}/import", name="entity.library.resource_from_template", defaults={"entity_type": "library"}, requirements={"library": "\d+", "resource": "[a-z]\w+"})
      * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-import.html.twig")
      */
-    public function createResourceFromTemplate(Request $request, $library, string $resource)
+    public function createResourceFromTemplate(Request $request, Library $library, string $resource)
     {
         $type_id = self::$resources[$resource];
         $types = $this->get('entity_type_manager');

@@ -127,6 +127,10 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             'phone_numbers' => 'Phone Numbers',
         ];
 
+        if ($entity_type != 'library') {
+            $resources = array_diff_key($resources, array_flip(['services', 'persons', 'departments']));
+        }
+
         $menu->addChild('Basic details', [
             'route' => "entity.{$entity_type}.edit",
             'routeParameters' => [
