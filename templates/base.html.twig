@@ -8,7 +8,7 @@
     <meta name="robots" content="noindex,nofollow"/>
     <title>{% if page_title %}{{ page_title }} – {% endif %}Kirkanta</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    <title>{% if block("title_text")|trim is not empty %}{{ block("title_text")|trim }} – {% endif %}{% block title %}Kirkanta – Kirjastot.fi{% endblock %}</title>
+    <title>{% if block("title_text")|trim is not empty %}{{- block("title_text")|trim -}} – {% endif %}{% block title %}Kirkanta – Kirjastot.fi{% endblock %}</title>
     <link href="{{ asset("/kirkanta.ico") }}" rel="shortcut icon"/>
     {% block stylesheets %}
       <style>
