@@ -25,7 +25,7 @@ class EntityRouteLoader extends Loader
         return $type == 'entity_routes';
     }
 
-    public function load($resource, $type = null)
+    public function load($resource, $type = null) : RouteCollection
     {
         if ($this->loaded) {
             throw new RuntimeException('Trying to load entity routes again');
@@ -78,12 +78,12 @@ class EntityRouteLoader extends Loader
 
             if (is_a($definition['class_name'], StateAwareness::class, true)) {
                 $recycled = new Route("{$base_path}/recycled", $defaults + [
-                    '_controller' => sprintf('%s::collection', EntityController::class),
+                    '_controller' => sprintf('%s:collection', EntityController::class),
                     'recycled' => true,
                 ]);
 
                 $restore = new Route("{$base_path}/{{$type_id}}/restore", $defaults + [
-                    '_controller' => sprintf('%s::restore', EntityController::class),
+                    '_controller' => sprintf('%s:restore', EntityController::class),
                 ]);
 
                 $routes->add("entity.{$type_id}.recycled", $recycled);

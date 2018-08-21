@@ -42,6 +42,14 @@ parameters:
             list_builder: 'App\Entity\ListBuilder\DepartmentListBuilder'
             forms:
                 default: 'App\Form\DepartmentForm'
+        service_point:
+          id: service_point
+          label: 'Service point'
+          label_multiple: 'Service points'
+          class_name: 'App\Entity\ServicePoint'
+          list_builder: 'App\Entity\ListBuilder\ServicePointListBuilder'
+          forms:
+              default: 'App\Form\ServicePointForm'
         # custom_data:
         #     id: custom_data
         #     label: 'Custom data'

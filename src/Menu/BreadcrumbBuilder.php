@@ -8,6 +8,7 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class BreadcrumbBuilder
 {
@@ -32,15 +33,19 @@ class BreadcrumbBuilder
         $current_path = $request_stack->getCurrentRequest()->getPathInfo();
 
         while (($i = strpos($current_path, '/', ($i ?? 0) + 1)) !== FALSE) {
-            $path = substr($current_path, 0, $i);
-            $match = $this->matcher->match($path);
-            $title = $this->resolveRouteTitle($match['_route'], $match);
+            try {
+                $path = substr($current_path, 0, $i);
+                $match = $this->matcher->match($path);
+                $title = $this->resolveRouteTitle($match['_route'], $match);
 
-            if ($title) {
-              $menu->addChild($title, [
-                'route' => $match['_route'],
-                'routeParameters' => array_filter($match, function($v, $k) { return $k[0] != '_'; }, ARRAY_FILTER_USE_BOTH),
-              ]);
+                if ($title) {
+                    $menu->addChild($title, [
+                        'route' => $match['_route'],
+                        'routeParameters' => array_filter($match, function($v, $k) { return $k[0] != '_'; }, ARRAY_FILTER_USE_BOTH),
+                    ]);
+                }
+            } catch (ResourceNotFoundException $e) {
+                // Thrown when there's no route for given path. Pass.
             }
         }
 

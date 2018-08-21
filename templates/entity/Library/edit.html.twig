@@ -34,18 +34,11 @@
     <div class="col-md-6">
       <fieldset class="form-section">
         <legend>{% trans %}Basic information{% endtrans %}</legend>
-        <div class="row">
-          <div class="col">
-            {{ form_row(form.name) }}
-            {{ form_row(form.short_name) }}
-            {# {{ form_row(form.slug) }} #}
-            {# {{ form_row(form.type) }} #}
-            {{ form_row(form.branch_type) }}
-            {{ form_row(form.consortium) }}
-            {{ form_row(form.isil) }}
-            {{ form_row(form.identificator) }}
-          </div>
-        </div>
+        {{ form_row(form.name) }}
+        {{ form_row(form.short_name) }}
+        {{ form_row(form.branch_type) }}
+        {{ form_row(form.isil) }}
+        {{ form_row(form.identificator) }}
       </fieldset>
     </div>
 
@@ -57,12 +50,16 @@
         </fieldset>
       {% endif %}
 
-      <div class="form-sidebar">
-        {% if not entity_is_trashed %}
-          {{ form_row(form.state) }}
-        {% endif %}
+      <fieldset class="form-section">
+        <legend>{% trans %}Administrators{% endtrans %}</legend>
         {{ form_row(form.slug) }}
-      </div>
+      </fieldset>
+
+      <fieldset class="form-section">
+        <legend>{% trans %}Relationships{% endtrans %}</legend>
+        {{ form_row(form.parent) }}
+        {{ form_row(form.consortium) }}
+      </fieldset>
     </aside>
   </div>
 

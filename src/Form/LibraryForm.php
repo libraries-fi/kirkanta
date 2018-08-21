@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\City;
 use App\Entity\Consortium;
+use App\Entity\Organisation;
 use App\Form\Type\AddressType;
 use App\Form\Type\MailAddressType;
 use App\Form\Type\StateChoiceType;
@@ -23,18 +24,20 @@ class LibraryForm extends FormType
     {
         $builder
             ->add('state', StateChoiceType::class)
-            // ->add('type', ChoiceType::class, [
-            //     'placeholder' => '-- Select --',
-            //     'choices' => new OrganisationTypes,
-            // ])
             ->add('branch_type', ChoiceType::class, [
-                'required' => false,
                 'placeholder' => '-- Select --',
                 'choices' => new OrganisationBranchTypes
             ])
             ->add('consortium', EntityType::class, [
                 'required' => false,
                 'class' => Consortium::class,
+                'placeholder' => '-- Select --',
+                'choice_label' => 'name',
+            ])
+            ->add('parent', EntityType::class, [
+                'label' => 'Parent organisation',
+                'required' => false,
+                'class' => Organisation::class,
                 'placeholder' => '-- Select --',
                 'choice_label' => 'name',
             ])

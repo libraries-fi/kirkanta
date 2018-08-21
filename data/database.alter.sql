@@ -1320,3 +1320,20 @@ UPDATE organisations SET role = 'meta' WHERE type = 'organisation' AND branch_ty
 UPDATE organisations SET role = 'department' WHERE type = 'centralized_service';
 UPDATE organisations SET role = 'library' WHERE id = 86476;
 UPDATE organisations SET role = 'mobile_stop' WHERE branch_type = 'mobile_stop' AND role = 'organisation';
+
+UPDATE organisations SET role = 'meta' WHERE id IN (84712, 84645, 86513, 86511);
+
+
+
+
+ALTER TYPE facility_role ADD VALUE 'foreign';
+UPDATE organisations a SET role = 'foreign' FROM organisations_data b WHERE role = 'organisation' AND (b.name ILIKE '%arkisto%' OR b.name ILIKE '%museo%') AND a.id = b.entity_id AND b.langcode = 'fi';
+
+UPDATE organisations SET role = 'foreign' WHERE id IN (86448, 86505, 86475);
+
+
+
+
+
+
+UPDATE organisations a SET parent_id = NULL FROM organisations b WHERE a.parent_id = b.id AND a.role = 'library' AND b.role <> 'organisation';

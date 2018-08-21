@@ -26,19 +26,18 @@ class OrganisationController extends Controller
     ];
 
     /**
-     * @Route("/library/{library}/{resource}", name="entity.library.resource_collection", requirements={"library": "\d+", "resource": "departments|periods|persons|phone_numbers|pictures|services"})
-     * @ParamConverter("library", class="App:Library")
+     * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-list.html.twig")
      */
-    public function listResourcesAction(Request $request, Library $library, string $resource)
+    public function resourceCollection(Request $request, $library, string $entity_type, string $resource)
     {
         // var_dump($request->attributes);
         $types = $this->getEntityTypeManager();
-        $metadata = $this->getEntityManager()->getClassMetadata(Library::class);
+        $entity_class = $types->getEntityClass($entity_type);
+        $metadata = $this->getEntityManager()->getClassMetadata($entity_class);
         $resource_class = $metadata->associationMappings[$resource]['targetEntity'];
         $type_id = $types->getTypeId($resource_class);
         $list_builder = $types->getListBuilder($type_id);
-
 
         /*
          * NOTE: Use alias 'ox' to avoid collision with aliases internally used by
@@ -117,8 +116,8 @@ class OrganisationController extends Controller
 
         $actions['add'] = [
             'title' => 'Create new',
-            'route' => 'entity.library.add_resource',
-            'params' => ['library' => $library->getId(), 'resource' => $resource],
+            'route' => "entity.{$entity_type}.add_resource",
+            'params' => [$entity_type => $library->getId(), 'resource' => $resource],
             'icon' => 'fas fa-plus-circle',
         ];
 
@@ -131,11 +130,10 @@ class OrganisationController extends Controller
     }
 
     /**
-     * @Route("/library/{library}/{resource}/add", name="entity.library.add_resource", requirements={"library": "\d+", "resource": "departments|periods|persons|phone_numbers|pictures|services"})
-     * @ParamConverter("library", class="App:Library")
+     * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-edit.html.twig")
      */
-    public function addResourceAction(Request $request, Library $library, string $resource)
+    public function addResource(Request $request, $library, string $resource)
     {
         $type_id = self::$resources[$resource];
         $types = $this->get('entity_type_manager');
@@ -172,10 +170,9 @@ class OrganisationController extends Controller
     }
 
     /**
-     * @Route("/library/{library}/{resource}/{resource_id}", name="entity.library.edit_resource", requirements={"library": "\d+", "resource_id": "\d+", "resource": "departments|periods|persons|phone_numbers|pictures|services"})
-     * @ParamConverter("library", class="App:Library")
+     * @ParamConverter("library", converter="entity_from_type_and_id")
      */
-    public function editResourceAction(Request $request, Library $library, string $resource, int $resource_id)
+    public function editResource(Request $request, $library, string $resource, int $resource_id)
     {
         $type_id = self::$resources[$resource];
         $types = $this->get('entity_type_manager');
@@ -206,17 +203,17 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/{resource}/{resource_id}/delete", name="entity.library.delete_resource", requirements={"library": "\d+", "resource": "[a-z]\w+", "resource_id": "\d+"}, defaults={"type": "organisation"})
      */
-    public function deleteResourceAction(Request $request, int $id, string $resource, int $resource_id)
+    public function deleteResource(Request $request, int $id, string $resource, int $resource_id)
     {
         exit('delete resource');
     }
 
     /**
      * @Route("/library/{library}/{resource}/import", name="entity.library.resource_from_template", requirements={"library": "\d+", "resource": "[a-z]\w+"})
-     * @ParamConverter("library", class="App:Library")
+     * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-import.html.twig")
      */
-    public function createResourceFromTemplate(Request $request, Library $library, string $resource)
+    public function createResourceFromTemplate(Request $request, $library, string $resource)
     {
         $type_id = self::$resources[$resource];
         $types = $this->get('entity_type_manager');
@@ -311,7 +308,7 @@ class OrganisationController extends Controller
 
     /**
      * @Route("/library/{library}/custom_data", name="entity.library.custom_data")
-     * @ParamConverter("library", class="App:Library")
+     * @ParamConverter("entity", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-list.html.twig")
      */
     public function listCustomData(Request $request, Library $library, \Knp\Component\Pager\PaginatorInterface $pager)
@@ -345,7 +342,7 @@ class OrganisationController extends Controller
 
     /**
      * @Route("/library/{library}/custom_data/{custom_data}", name="entity.custom_data.edit")
-     * @ParamConverter("library", class="App:Library")
+     * @ParamConverter("entity", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-edit.html.twig")
      */
     public function editCustomData(Request $request, Library $library, int $custom_data)
@@ -382,7 +379,7 @@ class OrganisationController extends Controller
 
     /**
      * @Route("/library/{library}/custom_data/{custom_data}", name="entity.custom_data.delete")
-     * @ParamConverter("library", class="App:Library")
+     * @ParamConverter("entity", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-edit.html.twig")
      */
     public function deleteCustomData()

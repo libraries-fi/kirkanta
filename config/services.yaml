@@ -83,6 +83,8 @@ services:
 
     App\Routing\EntityRouteLoader:
         tags: ['routing.loader']
+    App\Routing\LibraryRouteLoader:
+        tags: ['routing.loader']
 
     App\Doctrine\EventListener\AlterRepositoryClassSubscriber:
         tags:

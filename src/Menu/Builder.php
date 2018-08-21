@@ -50,6 +50,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
 
         $types = [
             'library' => null,
+            'service_point' => null,
             // 'consortium' => null,
             // 'finna_organisation' => null,
             'person' => 'Staff',
@@ -109,11 +110,12 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
     public function libraryTabs(RequestStack $request_stack) : ItemInterface
     {
         $request = $request_stack->getCurrentRequest();
-        $library = $request->attributes->get('library');
+        $entity_type = $request->attributes->get('entity_type');
+        $entity = $request->attributes->get($entity_type);
         $menu = $this->factory->createItem('root');
 
-        if (!is_object($library)) {
-            $library = $this->typeManager->getRepository('library')->findOneById($library);
+        if (!is_object($entity)) {
+            $entity = $this->typeManager->getRepository($entity_type)->findOneById($entity);
         }
 
         $resources = [
@@ -126,43 +128,43 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         ];
 
         $menu->addChild('Basic details', [
-            'route' => 'entity.library.edit',
+            'route' => "entity.{$entity_type}.edit",
             'routeParameters' => [
-                'library' => $library->getId(),
+                $entity_type => $entity->getId(),
             ]
         ]);
 
         foreach ($resources as $resource => $label) {
             $item = $menu->addChild($label, [
-                'route' => 'entity.library.resource_collection',
+                'route' => "entity.{$entity_type}.resource_collection",
                 'routeParameters' => [
-                    'library' => $library->getId(),
+                    $entity_type => $entity->getId(),
                     'resource' => $resource,
                 ]
             ]);
 
             if ($resource == $request->get('resource')) {
                 $item->addChild('Add', [
-                    'route' => 'entity.library.add_resource',
+                    'route' => "entity.{$entity_type}.add_resource",
                     'routeParameters' => [
-                        'library' => $library->getId(),
+                        $entity_type => $entity->getId(),
                         'resource' => $resource,
                     ]
                 ]);
 
                 if ($rid = $request->get('resource_id')) {
                     $item->addChild('Edit', [
-                        'route' => 'entity.library.edit_resource',
+                        'route' => "entity.{$entity_type}.edit_resource",
                         'routeParameters' => [
-                            'library' => $library->getId(),
+                            $entity_type => $entity->getId(),
                             'resource' => $resource,
                             'resource_id' => $rid
                         ]
                     ]);
                     $item->addChild('Delete', [
-                        'route' => 'entity.library.delete_resource',
+                        'route' => "entity.{$entity_type}.delete_resource",
                         'routeParameters' => [
-                            'library' => $library->getId(),
+                            $entity_type => $entity->getId(),
                             'resource' => $resource,
                             'resource_id' => $rid
                         ]

@@ -4,7 +4,6 @@ namespace App\Entity\ListBuilder;
 
 use Doctrine\ORM\QueryBuilder;
 use App\Util\OrganisationBranchTypes;
-use App\Util\OrganisationTypes;
 
 class LibraryListBuilder extends EntityListBuilder
 {
@@ -41,20 +40,17 @@ class LibraryListBuilder extends EntityListBuilder
 
     public function build(iterable $entities) : iterable
     {
-        $types = new OrganisationTypes;
         $branch_types = new OrganisationBranchTypes;
 
         $table = parent::build($entities)
             ->setColumns([
                 'state',
                 'name' => ['mapping' => ['d.name']],
-                // 'type',
                 'branch_type',
                 'group'
             ])
             ->setLabel('state', '')
             ->setSortable('name')
-            // ->setSortable('type')
             ->setSortable('group')
             ->useAsTemplate('state')
             ->useAsTemplate('name')
@@ -68,9 +64,6 @@ class LibraryListBuilder extends EntityListBuilder
             ->transform('name', function() {
                 return '<a href="{{ path("entity.library.edit", {library: row.id}) }}">{{ row.name }}</a>';
             })
-            // ->transform('type', function($o) use($types) {
-            //     return $types->search($o->getType());
-            // })
             ->transform('branch_type', function($o) use($branch_types) {
                 return $branch_types->search($o->getBranchType());
             });

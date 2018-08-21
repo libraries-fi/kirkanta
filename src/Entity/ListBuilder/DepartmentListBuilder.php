@@ -4,7 +4,6 @@ namespace App\Entity\ListBuilder;
 
 use Doctrine\ORM\QueryBuilder;
 use App\Util\OrganisationBranchTypes;
-use App\Util\OrganisationTypes;
 
 class DepartmentListBuilder extends EntityListBuilder
 {
@@ -19,11 +18,6 @@ class DepartmentListBuilder extends EntityListBuilder
                 $builder->expr()->like('LOWER(d.short_name)', ':name')
             ));
             $builder->setParameter('name', '%' . $search['name'] . '%');
-        }
-
-        if (isset($search['type'])) {
-            $builder->andWhere('e.type = :type');
-            $builder->setParameter('type', $search['type']);
         }
 
         if (isset($search['state'])) {
@@ -53,7 +47,7 @@ class DepartmentListBuilder extends EntityListBuilder
                 }
             })
             ->transform('name', function() {
-                return '<a href="{{ path("entity.organisation.edit", {organisation: row.id}) }}">{{ row.name }}</a>';
+                return '<a href="{{ path("entity.department.edit", {department: row.id}) }}">{{ row.name }}</a>';
             });
 
         return $table;

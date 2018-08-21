@@ -17,8 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="role", type="string")
  * @ORM\DiscriminatorMap({
- *     "department "= "Department",
- *     "foreign" = "ForeignOrganisation",
+ *     "department" = "Department",
+ *     "foreign" = "ServicePoint",
  *     "library" = "Library",
  *     "meta" = "MetaFacility",
  *     "mobile_stop" = "MobileStop",
