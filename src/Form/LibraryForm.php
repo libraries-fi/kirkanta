@@ -13,6 +13,7 @@ use App\Util\OrganisationTypes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -28,12 +29,6 @@ class LibraryForm extends FormType
                 'placeholder' => '-- Select --',
                 'choices' => new OrganisationBranchTypes
             ])
-            ->add('consortium', EntityType::class, [
-                'required' => false,
-                'class' => Consortium::class,
-                'placeholder' => '-- Select --',
-                'choice_label' => 'name',
-            ])
             ->add('parent', EntityType::class, [
                 'label' => 'Parent organisation',
                 'required' => false,
@@ -47,9 +42,7 @@ class LibraryForm extends FormType
             ->add('identificator', null, [
                 'required' => false
             ])
-            ->add('address', AddressType::class, [
-                // 'required' => false
-            ])
+            ->add('address', AddressType::class)
             ->add('mail_address', MailAddressType::class, [
                 'required' => false
             ])

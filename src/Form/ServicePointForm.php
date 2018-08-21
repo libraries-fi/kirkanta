@@ -40,6 +40,13 @@ class ServicePointForm extends LibraryForm
                 'class' => Consortium::class,
                 'placeholder' => '-- Select --',
                 'choice_label' => 'name',
+                'query_builder' => function($repository) {
+                    // NOTE: $this->queryBuilder is required by EntityTypeExtension.
+                    $this->queryBuilder = $repository->createQueryBuilder('e')
+                        ->innerJoin('e.finna_data', 'fd')
+                        ->andWhere('fd.exclusive = true');
+                    return $this->queryBuilder;
+                }
             ]);
     }
 }
