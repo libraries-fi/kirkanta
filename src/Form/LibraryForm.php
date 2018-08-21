@@ -78,7 +78,7 @@ class LibraryForm extends FormType
                 'required' => false
             ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
-                'entry_type' => EntityData\OrganisationDataType::class,
+                'entry_type' => EntityData\LibraryDataType::class,
             ])
 
             ;

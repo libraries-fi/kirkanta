@@ -10,17 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class Organisation extends Facility
+class ForeignOrganisation extends Facility
 {
     /**
      * @ORM\Column(type="string")
      */
     private $type;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Library", mappedBy="parent")
-     */
-    private $libraries;
 
     /**
      * @ORM\ManyToOne(targetEntity="City", inversedBy="organisations")
@@ -41,12 +36,6 @@ class Organisation extends Facility
      * @ORM\OneToMany(targetEntity="OrganisationData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
      */
     protected $translations;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->libraries = new ArrayCollection;
-    }
 
     public function __toString()
     {

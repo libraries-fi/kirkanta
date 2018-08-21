@@ -112,7 +112,6 @@ abstract class EntityListBuilder
         if (is_a($entity_class, GroupOwnership::class, true)) {
             if (!$this->auth->isGranted('MANAGE_ALL_ENTITIES', $entity_class)) {
                 $user_groups = $this->tokens->getToken()->getUser()->getGroup()->getTree();
-                // var_dump($user_groups);
                 $builder->andWhere('e.group IN (:owner)');
                 $builder->setParameter('owner', $user_groups);
             }

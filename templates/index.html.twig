@@ -26,17 +26,26 @@
   </div>
 
   <div class="row">
-    <div class="col">
-      <div class="border p-3 mb-3">
-        {{ block("user_parent_organisation") }}
+    {% if organisations is not empty %}
+      <div class="col">
+        <div class="border p-3 mb-3">
+          {{ block("user_parent_organisation") }}
+        </div>
       </div>
-    </div>
-    <div class="col">
-      <div class="border p-3 mb-3">
-        {# Consortium or Finna Organisation #}
-        {{ block("user_consortium") }}
+    {% endif %}
+    {% if finna_organisations is not empty %}
+      <div class="col">
+        <div class="border p-3 mb-3">
+          {{ block("user_finna_organisation") }}
+        </div>
       </div>
-    </div>
+    {% elseif consortiums is not empty %}
+      <div class="col">
+        <div class="border p-3 mb-3">
+          {{ block("user_consortium") }}
+        </div>
+      </div>
+    {% endif %}
   </div>
 
   <div class="row">
@@ -51,16 +60,33 @@
 {% block user_consortium %}
   <h2>Consortium</h2>
   <ul>
-    <li><a href="{{ path('entity.consortium.edit', {consortium: 2093})}}">HelMet</a> – Last updated foo.bar.year</li>
+    {% for consortium in consortiums %}
+      <li>
+        <a href="{{ path('entity.consortium.edit', {consortium: consortium.id})}}">{{ consortium.name }}</a> – Last updated foo.bar.year
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+
+{% block user_finna_organisation %}
+  <h2>Finna Organisations</h2>
+  <ul>
+    {% for finna_organisation in finna_organisations %}
+      <li>
+        <a href="{{ path('entity.finna_organisation.edit', {finna_organisation: finna_organisation.id})}}">{{ finna_organisation.name }}</a> – Last updated foo.bar.year
+      </li>
+    {% endfor %}
   </ul>
 {% endblock %}
 
 {% block user_parent_organisation %}
   <h2>Parent Organisation</h2>
   <ul>
-    <li><a href="{{ path('entity.organisation.edit', {organisation: 84646}) }}">Espoon kaupunginkirjasto</a></li>
-    <li><a href="{{ path('entity.organisation.edit', {organisation: 84846}) }}">Helsingin kaupunginkirjasto</a></li>
-    <li><a href="{{ path('entity.organisation.edit', {organisation: 84717}) }}">Vantaan kaupunginkirjasto</a></li>
+    {% for organisation in organisations %}
+      <li>
+        <a href="{{ path('entity.organisation.edit', {organisation: organisation.id})}}">{{ organisation.name }}</a>
+      </li>
+    {% endfor %}
   </ul>
 {% endblock %}
 

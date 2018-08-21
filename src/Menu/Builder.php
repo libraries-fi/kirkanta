@@ -106,7 +106,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         return $this->filterMenuItems($menu);
     }
 
-    public function organisationTabs(RequestStack $request_stack) : ItemInterface
+    public function libraryTabs(RequestStack $request_stack) : ItemInterface
     {
         $request = $request_stack->getCurrentRequest();
         $library = $request->attributes->get('library');

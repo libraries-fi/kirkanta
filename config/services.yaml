@@ -156,13 +156,13 @@ services:
         arguments: ['@request_stack']
         tags:
             - { name: knp_menu.menu, alias: admin_tools }
-    kirkanta.menu.organisation_tabs:
+    kirkanta.menu.library_tabs:
         public: true
         class: 'Knp\Menu\MenuItem'
-        factory: ['@menu_builder', 'organisationTabs']
+        factory: ['@menu_builder', 'libraryTabs']
         arguments: ['@request_stack']
         tags:
-            - { name: knp_menu.menu, alias: organisation_tabs }
+            - { name: knp_menu.menu, alias: library_tabs }
     kirkanta.breadcrumb:
         class: 'Knp\Menu\MenuItem'
         factory: ['@breadcrumb_builder', 'build']

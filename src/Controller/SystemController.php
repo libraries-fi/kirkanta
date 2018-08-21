@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\EntityTypeManager;
 use App\Entity\Notification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -9,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SystemController extends Controller
 {
@@ -17,8 +19,14 @@ class SystemController extends Controller
     /**
      * @Route("/", name="front")
      */
-    public function frontAction(Request $request)
+    public function frontAction(Request $request, AuthorizationCheckerInterface $auth, EntityTypeManager $entities)
     {
+        if (!$auth->isGranted('MANAGE_ALL_ENTITIES')) {
+            $organisations = $entities->getListBuilder('organisation')->load();
+            $consortiums = $entities->getListBuilder('consortium')->load();
+            $finna_organisations = $entities->getListBuilder('finna_organisation')->load();
+        }
+
         if ($user = $this->getUser()) {
             $storage = $this->getEntityTypeManager()->getRepository('notification');
             $notifications = $storage->findUnreadByUser($user);
@@ -28,6 +36,9 @@ class SystemController extends Controller
 
         return $this->render('index.html.twig', [
             'notifications' => $notifications,
+            'organisations' => $organisations ?? null,
+            'consortiums' => $consortiums ?? null,
+            'finna_organisations' => $finna_organisations ?? null,
         ]);
     }
 

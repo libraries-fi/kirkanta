@@ -2,7 +2,7 @@
 
 namespace App\Form\EntityData;
 
-use App\Entity\OrganisationData;
+use App\Entity\LibraryData;
 use App\Form\I18n\EntityDataType;
 use App\Form\Type\RichtextType;
 use App\Form\Type\SlugType;
@@ -12,9 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class OrganisationDataType extends EntityDataType
+class LibraryDataType extends EntityDataType
 {
-    protected $dataClass = OrganisationData::class;
+    protected $dataClass = LibraryData::class;
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
@@ -35,10 +35,31 @@ class OrganisationDataType extends EntityDataType
                 'langcode' => $options['langcode'],
                 'entity_type' => 'library',
             ])
+            ->add('slogan', null, [
+                'required' => true,
+                'label' => 'Slogan',
+                'langcode' => $options['langcode']
+            ])
             ->add('description', RichtextType::class, [
                 'required' => true,
                 'label' => 'Description',
                 'langcode' => $options['langcode']
+            ])
+            ->add('transit_directions', TextareaType::class, [
+                'required' => false,
+                'label' => 'Transit directions',
+                'langcode' => $options['langcode'],
+                'attr' => [
+                    'rows' => 4
+                ]
+            ])
+            ->add('parking_instructions', TextareaType::class, [
+                'required' => false,
+                'label' => 'Parking instructions',
+                'langcode' => $options['langcode'],
+                'attr' => [
+                    'rows' => 4
+                ]
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',

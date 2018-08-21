@@ -18,6 +18,22 @@ parameters:
             forms:
                 default: 'App\Form\LibraryForm'
                 search: 'App\Form\LibrarySearchForm'
+        mobile_stop:
+            id: mobile_stop
+            label: 'Mobile stop'
+            label_multiple: 'Mobile stops'
+            class_name: 'App\Entity\MobileStop'
+            list_builder: 'App\Entity\ListBuilder\MobileStopListBuilder'
+            forms:
+                default: 'App\Form\MobileStopForm'
+        meta_facility:
+            id: meta_facility
+            label: 'Meta facility'
+            label_multiple: 'Meta facilities'
+            class_name: 'App\Entity\MetaFacility'
+            list_builder: 'App\Entity\ListBuilder\MetaFacilityListBuilder'
+            forms:
+                'App\Form\MetaFacilityForm'
         department:
             id: department
             label: 'Department'

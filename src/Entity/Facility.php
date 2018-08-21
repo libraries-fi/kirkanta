@@ -7,6 +7,7 @@ use App\Entity\Feature\ModifiedAwareness;
 use App\Entity\Feature\Sluggable;
 use App\Entity\Feature\StateAwareness;
 use App\Entity\Feature\Translatable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,7 +16,14 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="organisations")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="role", type="string")
- * @ORM\DiscriminatorMap({"department"="Department", "library"="Library", "organisation"="Organisation"})
+ * @ORM\DiscriminatorMap({
+ *     "department "= "Department",
+ *     "foreign" = "ForeignOrganisation",
+ *     "library" = "Library",
+ *     "meta" = "MetaFacility",
+ *     "mobile_stop" = "MobileStop",
+ *     "organisation" = "Organisation",
+ * })
  */
 abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAwareness, Sluggable, StateAwareness, Translatable
 {
@@ -29,6 +37,11 @@ abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAw
      * @ORM\Column(type="custom_data_collection")
      */
     private $custom_data;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection;
+    }
 
     public function getCustomData() : array
     {

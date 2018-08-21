@@ -1249,8 +1249,9 @@ ALTER TABLE addresses RENAME COLUMN organisation_id TO library_id;
 
 ALTER TABLE finna_additions RENAME COLUMN special TO exclusive;
 
-
-
+ALTER TABLE finna_additions ADD COLUMN group_id int;
+ALTER TABLE finna_additions ADD FOREIGN KEY(group_id) REFERENCES user_groups(id);
+UPDATE finna_additions a SET group_id = b.group_id FROM consortiums b WHERE a.id = b.id;
 
 
 
@@ -1305,3 +1306,17 @@ ALTER TABLE organisations ADD COLUMN cached_document jsonb;
 ALTER TABLE consortiums ADD COLUMN cached_document jsonb;
 ALTER TABLE services ADD COLUMN cached_document jsonb;
 ALTER TABLE finna_additions ADD COLUMN cached_document jsonb;
+
+
+ALTER TYPE facility_role ADD VALUE 'mobile_stop';
+UPDATE organisations SET role = 'mobile_stop' WHERE type = 'mobile_stop';
+
+
+ALTER TYPE facility_role ADD VALUE 'meta';
+UPDATE organisations SET role = 'meta' WHERE type = 'organisation' AND branch_type = 'centralized_service';
+
+
+-- NOTE: THINK BEFORE EXECUTING THESE IN PRODUCTION!
+UPDATE organisations SET role = 'department' WHERE type = 'centralized_service';
+UPDATE organisations SET role = 'library' WHERE id = 86476;
+UPDATE organisations SET role = 'mobile_stop' WHERE branch_type = 'mobile_stop' AND role = 'organisation';
