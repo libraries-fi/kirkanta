@@ -20,18 +20,18 @@ class Library extends LibraryBase
     protected $persons;
 
     /**
-     * @ORM\OneToMany(targetEntity="Period", mappedBy="library", cascade={"persist", "remove"}, indexBy="id")
+     * @ORM\OneToMany(targetEntity="Period", mappedBy="parent", cascade={"persist", "remove"}, indexBy="id")
      * @ORM\OrderBy({"valid_from" = "desc", "valid_until" = "desc"})
      */
     protected $periods;
 
     /**
-     * @ORM\OneToMany(targetEntity="ServiceInstance", mappedBy="library", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="ServiceInstance", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $services;
 
     /**
-     * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="library", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $pictures;
 

@@ -11,8 +11,8 @@ class PeriodListBuilder extends EntityListBuilder
     {
         $builder = parent::createQueryBuilder()
             ->addOrderBy('d.name')
-            ->andWhere('COALESCE(IDENTITY(e.library), 0) = :library')
-            ->setParameter('library', 0)
+            ->andWhere('COALESCE(IDENTITY(e.parent), 0) = :parent')
+            ->setParameter('parent', 0)
             ;
 
         $search = $this->getSearch();

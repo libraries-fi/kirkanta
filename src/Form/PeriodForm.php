@@ -4,6 +4,7 @@ namespace App\Form;
 
 use DateTime;
 use App\Entity\Department;
+use App\Util\FormData;
 use App\Util\PeriodSections;
 use App\Form\Type\PeriodDayCollectionType;
 use App\Form\Type\PeriodDayType;
@@ -45,11 +46,11 @@ class PeriodForm extends FormType
             $form = $event->getForm();
             $period = $event->getData();
 
-            if (is_array($period)) {
-                $organisation = $period['organisation'];
+            if ($period instanceof FormData) {
+                $organisation = $period->getValues()['library'] ?? null;
                 $event->setData(null);
             } else {
-                $organisation = $period->getLibrary();
+                $organisation = $period->getParent();
             }
 
             if ($organisation) {

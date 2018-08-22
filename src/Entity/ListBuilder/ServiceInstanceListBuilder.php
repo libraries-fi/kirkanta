@@ -14,8 +14,8 @@ class ServiceInstanceListBuilder extends EntityListBuilder
             ->addSelect('td')
             ->join('e.template', 't')
             ->join('t.translations', 'td', 'WITH', 'td.langcode = :langcode')
-            ->andWhere('COALESCE(IDENTITY(e.library), 0) = :library')
-            ->setParameter('library', 0)
+            ->andWhere('COALESCE(IDENTITY(e.parent), 0) = :parent')
+            ->setParameter('parent', 0)
             ;
 
         $search = $this->getSearch();

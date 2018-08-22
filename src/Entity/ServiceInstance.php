@@ -40,7 +40,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
     /**
      * @ORM\ManyToOne(targetEntity="Library", inversedBy="services")
      */
-    private $library;
+    private $parent;
 
     /**
      * @ORM\Column(type="string")
@@ -185,14 +185,14 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
     /**
      * No library set if instance is a shared template.
      */
-    public function getLibrary() : ?Library
+    public function getParent() : ?Library
     {
-        return $this->library;
+        return $this->parent;
     }
 
-    public function setLibrary(Library $library) : void
+    public function setParent(Library $library) : void
     {
-        $this->library = $library;
-        $this->library->getServices()->add($this);
+        $this->parent = $library;
+        $this->parent->getServices()->add($this);
     }
 }

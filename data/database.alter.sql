@@ -1374,3 +1374,9 @@ CREATE OR REPLACE RULE split_type_id AS ON INSERT TO contact_info_doctrine
       NEW.parent_id
     )
 ;
+
+
+
+ALTER TABLE periods RENAME COLUMN library_id TO parent_id;
+ALTER TABLE pictures RENAME COLUMN library_id TO parent_id;
+ALTER TABLE service_instances RENAME COLUMN library_id TO parent_id;

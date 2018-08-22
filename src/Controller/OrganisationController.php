@@ -98,7 +98,7 @@ class OrganisationController extends Controller
                 $table->useAsTemplate('standard_name');
                 $table->transform('standard_name', function($entity) {
                     return '<a href="{{ path("entity.library.edit_resource", {
-                        "library": row.library.id,
+                        "library": row.parent.id,
                         "resource": app.request.get("resource"),
                         "resource_id": row.id
                     }) }}">{{ row.standardName }}</a>';
@@ -139,7 +139,7 @@ class OrganisationController extends Controller
     public function addResource(Request $request, $library, string $entity_type, string $resource)
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
-        $form = $this->types->getForm($type_id, 'edit', ['parent' => $library]);
+        $form = $this->types->getForm($type_id, 'edit', ['library' => $library]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -186,8 +186,8 @@ class OrganisationController extends Controller
           $this->get('doctrine.orm.entity_manager')->flush();
           $this->addFlash('success', 'Changes were saved.');
 
-          return $this->redirectToRoute('entity.library.list_resources', [
-            'library' => $library->getId(),
+          return $this->redirectToRoute("entity.{$entity_type}.resource_collection", [
+            $entity_type => $library->getId(),
             'resource' => $resource,
           ]);
         }
@@ -215,9 +215,9 @@ class OrganisationController extends Controller
      * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-import.html.twig")
      */
-    public function createResourceFromTemplate(Request $request, Library $library, string $resource)
+    public function createResourceFromTemplate(Request $request, Library $library, string $entity_type, string $resource)
     {
-        $type_id = self::$resources[$resource];
+        $type_id = $this->resolveResourceTypeId($entity_type, $resource);
         $entity_class = $this->types->getEntityClass($type_id);
         $template = $this->resolveTemplate('import', $resource);
 
