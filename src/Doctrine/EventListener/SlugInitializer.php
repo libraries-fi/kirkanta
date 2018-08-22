@@ -24,7 +24,7 @@ class SlugInitializer implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof Sluggable && !$entity->getSlug()) {
-
+          exit('asdasdsad');
         }
     }
 

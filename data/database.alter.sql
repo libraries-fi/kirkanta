@@ -1380,3 +1380,45 @@ CREATE OR REPLACE RULE split_type_id AS ON INSERT TO contact_info_doctrine
 ALTER TABLE periods RENAME COLUMN library_id TO parent_id;
 ALTER TABLE pictures RENAME COLUMN library_id TO parent_id;
 ALTER TABLE service_instances RENAME COLUMN library_id TO parent_id;
+
+
+
+
+
+INSERT INTO contact_info (type, id, contact, parent_id, attached_to)
+  SELECT 'website', id % 100000 + 200000, url, organisation_id, 'library'
+  FROM web_links
+  WHERE organisation_id IS NOT NULL
+;
+
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'fi', id % 100000 + 200000, name, description
+  FROM web_links
+  WHERE organisation_id IS NOT NULL
+;
+
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'en', id % 100000 + 200000, translations->'en'->>'name', translations->'en'->>'description'
+  FROM web_links
+  WHERE organisation_id IS NOT NULL AND
+    translations->'en'->>'name' != ''
+;
+
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'sv', id % 100000 + 200000, translations->'sv'->>'name', translations->'sv'->>'description'
+  FROM web_links
+  WHERE organisation_id IS NOT NULL AND
+    translations->'sv'->>'name' != ''
+;
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'ru', id % 100000 + 200000, translations->'ru'->>'name', translations->'ru'->>'description'
+  FROM web_links
+  WHERE organisation_id IS NOT NULL AND
+    translations->'ru'->>'name' != ''
+;
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'se', id % 100000 + 200000, translations->'se'->>'name', translations->'se'->>'description'
+  FROM web_links
+  WHERE organisation_id IS NOT NULL AND
+    translations->'se'->>'name' != ''
+;

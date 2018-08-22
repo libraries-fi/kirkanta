@@ -19,16 +19,11 @@ class DepartmentDataType extends EntityDataType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         parent::buildForm($builder, $options);
-        
+
         $builder
             ->add('name', null, [
                 'label' => 'Name',
                 'langcode' => $options['langcode'],
-            ])
-            ->add('slug', SlugType::class, [
-                'label' => 'Slug',
-                'langcode' => $options['langcode'],
-                'entity_type' => 'department',
             ])
             ->add('description', RichtextType::class, [
                 'required' => false,

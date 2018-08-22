@@ -18,6 +18,7 @@ class OrganisationController extends Controller
 
     public static $resources = [
         'departments' => 'department',
+        'links' => 'web_link',
         'periods' => 'period',
         'persons' => 'person',
         'phone_numbers' => 'phone',
@@ -70,6 +71,7 @@ class OrganisationController extends Controller
         switch ($resource) {
             case 'departments':
             case 'periods':
+            case 'links':
             case 'pictures':
             case 'phone_numbers':
                 $table->useAsTemplate('name');

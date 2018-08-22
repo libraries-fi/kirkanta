@@ -202,3 +202,11 @@ parameters:
             label: 'PTV data'
             label_multiple: 'PTV data'
             class_name: 'App\Module\Ptv\Entity\PtvData'
+        web_link:
+            id: web_link
+            label: 'Website'
+            label_multiple: 'Websites'
+            class_name: 'App\Entity\WebsiteLink'
+            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
+            forms:
+                default: 'App\Form\WebsiteLinkForm'

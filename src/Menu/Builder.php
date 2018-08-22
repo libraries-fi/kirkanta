@@ -125,6 +125,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             'persons' => 'Staff',
             'departments' => 'Departments',
             'phone_numbers' => 'Phone Numbers',
+            'links' => 'Websites'
         ];
 
         if ($entity_type != 'library') {

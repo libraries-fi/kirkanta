@@ -40,6 +40,8 @@
           {{ form_widget(form.content_language, {"attr": {"data-app": "content-language"}}) }}
         </div>
       </div>
+    {% else %}
+      {% do form.content_language.setRendered(true) %}
     {% endif %}
 
     {% if form.state is defined %}

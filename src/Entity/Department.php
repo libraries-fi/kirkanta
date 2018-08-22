@@ -1,11 +1,7 @@
 <?php
 
 namespace App\Entity;
-use App\Entity\Feature\GroupOwnership;
-use App\Entity\Feature\ModifiedAwareness;
-use App\Entity\Feature\Sluggable;
-use App\Entity\Feature\StateAwareness;
-use App\Entity\Feature\Translatable;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Department extends Facility
 {
-
     /**
      * @ORM\OneToMany(targetEntity="DepartmentData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
      */
@@ -67,7 +62,6 @@ class Department extends Facility
     public function setLibrary(Library $organisation) : void
     {
         $this->parent = $organisation;
-        $this->setOwner($organisation->getOwner());
     }
 
     public function getParent() : Library

@@ -30,7 +30,6 @@ class CustomDataCollectionType extends JsonType
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        exit('asdasd');
         return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 }

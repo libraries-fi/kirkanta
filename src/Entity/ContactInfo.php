@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *     "library:phone" = "PhoneNumber",
+ *     "library:website" = "WebsiteLink",
  *     "foreign:phone" = "ServicePointPhoneNumber"
  * })
  */

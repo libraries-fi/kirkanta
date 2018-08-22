@@ -10,8 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DepartmentData extends EntityDataBase
 {
-    use Feature\SluggableDataTrait;
-
     /**
      * @ORM\Column(type="string")
      */

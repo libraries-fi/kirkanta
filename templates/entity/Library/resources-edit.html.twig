@@ -13,5 +13,9 @@
 {% block form %}
   {{ form_start(form) }}
   {{ block("form_header") }}
+  <fieldset class="form-section">
+    <legend>{% trans %}Basic details{% endtrans %}</legend>
+    {{ form_rest(form) }}
+  </fieldset>
   {{ form_end(form) }}
 {% endblock %}

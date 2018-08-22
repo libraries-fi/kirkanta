@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Feature\StateAwareness;
 use App\I18n\Translations;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheableTrait;
@@ -14,9 +15,15 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\MappedSuperclass
  */
-abstract class LibraryBase extends Facility implements ApiCacheable
+abstract class LibraryBase extends Facility implements ApiCacheable, StateAwareness
 {
     use ApiCacheableTrait;
+    use Feature\StateAwarenessTrait;
+
+    /**
+     * @ORM\Column(type="custom_data_collection")
+     */
+    private $custom_data;
 
     /**
      * @ORM\Column(type="string")
@@ -371,5 +378,15 @@ abstract class LibraryBase extends Facility implements ApiCacheable
     public function getPhoneNumbers() : Collection
     {
         return $this->phone_numbers;
+    }
+
+    public function getCustomData() : array
+    {
+        return $this->custom_data;
+    }
+
+    public function setCustomData(array $entries) : void
+    {
+        $this->custom_data = $entries ?: null;
     }
 }

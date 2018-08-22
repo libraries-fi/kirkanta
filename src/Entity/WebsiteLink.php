@@ -12,7 +12,7 @@ class WebsiteLink extends ContactInfo
     /**
      * @ORM\ManyToOne(targetEntity="Library", inversedBy="links")
      */
-    protected $library;
+    protected $parent;
 
     public function getUrl() : string
     {

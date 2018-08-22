@@ -12,13 +12,19 @@ class Library extends LibraryBase
 {
     /**
      * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"weight": "asc", "id": "asc"})
+     * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
      */
     protected $phone_numbers;
 
     /**
+     * @ORM\OneToMany(targetEntity="WebsiteLink", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
+     */
+    protected $links;
+
+    /**
      * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"weight": "asc", "id": "asc"})
+     * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
      */
     protected $pictures;
 
@@ -58,5 +64,10 @@ class Library extends LibraryBase
     public function getServices() : Collection
     {
         return $this->services;
+    }
+
+    public function getLinks() : Collection
+    {
+        return $this->links;
     }
 }

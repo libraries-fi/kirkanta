@@ -33,7 +33,7 @@ class LibraryRouteLoader extends Loader
 
         $routes = new RouteCollection;
         $derivatives = ['library', 'service_point'];
-        $resources = ['departments', 'periods', 'persons', 'phone_numbers', 'pictures', 'services'];
+        $resources = ['departments', 'links', 'periods', 'persons', 'phone_numbers', 'pictures', 'services'];
 
         foreach ($derivatives as $type_id) {
             $base_path = "/{$type_id}/{{$type_id}}";
