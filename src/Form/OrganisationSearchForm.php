@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\UserGroup;
-use App\Util\OrganisationBranchTypes;
+use App\Util\LibraryTypes;
 use App\Util\OrganisationTypes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

@@ -1307,17 +1307,19 @@ ALTER TABLE consortiums ADD COLUMN cached_document jsonb;
 ALTER TABLE services ADD COLUMN cached_document jsonb;
 ALTER TABLE finna_additions ADD COLUMN cached_document jsonb;
 
+ALTER TABLE organisations RENAME COLUMN type TO old_doc_type;
+ALTER TABLE organisations RENAME COLUMN branch_type TO type;
 
 ALTER TYPE facility_role ADD VALUE 'mobile_stop';
-UPDATE organisations SET role = 'mobile_stop' WHERE type = 'mobile_stop';
+UPDATE organisations SET role = 'mobile_stop' WHERE old_doc_type = 'mobile_stop';
 
 
 ALTER TYPE facility_role ADD VALUE 'meta';
-UPDATE organisations SET role = 'meta' WHERE type = 'organisation' AND branch_type = 'centralized_service';
+UPDATE organisations SET role = 'meta' WHERE old_doc_type = 'organisation' AND branch_type = 'centralized_service';
 
 
 -- NOTE: THINK BEFORE EXECUTING THESE IN PRODUCTION!
-UPDATE organisations SET role = 'department' WHERE type = 'centralized_service';
+UPDATE organisations SET role = 'department' WHERE old_doc_type = 'centralized_service';
 UPDATE organisations SET role = 'library' WHERE id = 86476;
 UPDATE organisations SET role = 'mobile_stop' WHERE branch_type = 'mobile_stop' AND role = 'organisation';
 
@@ -1337,3 +1339,6 @@ UPDATE organisations SET role = 'foreign' WHERE id IN (86448, 86505, 86475);
 
 
 UPDATE organisations a SET parent_id = NULL FROM organisations b WHERE a.parent_id = b.id AND a.role = 'library' AND b.role <> 'organisation';
+
+UPDATE organisations SET type = 'other' WHERE role = 'library' AND type IS NULL;
+UPDATE organisations SET type = 'other' WHERE role = 'foreign' AND type IS NULL;

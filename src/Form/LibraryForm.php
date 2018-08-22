@@ -8,7 +8,7 @@ use App\Entity\Organisation;
 use App\Form\Type\AddressType;
 use App\Form\Type\MailAddressType;
 use App\Form\Type\StateChoiceType;
-use App\Util\OrganisationBranchTypes;
+use App\Util\LibraryTypes;
 use App\Util\OrganisationTypes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -25,9 +25,9 @@ class LibraryForm extends FormType
     {
         $builder
             ->add('state', StateChoiceType::class)
-            ->add('branch_type', ChoiceType::class, [
+            ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Select --',
-                'choices' => new OrganisationBranchTypes
+                'choices' => new LibraryTypes
             ])
             ->add('parent', EntityType::class, [
                 'label' => 'Parent organisation',

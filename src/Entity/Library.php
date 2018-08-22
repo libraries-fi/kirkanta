@@ -19,7 +19,7 @@ class Library extends Facility implements ApiCacheable
     /**
      * @ORM\Column(type="string")
      */
-    private $branch_type;
+    private $type;
 
     /**
      * @ORM\Column(type="string")
@@ -170,14 +170,14 @@ class Library extends Facility implements ApiCacheable
         $this->translations[$this->langcode]->setShortName($name);
     }
 
-    public function getBranchType() : ?string
+    public function getType() : string
     {
-        return $this->branch_type;
+        return $this->type;
     }
 
-    public function setBranchType(?string $branch_type) : void
+    public function setType(string $type) : void
     {
-        $this->branch_type = $branch_type;
+        $this->type = $type;
     }
 
     public function getIsil() : ?string

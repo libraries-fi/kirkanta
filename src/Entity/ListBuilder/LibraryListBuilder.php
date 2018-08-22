@@ -3,7 +3,7 @@
 namespace App\Entity\ListBuilder;
 
 use Doctrine\ORM\QueryBuilder;
-use App\Util\OrganisationBranchTypes;
+use App\Util\LibraryTypes;
 
 class LibraryListBuilder extends EntityListBuilder
 {
@@ -20,9 +20,9 @@ class LibraryListBuilder extends EntityListBuilder
             $builder->setParameter('name', '%' . $search['name'] . '%');
         }
 
-        if (isset($search['branch_type'])) {
-            $builder->andWhere('e.branch_type = :branch_type');
-            $builder->setParameter('branch_type', $search['branch_type']);
+        if (isset($search['type'])) {
+            $builder->andWhere('e.type = :type');
+            $builder->setParameter('type', $search['type']);
         }
 
         if (isset($search['group'])) {
@@ -40,13 +40,13 @@ class LibraryListBuilder extends EntityListBuilder
 
     public function build(iterable $entities) : iterable
     {
-        $branch_types = new OrganisationBranchTypes;
+        $types = new LibraryTypes;
 
         $table = parent::build($entities)
             ->setColumns([
                 'state',
                 'name' => ['mapping' => ['d.name']],
-                'branch_type',
+                'type',
                 'group'
             ])
             ->setLabel('state', '')
@@ -64,8 +64,8 @@ class LibraryListBuilder extends EntityListBuilder
             ->transform('name', function() {
                 return '<a href="{{ path("entity.library.edit", {library: row.id}) }}">{{ row.name }}</a>';
             })
-            ->transform('branch_type', function($o) use($branch_types) {
-                return $branch_types->search($o->getBranchType());
+            ->transform('type', function($o) use($types) {
+                return $types->search($o->getType());
             });
 
         return $table;

@@ -11,6 +11,7 @@ class ServicePointTypes extends StringMap
         parent::__construct([
             'Archive' => 'archive',
             'Museum' => 'museum',
+            'Other' => 'other',
         ]);
     }
 }

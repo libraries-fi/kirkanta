@@ -4,7 +4,7 @@ namespace App\Util;
 
 use App\I18n\StringMap;
 
-class OrganisationBranchTypes extends StringMap
+class LibraryTypes extends StringMap
 {
     public function __construct()
     {

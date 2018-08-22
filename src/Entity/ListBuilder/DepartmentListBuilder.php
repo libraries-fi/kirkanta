@@ -3,7 +3,7 @@
 namespace App\Entity\ListBuilder;
 
 use Doctrine\ORM\QueryBuilder;
-use App\Util\OrganisationBranchTypes;
+use App\Util\LibraryTypes;
 
 class DepartmentListBuilder extends EntityListBuilder
 {

@@ -3,13 +3,13 @@
 namespace App\Entity\ListBuilder;
 
 use Doctrine\ORM\QueryBuilder;
-use App\Util\OrganisationBranchTypes;
+use App\Util\LibraryTypes;
 
 class OrganisationListBuilder extends LibraryListBuilder
 {
     public function build(iterable $entities) : iterable
     {
-        $branch_types = new OrganisationBranchTypes;
+        $branch_types = new LibraryTypes;
 
         $table = parent::build($entities)
             ->setColumns([

@@ -7,7 +7,7 @@ use App\Entity\Consortium;
 use App\Form\Type\AddressType;
 use App\Form\Type\MailAddressType;
 use App\Form\Type\StateChoiceType;
-use App\Util\OrganisationBranchTypes;
+use App\Util\LibraryTypes;
 use App\Util\OrganisationTypes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
