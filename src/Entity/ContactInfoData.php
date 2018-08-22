@@ -62,8 +62,8 @@ class ContactInfoData extends EntityDataBase
      */
     public function validate(ExecutionContextInterface $context, $payload) : void
     {
-        if (!preg_match('/^[\w\d\s\-\(\)\.,]+$/u', $this->getName())) {
-            $context->buildViolation('Only the following characters are allowed: a-z 0-9 ( ) . , and space.')
+        if (!preg_match('/^[\w\d\s\-\(\)\.,\/]+$/u', $this->getName())) {
+            $context->buildViolation('Only the following characters are allowed: a-z 0-9 ( ) . , / and space.')
                 ->atPath('name')
                 ->addViolation();
         }

@@ -13,4 +13,9 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class PhoneNumber extends ContactInfo
 {
     use PhoneNumberTrait;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Library", inversedBy="phone_numbers")
+     */
+    protected $parent;
 }

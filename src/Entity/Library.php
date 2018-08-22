@@ -12,8 +12,15 @@ class Library extends LibraryBase
 {
     /**
      * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"weight": "asc", "id": "asc"})
      */
     protected $phone_numbers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"weight": "asc", "id": "asc"})
+     */
+    protected $pictures;
 
     /**
      * @ORM\OneToMany(targetEntity="Person", mappedBy="library", cascade={"persist", "remove"})
@@ -30,11 +37,6 @@ class Library extends LibraryBase
      * @ORM\OneToMany(targetEntity="ServiceInstance", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $services;
-
-    /**
-     * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     */
-    protected $pictures;
 
     /**
      * @ORM\OneToMany(targetEntity="Department", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)

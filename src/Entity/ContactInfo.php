@@ -47,11 +47,6 @@ abstract class ContactInfo extends EntityBase implements Translatable, Weight
      */
     private $translations;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="ServicePoint", inversedBy="phone_numbers")
-     */
-    protected $parent;
-
     public function getContact() : string
     {
         return $this->contact;
