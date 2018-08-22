@@ -170,6 +170,14 @@ parameters:
             list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
             forms:
                 default: 'App\Form\PhoneNumberForm'
+        service_point_phone:
+            id: service_point_phone
+            label: 'Phone number'
+            label_multiple: 'Phone numbers'
+            class_name: 'App\Entity\ServicePointPhoneNumber'
+            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
+            forms:
+                default: 'App\Form\PhoneNumberForm'
         service_category:
             id: service_category
             label: 'Service category'

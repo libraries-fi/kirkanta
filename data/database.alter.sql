@@ -53,7 +53,7 @@ CREATE TABLE photos (
   filename varchar(500) NOT NULL UNIQUE,
   created timestamp with time zone NOT NULL DEFAULT NOW(),
   sizes text[],
-  weight int NOT NULL DEFAULT 0,
+  weight int,
 
   -- Specifies entity type.
   attached_to varchar(40) NOT NULL,
@@ -1139,7 +1139,7 @@ CREATE TABLE contact_info (
   id serial NOT NULL,
   type contact_info_type NOT NULL,
   contact varchar(255) NOT NULL,
-  weight int NOT NULL DEFAULT 0,
+  weight int,
   organisation_id int,
   department_id int,
 
@@ -1342,3 +1342,35 @@ UPDATE organisations a SET parent_id = NULL FROM organisations b WHERE a.parent_
 
 UPDATE organisations SET type = 'other' WHERE role = 'library' AND type IS NULL;
 UPDATE organisations SET type = 'other' WHERE role = 'foreign' AND type IS NULL;
+
+
+
+
+
+
+ALTER TABLE contact_info ADD COLUMN attached_to facility_role;
+UPDATE contact_info SET attached_to = 'library';
+ALTER TABLE contact_info ALTER COLUMN attached_to SET NOT NULL;
+
+ALTER TABLE contact_info RENAME COLUMN library_id TO parent_id;
+
+UPDATE contact_info SET parent_id = department_id WHERE department_id IS NOT NULL;
+ALTER TABLE contact_info DROP COLUMN department_id;
+
+CREATE OR REPLACE VIEW contact_info_doctrine AS
+  SELECT attached_to || ':' || type AS type, id, contact, weight, parent_id
+  FROM contact_info a
+;
+
+CREATE OR REPLACE RULE split_type_id AS ON INSERT TO contact_info_doctrine
+  DO INSTEAD
+    INSERT INTO contact_info (id, attached_to, type, contact, weight, parent_id)
+    VALUES (
+      NEW.id,
+      left(NEW.type, position(':' IN NEW.type) - 1)::facility_role,
+      substring(NEW.type FROM position(':' IN NEW.type) + 1)::contact_info_type,
+      NEW.contact,
+      NEW.weight,
+      NEW.parent_id
+    )
+;

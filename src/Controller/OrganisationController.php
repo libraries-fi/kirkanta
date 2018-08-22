@@ -25,19 +25,22 @@ class OrganisationController extends Controller
         'services' => 'service_instance'
     ];
 
+    private $types;
+
+    public function __construct(EntityTypeManager $types)
+    {
+        $this->types = $types;
+    }
+
     /**
      * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-list.html.twig")
      */
     public function resourceCollection(Request $request, $library, string $entity_type, string $resource)
     {
-        // var_dump($request->attributes);
-        $types = $this->getEntityTypeManager();
-        $entity_class = $types->getEntityClass($entity_type);
-        $metadata = $this->getEntityManager()->getClassMetadata($entity_class);
-        $resource_class = $metadata->associationMappings[$resource]['targetEntity'];
-        $type_id = $types->getTypeId($resource_class);
-        $list_builder = $types->getListBuilder($type_id);
+        $entity_class = $this->types->getEntityClass($entity_type);
+        $type_id = $this->resolveResourceTypeId($entity_type, $resource);
+        $list_builder = $this->types->getListBuilder($type_id);
 
         /*
          * NOTE: Use alias 'ox' to avoid collision with aliases internally used by
@@ -45,13 +48,13 @@ class OrganisationController extends Controller
          */
         $builder = $list_builder
             ->getQueryBuilder()
-            ->innerJoin(Library::class, 'ox', 'WITH', "
-                ox.id = :library AND
+            ->innerJoin($entity_class, 'ox', 'WITH', "
+                ox.id = :parent AND
                 e MEMBER OF ox.{$resource}
             ")
             ;
 
-        $builder->setParameter('library', $library);
+        $builder->setParameter('parent', $library);
 
         if (in_array($type_id, ['service_instance'])) {
             // By default the list builder wants to fetch only shared templates,
@@ -70,12 +73,12 @@ class OrganisationController extends Controller
             case 'pictures':
             case 'phone_numbers':
                 $table->useAsTemplate('name');
-                $table->transform('name', function($entity) {
-                    return '<a href="{{ path("entity.library.edit_resource", {
-                        "library": row.library.id,
-                        "resource": app.request.get("resource"),
-                        "resource_id": row.id
-                    }) }}">{{ row.name }}</a>';
+                $table->transform('name', function($entity) use ($entity_type) {
+                    return str_replace('%entity_type%', $entity_type, '<a href="{{ path("entity.%entity_type%.edit_resource", {
+                        %entity_type%: row.parent.id,
+                        resource: app.request.get("resource"),
+                        resource_id: row.id
+                    }) }}">{{ row.name }}</a>');
                 });
                 break;
 
@@ -122,7 +125,7 @@ class OrganisationController extends Controller
         ];
 
         return [
-            'type_label' => $types->getTypeLabel($type_id, true),
+            'type_label' => $this->types->getTypeLabel($type_id, true),
             'entity_type' => $type_id,
             'table' => $table,
             'actions' => $actions
@@ -133,28 +136,27 @@ class OrganisationController extends Controller
      * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resources-edit.html.twig")
      */
-    public function addResource(Request $request, $library, string $resource)
+    public function addResource(Request $request, $library, string $entity_type, string $resource)
     {
-        $type_id = self::$resources[$resource];
-        $types = $this->get('entity_type_manager');
-        $form = $types->getForm($type_id, 'edit', ['library' => $library]);
+        $type_id = $this->resolveResourceTypeId($entity_type, $resource);
+        $form = $this->types->getForm($type_id, 'edit', ['parent' => $library]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $types->getRepository($type_id)->create($form->getData());
+            $entity = $this->types->getRepository($type_id)->create($form->getData()->getValues());
 
             // Is this needed or is it enough to pass 'library' to the form object?
             if (method_exists($entity, 'setLibrary')) {
                 $entity->setLibrary($library);
             }
 
-            $types->getEntityManager()->persist($entity);
-            $types->getEntityManager()->flush();
+            $this->types->getEntityManager()->persist($entity);
+            $this->types->getEntityManager()->flush();
 
             $this->addFlash('success', 'Resource created successfully.');
 
-            return $this->redirectToRoute('entity.library.edit_resource', [
-                'id' => $library->getId(),
+            return $this->redirectToRoute("entity.{$entity_type}.edit_resource", [
+                $entity_type => $library->getId(),
                 'resource' => $resource,
                 'resource_id' => $entity->getId(),
             ]);
@@ -164,7 +166,7 @@ class OrganisationController extends Controller
 
         return $this->render($template, [
             'form' => $form->createView(),
-            'type_label' => $types->getTypeLabel($type_id),
+            'type_label' => $this->types->getTypeLabel($type_id),
             'entity_type' => $type_id,
         ]);
     }
@@ -172,12 +174,12 @@ class OrganisationController extends Controller
     /**
      * @ParamConverter("library", converter="entity_from_type_and_id")
      */
-    public function editResource(Request $request, $library, string $resource, int $resource_id)
+    public function editResource(Request $request, $library, string $entity_type, string $resource, int $resource_id)
     {
-        $type_id = self::$resources[$resource];
-        $types = $this->get('entity_type_manager');
-        $entity = $types->getRepository($type_id)->findOneBy(['id' => $resource_id]);
-        $form = $types->getForm($type_id, 'edit', $entity);
+        $type_id = $this->resolveResourceTypeId($entity_type, $resource);
+
+        $entity = $this->types->getRepository($type_id)->findOneBy(['id' => $resource_id]);
+        $form = $this->types->getForm($type_id, 'edit', $entity);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -194,7 +196,7 @@ class OrganisationController extends Controller
 
         return $this->render($template, [
             'form' => $form->createView(),
-            'type_label' => $types->getTypeLabel($type_id),
+            'type_label' => $this->types->getTypeLabel($type_id),
             'entity_type' => $type_id,
             $type_id => $entity,
         ]);
@@ -216,20 +218,19 @@ class OrganisationController extends Controller
     public function createResourceFromTemplate(Request $request, Library $library, string $resource)
     {
         $type_id = self::$resources[$resource];
-        $types = $this->get('entity_type_manager');
-        $entity_class = $types->getEntityClass($type_id);
+        $entity_class = $this->types->getEntityClass($type_id);
         $template = $this->resolveTemplate('import', $resource);
 
-        $form = $types->getForm($type_id, 'import', null, [
+        $form = $this->types->getForm($type_id, 'import', null, [
             'user_groups' => $library->getOwner()->getTree(),
-            'entity_type' => $types->getEntityClass($type_id),
+            'entity_type' => $this->types->getEntityClass($type_id),
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $templates = $form->get('templates')->getData();
-            $em = $types->getEntityManager();
+            $em = $this->types->getEntityManager();
 
             foreach ($templates as $template) {
                 $instance = new $entity_class;
@@ -274,7 +275,7 @@ class OrganisationController extends Controller
 
         return $this->render($template, [
             'entity_type' => 'service_instance',
-            'type_label' => $types->getTypeLabel($type_id),
+            'type_label' => $this->types->getTypeLabel($type_id),
             'form' => $form->createView(),
         ]);
     }
@@ -385,6 +386,15 @@ class OrganisationController extends Controller
     public function deleteCustomData()
     {
 
+    }
+
+    protected function resolveResourceTypeId(string $parent_type, string $resource_name) : string
+    {
+        $entity_class = $this->types->getEntityClass($parent_type);
+        $metadata = $this->getEntityManager()->getClassMetadata($entity_class);
+        $resource_class = $metadata->associationMappings[$resource_name]['targetEntity'];
+        $type_id = $this->types->getTypeId($resource_class);
+        return $type_id;
     }
 
     protected function resolveTemplate(string $action, string $resource_type) : string

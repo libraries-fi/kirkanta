@@ -11,14 +11,29 @@ use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="contact_info_doctrine")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"phone"="PhoneNumber"})
+ * @ORM\DiscriminatorMap({
+ *     "library:phone" = "PhoneNumber",
+ *     "foreign:phone" = "ServicePointPhoneNumber"
+ * })
  */
 abstract class ContactInfo extends EntityBase implements Translatable, Weight
 {
     use Feature\TranslatableTrait;
     use Feature\WeightTrait;
+
+    /**
+     * NOTE: Since this entity is configured to read from a view, we must override the ID generator
+     * to use underlying table's sequence.
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="contact_info_id_seq")
+     */
+    protected $id;
 
     /**
      * @ORM\Column(type="string")
@@ -31,6 +46,11 @@ abstract class ContactInfo extends EntityBase implements Translatable, Weight
      * @Assert\Valid
      */
     private $translations;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ServicePoint", inversedBy="phone_numbers")
+     */
+    protected $parent;
 
     public function getContact() : string
     {
@@ -62,16 +82,6 @@ abstract class ContactInfo extends EntityBase implements Translatable, Weight
         $this->translations[$this->langcode]->setDescription($description);
     }
 
-    public function setLibrary(Library $organisation) : void
-    {
-        $this->library = $organisation;
-    }
-
-    public function getLibrary() : Library
-    {
-        return $this->library;
-    }
-
     public function setDepartment(Department $department) : void
     {
         $this->department = $department;
@@ -85,5 +95,15 @@ abstract class ContactInfo extends EntityBase implements Translatable, Weight
     public function getTranslations() : Collection
     {
         return $this->translations;
+    }
+
+    public function getParent() : Facility
+    {
+        return $this->parent;
+    }
+
+    public function setParent(Facility $facility) : void
+    {
+        $this->parent = $facility;
     }
 }

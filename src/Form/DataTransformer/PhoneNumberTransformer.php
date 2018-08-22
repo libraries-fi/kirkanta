@@ -7,7 +7,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class PhoneNumberTransformer implements DataTransformerInterface
 {
-    public function transform($source) : string
+    public function transform($source) : ?string
     {
         return $source;
     }

@@ -42,9 +42,10 @@ class EntityDataType extends AbstractType
             $builder->addModelTransformer($transformer);
 
             $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) use($transformer) {
-                $collection = $event->getForm()->getParent()->getData();
-                $parent = $collection->getOwner();
-                $transformer->setOwnerEntity($parent);
+                if ($collection = $event->getForm()->getParent()->getData()) {
+                    $parent = $collection->getOwner();
+                    $transformer->setOwnerEntity($parent);
+                }
             });
         }
     }

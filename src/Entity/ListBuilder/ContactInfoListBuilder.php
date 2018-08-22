@@ -7,7 +7,6 @@ use Doctrine\ORM\QueryBuilder;
 
 class ContactInfoListBuilder extends EntityListBuilder
 {
-
     public function build(iterable $entities) : iterable
     {
         $table = parent::build($entities)
