@@ -93,6 +93,11 @@ abstract class LibraryBase extends Facility implements ApiCacheable
      */
     private $consortium;
 
+    /**
+     * @ORM\OneToMany(targetEntity="LibraryData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
+     */
+    protected $translations;
+
     public function __construct()
     {
         parent::__construct();
@@ -104,8 +109,6 @@ abstract class LibraryBase extends Facility implements ApiCacheable
         $this->persons = new ArrayCollection;
         $this->phone_numbers = new ArrayCollection;
         $this->pictures = new ArrayCollection;
-        $this->services = new ArrayCollection;
-        $this->departments = new ArrayCollection;
 
         $this->weblinks = new ArrayCollection;
         $this->link_groups = new ArrayCollection;
@@ -360,19 +363,9 @@ abstract class LibraryBase extends Facility implements ApiCacheable
         return $this->persons;
     }
 
-    public function getServices() : Collection
-    {
-        return $this->services;
-    }
-
     public function getPictures() : Collection
     {
         return $this->pictures;
-    }
-
-    public function getDepartments() : Collection
-    {
-        return $this->departments;
     }
 
     public function getPhoneNumbers() : Collection

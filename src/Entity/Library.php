@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -40,8 +41,20 @@ class Library extends LibraryBase
      */
     protected $departments;
 
-    /**
-     * @ORM\OneToMany(targetEntity="LibraryData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
-     */
-    protected $translations;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->services = new ArrayCollection;
+        $this->departments = new ArrayCollection;
+    }
+
+    public function getDepartments() : Collection
+    {
+        return $this->departments;
+    }
+
+    public function getServices() : Collection
+    {
+        return $this->services;
+    }
 }

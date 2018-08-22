@@ -30,7 +30,7 @@ class Department extends Facility
     private $periods;
 
     /**
-     * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="department", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $phone_numbers;
 
