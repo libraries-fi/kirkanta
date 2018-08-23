@@ -12,7 +12,7 @@ class Library extends LibraryBase
 {
     /**
      * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
+     * @ORM\OrderBy({"weight": "ASC"})
      */
     protected $phone_numbers;
 

@@ -1461,30 +1461,23 @@ UPDATE organisations SET state = -1 WHERE role = 'department' AND parent_id IS N
 
 
 
+-- GENERATE WEIGHTS
 
--- Regenerate schedules schema due to moving departments out of organisations table.
-DROP TABLE schedules;
+UPDATE contact_info a
+SET weight = sub.pos
+FROM (
+  SELECT id, row_number() OVER(PARTITION BY attached_to, type, parent_id) pos
+  FROM contact_info
+  ORDER BY id
+) sub
+WHERE a.id = sub.id AND a.weight IS is_null
+;
 
-
-
--- NOTE: Foreign key columns do not have suffix '_id' because contents of this table represent
--- standalone API documents.
-CREATE TABLE schedules (
-  period int NOT NULL,
-  library int NOT NULL,
-  department int NOT NULL,
-  opens timestamptz NOT NULL,
-  closes timestamptz,
-  staff boolean,
-  status smallint,
-  info jsonb,
-
-  UNIQUE(library, department, opens),
-  FOREIGN KEY(library)
-    REFERENCES organisations(id)
-    ON DELETE CASCADE,
-  FOREIGN KEY(period)
-    REFERENCES periods(id),
-  FOREIGN KEY(department)
-    REFERENCES departments(id)
-);
+UPDATE pictures a
+SET weight = sub.pos
+FROM (
+  SELECT id, row_number() OVER(PARTITION BY parent_id) pos
+  FROM pictures
+  ORDER BY cover DESC, id
+) sub
+WHERE a.id = sub.id AND parent_id IS NOT NULL;

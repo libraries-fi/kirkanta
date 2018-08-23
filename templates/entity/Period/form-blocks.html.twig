@@ -13,21 +13,21 @@
           {{ form_row(form.department) }}
         {% endif %}
       </fieldset>
-      <fieldset class="col-lg-6 form-section">
-        <legend>{% trans %}Preview{% endtrans %}</legend>
 
-        {% with { library: app.request.get('library') } %}
-          {% if library is null and entity.library %}
-            {% set library = entity.library %}
-          {% endif %}
+      {% with { library: app.request.get('library') } %}
+        {% if library is null and entity.parent %}
+          {% set library = entity.parent %}
+        {% endif %}
 
-          {% if library %}
+        {% if library %}
+          <fieldset class="col-lg-6 form-section">
+            <legend>{% trans %}Preview{% endtrans %}</legend>
             <div data-app="organisation-calendar" data-organisation="{{ library.id }}">
               calendar here...
             </div>
-          {% endif %}
-        {% endwith %}
-      </fieldset>
+          </fieldset>
+        {% endif %}
+      {% endwith %}
     </div>
   </div>
   <fieldset class="form-section period-schedules">

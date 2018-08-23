@@ -11,9 +11,12 @@ class ContactInfoListBuilder extends EntityListBuilder
     {
         $table = parent::build($entities)
             ->setColumns([
-                'name' => ['mapping' => ['d.name']],
+                'name' => ['mapping' => ['d.name'], 'sortable' => true],
                 'contact' => ['label' => 'Phone Number', 'expand' => true],
-            ]);
+                'weight' => ['label' => false, 'sortable' => true],
+            ])
+            ->setSorting('weight', 'asc')
+            ;
 
         return $table;
     }

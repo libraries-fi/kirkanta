@@ -4,6 +4,7 @@ namespace App\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class SearchFormType extends FormType
 {
@@ -22,5 +23,13 @@ abstract class SearchFormType extends FormType
         foreach ($builder as $field) {
             $field->setRequired(false);
         }
+    }
+
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'parent' => null
+        ]);
     }
 }

@@ -21,11 +21,9 @@ class LibraryPhotoListBuilder extends EntityListBuilder
             ->setColumns([
                 'filename' => ['label' => false],
                 'name' => ['mapping' => ['d.name'], 'expand' => true],
-                'weight' => ['label' => ''],
             ])
             ->useAsTemplate('filename')
             ->useAsTemplate('name')
-            ->useAsTemplate('weight')
             ->transform('filename', function() {
                 return "<img src=\"/files/images/small/{{ row.filename }}\" alt=\"{{ row.name }}\" height=\"60\"/>";
             })
@@ -35,7 +33,6 @@ class LibraryPhotoListBuilder extends EntityListBuilder
                     <p>{{ row.description }}</p>
                 ';
             })
-            ->dragHandle('weight');
             ;
     }
 }

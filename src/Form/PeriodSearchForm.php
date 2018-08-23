@@ -2,7 +2,8 @@
 
 namespace App\Form;
 
-use App\Util\PeriodSections;
+use App\Entity\Department;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,12 +14,16 @@ class PeriodSearchForm extends SearchFormType
     {
         $builder
             ->add('name')
-            ->add('section', ChoiceType::class, [
-                'choices' => new PeriodSections,
-                'placeholder' => '-- Any --',
-            ])
-            ->add('only_valid', CheckboxType::class)
-
             ;
+
+        if ($options['parent']) {
+            $builder->add('department', EntityType::class, [
+                'class' => Department::class,
+                'choices' => $options['parent']->getDepartments(),
+                'placeholder' => '-- Any --',
+            ]);
+        }
+
+        $builder->add('only_valid', CheckboxType::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Library;
+use App\Entity\Feature\Weight;
 use App\EntityTypeManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -40,8 +41,21 @@ class OrganisationController extends Controller
     public function resourceCollection(Request $request, $library, string $entity_type, string $resource)
     {
         $entity_class = $this->types->getEntityClass($entity_type);
+        $resource_class = $this->types->getEntityClass($this->resolveResourceTypeId($entity_type, $resource));
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
         $list_builder = $this->types->getListBuilder($type_id);
+
+        if ($this->types->hasForm($type_id, 'search')) {
+            $search_form = $this->types->getForm($type_id, 'search', null, ['parent' => $library]);
+            $search_form->remove('group');
+            $search_form->handleRequest($request);
+
+            if ($search_form->isSubmitted() && $search_form->isValid()) {
+                $list_builder->setSearch($search_form->getData()->getValues());
+            }
+        } else {
+            $search_form = null;
+        }
 
         /*
          * NOTE: Use alias 'ox' to avoid collision with aliases internally used by
@@ -64,13 +78,32 @@ class OrganisationController extends Controller
         }
 
         $result = $list_builder->paginate($builder);
-        $table = $list_builder->build($result);
+        $table = $list_builder->build($result)
+            ->removeColumn('group')
+            ->removeColumn('parent')
+            ->removeColumn('library');
+
+        if (is_a($resource_class, Weight::class, true)) {
+            $table->addColumn('weight', '')->dragHandle('weight');
+            $builder->orderBy('weight');
+        }
 
         $actions = [];
 
         switch ($resource) {
-            case 'departments':
             case 'periods':
+                $table->useAsTemplate('name');
+                $table->transform('name', function($entity) {
+                    return '
+                        <a href="{{ path("entity.period.edit", {period: row.id}) }}">{{ row.name }}</a>
+                        {% if row.department %}
+                            <small class="text-secondary d-block">{{ row.department.name }}</small>
+                        {% endif %}
+                    ';
+                });
+                break;
+
+            case 'departments':
             case 'links':
             case 'pictures':
             case 'phone_numbers':
@@ -130,6 +163,7 @@ class OrganisationController extends Controller
             'type_label' => $this->types->getTypeLabel($type_id, true),
             'entity_type' => $type_id,
             'table' => $table,
+            'search_form' => $search_form ? $search_form->createView() : null,
             'actions' => $actions
         ];
     }
@@ -282,10 +316,7 @@ class OrganisationController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/library/{library}/{resource}/tablesort", name="entity.library.resource_table_sort", requirements={"library": "\d+", "resource": "[a-z]\w+"}, defaults={"type": "organisation"})
-     */
-    public function tableSort(Request $request, int $id, string $resource, EntityTypeManager $manager)
+    public function tableSort(Request $request, string $resource, EntityTypeManager $manager)
     {
         $ids = $request->request->get('rows') ?: [];
         $ids = array_map('intval', $ids);

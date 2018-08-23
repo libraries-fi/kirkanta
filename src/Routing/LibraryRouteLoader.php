@@ -67,10 +67,15 @@ class LibraryRouteLoader extends Loader
                 'resource_id' => '\d+'
             ]);
 
+            $table_sort = new Route("{$base_path}/{resource}/tablesort", $defaults + [
+                '_controller' => sprintf('%s:tableSort', OrganisationController::class)
+            ], $requirements);
+
             $routes->add("entity.{$type_id}.resource_collection", $resource_collection);
             $routes->add("entity.{$type_id}.add_resource", $add_resource);
             $routes->add("entity.{$type_id}.edit_resource", $edit_resource);
             $routes->add("entity.{$type_id}.delete_resource", $delete_resource);
+            $routes->add("entity.{$type_id}.table_sort", $table_sort);
         }
 
         return $routes;

@@ -135,6 +135,12 @@ class Table implements IteratorAggregate
         return $this;
     }
 
+    public function removeColumn(string $key) : self
+    {
+        unset($this->columns[$key]);
+        return $this;
+    }
+
     public function setLabel(string $column, string $label) : self
     {
         $this->columns[$column]->setLabel($label);
@@ -191,7 +197,7 @@ class Table implements IteratorAggregate
 
     public function dragHandle(string $column) : self
     {
-        return $this->transform($column, function() {
+        return $this->useAsTemplate($column)->transform($column, function() {
             return '
                 <a class="drag-handle" title="{{ \'Drag row\'|trans }}" data-drag-id="{{ row.id }}">
                     <i class="fas fa-arrows-alt"></i>

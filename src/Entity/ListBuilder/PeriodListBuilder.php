@@ -24,8 +24,14 @@ class PeriodListBuilder extends EntityListBuilder
 
         // CheckboxType always returns a value.
         if ($search['only_valid'] ?? false) {
-            $builder->andWhere('e.valid_from >= :now OR e.valid_until >= :now');
+            $builder->andWhere('(e.valid_from >= :now OR e.valid_until IS NULL) OR e.valid_until >= :now');
             $builder->setParameter('now', new DateTime);
+        }
+
+        if (isset($search['department'])) {
+            // var_dump($search['department']);
+            $builder->andWhere('e.department = :department');
+            $builder->setParameter('department', $search['department']);
         }
 
         return $builder;
@@ -39,7 +45,6 @@ class PeriodListBuilder extends EntityListBuilder
                 'name' => ['mapping' => ['d.name'], 'expand' => true],
                 'valid_from',
                 'valid_until',
-                'department' => ['expand' => true],
                 'owner'
             ])
             ->setSortable('name')
@@ -63,11 +68,6 @@ class PeriodListBuilder extends EntityListBuilder
             })
             ->transform('name', function() {
                 return '<a href="{{ path("entity.period.edit", {period: row.id}) }}">{{ row.name }}</a>';
-            })
-            ->transform('department', function($p) {
-                if ($department = $p->getDepartment()) {
-                    return $department->getName();
-                }
             })
             ->transform('valid_from', function($p) {
                 return $p->getValidFrom()->format('Y-m-d');
