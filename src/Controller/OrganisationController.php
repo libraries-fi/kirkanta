@@ -81,7 +81,8 @@ class OrganisationController extends Controller
         $table = $list_builder->build($result)
             ->removeColumn('group')
             ->removeColumn('parent')
-            ->removeColumn('library');
+            ->removeColumn('library')
+            ->removeColumn('owner');
 
         if (is_a($resource_class, Weight::class, true)) {
             $table->addColumn('weight', '')->dragHandle('weight');
