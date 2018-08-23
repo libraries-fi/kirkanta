@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="organisations_data")
+ * @ORM\Table(name="departments_data")
  */
 class DepartmentData extends EntityDataBase
 {

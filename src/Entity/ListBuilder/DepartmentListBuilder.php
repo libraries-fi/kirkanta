@@ -32,20 +32,20 @@ class DepartmentListBuilder extends EntityListBuilder
     {
         $table = parent::build($entities)
             ->setColumns([
-                'state',
+                // 'state',
                 'name' => ['mapping' => ['d.name']],
             ])
-            ->setLabel('state', '')
+            // ->setLabel('state', '')
             ->setSortable('name')
-            ->useAsTemplate('state')
+            // ->useAsTemplate('state')
             ->useAsTemplate('name')
-            ->transform('state', function($o) {
-                if ($o->isPublished()) {
-                    return '<i class="fa fa-square text-success" title="{{ \'Published\'|trans }}"></i>';
-                } else {
-                    return '<i class="fa fa-square text-warning" title="{{ \'Draft\'|trans }}"></i>';
-                }
-            })
+            // ->transform('state', function($o) {
+            //     if ($o->isPublished()) {
+            //         return '<i class="fa fa-square text-success" title="{{ \'Published\'|trans }}"></i>';
+            //     } else {
+            //         return '<i class="fa fa-square text-warning" title="{{ \'Draft\'|trans }}"></i>';
+            //     }
+            // })
             ->transform('name', function() {
                 return '<a href="{{ path("entity.department.edit", {department: row.id}) }}">{{ row.name }}</a>';
             });

@@ -185,7 +185,7 @@ class OrganisationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-          $this->get('doctrine.orm.entity_manager')->flush();
+          $this->types->getEntityManager()->flush();
           $this->addFlash('success', 'Changes were saved.');
 
           return $this->redirectToRoute("entity.{$entity_type}.resource_collection", [

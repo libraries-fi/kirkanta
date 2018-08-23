@@ -23,26 +23,26 @@ class UpdateSchedules
     public function postPersist(LifecycleEventArgs $event) : void
     {
         $entity = $event->getEntity();
-        if ($entity instanceof Period && $entity->getLibrary() && $entity->getOrganisation()->isPublished()) {
+        if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
             $begin = $entity->getValidFrom();
             $end = $entity->getValidUntil();
             $fallback = new DateTime('+12 months');
             $end = $end ? min($end, $fallback) : $fallback;
 
-            $this->manager->updateSchedules($entity->getLibrary(), $begin, $end);
+            $this->manager->updateSchedules($entity->getParent(), $begin, $end);
         }
     }
 
     public function preDelete(LifecycleEventArgs $event) : void
     {
         $entity = $event->getEntity();
-        if ($entity instanceof Period && $entity->getLibrary() && $entity->getOrganisation()->isPublished()) {
+        if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
             $begin = $entity->getValidFrom();
             $end = $entity->getValidUntil();
             $fallback = new DateTime('+12 months');
             $end = $end ? min($end, $fallback) : $fallback;
 
-            $this->manager->updateSchedules($entity->getLibrary(), $begin, $end);
+            $this->manager->updateSchedules($entity->getParent(), $begin, $end);
         }
     }
 
@@ -50,7 +50,7 @@ class UpdateSchedules
     {
         $entity = $event->getEntity();
 
-        if ($entity instanceof Period && $entity->getLibrary() && $entity->getOrganisation()->isPublished()) {
+        if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
             if ($event->hasChangedField('valid_from')) {
                 $begin = min($event->getOldValue('valid_from'), $event->getNewValue('valid_from'));
                 $begin = max($begin, new DateTime);
@@ -66,7 +66,7 @@ class UpdateSchedules
                 $end = $end ? min($end, $fallback) : $fallback;
             }
 
-            $this->manager->updateSchedules($entity->getLibrary(), $begin, $end);
+            $this->manager->updateSchedules($entity->getParent(), $begin, $end);
         }
     }
 }

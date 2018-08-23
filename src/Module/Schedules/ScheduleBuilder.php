@@ -48,18 +48,15 @@ class ScheduleBuilder
             }
 
             foreach ($days as $date => $day) {
-                if ($department == '') {
-                    // unset($day['section']);
-                    // Use stdClass to ensure empty data is serialized to JSON as '{}'.
-                    // $day['sections'] = new stdClass;
-                    $schedules[$date] = $day;
+                if (!$department) {
+                    $schedules[$date][0] = $day;
                 } else {
-                    if (!isset($schedules[$date]['sections'])) {
+                    if (!isset($schedules[$date])) {
                         // There is no base period (default section) for this day so we cannot continue.
                         continue;
                     }
                     unset($day['section'], $day['day'], $day['date'], $day['organisation']);
-                    $schedules[$date]['sections']->{$department} = $day;
+                    $schedules[$date][$department] = $day;
                 }
             }
         }
@@ -72,13 +69,15 @@ class ScheduleBuilder
         $groups = [];
 
         foreach ($periods as $period) {
-            $department = $period->getDepartment() ? $period->getDepartment()->getId() : null;
+            $department = $period->getDepartment() ? $period->getDepartment()->getId() : 0;
             $groups[$department][] = $period;
         }
 
         foreach ($groups as $department => $periods) {
             $groups[$department] = $this->sort($periods);
         }
+
+        ksort($groups);
 
         return $groups;
     }
@@ -135,7 +134,7 @@ class ScheduleBuilder
         $schedules = [];
 
         $department = $period->getDepartment();
-        $organisation = $period->getLibrary();
+        $organisation = $period->getParent();
 
         foreach ($range as $date) {
             $day = [

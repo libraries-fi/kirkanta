@@ -1086,14 +1086,14 @@ ALTER TABLE user_groups ALTER COLUMN roles SET NOT NULL;
 CREATE TABLE schedules (
   period int NOT NULL,
   library int NOT NULL,
-  department int NOT NULL,
-  opens timestamptz NOT NULL,
-  closes timestamptz,
+  department int,
+  opens timestamp NOT NULL,
+  closes timestamp,
   staff boolean,
   status smallint,
   info jsonb,
 
-  PRIMARY KEY(library, department, opens),
+  UNIQUE(library, department, opens),
   FOREIGN KEY(library)
     REFERENCES organisations(id)
     ON DELETE CASCADE,
@@ -1103,7 +1103,6 @@ CREATE TABLE schedules (
     REFERENCES organisations(id)
 );
 
--- Doesn't go through with PostgreSQL 10...
 CREATE INDEX idx_schedules_date ON schedules(date(opens));
 
 COMMENT ON COLUMN schedules.department IS 'Cannot be null per Postgresql requirements; use library ID when no department';
@@ -1422,3 +1421,70 @@ INSERT INTO contact_info_data (langcode, entity_id, name, description)
   WHERE organisation_id IS NOT NULL AND
     translations->'se'->>'name' != ''
 ;
+
+
+
+CREATE TYPE department_type AS enum('department', 'mobile_stop');
+
+CREATE TABLE departments (
+  id serial NOT NULL,
+  type department_type NOT NULL,
+  parent_id int NOT NULL,
+  PRIMARY KEY(id),
+  FOREIGN KEY(parent_id) REFERENCES organisations(id)
+);
+
+CREATE TABLE departments_data (
+  entity_id int NOT NULL,
+  langcode varchar(2) NOT NULL,
+  name varchar(100) NOT NULL,
+  description text,
+
+  PRIMARY KEY(entity_id, langcode),
+  FOREIGN KEY(entity_id) REFERENCES departments(id) ON DELETE CASCADE
+);
+
+INSERT INTO departments (id, type, parent_id)
+  SELECT id, 'department', parent_id
+  FROM organisations
+  WHERE role = 'department' AND parent_id IS NOT NULL
+;
+
+INSERT INTO departments_data (entity_id, langcode, name, description)
+  SELECT b.entity_id, b.langcode, b.name, b.description
+  FROM organisations a
+  INNER JOIN organisations_data b ON a.id = b.entity_id
+  WHERE a.role = 'department' AND a.parent_id IS NOT NULL
+;
+
+UPDATE organisations SET state = -1 WHERE role = 'department' AND parent_id IS NOT NULL;
+
+
+
+
+-- Regenerate schedules schema due to moving departments out of organisations table.
+DROP TABLE schedules;
+
+
+
+-- NOTE: Foreign key columns do not have suffix '_id' because contents of this table represent
+-- standalone API documents.
+CREATE TABLE schedules (
+  period int NOT NULL,
+  library int NOT NULL,
+  department int NOT NULL,
+  opens timestamptz NOT NULL,
+  closes timestamptz,
+  staff boolean,
+  status smallint,
+  info jsonb,
+
+  UNIQUE(library, department, opens),
+  FOREIGN KEY(library)
+    REFERENCES organisations(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY(period)
+    REFERENCES periods(id),
+  FOREIGN KEY(department)
+    REFERENCES departments(id)
+);

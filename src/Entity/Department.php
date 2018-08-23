@@ -2,17 +2,16 @@
 
 namespace App\Entity;
 
+use App\Entity\Feature\Translatable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="departments")
  */
-class Department extends Facility
+class Department extends EntityBase implements Translatable
 {
-    /**
-     * @ORM\OneToMany(targetEntity="DepartmentData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
-     */
-    protected $translations;
+    use Feature\TranslatableTrait;
 
     /**
      * @ORM\ManyToOne(targetEntity="Library", inversedBy="departments")
@@ -27,7 +26,12 @@ class Department extends Facility
     /**
      * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $phone_numbers;
+    // private $phone_numbers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DepartmentData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
+     */
+    protected $translations;
 
     public function __toString()
     {

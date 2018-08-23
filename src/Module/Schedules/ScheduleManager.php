@@ -84,42 +84,32 @@ class ScheduleManager
             VALUES (:period_id, :library_id, :department_id, :info, :opens, :closes, :staff)
         ');
 
-        foreach ($schedules as $day) {
-            $row = [
-                'library_id' => $library->getId(),
-                'period_id' => $day['period']->getId(),
-                'department_id' => $day['department'] ? $day['department']->getId() : $library->getId(),
-                'info' => json_encode($day['info']),
-
-                // This value is stored in the 'opens' field for every row.
-                // 'date' => $day['date']->format('Y-m-d'),
-            ];
-
-            $date = $day['date']->format('Y-m-d');
-
-            if ($day['closed']) {
-                $row += [
-                    // 'closed' => 't',
-                    'opens' => (new DateTime("{$date} 00:00:00"))->format(DateTime::RFC3339),
-                    'closes' => null,
-                    'staff' => 'f',
+        foreach ($schedules as $date => $day_group) {
+            foreach ($day_group as $department => $day) {
+                $row = [
+                    'library_id' => $library->getId(),
+                    'period_id' => $day['period']->getId(),
+                    'department_id' => $day['department'] ? $day['department']->getId() : null,
+                    'info' => json_encode($day['info']),
                 ];
-                $insert->execute($row);
-            } else {
-                foreach ($day['times'] as $tuple) {
-                    /*
-                     * Using DateTime to make timestamps timezone-aware.
-                     * NOTE: Postgresql converts times to UTC, hence the tz part will become +00.
-                     * Don't be confused...
-                     */
-                    $row['opens'] = (new DateTime("{$date} {$tuple['opens']}"))->format(DateTime::RFC3339);
-                    $row['closes'] = (new DateTime("{$date} {$tuple['closes']}"))->format(DateTime::RFC3339);
-                    $row['staff'] = isset($tuple['staff']) ? ($tuple['staff'] ? 't' : 'f') : 't';
 
+                if ($day['closed']) {
+                    $row += [
+                        'opens' => (new DateTime("{$date} 00:00:00"))->format(DateTime::RFC3339),
+                        'closes' => null,
+                        'staff' => 'f',
+                    ];
                     $insert->execute($row);
+                } else {
+                    foreach ($day['times'] as $tuple) {
+                        $row['opens'] = (new DateTime("{$date} {$tuple['opens']}"))->format(DateTime::RFC3339);
+                        $row['closes'] = (new DateTime("{$date} {$tuple['closes']}"))->format(DateTime::RFC3339);
+                        $row['staff'] = isset($tuple['staff']) ? ($tuple['staff'] ? 't' : 'f') : 't';
+
+                        $insert->execute($row);
+                    }
                 }
             }
-
         }
 
         $this->db->commit();
