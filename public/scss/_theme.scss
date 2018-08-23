@@ -33,7 +33,7 @@ label.required:after {
   $highlight: darken(theme-color("navbar"), 20%);
 
   position: sticky;
-  top: -1px;
+  top: 0;
   z-index: $zindex-sticky;
 
   padding-top: 0;
