@@ -48,7 +48,6 @@ class PersonListBuilder extends EntityListBuilder
                 'job_title' => ['mapping' => ['d.job_title']],
                 'email',
                 'library',
-                // 'group'
             ])
             ->useAsTemplate('state')
             ->useAsTemplate('name')
