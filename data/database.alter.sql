@@ -1481,3 +1481,7 @@ FROM (
   ORDER BY cover DESC, id
 ) sub
 WHERE a.id = sub.id AND parent_id IS NOT NULL;
+
+UPDATE organisations a SET type = 'archive' FROM organisations_data b WHERE role = 'foreign' AND b.name ILIKE '%arkisto%' AND a.id = b.entity_id AND b.langcode = 'fi';
+
+UPDATE organisations a SET type = 'museum' FROM organisations_data b WHERE role = 'foreign' AND b.name ILIKE '%museo%' AND a.id = b.entity_id AND b.langcode = 'fi';
