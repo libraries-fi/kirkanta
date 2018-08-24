@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Department;
+use App\Entity\Library;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -16,7 +17,7 @@ class PeriodSearchForm extends SearchFormType
             ->add('name')
             ;
 
-        if ($options['parent']) {
+        if ($options['parent'] && $options['parent'] instanceof Library) {
             $builder->add('department', EntityType::class, [
                 'class' => Department::class,
                 'choices' => $options['parent']->getDepartments(),
