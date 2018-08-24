@@ -12,16 +12,19 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 abstract class FormType extends AbstractType
 {
     abstract protected function form(FormBuilderInterface $builder, array $options) : void;
 
     private $requestStack;
+    protected $auth;
 
-    public function __construct(RequestStack $request_stack)
+    public function __construct(RequestStack $request_stack, Security $auth)
     {
         $this->requestStack = $request_stack;
+        $this->auth = $auth;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void

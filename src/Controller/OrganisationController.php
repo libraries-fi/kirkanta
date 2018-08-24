@@ -176,7 +176,9 @@ class OrganisationController extends Controller
     public function addResource(Request $request, $library, string $entity_type, string $resource)
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
-        $form = $this->types->getForm($type_id, 'edit', ['library' => $library]);
+        $form = $this->types->getForm($type_id, 'edit', null, [
+            'context_entity' => $library
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -216,7 +218,9 @@ class OrganisationController extends Controller
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
 
         $entity = $this->types->getRepository($type_id)->findOneBy(['id' => $resource_id]);
-        $form = $this->types->getForm($type_id, 'edit', $entity);
+        $form = $this->types->getForm($type_id, 'edit', $entity, [
+            'context_entity' => $library
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
