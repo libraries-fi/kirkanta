@@ -54,6 +54,7 @@ class LibraryListBuilder extends EntityListBuilder
             ->setSortable('group')
             ->useAsTemplate('state')
             ->useAsTemplate('name')
+            ->useAsTemplate('type')
             ->transform('state', function($o) {
                 if ($o->isPublished()) {
                     return '<i class="fa fa-square text-success" title="{{ \'Published\'|trans }}"></i>';
@@ -65,7 +66,8 @@ class LibraryListBuilder extends EntityListBuilder
                 return '<a href="{{ path("entity.library.edit", {library: row.id}) }}">{{ row.name }}</a>';
             })
             ->transform('type', function($o) use($types) {
-                return $types->search($o->getType());
+                $label = $types->search($o->getType());
+                return "{% trans %}{$label}{% endtrans %}";
             });
 
         return $table;
