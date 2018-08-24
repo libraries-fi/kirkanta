@@ -47,16 +47,21 @@ class PersonListBuilder extends EntityListBuilder
                 'name',
                 'job_title' => ['mapping' => ['d.job_title']],
                 'email',
-                'phone',
                 'library',
-                'group'
+                // 'group'
             ])
             ->useAsTemplate('state')
             ->useAsTemplate('name')
+            ->useAsTemplate('email')
             ->setSortable('name', true, ['last_name', 'first_name'])
             ->setSortable('job_title')
-            ->setSortable('email')
             ->setSorting('name')
+            ->transform('email', function() {
+                return '
+                    {{ row.email }}
+                    <span class="d-block">{{ row.phone }}</span>
+                ';
+            })
             ->transform('state', function($p) {
                 if ($p->isPublished()) {
                     return '<i class="fa fa-square text-success" aria-label="{{ \'Published\'|trans }}"></i>';
