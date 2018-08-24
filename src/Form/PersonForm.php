@@ -21,22 +21,13 @@ class PersonForm extends EntityFormType
     {
         $builder
             ->add('state', StateChoiceType::class)
-            // ->add('library', EntityType::class, [
-            //     'class' => Library::class,
-            //     'choice_label' => 'name',
-            //     'placeholder' => '-- Select --',
-            // ])
-            ->add('library', ChoiceType::class, [
-                'class' => Library::class,
-                'choice_label' => 'name',
-                'placeholder' => '-- Select --',
-            ])
             ->add('first_name')
             ->add('last_name')
             ->add('email', EmailType::class, [
                 // 'required' => false
             ])
             ->add('email_public', CheckboxType::class, [
+                'label' => 'Email address can be published',
                 'required' => false
             ])
             ->add('phone', null, [
@@ -55,18 +46,7 @@ class PersonForm extends EntityFormType
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\PersonDataType::class
             ])
-
             ;
-
-        // if ($options['context_entity']) {
-        //     $groups = $options['context_entity']->getOwner()->getTree();
-        //
-        //     $libraries = $this->types->getRepository('library')->findBy([
-        //         'group' => $groups
-        //     ]);
-        //
-        //     var_dump(count($libraries));
-        // }
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
             if (!$event->getData()) {

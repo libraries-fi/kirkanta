@@ -22,8 +22,12 @@
 
   <fieldset class="form-section">
     <legend>{% trans %}Work info{% endtrans %}</legend>
-    {{ form_row(form.library) }}
-    {{ form_row(form.head) }}
+    {% if form.library is defined %}
+      {{ form_row(form.library) }}
+      {{ form_row(form.head) }}
+    {% else %}
+      <p>{% trans %}Cannot change library{% endtrans %}</p>
+    {% endif %}
     {{ form_row(form.job_title) }}
     {{ form_row(form.responsibility) }}
     {{ form_row(form.qualities) }}
