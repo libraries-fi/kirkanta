@@ -2,22 +2,18 @@
 
 namespace App\Form;
 
-use App\Entity\City;
-use App\Entity\Consortium;
+use App\Entity\Library;
 use App\Entity\Organisation;
 use App\Form\Type\AddressType;
 use App\Form\Type\MailAddressType;
 use App\Form\Type\StateChoiceType;
 use App\Util\LibraryTypes;
-use App\Util\OrganisationTypes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 class LibraryForm extends FormType
 {
@@ -78,5 +74,31 @@ class LibraryForm extends FormType
             ])
 
             ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+            $library = $event->getData();
+
+            if ($library instanceof Library) {
+                $groups = $library->getGroup()->getTree();
+            } else {
+                $groups = $this->auth->getUser()->getGroup()->getTree();
+            }
+
+            if ($groups) {
+                $event->getForm()->add('parent', EntityType::class, [
+                    'class' => Organisation::class,
+                    'required' => false,
+                    'placeholder' => '-- Select --',
+                    'query_builder' => function($repo) use($groups) {
+                        return $repo->createQueryBuilder('e')
+                        ->join('e.translations', 'd')
+                        ->orderBy('d.name')
+                        ->andWhere('e.group IN (:groups)')
+                        ->setParameter('groups', $groups)
+                        ;
+                    }
+                ]);
+            }
+        });
     }
 }

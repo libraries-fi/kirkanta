@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Feature\GroupOwnership;
 use App\Entity\Feature\ModifiedAwareness;
 use App\Entity\Feature\Sluggable;
+use App\Entity\Feature\StateAwareness;
 use App\Entity\Feature\Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,11 +24,12 @@ use Doctrine\ORM\Mapping as ORM;
  *     "organisation" = "Organisation",
  * })
  */
-abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAwareness, Sluggable, Translatable
+abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAwareness, Sluggable, StateAwareness, Translatable
 {
     use Feature\GroupOwnershipTrait;
     use Feature\ModifiedAwarenessTrait;
     use Feature\SluggableTrait;
+    use Feature\StateAwarenessTrait;
     use Feature\TranslatableTrait;
 
     public function __construct()

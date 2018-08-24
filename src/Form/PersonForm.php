@@ -60,7 +60,7 @@ class PersonForm extends EntityFormType
             if ($person instanceof Person) {
                 $groups = $person->getGroup()->getTree();
             } else {
-                $groups = $this->auth->getGroup()->getTree();
+                $groups = $this->auth->getUser()->getGroup()->getTree();
             }
 
             if ($groups) {
