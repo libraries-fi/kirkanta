@@ -42,11 +42,6 @@ class Service extends EntityBase implements ApiCacheable, Translatable
      */
     private $instances;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $tr_score = 0;
-
     public function __construct()
     {
         parent::__construct();
