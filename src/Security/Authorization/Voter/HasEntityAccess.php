@@ -28,13 +28,11 @@ class HasEntityAccess extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        // return self::ACCESS_ABSTAIN;
-
         if ($subject instanceof Request) {
             try {
-                $type = $subject->attributes->get('type');
-                $class = $this->types->getEntityClass($type);
-                $id = $subject->attributes->getInt('id');
+                $entity_type = $subject->attributes->get('entity_type');
+                $class = $this->types->getEntityClass($entity_type);
+                $id = $subject->attributes->getInt($entity_type);
 
                 if (!$this->access->isGranted('VIEW', $class) == self::ACCESS_GRANTED) {
                     return self::ACCESS_DENIED;
@@ -50,8 +48,6 @@ class HasEntityAccess extends Voter
                 } else {
                     return self::ACCESS_GRANTED;
                 }
-
-                // var_dump($config);
 
                 exit('sad');
             } catch (OutOfBoundsException $e) {
