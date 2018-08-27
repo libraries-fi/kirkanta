@@ -4,6 +4,10 @@ ALTER TABLE users RENAME COLUMN role_id TO group_id;
 ALTER TABLE services_new RENAME TO service_instances;
 ALTER SEQUENCE services_new_id_seq RENAME TO service_instances_id_seq;
 
+ALTER TABLE services RENAME TO services_old;
+ALTER TABLE service_types RENAME TO services;
+DROP TABLE services_old;
+
 ALTER TABLE organisations DROP COLUMN web_library;
 ALTER TABLE cities RENAME COLUMN provincial_library_id TO regional_library_id;
 
@@ -1492,3 +1496,7 @@ UPDATE organisations a SET type = 'museum' FROM organisations_data b WHERE role 
 
 
 UPDATE users SET roles = '["ROLE_ROOT"]' WHERE email like '%@kirjastot.fi';
+
+
+
+UPDATE organisations SET state = 0 WHERE role in ('mobile_stop');
