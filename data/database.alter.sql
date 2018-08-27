@@ -1,6 +1,5 @@
 ALTER TABLE users ADD COLUMN roles jsonb NOT NULL DEFAULT '["ROLE_USER"]';
 ALTER TABLE users RENAME COLUMN role_id TO group_id;
-ALTER TABLE services RENAME TO services_old;
 
 ALTER TABLE services_new RENAME TO service_instances;
 ALTER SEQUENCE services_new_id_seq RENAME TO service_instances_id_seq;
@@ -1314,13 +1313,13 @@ UPDATE organisations SET role = 'mobile_stop' WHERE old_doc_type = 'mobile_stop'
 
 
 ALTER TYPE facility_role ADD VALUE 'meta';
-UPDATE organisations SET role = 'meta' WHERE old_doc_type = 'organisation' AND branch_type = 'centralized_service';
+UPDATE organisations SET role = 'meta' WHERE old_doc_type = 'organisation' AND type = 'centralized_service';
 
 
 -- NOTE: THINK BEFORE EXECUTING THESE IN PRODUCTION!
 UPDATE organisations SET role = 'department' WHERE old_doc_type = 'centralized_service';
 UPDATE organisations SET role = 'library' WHERE id = 86476;
-UPDATE organisations SET role = 'mobile_stop' WHERE branch_type = 'mobile_stop' AND role = 'organisation';
+UPDATE organisations SET role = 'mobile_stop' WHERE type = 'mobile_stop' AND role = 'organisation';
 
 UPDATE organisations SET role = 'meta' WHERE id IN (84712, 84645, 86513, 86511);
 
@@ -1470,7 +1469,7 @@ FROM (
   FROM contact_info
   ORDER BY id
 ) sub
-WHERE a.id = sub.id AND a.weight IS is_null
+WHERE a.id = sub.id AND a.weight IS NULL
 ;
 
 UPDATE pictures a
