@@ -6,8 +6,7 @@ App\Entity\Library:
       groups: ['default', 'index']
     parent:
       groups: ['parent']
-    #   groups: ['default', 'index']
-    branch_type:
+    type:
       groups: ['default', 'index']
     consortium:
       groups: ['default']

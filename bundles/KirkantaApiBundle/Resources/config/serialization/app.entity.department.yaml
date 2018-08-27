@@ -7,8 +7,6 @@ App\Entity\Department:
 
 App\Entity\DepartmentData:
   attributes:
-    slug:
-      groups: ['default', 'index']
     name:
       groups: ['default', 'index']
     description:
