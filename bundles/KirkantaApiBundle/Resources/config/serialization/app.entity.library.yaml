@@ -1,4 +1,4 @@
-App\Entity\Library:
+App\Entity\LibraryBase:
   attributes:
     translations:
       groups: ['default', 'index']

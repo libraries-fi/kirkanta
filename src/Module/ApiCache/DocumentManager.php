@@ -42,39 +42,6 @@ class DocumentManager
         try {
             list($type_id, $document, $translations) = $this->serialize($entity);
 
-            // $this->database->beginTransaction();
-
-            // $smt = $this->database->prepare('
-            //     DELETE
-            //     FROM api_documents
-            //     WHERE
-            //     type = :type AND
-            //     id = :id
-            // ');
-            //
-            // $smt->execute([
-            //     'type' => $type_id,
-            //     'id' => $entity->getId(),
-            // ]);
-            //
-            // $smt = $this->database->prepare('
-            //     INSERT
-            //     INTO api_documents (
-            //         type,
-            //         id,
-            //         body,
-            //         translations
-            //     )
-            //     VALUES (:type, :id, :values, :translations)
-            // ');
-            //
-            // $smt->execute([
-            //     'type' => $type_id,
-            //     'id' => $entity->getId(),
-            //     'values' => $document,
-            //     'translations' => $translations,
-            // ]);
-
             $entity_class = $this->types->getEntityClass($type_id);
 
             $dql = sprintf('UPDATE %s e SET e.cached_document = :document WHERE e.id = :id', $entity_class);
@@ -84,28 +51,8 @@ class DocumentManager
                 'document' => $document,
                 'id' => $entity->getId(),
             ]);
-
-
-            // $table = $this->types->getEntityManager()->getRepository($entity_class)->getClassMetadata()->getTableName();
-            //
-            // var_dump($table);
-            // exit;
-            //
-            // $smt = $this->database->prepare('
-            //     UPDATE organisations
-            //     SET cached_document = :document
-            //     WHERE id = :id
-            // ');
-            //
-            // $smt->execute([
-            //     'document' => $document,
-            //     'id' => $entity->getId()
-            // ]);
-
-            // $this->database->commit();
         } catch (OutOfBoundsException $e) {
             // Unmanaged entity type.
-
             exit('fail');
         }
     }

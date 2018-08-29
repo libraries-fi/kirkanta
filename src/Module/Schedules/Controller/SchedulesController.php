@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SchedulesController extends Controller
 {
-    const BATCH_SIZE = 200;
+    const BATCH_SIZE = 160;
 
     /**
      * @Route("/system/schedules/build")
