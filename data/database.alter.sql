@@ -1500,3 +1500,8 @@ UPDATE users SET roles = '["ROLE_ROOT"]' WHERE email like '%@kirjastot.fi';
 
 
 UPDATE organisations SET state = 0 WHERE role in ('mobile_stop');
+
+
+
+
+ALTER TABLE organisations RENAME COLUMN parent_id TO organisation_id;

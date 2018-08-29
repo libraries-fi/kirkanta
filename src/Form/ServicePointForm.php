@@ -59,7 +59,7 @@ class ServicePointForm extends LibraryForm
              * This allows us to re-use library form templates.
              */
             $event->getForm()
-                ->add('parent', HiddenType::class, [
+                ->add('organisation', HiddenType::class, [
                     'mapped' => false,
                     'required' => false,
                     'data' => null,

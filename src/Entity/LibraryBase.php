@@ -74,11 +74,6 @@ abstract class LibraryBase extends Facility implements ApiCacheable
     private $construction_year;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="libraries")
-     */
-    private $parent;
-
-    /**
      * @ORM\OneToOne(targetEntity="Address", cascade={"remove", "persist"}, orphanRemoval=true)
      */
     private $address;
@@ -302,11 +297,6 @@ abstract class LibraryBase extends Facility implements ApiCacheable
     public function setInteriorDesigner(?string $designer) : void
     {
         $this->interior_designer = $designer;
-    }
-
-    public function getParent() : ?Organisation
-    {
-        return $this->parent;
     }
 
     public function getAddress() : ?Address

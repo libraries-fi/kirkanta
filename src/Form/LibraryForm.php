@@ -25,7 +25,8 @@ class LibraryForm extends FormType
                 'placeholder' => '-- Select --',
                 'choices' => new LibraryTypes
             ])
-            ->add('parent', EntityType::class, [
+            ->add('organisation', EntityType::class, [
+                'property_path' => 'organisation',
                 'label' => 'Parent organisation',
                 'required' => false,
                 'class' => Organisation::class,
@@ -85,7 +86,7 @@ class LibraryForm extends FormType
             }
 
             if ($groups) {
-                $event->getForm()->add('parent', EntityType::class, [
+                $event->getForm()->add('organisation', EntityType::class, [
                     'class' => Organisation::class,
                     'required' => false,
                     'placeholder' => '-- Select --',

@@ -4,8 +4,6 @@ App\Entity\LibraryBase:
       groups: ['default', 'index']
     id:
       groups: ['default', 'index']
-    parent:
-      groups: ['parent']
     type:
       groups: ['default', 'index']
     consortium:

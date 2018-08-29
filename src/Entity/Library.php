@@ -49,6 +49,11 @@ class Library extends LibraryBase
      */
     protected $departments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="libraries")
+     */
+    private $organisation;
+
     public function __construct()
     {
         parent::__construct();
@@ -69,5 +74,10 @@ class Library extends LibraryBase
     public function getLinks() : Collection
     {
         return $this->links;
+    }
+
+    public function getOrganisation() : ?Organisation
+    {
+        return $this->organisation;
     }
 }

@@ -57,8 +57,8 @@
 
       <fieldset class="form-section">
         <legend>{% trans %}Relationships{% endtrans %}</legend>
-        {% if form.parent is defined %}
-          {{ form_row(form.parent) }}
+        {% if form.organisation is defined %}
+          {{ form_row(form.organisation) }}
         {% endif %}
 
         {% if form.consortium is defined %}

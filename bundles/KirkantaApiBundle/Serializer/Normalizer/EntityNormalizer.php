@@ -9,6 +9,7 @@ use App\Entity\Feature\Translatable;
 use App\Entity\Address;
 use App\Entity\City;
 use App\Entity\Facility;
+use App\Entity\Library;
 use App\Entity\Period;
 use App\Module\Finna\Entity\FinnaAdditions;
 use KirjastotFi\KirkantaApiBundle\Serializer\NameConverter\SnakesToCamelsConverter;
@@ -32,11 +33,12 @@ class EntityNormalizer extends ObjectNormalizer
         $normalizer->setOverride(City::class, 'consortium', [__CLASS__, 'entityId']);
         $normalizer->setOverride(City::class, 'region', [__CLASS__, 'entityId']);
 
-        $normalizer->setOverride(Facility::class, 'parent', [__CLASS__, 'entityId']);
         $normalizer->setOverride(Facility::class, 'consortium', [__CLASS__, 'entityId']);
         $normalizer->setOverride(Facility::class, 'city', [__CLASS__, 'entityId']);
 
         $normalizer->setOverride(FinnaAdditions::class, 'service_point', [__CLASS__, 'entityId']);
+        
+        $normalizer->setOverride(Library::class, 'parent', [__CLASS__, 'entityId']);
 
         $normalizer->setOverride(Period::class, 'valid_from', [$normalizer, 'formatDate']);
         $normalizer->setOverride(Period::class, 'valid_until', [$normalizer, 'formatDate']);
