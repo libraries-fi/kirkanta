@@ -14,9 +14,9 @@ framework:
         handler_id: ~
 
     serializer:
-      enabled: true
-      mapping:
-          paths: ['../src/Resources/config/serialization']
+        enabled: true
+        mapping:
+            paths: ['%kernel.project_dir%/src/Resources/config/serialization']
     php_errors:
         log: true
 
