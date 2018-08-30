@@ -32,9 +32,7 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-    KirjastotFi\KirkantaApiBundle\Controller\:
-        resource: '../bundles/KirkantaApiBundle/Controller'
-        tags: ['controller.service_arguments']
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -188,75 +186,30 @@ services:
 
 
 
-
-
-
-    kirkanta_api.query_compiler:
-        public: true
-        class: 'KirjastotFi\KirkantaApiBundle\QueryCompiler'
-        # arguments: ['@doctrine.orm.entity_manager', '@entity_type_manager']
-    KirjastotFi\KirkantaApiBundle\QueryCompiler: '@kirkanta_api.query_compiler'
-
-    KirjastotFi\KirkantaApiBundle\EventListener\WrapResponseIntoView:
-        arguments: ['@imagine', '%image_sizes%']
-        tags:
-            - { name: kernel.event_subscriber }
-
-    KirjastotFi\KirkantaApiBundle\Extension\Query\BasicQueryCompiler:
-        arguments: ['@doctrine.orm.entity_manager']
-        tags:
-            - { name: kirkanta_api.query_extension, priority: -1000 }
-    KirjastotFi\KirkantaApiBundle\Extension\Query\QueryTranslationCompiler:
-        arguments: ['@doctrine.orm.entity_manager']
-        tags:
-            - { name: kirkanta_api.query_extension, priority: -1000 }
-    KirjastotFi\KirkantaApiBundle\Extension\Query\OrganisationExtension:
-        tags:
-            - { name: kirkanta_api.query_extension }
-    KirjastotFi\KirkantaApiBundle\Extension\Query\LibraryExtension:
-        tags:
-            - { name: kirkanta_api.query_extension }
-    KirjastotFi\KirkantaApiBundle\Extension\Query\ConsortiumExtension:
-        tags:
-            - { name: kirkanta_api.query_extension }
-    KirjastotFi\KirkantaApiBundle\Extension\Query\ServiceExtension:
-        tags:
-            - { name: kirkanta_api.query_extension }
-    KirjastotFi\KirkantaApiBundle\Extension\Query\PersonExtension:
-        class: 'KirjastotFi\KirkantaApiBundle\Extension\Query\PersonExtension'
-        tags:
-            - { name: kirkanta_api.query_extension }
-    KirjastotFi\KirkantaApiBundle\Validator\Constraints\LanguageAllowedValidator:
-        arguments: ['%content_languages%']
-
     # NOTE: The built-in object normalizer has a priority -1000 so this must have a higher value.
-    kirkanta_api.normalizer.entity:
-        class: 'KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\EntityNormalizer'
-        factory: ['KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\EntityNormalizer', 'create']
+    kirkanta.normalizer.entity:
+        class: 'App\Module\ApiCache\Serializer\Normalizer\EntityNormalizer'
+        factory: ['App\Module\ApiCache\Serializer\Normalizer\EntityNormalizer', 'create']
         arguments: ['@serializer.mapping.class_metadata_factory', '@serializer.property_accessor']
         tags:
             - { name: serializer.normalizer, priority: -999}
 
-    KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\PictureNormalizer:
-        arguments: ['@kirkanta_api.normalizer.entity']
+    App\Module\ApiCache\Serializer\Normalizer\PictureNormalizer:
+        arguments: ['@kirkanta.normalizer.entity']
         tags:
             - { name: serializer.normalizer, priority: -998}
 
-    KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\PersonNormalizer:
-        arguments: ['@kirkanta_api.normalizer.entity']
+    App\Module\ApiCache\Serializer\Normalizer\PersonNormalizer:
+        arguments: ['@kirkanta.normalizer.entity']
         tags:
             - { name: serializer.normalizer, priority: -998}
-    KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\FinnaOrganisationNormalizer:
-        arguments: ['@kirkanta_api.normalizer.entity']
+    App\Module\ApiCache\Serializer\Normalizer\FinnaOrganisationNormalizer:
+        arguments: ['@kirkanta.normalizer.entity']
         tags:
             - { name: serializer.normalizer, priority: -998 }
-    KirjastotFi\KirkantaApiBundle\Serializer\Normalizer\CollectionNormalizer:
+    App\Module\ApiCache\Serializer\Normalizer\CollectionNormalizer:
         tags:
             - { name: serializer.normalizer, priority: -998 }
-    KirjastotFi\KirkantaApiBundle\EventListener\ExtractRefsSubscriber:
-        tags:
-            - { name: 'jms_serializer.event_subscriber' }
-
 
 
 

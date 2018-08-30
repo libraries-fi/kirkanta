@@ -103,15 +103,10 @@ abstract class LibraryBase extends Facility implements ApiCacheable
         parent::__construct();
 
         $this->accessibility = new ArrayCollection;
-        $this->links = new ArrayCollection;
         $this->mobile_stops = new ArrayCollection;
         $this->periods = new ArrayCollection;
-        $this->persons = new ArrayCollection;
         $this->phone_numbers = new ArrayCollection;
         $this->pictures = new ArrayCollection;
-
-        $this->weblinks = new ArrayCollection;
-        $this->link_groups = new ArrayCollection;
     }
 
     public function __toString()
@@ -351,11 +346,6 @@ abstract class LibraryBase extends Facility implements ApiCacheable
     public function getPeriods() : Collection
     {
         return $this->periods;
-    }
-
-    public function getPersons() : Collection
-    {
-        return $this->persons;
     }
 
     public function getPictures() : Collection

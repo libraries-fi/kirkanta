@@ -1,15 +1,6 @@
-kirkanta_api:
-    type: annotation
-    resource: '../../bundles/KirkantaApiBundle/Controller/'
-    prefix: '/v4'
-
 translation:
     type: annotation
     resource: '../../src/Module/Translation/Controller/'
-
-kirkanta_schedules:
-    type: annotation
-    resource: '../../src/Module/Schedules/Controller/'
 
 kirkanta_service_tree:
     type: annotation
@@ -38,8 +29,4 @@ library_routes:
 # NOTE: Put this last to allow other controllers to override generic functionality.
 entity_controller:
     resource: ../../src/Controller/EntityController.php
-    type: annotation
-
-api_cache:
-    resource: ../../src/Module/ApiCache/Controller/
     type: annotation

@@ -1492,6 +1492,8 @@ UPDATE organisations a SET type = 'museum' FROM organisations_data b WHERE role 
 
 
 
+ALTER TABLE schedules RENAME COLUMN status TO live_status;
+
 
 
 

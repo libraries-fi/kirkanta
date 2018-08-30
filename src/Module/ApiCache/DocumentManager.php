@@ -41,10 +41,8 @@ class DocumentManager
     {
         try {
             list($type_id, $document, $translations) = $this->serialize($entity);
-
             $entity_class = $this->types->getEntityClass($type_id);
-
-            $dql = sprintf('UPDATE %s e SET e.cached_document = :document WHERE e.id = :id', $entity_class);
+            $dql = "UPDATE {$entity_class} e SET e.cached_document = :document WHERE e.id = :id'";
 
             $query = $this->types->getEntityManager()->createQuery($dql);
             $query->execute([
@@ -59,13 +57,9 @@ class DocumentManager
 
     protected function serialize($entity) : array
     {
-        // $GLOBALS['API_SERIALIZE_MODE'] = 'cache';
-
         $context = ['groups' => ['default', 'api_cache']];
         $normalized = $this->serializer->normalize($entity, 'json', $context);
         $values = $this->serializer->serialize($entity, 'json', $context);
-
-        // unset($GLOBALS['API_SERIALIZE_MODE']);
 
         if ($entity instanceof Translatable) {
             $translations = [];
@@ -81,10 +75,5 @@ class DocumentManager
         $type_id = $this->types->getTypeId($class_name);
 
         return [$type_id, $values, null];
-        return [$type_id, $values, $translations];
-
-        // $document = $this->serializer->encode($normalized, 'json', $context);
-
-        // return $document;
     }
 }

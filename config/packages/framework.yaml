@@ -15,17 +15,9 @@ framework:
 
     serializer:
       enabled: true
-    #esi: ~
-    #fragments: ~
+      mapping:
+          paths: ['../src/Resources/config/serialization']
     php_errors:
         log: true
 
-    cache:
-        # The app cache caches to the filesystem by default. Other options include:
-
-        # Redis
-        #app: cache.adapter.redis
-        #default_redis_provider: redis://localhost
-
-        # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
-        #app: cache.adapter.apcu
+    cache: ~

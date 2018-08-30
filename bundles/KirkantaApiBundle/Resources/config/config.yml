@@ -1,8 +1,0 @@
-kirjastot_fi_kirkanta_api:
-  entity_types:
-    - organisation
-    - person
-    - service
-    - consortium
-    - city
-    - region

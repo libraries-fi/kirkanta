@@ -22,8 +22,7 @@ class ScheduleManager
 
     /**
      * NOTE: Field 'opens' is used to deduce the date for a row. If 'closes' is NULL, then
-     * the library is closed on that day. Field 'status' is the live status for the library.
-     * (Updated via a cron script.)
+     * the library is closed on that day. Live status is updated via a cron script.
      */
     public function loadSchedules(Library $library, DateTimeInterface $begin = NULL, DateTimeInterface $end = NULL) : array
     {
@@ -35,10 +34,8 @@ class ScheduleManager
             $end = new DateTime('+3 months');
         }
 
-        var_dump($begin, $end);
-
         $smt = $this->db->prepare('
-            SELECT opens, closes, staff, status, info, period
+            SELECT opens, closes, staff, live_status, info, period
             FROM schedules
             WHERE library = ? AND date(opens) BETWEEN ? AND ?
             ORDER BY opens

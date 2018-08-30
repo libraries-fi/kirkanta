@@ -59,11 +59,18 @@ class Library extends LibraryBase
         parent::__construct();
         $this->services = new ArrayCollection;
         $this->departments = new ArrayCollection;
+        $this->persons = new ArrayCollection;
+        $this->links = new ArrayCollection;
     }
 
     public function getDepartments() : Collection
     {
         return $this->departments;
+    }
+
+    public function getPersons() : Collection
+    {
+        return $this->persons;
     }
 
     public function getServices() : Collection

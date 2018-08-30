@@ -6,19 +6,13 @@ security:
     providers:
         user_db:
             entity: { class: App\Entity\User, property: username }
-        # current_user:
-        #     id: 'KirjastotFi\KirkantaBundle\Security\CurrentUserProvider'
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        api:
-            pattern: ^/v4/
-            security: false
         main:
             pattern: ^
             provider: user_db
-            http_basic: ~
             anonymous: ~
             form_login:
                 login_path: user.login

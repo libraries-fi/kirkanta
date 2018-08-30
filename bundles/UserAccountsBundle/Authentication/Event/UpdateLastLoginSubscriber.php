@@ -2,6 +2,7 @@
 
 namespace UserAccountsBundle\Authentication\Event;
 
+use UserAccountsBundle\UserInterface;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -27,12 +28,14 @@ class UpdateLastLoginSubscriber implements EventSubscriberInterface
     {
         $user = $event->getAuthenticationToken()->getUser();
 
-        $qb = $this->entity_manager->createQueryBuilder();
-        $qb->update($this->user_class, 'u')
-        ->set('u.last_login', $qb->expr()->literal((new DateTime)->format('Y-m-d H:i:s')))
-        ->where('u.id = ?1')
-        ->setParameter(1, $user->getId())
-        ->getQuery()
-        ->execute();
+        if ($user instanceof UserInterface) {
+            $qb = $this->entity_manager->createQueryBuilder();
+            $qb->update($this->user_class, 'u')
+            ->set('u.last_login', $qb->expr()->literal((new DateTime)->format('Y-m-d H:i:s')))
+            ->where('u.id = ?1')
+            ->setParameter(1, $user->getId())
+            ->getQuery()
+            ->execute();
+        }
     }
 }
