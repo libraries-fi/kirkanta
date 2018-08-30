@@ -42,7 +42,7 @@ class DocumentManager
         try {
             list($type_id, $document, $translations) = $this->serialize($entity);
             $entity_class = $this->types->getEntityClass($type_id);
-            $dql = "UPDATE {$entity_class} e SET e.cached_document = :document WHERE e.id = :id'";
+            $dql = "UPDATE {$entity_class} e SET e.cached_document = :document WHERE e.id = :id";
 
             $query = $this->types->getEntityManager()->createQuery($dql);
             $query->execute([
