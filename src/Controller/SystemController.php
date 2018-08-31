@@ -19,27 +19,32 @@ class SystemController extends Controller
     /**
      * @Route("/", name="front")
      */
-    public function frontAction(Request $request, AuthorizationCheckerInterface $auth, EntityTypeManager $entities)
+    public function frontAction(Request $request, EntityTypeManager $entities)
     {
-        if (!$auth->isGranted('MANAGE_ALL_ENTITIES')) {
-            $organisations = $entities->getListBuilder('organisation')->load();
-            $consortiums = $entities->getListBuilder('consortium')->load();
-            $finna_organisations = $entities->getListBuilder('finna_organisation')->load();
+        $view = [];
+
+        if (!$this->isGranted('MANAGE_ALL_ENTITIES')) {
+            $view['organisations'] = $entities->getListBuilder('organisation')->load();
+            $view['consortiums'] = $entities->getListBuilder('consortium')->load();
+            $view['finna_organisations'] = $entities->getListBuilder('finna_organisation')->load();
         }
 
-        if ($user = $this->getUser()) {
+        if ($this->isGranted('ROLE_USER')) {
             $storage = $this->getEntityTypeManager()->getRepository('notification');
-            $notifications = $storage->findUnreadByUser($user);
+            $view['notifications'] = $storage->findUnreadByUser($this->getUser());
         } else {
             $notifications = [];
         }
 
-        return $this->render('index.html.twig', [
-            'notifications' => $notifications,
-            'organisations' => $organisations ?? null,
-            'consortiums' => $consortiums ?? null,
-            'finna_organisations' => $finna_organisations ?? null,
-        ]);
+        if ($this->isGranted('ROLE_USER_MANAGER')) {
+            $group = $this->getUser()->getGroup();
+            $managed_users = $this->getEntityTypeManager()->getRepository('user')
+                ->findBy(['group' => $group]);
+
+            $view['user_management']['users'] = $managed_users;
+        }
+
+        return $this->render('index.html.twig', $view);
     }
 
     /**

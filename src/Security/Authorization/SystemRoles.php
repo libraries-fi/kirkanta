@@ -19,7 +19,7 @@ class SystemRoles
         return [
             'Common permissions' => [
                 // 'Regular user' => 'ROLE_USER',
-                'Manage users in own group' => 'ROLE_USER_MANAGER',
+                'Manage users in own group' => 'ROLE_GROUP_MANAGER',
             ],
             'Administration' => [
             ],

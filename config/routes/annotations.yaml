@@ -1,3 +1,7 @@
+user.login:
+    path: '/login'
+    controller: 'UserAccountsBundle:Account:login'
+
 translation:
     type: annotation
     resource: '../../src/Module/Translation/Controller/'
@@ -10,21 +14,21 @@ finna_additions:
     type: annotation
     resource: '../../src/Module/Finna/Controller/'
 
-user.login:
-    path: '/login'
-    controller: 'UserAccountsBundle:Account:login'
-
 controllers:
-    resource: ../../src/Controller/
     type: annotation
+    resource: '../../src/Controller/'
+
+user_management:
+    type: annotation
+    resource: '../../src/Module/UserManagement/Controller/'
 
 entity_routes:
-    resource: 'App\Routing\EntityRouteLoader:load'
     type: entity_routes
+    resource: 'App\Routing\EntityRouteLoader:load'
 
 library_routes:
-    resource: 'App\Routing\LibraryRouteLoader:load'
     type: library_routes
+    resource: 'App\Routing\LibraryRouteLoader:load'
 
 # NOTE: Put this last to allow other controllers to override generic functionality.
 entity_controller:

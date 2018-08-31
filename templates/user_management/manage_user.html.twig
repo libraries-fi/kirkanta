@@ -1,0 +1,25 @@
+{% extends "entity/edit.html.twig" %}
+
+{% set entity_type = "user" %}
+
+{% block title_text %}Manage user #{{ user.id }}{% endblock %}
+
+{% block form_body %}
+  <fieldset class="form-section">
+    <legend>{% trans %}Account{% endtrans %}</legend>
+    {{ form_row(form.username) }}
+    {{ form_row(form.email) }}
+    <ul>
+      <li class="text-muted">{% trans %}Forgotten passwords can be changed by ordering a recovery link by email.{% endtrans %}</li>
+    </ul>
+    <a href="#na" class="btn btn-link">{% trans %}Send a recovery link{% endtrans %}</a>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Settings{% endtrans %}</legend>
+    {{ form_row(form.group_manager) }}
+    <ul>
+      <li class="text-muted">{% trans %}For safety reasons, the number of group administrators is limited.{% endtrans %}</li>
+    </ul>
+  </fieldset>
+{% endblock %}

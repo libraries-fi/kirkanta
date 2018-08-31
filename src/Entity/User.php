@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
+use App\Entity\Feature\CreatedAwareness;
+use App\Module\UserManagement\Validator\GroupManagerCount;
 use DateTime;
 use Serializable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Feature\CreatedAwareness;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use UserAccountsBundle\BasicUserImplementation;
 use UserAccountsBundle\UserInterface;
+
 
 /**
  * @ORM\Entity
@@ -24,6 +28,11 @@ class User extends EntityBase implements CreatedAwareness, Serializable, UserInt
     use Feature\CreatedAwarenessTrait;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $municipal_account = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="UserGroup")
      */
     protected $group;
@@ -34,12 +43,14 @@ class User extends EntityBase implements CreatedAwareness, Serializable, UserInt
      */
     protected $read_notifications;
 
-    private $cachedRoles;
+    /**
+     * @GroupManagerCount
+     */
+    private $group_manager;
 
     public function __construct()
     {
         parent::__construct();
-        $this->roles = new ArrayCollection;
         $this->read_notifications = new ArrayCollection;
     }
 
@@ -87,5 +98,34 @@ class User extends EntityBase implements CreatedAwareness, Serializable, UserInt
     public function getReadNotifications() : Collection
     {
         return $this->read_notifications;
+    }
+
+    public function isMunicipalAccount() : bool
+    {
+        return $this->municipal_account;
+    }
+
+    public function isGroupManager() : bool
+    {
+        if (is_null($this->group_manager)) {
+            $role_id = \UserAccountsBundle\UserInterface::GROUP_MANAGER_ROLE;
+            $this->group_manager = in_array($role_id, $this->getRoles());
+        }
+
+        return $this->group_manager;
+    }
+
+    public function setGroupManager(bool $state) : void
+    {
+        $role_id = \UserAccountsBundle\UserInterface::GROUP_MANAGER_ROLE;
+        $pos = array_search($role_id, $this->roles);
+
+        if ($state && $pos === false) {
+            $this->roles[] = $role_id;
+        } elseif (!$state && $pos !== false) {
+            unset($this->roles[$pos]);
+        }
+
+        $this->group_manager = $state;
     }
 }

@@ -38,6 +38,11 @@ class UserGroup extends EntityBase
      */
     private $roles;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $max_group_admins = 3;
+
     public function __construct($name = null)
     {
         parent::__construct();
@@ -110,5 +115,15 @@ class UserGroup extends EntityBase
     public function getRoot() : UserGroup
     {
         return $this->getParent() ? $this->getParent()->getRoot() : $this;
+    }
+
+    public function getMaxGroupAdmins() : int
+    {
+        return $this->max_group_admins;
+    }
+
+    public function setMaxGroupAdmins(int $limit) : void
+    {
+        $this->max_group_admins = $limit;
     }
 }

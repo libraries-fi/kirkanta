@@ -1507,3 +1507,53 @@ UPDATE organisations SET state = 0 WHERE role in ('mobile_stop');
 
 
 ALTER TABLE organisations RENAME COLUMN parent_id TO organisation_id;
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+
+ALTER TABLE users ADD COLUMN municipal_account bool NOT NULL DEFAULT false;
+UPDATE users SET municipal_account = true WHERE email NOT LIKE '%@kirjastot.fi' AND email NOT LIKE '%@biblioteken.fi';
+
+ALTER TABLE users ADD COLUMN expires date;
+
+
+-- From now on 'username' will contain the personal name of a user, not an actual username.
+ALTER TABLE users DROP CONSTRAINT users_username_key;
+
+
+-- Nullify duplicate emails to allow for UNIQUE constraint.
+UPDATE users SET email = NULL WHERE email = '';
+UPDATE users SET email = NULL WHERE id IN (14948, 14621, 15013, 15028, 15029, 14949, 15031);
+
+
+-- Email addresses are used as logins so they have to be unique.
+ALTER TABLE users ADD UNIQUE(email);
+
+
+ALTER TABLE user_groups ADD COLUMN max_group_admins int;
+UPDATE user_groups SET max_group_admins = 3;
+
+ALTER TABLE user_groups ALTER COLUMN max_group_admins SET NOT NULL;
+
+ALTER TABLE users DROP COLUMN roles;
+ALTER TABLE users ADD COLUMN roles text[];
+
+UPDATE users SET roles = ARRAY['ROLE_GROUP_MANAGER'];
+UPDATE users SET roles = ARRAY['ROLE_ROOT'] WHERE email like '%@kirjastot.fi';
+
+ALTER TABLE user_groups DROP COLUMN roles;
+ALTER TABLE user_groups ADD COLUMN roles text[];
+
+UPDATE user_groups SET roles = ARRAY['ROLE_FINNA'] WHERE parent_id = (SELECT id FROM user_groups WHERE role_id = 'finna');
+
+
+
+
+-- COMMIT PLACEHOLDER --

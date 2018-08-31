@@ -14,7 +14,7 @@
 
 {% block content %}
   <div class="form-section">
-    {% if notifications is not empty %}
+    {% if notifications|default() is not empty %}
       <p>
         <i class="fa fa-bell text-danger"></i>
         <span class="ml-3">{% transchoice notifications|length %}{1}You have one new notification.|]1,Inf[You have %count% unread notifications.{% endtranschoice %}
@@ -24,22 +24,35 @@
       <p><i class="far fa-bell text-muted"></i> <span class="ml-2">{% trans %}No unread notifications.{% endtrans %}</span></p>
     {% endif %}
   </div>
+  {% if app.user.isMunicipalAccount() %}
+    <div class="border p-3 mb-3">
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        {% trans %}Municipal accounts will be removed in the future.{% endtrans %}
+      </div>
+      <ul>
+        <li>
+          <a href="{{ path('user_management.create_user') }}">Create a personal account</a>
+        </li>
+      </ul>
+    </div>
+  {% endif %}
 
   <div class="row">
-    {% if organisations is not empty %}
+    {% if organisations|default() is not empty %}
       <div class="col">
         <div class="border p-3 mb-3">
           {{ block("user_parent_organisation") }}
         </div>
       </div>
     {% endif %}
-    {% if finna_organisations is not empty %}
+    {% if finna_organisations|default() is not empty %}
       <div class="col">
         <div class="border p-3 mb-3">
           {{ block("user_finna_organisation") }}
         </div>
       </div>
-    {% elseif consortiums is not empty %}
+    {% elseif consortiums|default() is not empty %}
       <div class="col">
         <div class="border p-3 mb-3">
           {{ block("user_consortium") }}
@@ -55,6 +68,16 @@
       </div>
     </div>
   </div>
+
+  {% if user_management is defined %}
+    <div class="row">
+      <div class="col">
+        <div class="border p-3 mb-3">
+          {{ block("user_manager") }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block user_consortium %}
@@ -96,4 +119,10 @@
   <ul>
     <li class="font-italic">Pasilan kirjasto is outdated</li>
   </ul>
+{% endblock %}
+
+{% block user_manager %}
+  <h2>{% trans %}User management{% endtrans %}</h2>
+  <p>{% trans %}You are allowed to manage user accounts in your group.{% endtrans %}</p>
+  <a href="{{ path('user_management.own_group') }}">{% trans %}Manage users{% endtrans %}</a>
 {% endblock %}

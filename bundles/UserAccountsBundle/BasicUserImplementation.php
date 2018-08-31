@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait BasicUserImplementation
 {
@@ -37,9 +38,19 @@ trait BasicUserImplementation
     protected $last_login;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="text_array")
      */
     protected $roles = [];
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $expires;
+
+    /**
+     * @Assert\Length(min = 8, max = 100)
+     */
+    private $raw_password;
 
     public function getId() : int
     {
@@ -66,7 +77,7 @@ trait BasicUserImplementation
         $this->password = $hash;
     }
 
-    public function getEmail() : string
+    public function getEmail() : ?string
     {
         return $this->email;
     }
@@ -101,7 +112,17 @@ trait BasicUserImplementation
      */
     public function eraseCredentials() : void
     {
-        // Pass
+        $this->raw_password = null;
+    }
+
+    public function getRawPassword() : ?string
+    {
+        return $this->raw_password;
+    }
+
+    public function setRawPassword(?string $password) : void
+    {
+        $this->raw_password = $password;
     }
 
     public function serialize() : string
@@ -117,5 +138,35 @@ trait BasicUserImplementation
     public function getSalt() : ?string
     {
         return null;
+    }
+
+    public function getExpires() : ?DateTimeInterface
+    {
+        return $this->expires;
+    }
+
+    public function setExpires(?DateTimeInterface $date) : void
+    {
+        $this->expires = $date;
+    }
+
+    public function isAccountNonExpired() : bool
+    {
+        return !$this->expires || $this->expires < new DateTime;
+    }
+
+    public function isAccountNonLocked() : bool
+    {
+        return $this->isAccountNonExpired();
+    }
+
+    public function isCredentialsNonExpired() : bool
+    {
+        return $this->isAccountNonExpired();
+    }
+
+    public function isEnabled() : bool
+    {
+        return $this->isAccountNonExpired();
     }
 }

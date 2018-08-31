@@ -78,13 +78,13 @@ class BreadcrumbBuilder
             $resource = $parameters['resource'];
             $type_id = OrganisationController::$resources[$resource];
             return $this->types->getTypeLabel($type_id, true);
-        } else {
-            switch ($route_name) {
-                case 'admin':
-                    return 'Administration';
-            }
         }
 
-        return null;
+        $titles = [
+            'admin' => 'Administration',
+            'user_management.own_group' => 'User management',
+        ];
+
+        return $titles[$route_name] ?? null;
     }
 }

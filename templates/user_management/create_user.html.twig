@@ -1,0 +1,38 @@
+{% extends "entity/edit.html.twig" %}
+
+{% set entity_type = "user" %}
+
+{% block title_text %}Create a new user {% endblock %}
+
+{% block form_body %}
+  <fieldset class="form-section">
+    <legend>{% trans %}Account{% endtrans %}</legend>
+    {{ form_row(form.username) }}
+    {{ form_row(form.email) }}
+    <ul>
+      <li class="text-muted">{% trans %}Users will login using email address.{% endtrans %}</li>
+      <li class="text-danger">{% trans %}Every account <b>MUST</b> be a personal account{% endtrans %}</li>
+    </ul>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Settings{% endtrans %}</legend>
+    {{ form_row(form.group) }}
+    {{ form_row(form.group_manager) }}
+    <ul>
+      <li class="text-muted">{% trans %}Group administrators are allowed to create new user accounts.{% endtrans %}</li>
+      <li class="text-danger">{% trans %}For safety reasons, the number of group administrators is limited.{% endtrans %}</li>
+    </ul>
+  </fieldset>
+
+  {% if form.password is defined %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Password{% endtrans %}</legend>
+      {{ form_row(form.password) }}
+      <ul>
+        <li class="text-muted">{% trans %}Users will be emailed with an activation link.{% endtrans %}</li>
+        <li class="text-danger">{% trans %}Set password <b>ONLY</b> if this account is for yourself.{% endtrans %}</li>
+      </ul>
+    </fieldset>
+  {% endif %}
+{% endblock %}
