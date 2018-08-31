@@ -36,7 +36,7 @@ class SystemController extends Controller
             $notifications = [];
         }
 
-        if ($this->isGranted('ROLE_USER_MANAGER') && !$this->isGranted('ROLE_ROOT')) {
+        if ($this->isGranted('ROLE_GROUP_MANAGER') && !$this->isGranted('ROLE_ROOT')) {
             $group = $this->getUser()->getGroup();
             $managed_users = $this->getEntityTypeManager()->getRepository('user')
                 ->findBy(['group' => $group]);
