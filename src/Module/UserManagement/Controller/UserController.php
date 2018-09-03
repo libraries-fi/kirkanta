@@ -167,22 +167,15 @@ class UserController extends Controller
      */
     public function manageUser(Request $request, UserInterface $user)
     {
-        $form = $this->createFormBuilder($user)
-            ->add('username', null, [
-                'label' => 'Name'
-            ])
+        $form = $this->types
+            ->getForm('user', 'edit', $user)
+            ->remove('group')
+            ->remove('roles')
             ->add('group_manager', CheckboxType::class, [
                 'label' => 'Make this account a group administrator',
                 'required' => false,
-            ])
-            ->add('email', EmailType::class)
-            ->add('actions', FormType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->getForm();
+            ]);
 
-        $form->get('actions')->add('submit', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

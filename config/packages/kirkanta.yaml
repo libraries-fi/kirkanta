@@ -143,7 +143,7 @@ parameters:
             class_name: 'App\Entity\User'
             list_builder: 'App\Entity\ListBuilder\UserListBuilder'
             forms:
-                default: 'App\Form\UserForm'
+                default: 'App\Module\UserManagement\Form\UserForm'
                 search: 'App\Form\UserSearchForm'
         user_group:
             id: user_group

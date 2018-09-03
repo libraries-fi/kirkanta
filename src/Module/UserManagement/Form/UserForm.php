@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Form;
+namespace App\Module\UserManagement\Form;
 
 use App\Entity\UserGroup;
+use App\Form\FormType;
 use App\Security\Authorization\SystemRoles;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,6 +20,7 @@ class UserForm extends FormType
             ->add('username')
             ->add('email', EmailType::class)
             ->add('group', EntityType::class, [
+                'label' => 'User group',
                 'placeholder' => '-- Any --',
                 'class' => UserGroup::class,
                 'choice_label' => 'name'
@@ -33,6 +37,15 @@ class UserForm extends FormType
                     }
                     return [];
                 }
+            ])
+            ->add('expires', DateType::class, [
+                'label' => 'Expiration date',
+                'required' => false,
+                'placeholder' => [
+                    'day' => '-- Day --',
+                    'month' => '-- Month --',
+                    'year' => '-- Year --'
+                ]
             ])
 
             ;

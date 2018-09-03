@@ -1,0 +1,17 @@
+{% extends "user_management/manage_user.html.twig" %}
+
+{% block form_base_fields %}
+  {{ parent() }}
+  {{ form_row(form.group) }}
+{% endblock %}
+
+{% block form_group_manager %}
+
+{% endblock %}
+
+{% block form_extra_groups %}
+  <fieldset class="form-section">
+    <legend>{% trans %}Permissions{% endtrans %}</legend>
+    {{ form_row(form.roles) }}
+  </fieldset>
+{% endblock %}

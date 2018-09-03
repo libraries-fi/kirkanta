@@ -5,21 +5,50 @@
 {% block title_text %}Manage user #{{ user.id }}{% endblock %}
 
 {% block form_body %}
-  <fieldset class="form-section">
-    <legend>{% trans %}Account{% endtrans %}</legend>
-    {{ form_row(form.username) }}
-    {{ form_row(form.email) }}
-    <ul>
-      <li class="text-muted">{% trans %}Forgotten passwords can be changed by ordering a recovery link by email.{% endtrans %}</li>
-    </ul>
-    <a href="#na" class="btn btn-link">{% trans %}Send a recovery link{% endtrans %}</a>
-  </fieldset>
+  {% if user is defined and user.expires %}
+    <div class="alert alert-warning">{% trans with {"%date%": user.expires|date()} %}This account is set to expire on %date%{% endtrans %}</div>
+  {% endif %}
 
   <fieldset class="form-section">
-    <legend>{% trans %}Settings{% endtrans %}</legend>
-    {{ form_row(form.group_manager) }}
+    <legend>{% trans %}User account{% endtrans %}</legend>
+    {% block form_base_fields %}
+      {{ form_row(form.username) }}
+      {{ form_row(form.email) }}
+    {% endblock %}
+
     <ul>
-      <li class="text-muted">{% trans %}For safety reasons, the number of group administrators is limited.{% endtrans %}</li>
+      <li class="text-muted">{% trans %}Forgotten passwords can be changed by ordering a recovery link by email.{% endtrans %}</li>
+      <li>
+        <a href="#na" class="btn btn-link pl-0">{% trans %}Send a recovery link{% endtrans %}</a>
+      </li>
     </ul>
   </fieldset>
+
+  {% block form_extra_groups %}
+
+  {% endblock %}
+
+  {% block form_group_manager %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Settings{% endtrans %}</legend>
+      {{ form_row(form.group_manager) }}
+      <ul>
+        <li class="text-muted">{% trans %}For safety reasons, the number of group administrators is limited.{% endtrans %}</li>
+      </ul>
+    </fieldset>
+  {% endblock %}
+
+  {% block form_account_management %}
+    <fieldset class="form-section">
+      <legend>{% trans %}User management{% endtrans %}</legend>
+      <div class="form-group">
+        <label for="account_status">{% trans %}Account status{% endtrans %}</label>
+        <input type="text" id="account_status" class="form-control-plaintext" readonly value="{% if user.enabled %}Account is active{% else %}Account has been disabled{% endif %}"/>
+      </div>
+      {{ form_row(form.expires) }}
+      <ul>
+        <li class="text-muted">{% trans %}Account will be disabled on this date.{% endtrans %}</li>
+      </ul>
+    </fieldset>
+  {% endblock %}
 {% endblock %}
