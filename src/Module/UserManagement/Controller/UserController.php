@@ -75,7 +75,7 @@ class UserController extends Controller
 
     /**
      * @Route("/user_management/add", name="user_management.create_user", defaults={"entity_type": "user"})
-     * @Template("user_management/create_user.html.twig")
+     * @Template("user_management/create-user.html.twig")
      */
     public function createUser(Request $request, UserPasswordEncoderInterface $passwords)
     {
@@ -163,7 +163,7 @@ class UserController extends Controller
     /**
      * @Route("/user_management/{user}", name="user_management.manage_user", defaults={"entity_type": "user"})
      * @ParamConverter("user", converter="entity_from_type_and_id")
-     * @Template("user_management/manage_user.html.twig")
+     * @Template("user_management/manage-user.html.twig")
      */
     public function manageUser(Request $request, UserInterface $user)
     {

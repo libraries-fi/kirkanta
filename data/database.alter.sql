@@ -1557,3 +1557,25 @@ UPDATE user_groups SET roles = ARRAY['ROLE_FINNA'] WHERE parent_id = (SELECT id 
 
 
 -- COMMIT PLACEHOLDER --
+
+
+
+
+
+CREATE TABLE one_time_tokens (
+  token varchar(64) NOT NULL,
+  purpose varchar(64) NOT NULL,
+  created timestamptz NOT NULL,
+  user_id int NOT NULL,
+
+  PRIMARY KEY(token),
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+COMMENT ON COLUMN one_time_tokens.token IS 'Hash of the token used in authentication URLs.';
+COMMENT ON COLUMN one_time_tokens.purpose IS 'Keyword for identifying what the token is used for.';
+
+
+
+
+-- COMMIT PLACEHOLDER --

@@ -53,3 +53,8 @@ doctrine:
                 type: annotation
                 dir: '%kernel.project_dir%/src/Module/ServiceTree/Entity'
                 prefix: 'App\Module\ServiceTree\Entity'
+            UserManagement:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Module/UserManagement/Entity'
+                prefix: 'App\Module\UserManagement\Entity'
