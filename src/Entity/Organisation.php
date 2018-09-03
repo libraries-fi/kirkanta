@@ -18,7 +18,7 @@ class Organisation extends Facility
     private $type;
 
     /**
-     * @ORM\OneToMany(targetEntity="Library", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Library", mappedBy="organisation")
      */
     private $libraries;
 
