@@ -5,7 +5,7 @@ namespace App\Module\UserManagement\Entity;
 use App\Entity\Feature;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use UserAccountsBundle\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Module\UserManagement\Doctrine\OneTimeTokenRepository")
