@@ -4,20 +4,25 @@ namespace App\Entity;
 
 use App\Entity\Feature\Translatable;
 use App\Entity\Feature\Weight;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Doctrine\Common\Collections\Collection;
-
 /**
+ * NOTE: In order to implement two-level discriminator mapping, we're using a read-write view as
+ * a source for Doctrine (as per the Table annotation).
+ *
  * @ORM\Entity
  * @ORM\Table(name="contact_info_doctrine")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
+ *     "library:email" = "EmailAddress",
  *     "library:phone" = "PhoneNumber",
  *     "library:website" = "WebsiteLink",
- *     "foreign:phone" = "ServicePointPhoneNumber"
+ *     "foreign:email" = "ServicePointEmailAddress",
+ *     "foreign:phone" = "ServicePointPhoneNumber",
+ *     "foreign:website" = "ServicePointWebsiteLink",
  * })
  */
 abstract class ContactInfo extends EntityBase implements Translatable, Weight
@@ -78,21 +83,6 @@ abstract class ContactInfo extends EntityBase implements Translatable, Weight
         $this->translations[$this->langcode]->setDescription($description);
     }
 
-    public function setDepartment(Department $department) : void
-    {
-        $this->department = $department;
-    }
-
-    public function getDepartment() : Department
-    {
-        return $this->department;
-    }
-
-    public function getTranslations() : Collection
-    {
-        return $this->translations;
-    }
-
     public function getParent() : Facility
     {
         return $this->parent;
@@ -101,5 +91,10 @@ abstract class ContactInfo extends EntityBase implements Translatable, Weight
     public function setParent(Facility $facility) : void
     {
         $this->parent = $facility;
+    }
+
+    public function getTranslations() : Collection
+    {
+        return $this->translations;
     }
 }

@@ -161,12 +161,12 @@ class OrganisationData extends EntityDataBase
         $this->building_name = $name;
     }
 
-    public function getEntity() : Library
+    public function getEntity() : Organisation
     {
         return $this->entity;
     }
 
-    public function setEntity(Library $entity) : void
+    public function setEntity(Organisation $entity) : void
     {
         $this->entity = $entity;
     }

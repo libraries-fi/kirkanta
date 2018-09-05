@@ -2,15 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Consortium;
-use App\Entity\Region;
-use App\Entity\RegionalLibrary;
-use App\Util\PersonQualities;
+use App\Entity\Department;
+use App\Entity\Library;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContactInfoForm extends FormType
+class ContactInfoForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
@@ -19,5 +16,14 @@ class ContactInfoForm extends FormType
                 'entry_type' => EntityData\ContactInfoDataType::class,
             ])
             ;
+
+        if ($options['context_entity'] instanceof Library) {
+            $builder->add('department', EntityType::class, [
+                'required' => false,
+                'class' => Department::class,
+                'choices' => $options['context_entity']->getDepartments(),
+                'placeholder' => $options['context_entity']->getName(),
+            ]);
+        }
     }
 }

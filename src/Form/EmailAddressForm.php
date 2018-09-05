@@ -2,17 +2,17 @@
 
 namespace App\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
-class WebsiteLinkForm extends ContactInfoForm
+class EmailAddressForm extends ContactInfoForm
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         parent::form($builder, $options);
 
-        $builder->add('contact', UrlType::class, [
-            'label' => 'URL'
+        $builder->add('contact', EmailType::class, [
+            'label' => 'Email address'
         ]);
     }
 }

@@ -6,7 +6,7 @@ use App\Util\ServiceTypes;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ServiceForm extends FormType
+class ServiceForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {

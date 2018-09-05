@@ -1578,4 +1578,40 @@ COMMENT ON COLUMN one_time_tokens.purpose IS 'Keyword for identifying what the t
 
 
 
+
+ALTER TABLE organisations ALTER COLUMN type DROP NOT NULL;
+
+
+
+
+
+ALTER TABLE contact_info ADD COLUMN department_id int;
+ALTER TABLE contact_info ADD FOREIGN KEY(department_id) REFERENCES departments(id) ON DELETE CASCADE;
+
+ALTER TABLE contact_info ALTER COLUMN parent_id SET NOT NULL;
+
+
+-- Recreate the view to accommodate the new column.
+CREATE OR REPLACE VIEW contact_info_doctrine AS
+  SELECT attached_to || ':' || type AS type, id, contact, weight, parent_id, department_id
+  FROM contact_info a
+;
+
+CREATE OR REPLACE RULE split_type_id AS ON INSERT TO contact_info_doctrine
+  DO INSTEAD
+    INSERT INTO contact_info (id, attached_to, type, contact, weight, parent_id, department_id)
+    VALUES (
+      NEW.id,
+      left(NEW.type, position(':' IN NEW.type) - 1)::facility_role,
+      substring(NEW.type FROM position(':' IN NEW.type) + 1)::contact_info_type,
+      NEW.contact,
+      NEW.weight,
+      NEW.parent_id,
+      NEW.department_id
+    )
+;
+
+
+
+
 -- COMMIT PLACEHOLDER --

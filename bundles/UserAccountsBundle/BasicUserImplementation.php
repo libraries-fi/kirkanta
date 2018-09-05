@@ -152,7 +152,7 @@ trait BasicUserImplementation
 
     public function isAccountNonExpired() : bool
     {
-        return !$this->expires || $this->expires < new DateTime;
+        return !$this->expires || $this->expires > new DateTime;
     }
 
     public function isAccountNonLocked() : bool

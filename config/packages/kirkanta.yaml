@@ -42,14 +42,6 @@ parameters:
             list_builder: 'App\Entity\ListBuilder\DepartmentListBuilder'
             forms:
                 default: 'App\Form\DepartmentForm'
-        service_point:
-          id: service_point
-          label: 'Service point'
-          label_multiple: 'Service points'
-          class_name: 'App\Entity\ServicePoint'
-          list_builder: 'App\Entity\ListBuilder\ServicePointListBuilder'
-          forms:
-              default: 'App\Form\ServicePointForm'
         # custom_data:
         #     id: custom_data
         #     label: 'Custom data'
@@ -170,14 +162,6 @@ parameters:
             list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
             forms:
                 default: 'App\Form\PhoneNumberForm'
-        service_point_phone:
-            id: service_point_phone
-            label: 'Phone number'
-            label_multiple: 'Phone numbers'
-            class_name: 'App\Entity\ServicePointPhoneNumber'
-            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
-            forms:
-                default: 'App\Form\PhoneNumberForm'
         service_category:
             id: service_category
             label: 'Service category'
@@ -207,6 +191,46 @@ parameters:
             label: 'Website'
             label_multiple: 'Websites'
             class_name: 'App\Entity\WebsiteLink'
+            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
+            forms:
+                default: 'App\Form\WebsiteLinkForm'
+        email_address:
+            id: email_address
+            label: 'Email address'
+            label_multiple: 'Email addresses'
+            class_name: 'App\Entity\EmailAddress'
+            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
+            forms:
+                default: 'App\Form\EmailAddressForm'
+        service_point:
+            id: service_point
+            label: 'Service point'
+            label_multiple: 'Service points'
+            class_name: 'App\Entity\ServicePoint'
+            list_builder: 'App\Entity\ListBuilder\ServicePointListBuilder'
+            forms:
+                default: 'App\Form\ServicePointForm'
+        service_point_phone:
+            id: service_point_phone
+            label: 'Phone number'
+            label_multiple: 'Phone numbers'
+            class_name: 'App\Entity\ServicePointPhoneNumber'
+            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
+            forms:
+                default: 'App\Form\PhoneNumberForm'
+        service_point_email_address:
+            id: service_point_email_address
+            label: 'Email address'
+            label_multiple: 'Email addresses'
+            class_name: 'App\Entity\ServicePointEmailAddress'
+            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
+            forms:
+                default: 'App\Form\EmailAddressForm'
+        service_point_web_link:
+            id: service_point_web_link
+            label: 'Website'
+            label_multiple: 'Websites'
+            class_name: 'App\Entity\ServicePointWebsiteLink'
             list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
             forms:
                 default: 'App\Form\WebsiteLinkForm'

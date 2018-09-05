@@ -21,7 +21,6 @@ abstract class EntityFormType extends FormType
     {
         parent::configureOptions($options);
         $options->setDefaults([
-            // 'data_class' => 'string'
             'context_entity' => null,
         ]);
     }

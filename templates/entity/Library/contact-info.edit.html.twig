@@ -1,4 +1,4 @@
-{% extends "entity/Organisation/resources-edit.html.twig" %}
+{% extends "entity/Library/resources-edit.html.twig" %}
 
 {% block form %}
   {{ form_start(form) }}
@@ -7,6 +7,11 @@
   <fieldset class="form-section">
     <legend>{% trans %}Basic details{% endtrans %}</legend>
     {{ form_row(form.contact) }}
+
+    {% if form.department is defined %}
+      {{ form_row(form.department) }}
+    {% endif %}
+
     {{ form_row(form.name) }}
     {{ form_row(form.description) }}
   </fieldset>

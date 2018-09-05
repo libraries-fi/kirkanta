@@ -19,6 +19,7 @@ class OrganisationController extends Controller
 
     public static $resources = [
         'departments' => 'department',
+        'email_addresses' => 'email_address',
         'links' => 'web_link',
         'periods' => 'period',
         'persons' => 'person',
@@ -105,6 +106,7 @@ class OrganisationController extends Controller
                 break;
 
             case 'departments':
+            case 'email_addresses':
             case 'links':
             case 'pictures':
             case 'phone_numbers':
@@ -184,9 +186,8 @@ class OrganisationController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $entity = $this->types->getRepository($type_id)->create($form->getData()->getValues());
 
-            // Is this needed or is it enough to pass 'library' to the form object?
-            if (method_exists($entity, 'setLibrary')) {
-                $entity->setLibrary($library);
+            if (method_exists($entity, 'setParent')) {
+                $entity->setParent($library);
             }
 
             $this->types->getEntityManager()->persist($entity);

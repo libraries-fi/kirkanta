@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class LibraryPhotoForm extends FormType
+class LibraryPhotoForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {

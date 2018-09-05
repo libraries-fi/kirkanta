@@ -36,7 +36,7 @@ class OrganisationDataType extends EntityDataType
                 'entity_type' => 'library',
             ])
             ->add('description', RichtextType::class, [
-                'required' => true,
+                'required' => false,
                 'label' => 'Description',
                 'langcode' => $options['langcode']
             ])
@@ -47,11 +47,6 @@ class OrganisationDataType extends EntityDataType
             ->add('homepage', UrlType::class, [
                 'required' => false,
                 'label' => 'Homepage',
-                'langcode' => $options['langcode']
-            ])
-            ->add('building_name', null, [
-                'required' => false,
-                'label' => 'Building name',
                 'langcode' => $options['langcode']
             ])
             ;

@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-class ServiceInstanceForm extends FormType
+class ServiceInstanceForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {

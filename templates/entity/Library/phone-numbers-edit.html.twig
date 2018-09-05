@@ -1,15 +1,1 @@
-{% extends "entity/Library/resources-edit.html.twig" %}
-
-{% block form %}
-  {{ form_start(form) }}
-  {{ block("form_header") }}
-
-  <fieldset class="form-section">
-    <legend>{% trans %}Basic details{% endtrans %}</legend>
-    {{ form_row(form.contact) }}
-    {{ form_row(form.name) }}
-    {{ form_row(form.description) }}
-  </fieldset>
-
-  {{ form_end(form) }}
-{% endblock %}
+{% extends "entity/Library/contact-info.edit.html.twig" %}

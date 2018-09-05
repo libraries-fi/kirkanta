@@ -121,11 +121,12 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         $resources = [
             'periods' => 'Periods',
             'services' => 'Services',
-            'pictures' => 'Pictures',
             'persons' => 'Staff',
-            'departments' => 'Departments',
+            'email_addresses' => 'Email addresses',
             'phone_numbers' => 'Phone Numbers',
-            'links' => 'Websites'
+            'links' => 'Websites',
+            'pictures' => 'Pictures',
+            'departments' => 'Departments',
         ];
 
         if ($entity_type != 'library') {

@@ -17,6 +17,12 @@ class Library extends LibraryBase
     protected $phone_numbers;
 
     /**
+     * @ORM\OneToMany(targetEntity="EmailAddress", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"weight": "ASC"})
+     */
+    protected $email_addresses;
+
+    /**
      * @ORM\OneToMany(targetEntity="WebsiteLink", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
      */
@@ -81,6 +87,11 @@ class Library extends LibraryBase
     public function getLinks() : Collection
     {
         return $this->links;
+    }
+
+    public function getEmailAddresses() : Collection
+    {
+        return $this->email_addresses;
     }
 
     public function getOrganisation() : ?Organisation

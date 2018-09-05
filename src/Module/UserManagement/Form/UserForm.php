@@ -2,6 +2,7 @@
 
 namespace App\Module\UserManagement\Form;
 
+use UserAccountsBundle\UserInterface;
 use App\Entity\UserGroup;
 use App\Form\FormType;
 use App\Security\Authorization\SystemRoles;
@@ -10,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class UserForm extends FormType
@@ -31,12 +34,6 @@ class UserForm extends FormType
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => (new SystemRoles)->getUserRoles(),
-                'choice_attr' => function($key, $label) {
-                    if ($key == 'ROLE_USER') {
-                    // return ['disabled' => true];
-                    }
-                    return [];
-                }
             ])
             ->add('expires', DateType::class, [
                 'label' => 'Expiration date',
@@ -49,5 +46,13 @@ class UserForm extends FormType
             ])
 
             ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+            $user = $event->getData();
+
+            if ($user instanceof UserInterface && !$user->isEnabled()) {
+                $event->getForm()->remove('expires');
+            }
+        });
     }
 }

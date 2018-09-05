@@ -34,7 +34,15 @@ class EntityRouteLoader extends Loader
         $types = $this->types->getTypes();
         $routes = new RouteCollection;
 
-        $public_entities = ['library', 'consortium', 'finna_organisation', 'person', 'service_instance', 'period'];
+        $public_entities = [
+            'consortium',
+            'finna_organisation',
+            'library',
+            'organisation',
+            'period',
+            'person',
+            'service_instance',
+        ];
 
         foreach ($types as $type_id => $definition) {
             $base_path = in_array($type_id, $public_entities) ? "/{$type_id}" : "/admin/{$type_id}";

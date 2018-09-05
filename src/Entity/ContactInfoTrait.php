@@ -4,22 +4,17 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
-class PhoneNumber extends ContactInfo
+trait ContactInfoTrait
 {
-    use PhoneNumberTrait;
+    /**
+     * @ORM\ManyToOne(targetEntity="Department", inversedBy="phone_numbers")
+     */
+    protected $department;
 
     /**
      * @ORM\ManyToOne(targetEntity="Library", inversedBy="phone_numbers")
      */
     protected $parent;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Department", inversedBy="phone_numbers")
-     */
-    protected $department;
 
     public function setDepartment(?Department $department) : void
     {

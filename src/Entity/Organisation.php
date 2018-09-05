@@ -13,11 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Organisation extends Facility
 {
     /**
-     * @ORM\Column(type="string")
-     */
-    private $type;
-
-    /**
      * @ORM\OneToMany(targetEntity="Library", mappedBy="organisation")
      */
     private $libraries;

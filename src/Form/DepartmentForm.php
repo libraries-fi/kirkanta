@@ -5,7 +5,7 @@ namespace App\Form;
 use App\Form\Type\StateChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class DepartmentForm extends FormType
+class DepartmentForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
@@ -13,6 +13,5 @@ class DepartmentForm extends FormType
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\DepartmentDataType::class
             ]);
-
     }
 }

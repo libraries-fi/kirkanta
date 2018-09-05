@@ -45,7 +45,11 @@
         <label for="account_status">{% trans %}Account status{% endtrans %}</label>
         <input type="text" id="account_status" class="form-control-plaintext" readonly value="{% if user.enabled %}Account is active{% else %}Account has been disabled{% endif %}"/>
       </div>
-      {{ form_row(form.expires) }}
+
+      {% if form.expires is defined %}
+        {{ form_row(form.expires) }}
+      {% endif %}
+      
       <ul>
         <li class="text-muted">{% trans %}Account will be disabled on this date.{% endtrans %}</li>
       </ul>

@@ -7,13 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class WebsiteLink extends ContactInfo
+class ServicePointWebsiteLink extends ContactInfo
 {
-    use ContactInfoTrait;
     use WebsiteLinkTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="links")
+     * @ORM\ManyToOne(targetEntity="ServicePoint", inversedBy="links")
      */
     protected $parent;
 }

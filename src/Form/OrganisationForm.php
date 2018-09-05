@@ -23,16 +23,12 @@ class OrganisationForm extends FormType
     {
         $builder
             ->add('state', StateChoiceType::class)
-            ->add('type', ChoiceType::class, [
-                'placeholder' => '-- Select --',
-                'choices' => new OrganisationTypes,
-            ])
-            ->add('address', AddressType::class, [
-                // 'required' => false
-            ])
-            ->add('mail_address', MailAddressType::class, [
-                'required' => false
-            ])
+            // ->add('address', AddressType::class, [
+            //     // 'required' => false
+            // ])
+            // ->add('mail_address', MailAddressType::class, [
+            //     'required' => false
+            // ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\OrganisationDataType::class,
             ])
