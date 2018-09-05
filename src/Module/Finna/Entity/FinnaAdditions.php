@@ -176,7 +176,7 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
     public function getOwner() : UserGroup
     {
         if ($this->consortium) {
-            return $this->consortium->hasOwner();
+            return $this->consortium->getOwner();
         }
     }
 
