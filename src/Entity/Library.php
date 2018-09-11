@@ -84,16 +84,6 @@ class Library extends LibraryBase
         return $this->services;
     }
 
-    public function getLinks() : Collection
-    {
-        return $this->links;
-    }
-
-    public function getEmailAddresses() : Collection
-    {
-        return $this->email_addresses;
-    }
-
     public function getOrganisation() : ?Organisation
     {
         return $this->organisation;

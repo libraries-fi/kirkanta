@@ -1,4 +1,4 @@
-App\Entity\LibraryBase:
+App\Entity\Library:
   attributes:
     translations:
       groups: ['default', 'index']
@@ -17,6 +17,10 @@ App\Entity\LibraryBase:
     departments:
       groups: ['departments', 'api_cache']
     phone_numbers:
+      groups: ['phone_numbers', 'api_cache']
+    links:
+      groups: ['phone_numbers', 'api_cache']
+    email_addresses:
       groups: ['phone_numbers', 'api_cache']
     persons:
       groups: ['persons', 'api_cache']

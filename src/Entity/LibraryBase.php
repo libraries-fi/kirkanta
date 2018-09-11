@@ -358,6 +358,16 @@ abstract class LibraryBase extends Facility implements ApiCacheable
         return $this->phone_numbers;
     }
 
+    public function getEmailAddresses() : Collection
+    {
+        return $this->email_addresses;
+    }
+
+    public function getLinks() : Collection
+    {
+        return $this->links;
+    }
+
     public function getCustomData() : array
     {
         return $this->custom_data;
