@@ -177,12 +177,14 @@ services:
 
 
     # NOTE: The built-in object normalizer has a priority -1000 so this must have a higher value.
-    kirkanta.normalizer.entity:
-        class: 'App\Module\ApiCache\Serializer\Normalizer\EntityNormalizer'
+    App\Module\ApiCache\Serializer\Normalizer\EntityNormalizer:
         factory: ['App\Module\ApiCache\Serializer\Normalizer\EntityNormalizer', 'create']
         arguments: ['@serializer.mapping.class_metadata_factory', '@serializer.property_accessor']
         tags:
             - { name: serializer.normalizer, priority: -999}
+
+    kirkanta.normalizer.entity:
+        alias: App\Module\ApiCache\Serializer\Normalizer\EntityNormalizer
 
     App\Module\ApiCache\Serializer\Normalizer\PictureNormalizer:
         arguments: ['@kirkanta.normalizer.entity']
