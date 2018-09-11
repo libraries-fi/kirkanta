@@ -2,8 +2,6 @@
 
 namespace App\Module\Finna\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Consortium;
 use App\Entity\EntityBase;
 use App\Entity\Feature;
@@ -14,6 +12,8 @@ use App\Entity\Feature\StateAwareness;
 use App\Entity\Feature\Translatable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -26,6 +26,8 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
     use Feature\GroupOwnershipTrait;
 
     /**
+     * Override ID definition to change GeneratedValue.
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="NONE")
@@ -43,7 +45,7 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
     private $translations;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Library")
+     * @ORM\OneToOne(targetEntity="App\Module\Finna\Entity\DefaultServicePointBinding", mappedBy="parent", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $service_point;
 
@@ -125,12 +127,16 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
         $this->finna_coverage = $percentage;
     }
 
-    public function setServicePoint(?Library $organisation) : void
+    public function setServicePoint(?DefaultServicePointBinding $binding) : void
     {
-        $this->service_point = $organisation;
+        $this->service_point = $binding;
+
+        if ($binding) {
+            $binding->setParent($this);
+        }
     }
 
-    public function getServicePoint() : ?Library
+    public function getServicePoint() : ?DefaultServicePointBinding
     {
         return $this->service_point;
     }

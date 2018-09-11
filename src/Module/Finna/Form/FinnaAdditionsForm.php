@@ -4,20 +4,24 @@ namespace App\Module\Finna\Form;
 
 use App\Entity\Consortium;
 use App\Form\ConsortiumForm;
-use App\Form\FormType;
+use App\Form\EntityFormType;
 use App\Form\I18n\EntityDataCollectionType;
 use App\Form\Type\RichtextType;
 use App\Form\Type\StateChoiceType;
+use App\Module\Finna\Entity\DefaultServicePointBinding;
 use App\Module\Finna\Entity\FinnaAdditions;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FinnaAdditionsForm extends FormType
+class FinnaAdditionsForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
@@ -34,11 +38,13 @@ class FinnaAdditionsForm extends FormType
                 'required' => true,
                 'label' => 'Finna ID',
             ])
-            // ->add('service_point', EntityType::class, [
-            //     'class' => Library::class,
-            //     'choice_label' => 'name',
-            //     'required' => false,
-            // ])
+            ->add('service_point', ChoiceType::class, [
+                // 'class' => Library::class,
+                'label' => 'Default service point',
+                'choices' => [],
+                'choice_label' => 'name',
+                'required' => false,
+            ])
             ->add('finna_coverage', IntegerType::class, [
                 'required' => false
             ])
@@ -64,5 +70,39 @@ class FinnaAdditionsForm extends FormType
             ;
 
         $builder->get('consortium')->remove('state');
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+            $form = $event->getForm();
+            $data = $event->getData();
+
+            $user_group = $data instanceof FinnaAdditions
+                ? $data->getOwner()
+                : $this->auth->getUser()->getGroup();
+
+            $service_points = $this->types->getRepository('service_point')->findBy([
+                'group' => $user_group->getTree()
+            ]);
+
+            $libraries = $this->types->getRepository('library')->findBy([
+                'group' => $user_group->getTree()
+            ]);
+
+            $choices = [];
+
+            foreach (array_merge($libraries, $service_points) as $entity) {
+                $choices[$entity->getId()] = new DefaultServicePointBinding($entity);
+            }
+
+            if ($chosen = $data->getServicePoint()) {
+                $choices[$chosen->getId()] = $chosen;
+            }
+
+            $form->add('service_point', ChoiceType::class, [
+                'label' => 'Default service point',
+                'choices' => $choices,
+                'choice_label' => 'name',
+                'required' => false,
+            ]);
+        });
     }
 }

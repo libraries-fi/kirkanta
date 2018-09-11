@@ -59,17 +59,10 @@ class DocumentManager
     {
         $context = ['groups' => ['default', 'api_cache']];
         $normalized = $this->serializer->normalize($entity, 'json', $context);
+
+        print_r($normalized);
+        
         $values = $this->serializer->serialize($entity, 'json', $context);
-
-        if ($entity instanceof Translatable) {
-            $translations = [];
-
-            foreach ($entity->getTranslations() as $langcode => $data) {
-                $translations[$langcode] = $this->serializer->normalize($data, 'json', $context);
-            }
-
-            $translations = $this->serializer->encode($translations, 'json');
-        }
 
         $class_name = get_class($entity);
         $type_id = $this->types->getTypeId($class_name);

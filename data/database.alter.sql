@@ -1615,3 +1615,36 @@ CREATE OR REPLACE RULE split_type_id AS ON INSERT TO contact_info_doctrine
 
 
 -- COMMIT PLACEHOLDER --
+
+
+
+
+CREATE TABLE finna_service_point_bindings (
+  parent_id int NOT NULL,
+  library_id int,
+  service_point_id int,
+
+  PRIMARY KEY(parent_id),
+  FOREIGN KEY(parent_id) REFERENCES finna_additions(id) ON DELETE CASCADE,
+  FOREIGN KEY(library_id) REFERENCES organisations(id) ON DELETE CASCADE,
+  FOREIGN KEY(service_point_id) REFERENCES organisations(id) ON DELETE CASCADE
+);
+
+INSERT INTO finna_service_point_bindings (parent_id, library_id) (
+  SELECT a.id, a.service_point_id
+  FROM finna_additions a
+    INNER JOIN organisations b ON a.service_point_id = b.id
+    WHERE b.role = 'library'
+  )
+;
+
+INSERT INTO finna_service_point_bindings (parent_id, service_point_id) (
+  SELECT a.id, a.service_point_id
+  FROM finna_additions a
+    INNER JOIN organisations b ON a.service_point_id = b.id
+    WHERE b.role = 'foreign'
+  )
+;
+
+-- Association is now stored on finna_service_point_bindings.
+ALTER TABLE finna_additions DROP COLUMN service_point_id;

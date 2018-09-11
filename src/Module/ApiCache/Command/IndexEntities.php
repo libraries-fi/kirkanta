@@ -55,6 +55,19 @@ class IndexEntities extends Command
             ? ['state' => StateAwareness::PUBLISHED]
             : [];
 
+
+
+
+
+
+            $parameters['id'] = 2207;
+
+
+
+
+
+
+
             $result = $this->types
                 ->getRepository($entity_type)
                 ->findBy($parameters, ['id' => 'asc'], $BATCH_SIZE, $BATCH_SIZE * $ROUND++);
