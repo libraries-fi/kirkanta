@@ -59,9 +59,6 @@ class DocumentManager
     {
         $context = ['groups' => ['default', 'api_cache']];
         $normalized = $this->serializer->normalize($entity, 'json', $context);
-
-        print_r($normalized);
-        
         $values = $this->serializer->serialize($entity, 'json', $context);
 
         $class_name = get_class($entity);
