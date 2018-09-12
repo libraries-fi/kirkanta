@@ -67,7 +67,7 @@ class LibraryData extends EntityDataBase
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="Facility", inversedBy="translations")
      */
     protected $entity;
 
@@ -161,12 +161,12 @@ class LibraryData extends EntityDataBase
         $this->building_name = $name;
     }
 
-    public function getEntity() : Library
+    public function getEntity() : Facility
     {
         return $this->entity;
     }
 
-    public function setEntity(Library $entity) : void
+    public function setEntity(Facility $entity) : void
     {
         $this->entity = $entity;
     }

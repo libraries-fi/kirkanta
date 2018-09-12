@@ -42,7 +42,7 @@ class Address extends EntityBase implements Translatable
     private $translations;
 
     /**
-     * @ORM\OneToOne(targetEntity="Library")
+     * @ORM\OneToOne(targetEntity="LibraryBase")
      */
     private $library;
 
