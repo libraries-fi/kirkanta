@@ -10,6 +10,8 @@ App\Module\Finna\Entity\FinnaAdditions:
       groups: ['default']
     consortium:
       groups: ['default']
+    finna_id:
+      groups: ['default']
 
 App\Module\Finna\Entity\FinnaAdditionsData:
   attributes:
