@@ -37,18 +37,18 @@ class LibraryPhoto extends Picture implements Translatable
     private $translations;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="pictures")
+     * @ORM\ManyToOne(targetEntity="LibraryBase", inversedBy="pictures")
      */
     private $parent;
 
-    public function getParent() : Library
+    public function getParent() : LibraryBase
     {
         return $this->parent;
     }
 
-    public function setParent(Library $organisation) : void
+    public function setParent(LibraryBase $library) : void
     {
-        $this->parent = $organisation;
+        $this->parent = $library;
     }
 
     public function isDefault() : bool

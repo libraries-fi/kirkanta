@@ -1657,6 +1657,13 @@ ALTER TABLE finna_additions DROP COLUMN service_point_id;
 
 
 
+
 UPDATE organisations_data SET description = NULL WHERE description = '<p>&nbsp;</p>';
 UPDATE consortiums_data SET description = NULL WHERE description = '<p>&nbsp;</p>';
 UPDATE finna_additions_data SET usage_info = NULL WHERE usage_info = '<p>&nbsp;</p>';
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
