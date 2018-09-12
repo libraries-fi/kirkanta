@@ -90,7 +90,8 @@ class FinnaAdditionsForm extends EntityFormType
             $choices = [];
 
             foreach (array_merge($libraries, $service_points) as $entity) {
-                $choices[$entity->getId()] = new DefaultServicePointBinding($entity);
+                // $choices[$entity->getId()] = new DefaultServicePointBinding($entity);
+                $choices[$entity->getId()] = $entity;
             }
 
             if ($chosen = $data->getServicePoint()) {

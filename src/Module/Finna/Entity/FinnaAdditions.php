@@ -5,7 +5,7 @@ namespace App\Module\Finna\Entity;
 use App\Entity\Consortium;
 use App\Entity\EntityBase;
 use App\Entity\Feature;
-use App\Entity\Library;
+use App\Entity\LibraryBase;
 use App\Entity\UserGroup;
 use App\Entity\Feature\GroupOwnership;
 use App\Entity\Feature\StateAwareness;
@@ -87,6 +87,28 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
         }
     }
 
+    public function getServicePoint() : ?LibraryBase
+    {
+        if ($this->service_point) {
+            return $this->service_point->getTargetEntity();
+        } else {
+            return null;
+        }
+    }
+
+    public function setServicePoint(?LibraryBase $entity) : void
+    {
+        if ($entity) {
+            if ($this->service_point) {
+                $this->service_point->setTargetEntity($entity);
+            } else {
+                $this->service_point = new DefaultServicePointBinding($this, $entity);
+            }
+        } else {
+            $this->service_point = null;
+        }
+    }
+
     public function getFinnaId() : string
     {
         return $this->finna_id;
@@ -125,20 +147,6 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
     public function setFinnaCoverage(?string $percentage) : void
     {
         $this->finna_coverage = $percentage;
-    }
-
-    public function setServicePoint(?DefaultServicePointBinding $binding) : void
-    {
-        $this->service_point = $binding;
-
-        if ($binding) {
-            $binding->setParent($this);
-        }
-    }
-
-    public function getServicePoint() : ?DefaultServicePointBinding
-    {
-        return $this->service_point;
     }
 
     public function isExclusive() : bool
