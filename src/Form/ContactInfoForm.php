@@ -23,6 +23,7 @@ class ContactInfoForm extends EntityFormType
                 'class' => Department::class,
                 'choices' => $options['context_entity']->getDepartments(),
                 'placeholder' => $options['context_entity']->getName(),
+                'help' => 'Attach contact info to a department',
             ]);
         }
     }

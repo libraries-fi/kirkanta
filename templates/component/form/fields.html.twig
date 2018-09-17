@@ -39,45 +39,6 @@
   {{ parent() }}
 {%- endblock -%}
 
-{% block form_errors -%}
-  {% if errors|length > 0 -%}
-  <div class="invalid-feedback">
-    <ul class="list-unstyled">
-      {%- for error in errors -%}
-        <li><i class="fas fa-exclamation-circle"></i> {{ error.message }}</li>
-      {%- endfor -%}
-    </ul>
-  </div>
-  {%- endif %}
-{%- endblock form_errors %}
-{% block form_row %}
-  {% if errors|length > 0 %}
-    {% set widget_class = "is-invalid" %}
-  {% else %}
-    {% set widget_class = "" %}
-  {% endif %}
-
-  {% if 'actions' in block_prefixes %}
-    {{ block('form_actions') }}
-  {% elseif 'collection' in block_prefixes %}
-    <fieldset class="form-group">
-      {% if label != false %}
-        <legend>{% if label %}{{ label }}{% else %}{{ name|humanize }}{% endif %}</legend>
-      {% endif %}
-      {{- form_widget(form) -}}
-      {{- form_errors(form) -}}
-    </fieldset>
-  {% else %}
-    <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
-      {{- form_label(form) -}}
-      {{- form_widget(form, {attr: {class: widget_class}}) -}}
-      {% if form.vars.langcode is not defined %}
-        {{- form_errors(form) -}}
-      {% endif %}
-    </div>
-  {% endif %}
-{% endblock %}
-
 {% block tr_group_row %}
   <fieldset class="tr-group collapsed" data-app-group="content-language">
     {% for child in form %}
@@ -95,7 +56,6 @@
         <span class="input-group-text">{{ langcode }}</span>
       </span>
       {{ block("form_widget") }}
-      {{ block("form_errors") }}
     </div>
   {% else %}
     {{ block("form_widget") }}
