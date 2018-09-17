@@ -4,11 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Provides additional features for contact info attached to Library entities.
+ */
 trait ContactInfoTrait
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="Department", inversedBy="phone_numbers")
-     */
     protected $department;
 
     /**

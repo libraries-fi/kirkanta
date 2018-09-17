@@ -72,4 +72,9 @@ class Department extends EntityBase implements Translatable
     {
         return $this->getLibrary();
     }
+
+    public function setParent($parent) : void
+    {
+        $this->parent = $parent;
+    }
 }

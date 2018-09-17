@@ -6,13 +6,13 @@
 
   <fieldset class="form-section">
     <legend>{% trans %}Basic details{% endtrans %}</legend>
+    {{ form_row(form.name) }}
     {{ form_row(form.contact) }}
 
     {% if form.department is defined %}
       {{ form_row(form.department) }}
     {% endif %}
 
-    {{ form_row(form.name) }}
     {{ form_row(form.description) }}
   </fieldset>
 
