@@ -59,6 +59,7 @@ class PeriodForm extends FormType
                     'class' => Department::class,
                     'choices' => $organisation->getDepartments(),
                     'placeholder' => $organisation->getName(),
+                    'help' => 'Attach contact info to a department',
                 ]);
             }
         });

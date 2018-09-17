@@ -29,6 +29,7 @@ class PeriodDayType extends BaseType
                 'required' => false,
                 'prototype' => TextType::class,
                 // 'data' =>
+                'help' => 'Name of the holiday etc.',
             ])
             ->add('times', CollectionType::class, [
                 'entry_type' => PeriodDayTimeType::class,

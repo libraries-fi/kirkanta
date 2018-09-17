@@ -34,7 +34,8 @@ class LibraryForm extends FormType
                 'choice_label' => 'name',
             ])
             ->add('isil', null, [
-                'required' => false
+                'required' => false,
+                'label' => 'ISIL',
             ])
             ->add('identificator', null, [
                 'required' => false

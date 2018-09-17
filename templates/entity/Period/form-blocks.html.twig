@@ -83,7 +83,6 @@
 
 {# NOTE: Using fieldset as a container is not viable because fieldset + flex does not work with Chrome as of now #}
 {% block period_day_widget_NEW %}
-
   <div class="row period-day-data" id="{{ id }}">
     <div class="col-sm-3 col-lg-2">
       <b>{{ name }}</b>
@@ -119,25 +118,12 @@
           </div>
         {% endfor %}
 
-
       </div>
     </div>
-
-
-
-
-
   </div>
-
-
-
 {% endblock %}
 
 {% block period_day_widget %}
-
-
-
-
   <div class="row period-day-data" id="{{ id }}" >
     <div class="col-sm-3 col-lg-2">
       <b class="col-form-label day-name">{{ name }}</b>
@@ -182,6 +168,8 @@
 
             <div class="day-description-value {% if form.info.vars.value|join is empty %}hidden{% endif %}">
               {{ form_widget(form.info) }}
+              {{ form_errors(form.info) }}
+              {{ form_help(form.info) }}
             </div>
           </div>
         </div>
