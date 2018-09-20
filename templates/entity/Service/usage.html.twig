@@ -7,9 +7,9 @@
 {% block content %}
   {% if templates|length %}
     <h2>{% trans %}Templates{% endtrans %}</h2>
-    <ul>
+    <ul class="list-group mb-3">
       {% for template in templates %}
-        <li>
+        <li class="list-group-item">
           {% if template.group %}
             {{ template.group }}:
           {% else %}
@@ -22,20 +22,24 @@
   {% endif %}
 
   <h2>{% trans %}Libraries{% endtrans %}</h2>
-  <dl>
+  <ul class="list-group">
     {% for entry in tree %}
-      <dt>{{ entry.library }}, {{ entry.library.city }}</dt>
+      <li class="list-group-item">
+        {{ entry.library }}, {{ entry.library.city }}
 
-      {% for instance in entry.instances %}
-        {% set route_params = {
-          library: entry.library.id,
-          resource: 'services',
-          resource_id: instance.id
-        } %}
-        <dd>
-          <a href="{{ path('entity.library.edit_resource', route_params)}}">#{{ instance.id }}</a>
-        </dd>
-      {% endfor %}
+        <ul>
+          {% for instance in entry.instances %}
+            {% set route_params = {
+              library: entry.library.id,
+              resource: 'services',
+              resource_id: instance.id
+            } %}
+            <li>
+              <a href="{{ path('entity.library.edit_resource', route_params)}}">#{{ instance.id }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
     {% endfor %}
-  </dl>
+  </ul>
 {% endblock %}

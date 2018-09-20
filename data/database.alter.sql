@@ -1667,3 +1667,10 @@ UPDATE finna_additions_data SET usage_info = NULL WHERE usage_info = '<p>&nbsp;<
 
 
 -- COMMIT PLACEHOLDER --
+
+
+
+
+DELETE FROM service_instances a
+USING organisations b
+WHERE a.parent_id = b.id AND b.role NOT IN ('library', 'foreign');
