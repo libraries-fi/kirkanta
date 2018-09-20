@@ -32,14 +32,18 @@ class ServiceListBuilder extends EntityListBuilder
             ->setColumns([
                 'name' => ['mapping' => ['d.name']],
                 'type',
-                'description',
                 'instances'
             ])
             ->setSortable('name')
             ->useAsTemplate('name')
             ->useAsTemplate('instances')
             ->transform('name', function() {
-                return '<a href="{{ path("entity.service.edit", {service: row.id}) }}">{{ row.name }}</a>';
+                return '
+                    <a href="{{ path("entity.service.edit", {service: row.id}) }}">{{ row.name }}</a>
+                    {% if row.description|length %}
+                        <p class="small">{{ row.description }}</p>
+                    {% endif %}
+                ';
             })
             ->transform('type', function($s) use ($types) {
                 return $types->search($s->getType());
