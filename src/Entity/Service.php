@@ -39,6 +39,7 @@ class Service extends EntityBase implements ApiCacheable, Translatable
 
     /**
      * @ORM\OneToMany(targetEntity="ServiceInstance", mappedBy="template")
+     * @ORM\OrderBy({"id": "asc"})
      */
     private $instances;
 

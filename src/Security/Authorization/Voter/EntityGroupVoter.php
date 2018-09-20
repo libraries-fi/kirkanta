@@ -16,6 +16,13 @@ class EntityGroupVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token) : bool
     {
+        if (!$subject->getGroup()) {
+            // Some templates (services, periods etc.) are shared globally.
+            // Access to these is retricted to admins.
+            // But here we should probably be able to make a distinction between viewing and editing.
+            return false;
+        }
+
         foreach ($token->getUser()->getGroup()->getTree() as $group) {
             if ($subject->getGroup()->getId() == $group->getId()) {
                 return true;

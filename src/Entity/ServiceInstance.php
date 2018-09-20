@@ -195,4 +195,9 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
         $this->parent = $library;
         $this->parent->getServices()->add($this);
     }
+
+    public function getLibrary() : ?Library
+    {
+        return $this->parent;
+    }
 }

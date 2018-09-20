@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  {% trans with {'%service%': service.name} %}Libraries using service %service%{% endtrans %}
+{% endblock %}
+
+{% block content %}
+  {% if templates|length %}
+    <h2>{% trans %}Templates{% endtrans %}</h2>
+    <ul>
+      {% for template in templates %}
+        <li>
+          {% if template.group %}
+            {{ template.group }}:
+          {% else %}
+            {% trans %}Shared{% endtrans %}:
+          {% endif %}
+          <a href="{{ path('entity.service_instance.edit', {service_instance: template.id}) }}">#{{ template.id }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <h2>{% trans %}Libraries{% endtrans %}</h2>
+  <dl>
+    {% for entry in tree %}
+      <dt>{{ entry.library }}, {{ entry.library.city }}</dt>
+
+      {% for instance in entry.instances %}
+        {% set route_params = {
+          library: entry.library.id,
+          resource: 'services',
+          resource_id: instance.id
+        } %}
+        <dd>
+          <a href="{{ path('entity.library.edit_resource', route_params)}}">#{{ instance.id }}</a>
+        </dd>
+      {% endfor %}
+    {% endfor %}
+  </dl>
+{% endblock %}
