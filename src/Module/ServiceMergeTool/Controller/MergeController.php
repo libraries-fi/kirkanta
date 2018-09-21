@@ -71,15 +71,27 @@ class MergeController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->types->getEntityManager();
 
-            $data = $form->getData();
             $keep = $form->get('keep')->getData();
+            $services = $form->get('services')->getData();
+
+            foreach ($services as $service) {
+                if ($service != $keep) {
+                    /*
+                     * Delete translations first to avoid UNIQUE violations should the slug
+                     * of $keep be changed.
+                     */
+                    foreach ($service->getTranslations() as $d) {
+                        $em->remove($d);
+                        $em->flush($d);
+                    }
+                }
+            }
 
             foreach ($form->get('services')->getData() as $service) {
                 if ($service != $keep) {
                     foreach ($service->getInstances() as $instance) {
                         $instance->setTemplate($keep);
                     }
-
                     $em->remove($service);
                 }
             }
