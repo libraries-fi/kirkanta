@@ -184,7 +184,17 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
 
     public function adminMenu() : ItemInterface
     {
-        $entities = ['consortium', 'finna_organisation', 'city', 'region', 'regional_library', 'service', 'user', 'user_group'];
+        $entities = [
+            'consortium',
+            'finna_organisation',
+            'city',
+            'region',
+            'regional_library',
+            'service',
+            'user',
+            'user_group'
+        ];
+
         $menu = $this->factory->createItem('root');
 
         foreach ($entities as $type_id) {
@@ -204,6 +214,9 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         ]);
         $menu->addChild('Notifications', [
             'route' => 'entity.notification.collection',
+        ]);
+        $menu->addChild('Combine services', [
+            'route' => 'service_tool.choose'
         ]);
         $menu->addChild('Service tree', [
             'route' => 'entity.service_category.collection',
