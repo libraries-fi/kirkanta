@@ -10,6 +10,7 @@ import "bootstrap/dist/js/bootstrap.min";
 import "./configure.dependencies";
 import "./init.ckeditor";
 import "./content-language";
+import "./service-tool";
 
 import "./table.drag";
 import "./widget.sluggable";

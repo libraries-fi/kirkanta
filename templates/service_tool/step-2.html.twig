@@ -1,0 +1,58 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  {% trans %}Merge services{% endtrans %}
+{% endblock %}
+
+{% block content_top %}
+  {{ parent() }}
+  <div class="hud-group">
+    {{ form_widget(form.content_language, {"attr": {"data-app": "content-language"}}) }}
+  </div>
+
+  {% do form.actions.setRendered(true) %}
+
+  <div class="hud-actions">
+    <button type="submit" class="btn btn-primary">
+      <i class="fas fa-save"></i>
+      {% trans %}Finish{% endtrans %}
+    </button>
+  </div>
+{% endblock %}
+
+{% block body %}
+  <main id="l-main" class="container">
+    {{ form_start(form) }}
+      {{ block("breadcrumb") }}
+      {{ block("region_top") }}
+
+      {% set keep = form.keep.vars %}
+
+      <div class="list-group">
+        {% for child in form.services %}
+          {% set service = child.vars.value %}
+          {% set is_active = keep.value == service.id %}
+
+          <div class="list-group-item" data-id="{{ service.id }}">
+            <div class="d-flex justify-content-start mb-3">
+              <div class="custom-control custom-radio custom-control-inline">
+                {% set input_id = keep.id ~ '-' ~ service.id %}
+                <input type="radio" class="custom-control-input" name="{{ keep.full_name }}" value="{{ service.id }}" {% if keep.value == service.id %}checked{% endif %} id="{{ input_id }}" required data-choose-item/>
+                <label class="custom-control-label h5 m-0 mr-3" for="{{ input_id }}">
+                  {% trans with {'%id%': service.id} %}Service #%id%{% endtrans %}
+                </label>
+              </div>
+              <span class="badge badge-primary">{{ service.type }}</span>
+            </div>
+
+            <div class="inputs">
+              {{ form_widget(child) }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% do form.keep.setRendered(true) %}
+    {{ form_end(form) }}
+  </main>
+{% endblock %}

@@ -4,6 +4,8 @@
   function toggle_active_language(form, langcode) {
     form = $(form);
 
+    console.log('TOGGLE', langcode);
+
     if (langcode) {
       $('[data-app-group="content-language"]', form).addClass('collapsed');
       $('[data-content-language]', form).hide();

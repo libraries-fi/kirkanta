@@ -1,0 +1,40 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  {% trans %}Merge services{% endtrans %}
+{% endblock %}
+
+{% block content_top %}
+  {{ parent() }}
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">{% trans %}Next{% endtrans %}</button>
+  </div>
+{% endblock %}
+
+{% block body %}
+  <main id="l-main" class="container">
+    <form action="{{ path('service_tool.verify') }}">
+      {{ block("breadcrumb") }}
+      {{ block("region_top") }}
+
+      <ul class="list-group">
+        {% for service in services %}
+          {% set count = instanceCounts[service.id]|default(0) %}
+
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <label class="m-0">
+              <input type="checkbox" name="s[]" value="{{ service.id }}" class="mr-2"/>
+              {{ service.name }}
+            </label>
+            <span class="badge badge-primary">
+              {% transchoice count with {"%count%": count} %}
+                {0} %count% instances | {1} 1 instance | [2, Inf[ %count% instances
+              {% endtranschoice %}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </form>
+  </main>
+{% endblock %}

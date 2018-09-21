@@ -22,6 +22,14 @@ class FormData
         return $this->data;
     }
 
+    public function __call($method, $params) {
+        if (substr($method, 0, 3) == 'get') {
+            $prop = strtolower(preg_replace('/([A-Z])/', '_$1', $method));
+            $prop = substr($prop, 4);
+            return $this->data[$prop];
+        }
+    }
+
     public function __get($key) {
         return $this->data[$key] ?? null;
     }

@@ -18,7 +18,7 @@
       </style>
     {% endblock %}
   </head>
-  <body>
+  <body id="{{ app.request.get('_route')|replace({'.': '--', '_': '-'}) }}">
     {% block header %}
       <nav class="navbar navbar-expand-md navbar-dark bg-navbar" id="nav-main">
         <div class="container">

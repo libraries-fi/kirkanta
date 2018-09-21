@@ -170,6 +170,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
     public function setTemplate(Service $service) : void
     {
         $this->template = $service;
+        $service->getInstances()->add($this);
     }
 
     public function getPicture() : ?string

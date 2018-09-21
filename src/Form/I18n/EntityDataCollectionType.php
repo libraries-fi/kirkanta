@@ -65,8 +65,6 @@ class EntityDataCollectionType extends AbstractType
         $view->setRendered(true);
         $parent = $view->parent;
 
-        // var_dump($parent);
-
         foreach ($view->children as $langcode => $child) {
             foreach ($child as $name => $field) {
                 if (!isset($parent->children[$name])) {
@@ -86,8 +84,6 @@ class EntityDataCollectionType extends AbstractType
             }
         }
 
-        // FIXME: Maybe move the following code to its own form extension?
-
         $root = $parent;
 
         while ($root->parent) {
@@ -95,17 +91,8 @@ class EntityDataCollectionType extends AbstractType
         }
 
         if (!isset($root->children['content_language'])) {
-            $languages = (new SystemLanguages)->getData();
-
-            $languages = array_intersect($languages, array_keys($view->children));
-            $choices = ['All' => ''] + $languages;
-
-            $language = $this->formFactory->create(ChoiceType::class, null, [
-                'label' => 'Language',
-                'mapped' => false,
-                'required' => false,
-                'choices' => $choices,
-                'preferred_choices' => ['All']
+            $language = $this->formFactory->create(ContentLanguageChoiceType::class, null, [
+                'enabled_languages' => array_keys($view->children)
             ]);
 
             $language->setData($this->currentLangcode);
