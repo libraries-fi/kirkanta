@@ -26,6 +26,10 @@
       {{ block("breadcrumb") }}
       {{ block("region_top") }}
 
+      <ul class="alert alert-warning">
+        <li>{% trans %}Remember to check all translations!{% endtrans %}</li>
+      </ul>
+
       {% set keep = form.keep.vars %}
 
       <div class="list-group">
