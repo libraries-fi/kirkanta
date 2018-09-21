@@ -24,9 +24,22 @@ class Department extends EntityBase implements Translatable
     private $periods;
 
     /**
-     * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="department", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"weight": "ASC"})
      */
-    // private $phone_numbers;
+    protected $phone_numbers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="EmailAddress", mappedBy="department", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"weight": "ASC"})
+     */
+    protected $email_addresses;
+
+    /**
+     * @ORM\OneToMany(targetEntity="WebsiteLink", mappedBy="department", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
+     */
+    protected $links;
 
     /**
      * @ORM\OneToMany(targetEntity="DepartmentData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")

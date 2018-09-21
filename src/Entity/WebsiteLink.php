@@ -18,7 +18,7 @@ class WebsiteLink extends ContactInfo
     protected $parent;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Department", inversedBy="phone_numbers")
+     * @ORM\ManyToOne(targetEntity="Department", inversedBy="links")
      */
     protected $department;
 }

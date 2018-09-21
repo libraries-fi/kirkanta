@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1"/>
     <meta name="robots" content="noindex,nofollow"/>
 
-    <title>{% if block("title_text")|trim is not empty %}{{- block("title_text")|trim -}} – {% endif %}{% block title %}Kirkanta{% endblock %}</title>
+    <title>{% if block("title_text")|trim is not empty %}{{- block("title_text")|trim }} – {% endif %}{% block title %}Kirkanta{% endblock %}</title>
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <link href="{{ asset("/kirkanta.ico") }}" rel="shortcut icon"/>

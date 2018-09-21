@@ -11,11 +11,6 @@ trait ContactInfoTrait
 {
     protected $department;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="phone_numbers")
-     */
-    protected $parent;
-
     public function setDepartment(?Department $department) : void
     {
         $this->department = $department;

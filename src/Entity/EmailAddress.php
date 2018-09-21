@@ -15,9 +15,14 @@ class EmailAddress extends ContactInfo
     use EmailAddressTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Department", inversedBy="phone_numbers")
+     * @ORM\ManyToOne(targetEntity="Department", inversedBy="email_addresses")
      */
     protected $department;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Library", inversedBy="email_addresses")
+     */
+    protected $parent;
 
     /**
      * @Assert\Callback

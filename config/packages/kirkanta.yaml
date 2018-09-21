@@ -80,7 +80,7 @@ parameters:
         service:
             id: service
             label: 'Service'
-            label_multiple: 'Service'
+            label_multiple: 'Services'
             class_name: 'App\Entity\Service'
             list_builder: 'App\Entity\ListBuilder\ServiceListBuilder'
             forms:

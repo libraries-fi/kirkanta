@@ -67,7 +67,7 @@ class LibraryData extends EntityDataBase
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Facility", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="LibraryBase", inversedBy="translations")
      */
     protected $entity;
 
