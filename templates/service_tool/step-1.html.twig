@@ -8,7 +8,10 @@
   {{ parent() }}
 
   <div class="form-actions">
-    <button type="submit" class="btn btn-primary">{% trans %}Next{% endtrans %}</button>
+    <button type="submit" class="btn btn-primary">
+      {% trans %}Next{% endtrans %}
+      <i class="fas fa-chevron-circle-right end"></i>
+    </button>
   </div>
 {% endblock %}
 
@@ -18,15 +21,16 @@
       {{ block("breadcrumb") }}
       {{ block("region_top") }}
 
-      <ul class="list-group">
+      <h2 class="h5">{% trans with {'%count%': services|length} %}Total of %count% services.{% endtrans %}</h2>
+      <ul class="list-group mb-3">
         {% for service in services %}
           {% set count = instanceCounts[service.id]|default(0) %}
 
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            <label class="m-0">
-              <input type="checkbox" name="s[]" value="{{ service.id }}" class="mr-2"/>
-              {{ service.name }}
-            </label>
+            <div class="custom-control custom-checkbox custom-control-inline ">
+              <input type="checkbox" name="s[]" value="{{ service.id }}" class="mr-4 custom-control-input" id="s-{{ service.id }}"/>
+              <label class="custom-control-label pl-2" for="s-{{ service.id }}">{{ service.name }}</label>
+            </div>
             <span class="badge badge-primary">
               {% transchoice count with {"%count%": count} %}
                 {0} %count% instances | {1} 1 instance | [2, Inf[ %count% instances

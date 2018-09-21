@@ -88,6 +88,11 @@ label.required:after {
     margin-right: 0.3rem;
     margin-top: -0.2rem;
   }
+
+  .svg-inline--fa.end {
+    margin-right: unset;
+    margin-left: 0.3rem;
+  }
 }
 
 .btn-link {
