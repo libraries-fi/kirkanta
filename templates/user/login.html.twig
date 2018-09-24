@@ -7,7 +7,32 @@
     <div class="row justify-content-md-center">
       <div class="col-4">
         <h1 class="text-center p-0 mb-4">{% trans %}Login required{% endtrans %}</h1>
-        {{ include("@UserAccountsBundle/login.html.twig") }}
+
+        {% if error %}
+          <div class="alert alert-danger">
+            <p>{{ error }}</p>
+          </div>
+        {% endif %}
+        <form method="post">
+          <div class="form-group form-required">
+            <label for="input-username">{{ "Username"|trans }}</label>
+            <input id="input-username" type="text" name="_username" class="form-control" required autofocus/>
+          </div>
+          <div class="form-group form-required">
+            <label for="input-password">{{ "Password"|trans }}</label>
+            <input id="input-password" type="password" name="_password" class="form-control" required/>
+          </div>
+          <div class="form-group border p-2">
+            <label for="input-lang">{% trans %}Language{% endtrans %}</label>
+            <select name="lang" id="input-lang" class="custom-select">
+              <option value="fi">Suomi</option>
+              <option value="sv">Svenska</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">{{ "Login"|trans }}</button>
+        </form>
+
       </div>
     </div>
   </main>

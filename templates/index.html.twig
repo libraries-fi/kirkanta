@@ -24,6 +24,7 @@
       <p><i class="far fa-bell text-muted"></i> <span class="ml-2">{% trans %}No unread notifications.{% endtrans %}</span></p>
     {% endif %}
   </div>
+  
   {% if app.user.expires %}
     <div class="alert alert-warning">{% trans with {"%date%": app.user.expires|date()} %}This account is set to expire on %date%{% endtrans %}</div>
   {% endif %}
