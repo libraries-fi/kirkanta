@@ -32,10 +32,8 @@ class TableExtension extends Extension
             'drag' => false,
         ];
 
-        if (in_array('attr', $options)) {
-            $attr = $options['attr'];
-            unset($options['attr']);
-        }
+        $attr = $options['attr'] ?? [];
+        unset($options['attr']);
 
         if (is_array($table)) {
             $table = Table::createFromArray($table);

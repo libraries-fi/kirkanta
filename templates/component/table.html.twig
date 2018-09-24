@@ -1,4 +1,4 @@
-{% set classes = attr.class|default([]) %}
+{% set classes = attr.class|default('') %}
 
 {% if options.striped %}
   {% set classes = classes ~ ' table-striped' %}

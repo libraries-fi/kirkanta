@@ -41,7 +41,6 @@ class SessionLanguageSubscriber implements EventSubscriberInterface
         $event->getRequest()->setLocale($this->getLanguage());
     }
 
-
     private function setLanguage(string $langcode) : void
     {
         if ($this->languages->search($langcode) === false) {
