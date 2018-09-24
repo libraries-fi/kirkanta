@@ -21,8 +21,12 @@ class PersonForm extends EntityFormType
     {
         $builder
             ->add('state', StateChoiceType::class)
-            ->add('first_name')
-            ->add('last_name')
+            ->add('first_name', null, [
+                'required' => true
+            ])
+            ->add('last_name', null, [
+                'required' => true
+            ])
             ->add('email', EmailType::class, [
                 // 'required' => false
             ])
