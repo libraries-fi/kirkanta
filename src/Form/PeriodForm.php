@@ -19,7 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-class PeriodForm extends FormType
+class PeriodForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
