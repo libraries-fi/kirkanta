@@ -17,3 +17,5 @@ import "./widget.sluggable";
 import "./widget.radio-collapse";
 import "./period.widgets";
 import "./period.edit";
+
+import "./info-tooltips";

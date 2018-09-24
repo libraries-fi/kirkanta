@@ -33,7 +33,7 @@
       <div class="hud-group">
         <div class="input-group">
           <div class="input-group-prepend">
-            <a href="{{ path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link" aria-label="{{ 'Manage translations'|trans }}" title="{{ 'Manage translations'|trans }}">
+            <a href="{{ path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link" aria-label="{{ 'Manage translations'|trans }}" title="{{ 'Manage translations'|trans }}" id="btn-manage-entity-translations">
               <i class="fas fa-cog" aria-hidden="true"></i>
             </a>
           </div>

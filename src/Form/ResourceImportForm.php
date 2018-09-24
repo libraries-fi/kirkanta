@@ -26,7 +26,7 @@ class ResourceImportForm extends FormType
             'query_builder' => function(EntityRepository $repo) use($options) {
                 $qb = $repo->createQueryBuilder('e')
                     ->andWhere('e.group IN (:groups)')
-                    ->andWhere('e.library IS NULL')
+                    ->andWhere('e.parent IS NULL')
                     ->setParameter('groups', $options['user_groups']);
 
                 return $qb;

@@ -100,6 +100,31 @@
       </div>
     {% endblock %}
 
+    <script type="text/x-service-popover" id="full">
+      <div class="popover" role="dialog" aria-labelledby="my-popover-header" aria-describedby="my-popover-body">
+        <div class="arrow"></div>
+        <div class="d-flex">
+          <h3 class="popover-header"></h3>
+          <button type="button" class="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="popover-body"></div>
+      </div>
+    </script>
+
+    <script type="text/x-service-popover" id="no-body">
+      <div class="popover" role="tooltip" aria-labelledby="my-popover-header" aria-describedby="my-popover-body">
+        <div class="arrow"></div>
+        <div class="d-flex">
+          <h3 class="popover-header"></h3>
+          <button type="button" class="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </script>
+
     {% block javascripts %}
       {% if app.environment == "prod" %}
         <script src="{{ asset('/dist/script.js') }}"></script>

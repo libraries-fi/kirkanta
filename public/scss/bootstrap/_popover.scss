@@ -1,0 +1,12 @@
+@import "~bootstrap/scss/popover";
+
+.popover .close {
+  background-color: $popover-header-bg;
+  color: $popover-header-color;
+  padding-left: spacing(2);
+  padding-right: spacing(2);
+}
+
+.popover-header {
+  white-space: nowrap;
+}

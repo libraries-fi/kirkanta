@@ -2,6 +2,7 @@
 $enable-rounded: true;
 $enable-gradients: true;
 
+$popover-max-width: 15rem;
 $font-size-h1: 2rem;
 
 $zengreen: #47BC7A;
@@ -40,7 +41,7 @@ $table-dark-bg: #444;
 
 $bg-faded: red;
 
-@import "bootstrap";
+@import "bootstrap/bootstrap";
 @import "theme";
 @import "react-widgets";
 @import "ckeditor";
