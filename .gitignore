@@ -8,4 +8,4 @@
 .sass-cache
 node_modules
 .tmp-globalize-webpack
-/public/dist/*
+/public/dev

@@ -11,7 +11,7 @@ module.exports = {
     style: ["./public/scss/kirkanta.scss"],
   },
   output: {
-    path: path.resolve(__dirname, "public/dist"),
+    path: path.resolve(__dirname, "public/dev"),
     filename: "[name].js"
   },
   module: {

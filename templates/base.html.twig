@@ -14,7 +14,11 @@
 
     {% block stylesheets %}
       <style>
-        @import url("/dist/style.css");
+        {% if app.environment == "prod" %}
+          @import url("/dist/style.css");
+        {% else %}
+          @import url("/dev/style.css");
+        {% endif %}
       </style>
     {% endblock %}
   </head>
@@ -97,7 +101,11 @@
     {% endblock %}
 
     {% block javascripts %}
-      <script src="{{ asset('/dist/script.js') }}"></script>
+      {% if app.environment == "prod" %}
+        <script src="{{ asset('/dist/script.js') }}"></script>
+      {% else %}
+        <script src="{{ asset('/dev/script.js') }}"></script>
+      {% endif %}
     {% endblock %}
   </body>
 </html>
