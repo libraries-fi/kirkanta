@@ -4450,7 +4450,7 @@ button.close {
   left: 0;
   z-index: 1060;
   display: block;
-  max-width: 276px;
+  max-width: 15rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
@@ -4582,6 +4582,15 @@ button.close {
 .popover-body {
   padding: 0.5rem 0.75rem;
   color: #212529; }
+
+.popover .close {
+  background-color: #f7f7f7;
+  color: inherit;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem; }
+
+.popover-header {
+  white-space: nowrap; }
 
 .carousel {
   position: relative; }
