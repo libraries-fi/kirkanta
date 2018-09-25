@@ -42,6 +42,6 @@
 <ul class="navbar-nav pr-3">
   {% set children = item.children|slice(-1) %}
 
-  {% do (item.children|last).setExtra("icon", "fas fa-list-alt") %}
+  {% do (item.children|last).setExtra("icon", "fas fa-lock") %}
   {{ block("children") }}
 </ul>
