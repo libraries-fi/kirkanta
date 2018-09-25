@@ -40,12 +40,16 @@ label.required:after {
   padding-bottom: 0;
   border-bottom: 1px solid $highlight;
 
-  .nav-link {
-    color: $white;
+  .nav-item {
+    white-space: nowrap;
+
+    &.active {
+      background-color: $highlight;
+    }
   }
 
-  .nav-item.active {
-    background-color: $highlight;
+  .nav-link {
+    color: $white;
   }
 
   .navbar-nav:first-child {
@@ -60,7 +64,7 @@ label.required:after {
     }
   }
 
-  @include media-breakpoint-down("md") {
+  @include media-breakpoint-down("sm") {
     padding: $navbar-padding-y 0;
 
     .navbar-brand {
