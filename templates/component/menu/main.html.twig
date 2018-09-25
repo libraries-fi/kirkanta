@@ -39,7 +39,7 @@
   {% endblock %}
 </ul>
 
-<ul class="navbar-nav pr-3">
+<ul class="navbar-nav pr-3 navbar-secondary">
   {% set children = item.children|slice(-1) %}
 
   {% do (item.children|last).setExtra("icon", "fas fa-lock") %}

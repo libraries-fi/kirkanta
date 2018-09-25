@@ -52,6 +52,14 @@ label.required:after {
   .navbar-nav:first-child {
     flex-grow: 1;
   }
+
+  .navbar-secondary {
+    .nav-link {
+      padding-top: spacing(1);
+      padding-bottom: spacing(1);
+      border-radius: .5rem;
+    }
+  }
 }
 
 #l-notifications {
