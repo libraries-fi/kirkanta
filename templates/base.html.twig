@@ -38,7 +38,7 @@
                 template: "component/menu/main.html.twig"
               }) }}
 
-              <div class="navbar-nav">
+              <div class="navbar-nav" id="user-menu">
                 <div class="nav-item dropdown">
                   <button type="button" class="dropdown-toggle" data-toggle="dropdown">
                     <i class="fas fa-user"></i>
@@ -71,15 +71,19 @@
       </div>
     {% endblock %}
 
-    {% block body %}
-      <div id="l-main" class="container">
+    <div id="l-breadcrumb">
+      <div class="container">
         {% block breadcrumb %}
           {{ knp_menu_render('breadcrumb', {
             depth: 1,
             template: "component/menu/breadcrumb.html.twig"
           })}}
         {% endblock %}
+      </div>
+    </div>
 
+    {% block body %}
+      <div id="l-main" class="container">
         {% block region_top %}
           <div class="hud position-sticky">
             {% block content_top %}

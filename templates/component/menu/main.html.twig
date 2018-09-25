@@ -18,12 +18,14 @@
         {% set link_attrs = item.linkAttributes %}
 
         {% set _classes = attrs.classes|default("") ~ " nav-item" %}
+
+        {% if matcher.isCurrent(item) %}
+          {% set _classes = _classes ~ " active" %}
+        {% endif %}
+
         {% set attrs = attrs|merge({class: _classes}) %}
 
         {% set _link_classes = link_attrs.classes|default("") ~ " nav-link" %}
-        {% if matcher.isCurrent(item) %}
-          {% set _link_classes = _link_classes ~ " active" %}
-        {% endif %}
         {% set link_attrs = link_attrs|merge({class: _link_classes}) %}
 
         {% set icon = item.extra("icon") %}

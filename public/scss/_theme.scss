@@ -44,8 +44,7 @@ label.required:after {
     color: $white;
   }
 
-  .nav-link.active,
-  .nav-link.ancestor {
+  .nav-item.active {
     background-color: $highlight;
   }
 
@@ -59,6 +58,34 @@ label.required:after {
       padding-bottom: spacing(1);
       border-radius: .5rem;
     }
+  }
+
+  @include media-breakpoint-down("md") {
+    padding: $navbar-padding-y 0;
+
+    .navbar-brand {
+      padding-left: $navbar-padding-x;
+    }
+
+    .nav-item {
+      padding-left: $navbar-padding-x;
+      padding-right: $navbar-padding-x;
+    }
+
+    #user-menu {
+      margin-top: spacing(3);
+      padding: $navbar-padding-y 0;
+      background-color: darken(theme-color("navbar"), 10%);
+    }
+  }
+}
+
+#l-breadcrumb {
+  background-color: $breadcrumb-bg;
+
+  .breadcrumb {
+    border-left: 1px solid white;
+    border-right: 1px solid white;
   }
 }
 
