@@ -1,0 +1,15 @@
+#entity--person--edit {
+  #person_form_qualities {
+    @include media-breakpoint-only("sm") {
+      columns: 2;
+    }
+
+    @include media-breakpoint-only("md") {
+      columns: 3;
+    }
+
+    @include media-breakpoint-up("lg") {
+      columns: 4;
+    }
+  }
+}
