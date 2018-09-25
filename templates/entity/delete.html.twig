@@ -9,15 +9,23 @@
 {% endblock %}
 
 {% block content %}
-  <p>{% trans %}Do you really wish to delete this record?{% endtrans %}</p>
-  {{ form(form) }}
+  <div class="form-section">
+    <p>{% trans %}Do you really wish to delete this record?{% endtrans %}</p>
+    <p>{% trans %}This action cannot be undone.{% endtrans %}</p>
+    {{ form(form) }}
+  </div>
 {% endblock %}
 
 {% block _form_submit_widget %}
   {# These variables won't inherit from template scope #}
   {% set entity_type = app.request.get('entity_type') %}
   {% set entity_id = app.request.get(entity_type) %}
+  {% do form.setRendered(true) %}
 
-  {{ form_widget(form) }}
-  <a href="{{ path('entity.%s.edit'|format(entity_type), {(entity_type): entity_id}) }}" class="btn btn-link text-body">{% trans %}Cancel{% endtrans %}</a>
+  <button type="submit" class="btn btn-danger">
+    <i class="fas fa-trash"></i>
+    {% trans %}Delete{% endtrans %}
+  </button>
+
+  <a href="{{ path('entity.%s.edit'|format(entity_type), {(entity_type): entity_id}) }}" class="btn btn-secondary text-body ml-3">{% trans %}Cancel{% endtrans %}</a>
 {% endblock %}
