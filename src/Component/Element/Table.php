@@ -131,6 +131,7 @@ class Table implements IteratorAggregate
             $column->setExpand($definition['expand']);
         }
 
+        unset($this->columns[$key]);
         $this->columns[$key] = $column;
         return $this;
     }
