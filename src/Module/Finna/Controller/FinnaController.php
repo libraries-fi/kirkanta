@@ -6,6 +6,7 @@ use App\EntityTypeManager;
 use App\Entity\Consortium;
 use App\Module\Finna\Entity\FinnaAdditions;
 use App\Module\Finna\Entity\FinnaOrganisationWebsiteLink;
+use App\Module\Finna\WebsiteLinkCategories;
 use App\Util\FormData;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -13,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class FinnaController extends Controller
@@ -150,11 +152,30 @@ class FinnaController extends Controller
         $type_id = 'finna_organisation_web_link';
         $list_builder = $this->types->getListBuilder($type_id);
 
+        $list_builder->getQueryBuilder()
+            ->andWhere('e.finna_organisation = :finna_organisation')
+            ->setParameter('finna_organisation', $finna_organisation);
+
         $result = $list_builder->load();
         $table = $list_builder->build($result);
 
-        $table->useAsTemplate('name');
-        $table->transform('name', function($entity) {
+        $groups = new WebsiteLinkCategories;
+        $table
+            ->addColumn('category', 'Category')
+            ->useAsTemplate('category')
+            ->transform('category', function($o) use($groups) {
+                if ($label = $groups->search($o->getCategory())) {
+                    return "{% trans %}{$label}{% endtrans %}";
+                }
+            });
+
+        $table
+            ->addColumn('weight', '')
+            ->draghandle('weight');
+
+        $table
+            ->useAsTemplate('name')
+            ->transform('name', function($entity) {
             return '
                 <a href="{{ path("entity.finna_organisation.edit_link", {
                     finna_organisation: row.finnaOrganisation.id,
@@ -239,5 +260,32 @@ class FinnaController extends Controller
             'entity_type' => $type_id,
             $type_id => $link,
         ];
+    }
+
+    /**
+     * @Route("/finna_organisation/{finna_organisation}/links/tablesort", name="entity.finna_organisation.table_sort")
+     */
+    public function tableSort(Request $request, FinnaAdditions $finna_organisation)
+    {
+        $ids = $request->request->get('rows') ?: [];
+        $ids = array_map('intval', $ids);
+        $entities = $this->types->getRepository('finna_organisation_web_link')->findById($ids);
+
+        if ($entities) {
+            usort($entities, function($a, $b) {
+                return $a->getWeight() - $b->getWeight();
+            });
+
+            $base = reset($entities)->getWeight();
+
+            foreach ($entities as $entity) {
+                $new_weight = $base + array_search($entity->getId(), $ids);
+                $entity->setWeight($new_weight);
+            }
+
+            $this->types->getEntityManager()->flush();
+        }
+
+        return new JsonResponse($request->request->get('rows'));
     }
 }

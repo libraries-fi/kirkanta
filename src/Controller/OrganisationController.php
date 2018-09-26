@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Library;
 use App\Entity\Feature\Weight;
 use App\EntityTypeManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -225,7 +226,7 @@ class OrganisationController extends Controller
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
         $entity = $this->types->getRepository($type_id)->findOneBy(['id' => $resource_id]);
-        
+
         $form = $this->types->getForm($type_id, 'edit', $entity, [
             'context_entity' => $library
         ]);
@@ -329,6 +330,9 @@ class OrganisationController extends Controller
         ]);
     }
 
+    /**
+     * @Method("POST")
+     */
     public function tableSort(Request $request, string $resource, EntityTypeManager $manager)
     {
         $ids = $request->request->get('rows') ?: [];

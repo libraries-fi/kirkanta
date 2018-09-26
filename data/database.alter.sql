@@ -1776,3 +1776,18 @@ INSERT INTO contact_info_data (langcode, entity_id, name, description)
   WHERE consortium_id IS NOT NULL AND
     translations->'se'->>'name' != ''
 ;
+
+UPDATE contact_info a
+SET weight = sub.pos
+FROM (
+  SELECT id, row_number() OVER(PARTITION BY attached_to, type, finna_organisation_id) pos
+  FROM contact_info
+  ORDER BY id
+) sub
+WHERE a.id = sub.id AND a.weight IS NULL AND a.finna_organisation_id IS NOT NULL
+;
+
+
+
+
+-- COMMIT PLACEHOLDER --
