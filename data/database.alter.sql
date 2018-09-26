@@ -1674,3 +1674,105 @@ UPDATE finna_additions_data SET usage_info = NULL WHERE usage_info = '<p>&nbsp;<
 DELETE FROM service_instances a
 USING organisations b
 WHERE a.parent_id = b.id AND b.role NOT IN ('library', 'foreign');
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+ALTER TYPE facility_role ADD VALUE 'finna_organisation';
+
+ALTER TABLE contact_info ADD COLUMN category varchar(40);
+ALTER TABLE contact_info ADD COLUMN finna_organisation_id int;
+ALTER TABLE contact_info ADD FOREIGN KEY (finna_organisation_id)
+  REFERENCES finna_additions(id) ON DELETE CASCADE;
+
+ALTER TABLE contact_info ALTER COLUMN parent_id DROP NOT NULL;
+
+
+-- Need this to avoid a complaint about renaming columns.
+DROP VIEW contact_info_doctrine;
+
+-- Recreate the view to accommodate the new column.
+CREATE OR REPLACE VIEW contact_info_doctrine AS
+  SELECT
+    attached_to || ':' || type AS type,
+    id,
+    contact,
+    weight,
+    category,
+    parent_id,
+    department_id,
+    finna_organisation_id
+  FROM contact_info a
+;
+
+CREATE OR REPLACE RULE split_type_id AS ON INSERT TO contact_info_doctrine
+  DO INSTEAD
+    INSERT INTO contact_info (
+      id,
+      attached_to,
+      type,
+      contact,
+      weight,
+      category,
+      parent_id,
+      department_id,
+      finna_organisation_id
+    )
+    VALUES (
+      NEW.id,
+      left(NEW.type, position(':' IN NEW.type) - 1)::facility_role,
+      substring(NEW.type FROM position(':' IN NEW.type) + 1)::contact_info_type,
+      NEW.contact,
+      NEW.weight,
+      NEW.category,
+      NEW.parent_id,
+      NEW.department_id,
+      NEW.finna_organisation_id
+    )
+;
+
+DELETE FROM web_links WHERE consortium_id = 2183;
+
+INSERT INTO contact_info (type, id, contact, finna_organisation_id, attached_to, category)
+  SELECT 'website', a.id % 100000 + 200000, a.url, a.consortium_id, 'finna_organisation', b.identifier
+  FROM web_links a
+  LEFT JOIN web_link_groups b ON a.link_group_id = b.id
+  WHERE a.consortium_id IS NOT NULL
+;
+
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'fi', id % 100000 + 200000, name, description
+  FROM web_links
+  WHERE consortium_id IS NOT NULL
+;
+
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'en', id % 100000 + 200000, translations->'en'->>'name', translations->'en'->>'description'
+  FROM web_links
+  WHERE consortium_id IS NOT NULL AND
+    translations->'en'->>'name' != ''
+;
+
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'sv', id % 100000 + 200000, translations->'sv'->>'name', translations->'sv'->>'description'
+  FROM web_links
+  WHERE consortium_id IS NOT NULL AND
+    translations->'sv'->>'name' != ''
+;
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'ru', id % 100000 + 200000, translations->'ru'->>'name', translations->'ru'->>'description'
+  FROM web_links
+  WHERE consortium_id IS NOT NULL AND
+    translations->'ru'->>'name' != ''
+;
+INSERT INTO contact_info_data (langcode, entity_id, name, description)
+  SELECT 'se', id % 100000 + 200000, translations->'se'->>'name', translations->'se'->>'description'
+  FROM web_links
+  WHERE consortium_id IS NOT NULL AND
+    translations->'se'->>'name' != ''
+;

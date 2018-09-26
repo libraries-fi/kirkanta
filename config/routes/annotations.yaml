@@ -34,7 +34,6 @@ library_routes:
     type: library_routes
     resource: 'App\Routing\LibraryRouteLoader:load'
 
-
 # NOTE: Put this last to allow other controllers to override generic functionality.
 entity_controller:
     resource: ../../src/Controller/EntityController.php

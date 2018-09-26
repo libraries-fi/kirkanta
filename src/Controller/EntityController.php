@@ -51,13 +51,13 @@ class EntityController extends Controller
 
         $result = $list_builder->load();
         $table = $list_builder->build($result);
-        $template = $this->resolveTemplate('list', $entity_type);
+        $template = $this->resolveTemplate('collection', $entity_type);
 
         $actions = [
             'add' => [
+                'icon' => 'fas fa-plus-circle',
                 'title' => 'Create new',
                 'route' => "entity.{$entity_type}.add",
-                'icon' => 'fas fa-plus-circle'
             ]
         ];
 

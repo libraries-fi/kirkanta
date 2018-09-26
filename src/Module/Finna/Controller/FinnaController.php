@@ -5,6 +5,7 @@ namespace App\Module\Finna\Controller;
 use App\EntityTypeManager;
 use App\Entity\Consortium;
 use App\Module\Finna\Entity\FinnaAdditions;
+use App\Module\Finna\Entity\FinnaOrganisationWebsiteLink;
 use App\Util\FormData;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -18,9 +19,11 @@ class FinnaController extends Controller
 {
     const FINNA_ENTITY_TYPE = 'finna_organisation';
 
+    private $types;
+
     public function __construct(EntityTypeManager $types)
     {
-        $this->entityTypeManager = $types;
+        $this->types = $types;
     }
 
     /**
@@ -36,7 +39,7 @@ class FinnaController extends Controller
         $form = $this->entityTypeManager->getForm(self::FINNA_ENTITY_TYPE, 'edit', new FormData([
             'consortium' => $consortium
         ]));
-        
+
         $form->remove('exclusive');
 
         // $form->get('consortium')->setData($consortium);
@@ -136,5 +139,105 @@ class FinnaController extends Controller
                 'finna_organisation' => $finna_organisation->getId(),
             ]);
         }
+    }
+
+    /**
+     * @Route("/finna_organisation/{finna_organisation}/links", name="entity.finna_organisation.link_collection")
+     * @Template("entity/FinnaAdditions/links.collection.html.twig")
+     */
+    public function linkCollection(FinnaAdditions $finna_organisation)
+    {
+        $type_id = 'finna_organisation_web_link';
+        $list_builder = $this->types->getListBuilder($type_id);
+
+        $result = $list_builder->load();
+        $table = $list_builder->build($result);
+
+        $table->useAsTemplate('name');
+        $table->transform('name', function($entity) {
+            return '
+                <a href="{{ path("entity.finna_organisation.edit_link", {
+                    finna_organisation: row.finnaOrganisation.id,
+                    link: row.id
+                }) }}">{{ row.name }}</a>
+            ';
+        });
+
+        $actions = [
+            'add' => [
+                'icon' => 'fas fa-plus-circle',
+                'title' => 'Create new',
+                'route' => "entity.finna_organisation.add_link",
+                'params' => [
+                    'finna_organisation' => $finna_organisation->getId(),
+                ],
+            ]
+        ];
+
+        return [
+            'entity_type' => $type_id,
+            'type_label' => $this->types->getTypeLabel($type_id, true),
+            'table' => $table,
+            'actions' => $actions,
+        ];
+    }
+
+    /**
+     * @Route("/finna_organisation/{finna_organisation}/links/add", name="entity.finna_organisation.add_link")
+     * @Template("entity/FinnaAdditions/links.edit.html.twig")
+     */
+    public function addLink(Request $request, FinnaAdditions $finna_organisation)
+    {
+        $type_id = 'finna_organisation_web_link';
+        $form = $this->types->getForm($type_id, 'edit');
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entity = $this->types->getRepository($type_id)->create($form->getData()->getValues());
+            $entity->setFinnaOrganisation($finna_organisation);
+
+            $this->types->getEntityManager()->persist($entity);
+            $this->types->getEntityManager()->flush();
+            $this->addFlash('success', 'Resource created successfully.');
+
+            return $this->redirectToRoute('entity.finna_organisation.edit_link', [
+                'finna_organisation' => $finna_organisation->getId(),
+                'link' => $entity->getId()
+            ]);
+        }
+
+        return [
+            'form' => $form->createView(),
+            'entity_type' => $type_id,
+            'type_label' => $this->types->getTypeLabel($type_id),
+        ];
+    }
+
+    /**
+     * @Route("/finna_organisation/{finna_organisation}/links/{link}/edit", name="entity.finna_organisation.edit_link")
+     * @Template("entity/FinnaAdditions/links.edit.html.twig")
+     */
+    public function editLink(Request $request, FinnaAdditions $finna_organisation, FinnaOrganisationWebsiteLink $link)
+    {
+        $type_id = 'finna_organisation_web_link';
+
+        $form = $this->types->getForm($type_id, 'edit', $link);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->types->getEntityManager()->flush();
+            $this->addFlash('success', 'Changed were saved.');
+
+            return $this->redirectToRoute('entity.finna_organisation.link_collection', [
+              'finna_organisation' => $finna_organisation->getId(),
+            ]);
+        }
+
+        return [
+            'form' => $form->createView(),
+            'type_label' => $this->types->getTypeLabel($type_id),
+            'entity_type' => $type_id,
+            $type_id => $link,
+        ];
     }
 }

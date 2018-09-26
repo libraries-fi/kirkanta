@@ -65,12 +65,6 @@
       </nav>
     {% endblock %}
 
-    {% block notifications %}
-      <div class="container" id="l-notifications">
-        {{ block("flashes", "common-blocks.html.twig") }}
-      </div>
-    {% endblock %}
-
     <div id="l-breadcrumb">
       <div class="container">
         {% block breadcrumb %}
@@ -81,6 +75,12 @@
         {% endblock %}
       </div>
     </div>
+
+    {% block notifications %}
+      <div class="container" id="l-notifications">
+        {{ block("flashes", "common-blocks.html.twig") }}
+      </div>
+    {% endblock %}
 
     {% block body %}
       <div id="l-main" class="container">

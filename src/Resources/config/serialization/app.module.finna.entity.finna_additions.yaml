@@ -12,6 +12,8 @@ App\Module\Finna\Entity\FinnaAdditions:
       groups: ['default']
     finna_id:
       groups: ['default']
+    links:
+      groups: ['default']
 
 App\Module\Finna\Entity\FinnaAdditionsData:
   attributes:

@@ -23,6 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "foreign:email" = "ServicePointEmailAddress",
  *     "foreign:phone" = "ServicePointPhoneNumber",
  *     "foreign:website" = "ServicePointWebsiteLink",
+ *     "finna_organisation:website" = "App\Module\Finna\Entity\FinnaOrganisationWebsiteLink",
  * })
  */
 abstract class ContactInfo extends EntityBase implements Translatable, Weight
@@ -81,16 +82,6 @@ abstract class ContactInfo extends EntityBase implements Translatable, Weight
     public function setDescription(?string $description) : void
     {
         $this->translations[$this->langcode]->setDescription($description);
-    }
-
-    public function getParent() : Facility
-    {
-        return $this->parent;
-    }
-
-    public function setParent(Facility $facility) : void
-    {
-        $this->parent = $facility;
     }
 
     public function getTranslations() : Collection

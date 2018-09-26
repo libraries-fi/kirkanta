@@ -34,4 +34,14 @@ trait ContactInfoTrait
     {
         return $this->getParent();
     }
+
+    public function getParent() : Library
+    {
+        return $this->parent;
+    }
+
+    public function setParent(Library $library) : void
+    {
+        $this->parent = $library;
+    }
 }

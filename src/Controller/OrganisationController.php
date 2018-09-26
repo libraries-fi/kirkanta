@@ -37,7 +37,7 @@ class OrganisationController extends Controller
 
     /**
      * @ParamConverter("library", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resources-list.html.twig")
+     * @Template("entity/Library/resource.collection.html.twig")
      */
     public function resourceCollection(Request $request, $library, string $entity_type, string $resource)
     {
@@ -93,18 +93,6 @@ class OrganisationController extends Controller
         $actions = [];
 
         switch ($resource) {
-            case 'periods':
-                $table->useAsTemplate('name');
-                $table->transform('name', function($entity) {
-                    return '
-                        <a href="{{ path("entity.period.edit", {period: row.id}) }}">{{ row.name }}</a>
-                        {% if row.department %}
-                            <small class="text-secondary d-block">{{ row.department.name }}</small>
-                        {% endif %}
-                    ';
-                });
-                break;
-
             case 'departments':
             case 'email_addresses':
             case 'links':
@@ -120,14 +108,33 @@ class OrganisationController extends Controller
                 });
                 break;
 
+            case 'periods':
+                $table->useAsTemplate('name');
+                $table->transform('name', function($entity) {
+                    return '
+                        <a href="{{ path("entity.library.edit_resource", {
+                            library: row.parent.id,
+                            resource: app.request.get("resource"),
+                            resource_id: row.id
+                        }) }}">{{ row.name }}</a>
+
+                        {% if row.department %}
+                            <small class="text-secondary d-block">{{ row.department.name }}</small>
+                        {% endif %}
+                    ';
+                });
+                break;
+
             case 'persons':
                 $table->useAsTemplate('name');
                 $table->transform('name', function($entity) {
-                    return '<a href="{{ path("entity.library.edit_resource", {
-                        "library": row.library.id,
-                        "resource": app.request.get("resource"),
-                        "resource_id": row.id
-                    }) }}">{{ row.listName }}</a>';
+                    return '
+                        <a href="{{ path("entity.library.edit_resource", {
+                            library: row.library.id,
+                            resource: app.request.get("resource"),
+                            resource_id: row.id
+                        }) }}">{{ row.listName }}</a>
+                    ';
 
                 });
                 break;
@@ -173,7 +180,7 @@ class OrganisationController extends Controller
 
     /**
      * @ParamConverter("library", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resources-edit.html.twig")
+     * @Template("entity/Library/resource.edit.html.twig")
      */
     public function addResource(Request $request, $library, string $entity_type, string $resource)
     {
@@ -217,8 +224,8 @@ class OrganisationController extends Controller
     public function editResource(Request $request, $library, string $entity_type, string $resource, int $resource_id)
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
-
         $entity = $this->types->getRepository($type_id)->findOneBy(['id' => $resource_id]);
+        
         $form = $this->types->getForm($type_id, 'edit', $entity, [
             'context_entity' => $library
         ]);
@@ -255,7 +262,7 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/{resource}/import", name="entity.library.resource_from_template", defaults={"entity_type": "library"}, requirements={"library": "\d+", "resource": "[a-z]\w+"})
      * @ParamConverter("library", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resources-import.html.twig")
+     * @Template("entity/Library/resource.import.html.twig")
      */
     public function createResourceFromTemplate(Request $request, Library $library, string $entity_type, string $resource)
     {
@@ -349,7 +356,7 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/custom_data", name="entity.library.custom_data")
      * @ParamConverter("entity", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resources-list.html.twig")
+     * @Template("entity/Library/resource.list.html.twig")
      */
     public function listCustomData(Request $request, Library $library, \Knp\Component\Pager\PaginatorInterface $pager)
     {
@@ -383,7 +390,7 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/custom_data/{custom_data}", name="entity.custom_data.edit")
      * @ParamConverter("entity", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resources-edit.html.twig")
+     * @Template("entity/Library/resource.edit.html.twig")
      */
     public function editCustomData(Request $request, Library $library, int $custom_data)
     {
@@ -420,7 +427,7 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/custom_data/{custom_data}", name="entity.custom_data.delete")
      * @ParamConverter("entity", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resources-edit.html.twig")
+     * @Template("entity/Library/resource.edit.html.twig")
      */
     public function deleteCustomData()
     {
@@ -442,8 +449,8 @@ class OrganisationController extends Controller
         $resource_type = str_replace('_', '-', $resource_type);
 
         $names = [
-            sprintf('entity/Library/%s-%s.html.twig', $resource_type, $action),
-            sprintf('entity/Library/resources-%s.html.twig', $action),
+            sprintf('entity/Library/%s.%s.html.twig', $resource_type, $action),
+            sprintf('entity/Library/resource.%s.html.twig', $action),
         ];
 
         foreach ($names as $name) {

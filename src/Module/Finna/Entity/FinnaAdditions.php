@@ -13,6 +13,7 @@ use App\Entity\Feature\Translatable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,6 +39,11 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
      * @ORM\OneToOne(targetEntity="App\Entity\Consortium", mappedBy="finna_data", fetch="LAZY", cascade={"persist"})
      */
     private $consortium;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FinnaOrganisationWebsiteLink", mappedBy="finna_organisation", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     */
+    private $links;
 
     /**
      * @ORM\OneToMany(targetEntity="FinnaAdditionsData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
@@ -67,6 +73,12 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
      * @ORM\Column(type="boolean")
      */
     private $exclusive;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->links = new ArrayCollection;
+    }
 
     public function getConsortium() : Consortium
     {
@@ -107,6 +119,11 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
         } else {
             $this->service_point = null;
         }
+    }
+
+    public function getLinks() : Collection
+    {
+        return $this->links;
     }
 
     public function getFinnaId() : string

@@ -1,4 +1,14 @@
-{% extends "entity/Library/resource.edit.html.twig" %}
+{% extends "entity/edit.html.twig" %}
+
+{% block form_header %}
+  {{ parent() }}
+
+  {% block form_tabs %}
+    <nav class="nav-form-tabs">
+      {{ knp_menu_render("finna_organisation_tabs", {depth: 1}) }}
+    </nav>
+  {% endblock %}
+{% endblock %}
 
 {% block form %}
   {{ form_start(form) }}
@@ -8,6 +18,7 @@
     <legend>{% trans %}Basic details{% endtrans %}</legend>
     {{ form_row(form.name) }}
     {{ form_row(form.contact) }}
+    {{ form_row(form.category) }}
 
     {% if form.department is defined %}
       {{ form_row(form.department) }}

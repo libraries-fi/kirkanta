@@ -15,4 +15,14 @@ class ServicePointPhoneNumber extends ContactInfo
      * @ORM\ManyToOne(targetEntity="ServicePoint", inversedBy="phone_numbers")
      */
     protected $parent;
+
+    public function getParent() : ServicePoint
+    {
+        return $this->parent;
+    }
+
+    public function setParent(ServicePoint $service_point) : void
+    {
+        $this->parent = $service_point;
+    }
 }

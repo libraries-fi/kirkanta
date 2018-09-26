@@ -31,6 +31,8 @@ class LibraryRouteLoader extends Loader
             throw new RuntimeException('Trying to load library routes again');
         }
 
+        $this->loaded = true;
+
         $routes = new RouteCollection;
         $derivatives = ['library', 'service_point'];
         $resources = [

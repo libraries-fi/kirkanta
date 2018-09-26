@@ -1,0 +1,48 @@
+App\Entity\ContactInfo:
+  attributes:
+    translations:
+      groups: ['default', 'index']
+
+App\Entity\ContactInfoData:
+  attributes:
+    name:
+      groups: ['default']
+    description:
+      groups: ['default']
+
+App\Entity\EmailAddress:
+  attributes:
+    email:
+      groups: ['default']
+
+App\Entity\PhoneNumber:
+  attributes:
+    number:
+      groups: ['default']
+
+App\Entity\WebsiteLink:
+  attributes:
+    url:
+      groups: ['default']
+
+App\Entity\ServicePointEmailAddress:
+  attributes:
+    email:
+      groups: ['default']
+
+App\Entity\ServicePointPhoneNumber:
+  attributes:
+    number:
+      groups: ['default']
+
+App\Entity\ServicePointWebsiteLink:
+  attributes:
+    url:
+      groups: ['default']
+
+App\Module\Finna\Entity\FinnaOrganisationWebsiteLink:
+  attributes:
+    url:
+      groups: ['default', 'index']
+    category:
+      groups: ['default']

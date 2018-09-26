@@ -234,3 +234,11 @@ parameters:
             list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
             forms:
                 default: 'App\Form\WebsiteLinkForm'
+        finna_organisation_web_link:
+            id: finna_organisation_web_link
+            label: 'Website'
+            label_multiple: 'Websites'
+            class_name: 'App\Module\Finna\Entity\FinnaOrganisationWebsiteLink'
+            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
+            forms:
+                default: 'App\Module\Finna\Form\FinnaOrganisationWebsiteLinkForm'

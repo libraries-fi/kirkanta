@@ -71,6 +71,7 @@ services:
 
     App\Routing\EntityRouteLoader:
         tags: ['routing.loader']
+
     App\Routing\LibraryRouteLoader:
         tags: ['routing.loader']
 
@@ -119,12 +120,12 @@ services:
         decorates: translator
         arguments: ['@translation.translator.inner', '@translation.logger']
 
-
     menu_builder:
-        class: 'App\Menu\Builder'
-        arguments: ['@knp_menu.factory', '@entity_type_manager']
+        alias: 'App\Menu\Builder'
+
     breadcrumb_builder:
         class: 'App\Menu\BreadcrumbBuilder'
+
     kirkanta.menu.main:
         public: true
         class: 'Knp\Menu\MenuItem'
@@ -158,6 +159,18 @@ services:
         factory: ['@breadcrumb_builder', 'build']
         tags:
             - { name: knp_menu.menu, alias: breadcrumb }
+
+    finna_menu_builder:
+        alias: 'App\Module\Finna\MenuBuilder'
+
+    kirkanta.menu.finna_organisation_tabs:
+        public: true
+        class: 'Knp\Menu\MenuItem'
+        factory: ['@finna_menu_builder', 'organisationTabs']
+        arguments: ['@request_stack']
+        tags:
+            - { name: knp_menu.menu, alias: finna_organisation_tabs }
+
     App\Menu\Matcher\PathTraceVoter:
         tags:
             - { name: knp_menu.voter }

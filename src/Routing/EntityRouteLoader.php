@@ -31,6 +31,8 @@ class EntityRouteLoader extends Loader
             throw new RuntimeException('Trying to load entity routes again');
         }
 
+        $this->loaded = true;
+
         $types = $this->types->getTypes();
         $routes = new RouteCollection;
 
@@ -105,8 +107,6 @@ class EntityRouteLoader extends Loader
             $routes->add("entity.{$type_id}.translate", $translate);
             $routes->add("entity.{$type_id}.delete_translation", $delete_translation);
         }
-
-        $this->loaded = true;
 
         return $routes;
     }
