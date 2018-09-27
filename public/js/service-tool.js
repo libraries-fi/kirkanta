@@ -7,9 +7,9 @@ $(() => {
       items.removeClass(class_name);
       items.filter(`[data-id=${event.target.value}]`).addClass(class_name);
 
-      // items.each((i, group) => {
-      //   $(group).find(".inputs :input,select").prop("disabled", !$(group).hasClass(class_name));
-      // })
+      items.each((i, group) => {
+        $(group).find(".inputs :input,select").prop("readOnly", !$(group).hasClass(class_name));
+      })
     });
   });
 

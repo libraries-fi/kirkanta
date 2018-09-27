@@ -1802,3 +1802,8 @@ ALTER TABLE organisations_data ADD COLUMN phone_id int;
 ALTER TABLE organisations_data ADD FOREIGN KEY (email_id) REFERENCES contact_info(id);
 ALTER TABLE organisations_data ADD FOREIGN KEY (homepage_id) REFERENCES contact_info(id);
 ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_info(id);
+
+
+
+
+-- COMMIT PLACEHOLDER --

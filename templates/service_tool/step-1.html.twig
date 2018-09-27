@@ -18,7 +18,6 @@
 {% block body %}
   <main id="l-main" class="container">
     <form action="{{ path('service_tool.verify') }}">
-      {{ block("breadcrumb") }}
       {{ block("region_top") }}
 
       <h2 class="h5">{% trans with {'%count%': services|length} %}Total of %count% services.{% endtrans %}</h2>

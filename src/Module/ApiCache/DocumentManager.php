@@ -51,6 +51,8 @@ class DocumentManager
             ]);
         } catch (OutOfBoundsException $e) {
             // Unmanaged entity type.
+
+            var_dump($e->getMessage());
             exit('fail');
         }
     }

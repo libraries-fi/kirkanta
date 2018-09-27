@@ -7,6 +7,7 @@ use App\Entity\ListBuilder\EntityListBuilder;
 use App\Util\FormData;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Proxy\Proxy;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -55,6 +56,11 @@ final class EntityTypeManager {
 
     public function getTypeId(string $entity_class) : string
     {
+        if (is_a($entity_class, Proxy::class, true)) {
+            $parents = class_parents($entity_class);
+            $entity_class = reset($parents);
+        }
+
         foreach ($this->types as $type_id => $definition) {
             if ($definition['class_name'] == $entity_class) {
                 return $type_id;
