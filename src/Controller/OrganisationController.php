@@ -38,7 +38,6 @@ class OrganisationController extends Controller
 
     /**
      * @ParamConverter("library", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resource.collection.html.twig")
      */
     public function resourceCollection(Request $request, $library, string $entity_type, string $resource)
     {
@@ -186,8 +185,6 @@ class OrganisationController extends Controller
         ];
 
         return [
-            'type_label' => $this->types->getTypeLabel($type_id, true),
-            'entity_type' => $type_id,
             'table' => $table,
             'search_form' => $search_form ? $search_form->createView() : null,
             'actions' => $actions
@@ -196,7 +193,6 @@ class OrganisationController extends Controller
 
     /**
      * @ParamConverter("library", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resource.edit.html.twig")
      */
     public function addResource(Request $request, $library, string $entity_type, string $resource)
     {
@@ -224,13 +220,9 @@ class OrganisationController extends Controller
             ]);
         }
 
-        $template = $this->resolveTemplate('edit', $resource);
-
-        return $this->render($template, [
+        return [
             'form' => $form->createView(),
-            'type_label' => $this->types->getTypeLabel($type_id),
-            'entity_type' => $type_id,
-        ]);
+        ];
     }
 
     /**
@@ -255,14 +247,9 @@ class OrganisationController extends Controller
           ]);
         }
 
-        $template = $this->resolveTemplate('edit', $resource);
-
-        return $this->render($template, [
+        return [
             'form' => $form->createView(),
-            'type_label' => $this->types->getTypeLabel($type_id),
-            'entity_type' => $type_id,
-            $type_id => $entity,
-        ]);
+        ];
     }
 
     /**
@@ -282,7 +269,6 @@ class OrganisationController extends Controller
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
         $entity_class = $this->types->getEntityClass($type_id);
-        $template = $this->resolveTemplate('import', $resource);
 
         $form = $this->types->getForm($type_id, 'import', null, [
             'user_groups' => $library->getOwner()->getTree(),
@@ -335,11 +321,11 @@ class OrganisationController extends Controller
             ]);
         }
 
-        return $this->render($template, [
+        return [
             'entity_type' => 'service_instance',
             'type_label' => $this->types->getTypeLabel($type_id),
             'form' => $form->createView(),
-        ]);
+        ];
     }
 
     /**
@@ -372,7 +358,6 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/custom_data", name="entity.library.custom_data")
      * @ParamConverter("entity", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resource.list.html.twig")
      */
     public function listCustomData(Request $request, Library $library, \Knp\Component\Pager\PaginatorInterface $pager)
     {
@@ -406,7 +391,6 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/custom_data/{custom_data}", name="entity.custom_data.edit")
      * @ParamConverter("entity", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resource.edit.html.twig")
      */
     public function editCustomData(Request $request, Library $library, int $custom_data)
     {
@@ -443,7 +427,6 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/custom_data/{custom_data}", name="entity.custom_data.delete")
      * @ParamConverter("entity", converter="entity_from_type_and_id")
-     * @Template("entity/Library/resource.edit.html.twig")
      */
     public function deleteCustomData()
     {
@@ -465,22 +448,5 @@ class OrganisationController extends Controller
         $resource_class = $metadata->associationMappings[$resource_name]['targetEntity'];
         $type_id = $this->types->getTypeId($resource_class);
         return $type_id;
-    }
-
-    protected function resolveTemplate(string $action, string $resource_type) : string
-    {
-        $loader = $this->get('twig')->getLoader();
-        $resource_type = str_replace('_', '-', $resource_type);
-
-        $names = [
-            sprintf('entity/Library/%s.%s.html.twig', $resource_type, $action),
-            sprintf('entity/Library/resource.%s.html.twig', $action),
-        ];
-
-        foreach ($names as $name) {
-            if ($loader->exists($name)) {
-                return $name;
-            }
-        }
     }
 }

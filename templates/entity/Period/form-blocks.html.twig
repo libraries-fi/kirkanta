@@ -15,7 +15,7 @@
       </fieldset>
 
       {% with { library: app.request.get('library') } %}
-        {% if library is null and entity.parent %}
+        {% if library is null and entity is defined %}
           {% set library = entity.parent %}
         {% endif %}
 

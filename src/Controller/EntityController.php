@@ -69,13 +69,11 @@ class EntityController extends Controller
         //     ];
         // }
 
-        return $this->render($template, [
-            'type_label' => $this->entityTypeManager->getTypeLabel($entity_type, true),
+        return [
             'search_form' => $search_form ? $search_form->createView() : null,
             'table' => $table,
             'actions' => $actions,
-            'entity_type' => $entity_type,
-        ]);
+        ];
     }
 
     public function add(Request $request, string $entity_type)
@@ -97,6 +95,10 @@ class EntityController extends Controller
             ]);
         }
 
+        return [
+            'form' => $form->createView(),
+        ];
+
         $template = $this->resolveTemplate('edit', $entity_type);
 
         return $this->render($template, [
@@ -113,11 +115,6 @@ class EntityController extends Controller
     {
         $form = $this->entityTypeManager->getForm($entity_type, 'edit', $entity);
         $form->handleRequest($request);
-
-        if (!empty($_POST)) {
-            // var_dump($form->get('ptv')->getData());
-            // exit;
-        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityTypeManager->getEntityManager()->flush();
@@ -154,18 +151,6 @@ class EntityController extends Controller
         $available = array_diff($languages, $entity->getTranslations()->getKeys());
         $protected_translations = ['fi'];
 
-        // $form = $this->createForm(EntityTranslationForm::class, null, [
-        //     'existing_translations' => $entity->getTranslations()->getKeys()
-        // ]);
-        // $form->handleRequest($request);
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-        //     return $this->redirectToRoute("entity.{$entity_type}.edit", [
-        //         $entity_type => $entity->getId(),
-        //         'langcode' => $form->get('langcode')->getData(),
-        //     ]);
-        // }
-
         if ($request->isMethod('post')) {
             $langcode = $request->request->get('langcode');
 
@@ -191,22 +176,13 @@ class EntityController extends Controller
             exit('POST');
         }
 
-        $template = $this->resolveTemplate('translate', $entity_type);
-        // $form_choices = $form->get('langcode')->getConfig()->getOptions()['choices'];
-
-        return $this->render($template, [
-            // 'form' => $form->createView(),
-            'type_label' => $this->entityTypeManager->getTypeLabel($entity_type),
-            'entity_type' => $entity_type,
-            $entity_type => $entity,
-
+        return [
             // Here this should be OK as there should be no variants of this route.
-            'entity' => $entity,
             'translations' => $entity->getTranslations(),
             'available_translations' => $available,
             'protected_translations' => $protected_translations,
             'can_add_more' => !empty($form_choices)
-        ]);
+        ];
     }
 
     /**

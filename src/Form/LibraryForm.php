@@ -38,7 +38,8 @@ class LibraryForm extends FormType
                 'label' => 'ISIL',
             ])
             ->add('identificator', null, [
-                'required' => false
+                'required' => false,
+                'label' => 'Official identifier',
             ])
             ->add('address', AddressType::class)
             ->add('mail_address', MailAddressType::class, [

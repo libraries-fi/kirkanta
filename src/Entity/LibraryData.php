@@ -141,7 +141,7 @@ class LibraryData extends EntityDataBase
         return $this->email;
     }
 
-    public function setEmail(EmailAddress $email) : void
+    public function setEmail(?EmailAddress $email) : void
     {
         $this->email = $email;
     }
@@ -151,7 +151,7 @@ class LibraryData extends EntityDataBase
         return $this->homepage;
     }
 
-    public function setHomepage(WebsiteLink $homepage) : void
+    public function setHomepage(?WebsiteLink $homepage) : void
     {
         $this->homepage = $homepage;
     }
@@ -161,7 +161,7 @@ class LibraryData extends EntityDataBase
         return $this->phone;
     }
 
-    public function setPhone(PhoneNumber $phone) : void
+    public function setPhone(?PhoneNumber $phone) : void
     {
         $this->phone = $phone;
     }

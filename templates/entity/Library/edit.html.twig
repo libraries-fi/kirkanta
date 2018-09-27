@@ -81,7 +81,9 @@
   </fieldset>
 
   <fieldset class="form-section">
-    <legend>{% trans %}E-contact{% endtrans %}</legend>
+    <legend>{% trans %}Primary contact info{% endtrans %}</legend>
+    <p class="text-muted">{% trans %}This information could e.g. be displayed in a summary.{% endtrans %}</p>
+
     {{ form_row(form.email) }}
     {{ form_row(form.phone) }}
     {{ form_row(form.homepage) }}
@@ -89,25 +91,39 @@
 
   <fieldset class="form-section">
     <legend>{% trans %}Introduction{% endtrans %}</legend>
+    <p class="text-muted">{% trans %}Introduction is also required for exporting to Suomi.fi.{% endtrans %}</p>
     {{ form_row(form.slogan) }}
     {{ form_row(form.description) }}
   </fieldset>
 
   <fieldset class="form-section">
     <legend>{% trans %}Arrival guide{% endtrans %}</legend>
-    {{ form_row(form.buses) }}
-    {{ form_row(form.trams) }}
-    {{ form_row(form.trains) }}
-    {{ form_row(form.transit_directions) }}
-    {{ form_row(form.parking_instructions) }}
+    <div class="row">
+      <div class="col-md-6">
+        {{ form_row(form.transit_directions) }}
+        {{ form_row(form.parking_instructions) }}
+      </div>
+      <div class="col-md-6">
+        <p class="text-muted">{% trans %}Write line numbers only.{% endtrans %}</p>
+        {{ form_row(form.buses) }}
+        {{ form_row(form.trams) }}
+        {{ form_row(form.trains) }}
+      </div>
+    </div>
   </fieldset>
 
   <fieldset class="form-section">
     <legend>{% trans %}Building information{% endtrans %}</legend>
-    {{ form_row(form.building_name) }}
-    {{ form_row(form.construction_year) }}
-    {{ form_row(form.building_architect) }}
-    {{ form_row(form.interior_designer) }}
+    <div class="row">
+      <div class="col-md-6">
+        {{ form_row(form.building_name) }}
+        {{ form_row(form.construction_year) }}
+      </div>
+      <div class="col-md-6">
+        {{ form_row(form.building_architect) }}
+        {{ form_row(form.interior_designer) }}
+      </div>
+    </div>
   </fieldset>
 {% endblock %}
 
