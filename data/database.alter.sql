@@ -1791,3 +1791,14 @@ WHERE a.id = sub.id AND a.weight IS NULL AND a.finna_organisation_id IS NOT NULL
 
 
 -- COMMIT PLACEHOLDER --
+
+
+
+
+ALTER TABLE organisations_data ADD COLUMN email_id int;
+ALTER TABLE organisations_data ADD COLUMN homepage_id int;
+ALTER TABLE organisations_data ADD COLUMN phone_id int;
+
+ALTER TABLE organisations_data ADD FOREIGN KEY (email_id) REFERENCES contact_info(id);
+ALTER TABLE organisations_data ADD FOREIGN KEY (homepage_id) REFERENCES contact_info(id);
+ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_info(id);

@@ -23,7 +23,7 @@
   {% block form_tabs %}
     {% if entity is defined %}
       <nav class="nav-form-tabs">
-        {{ knp_menu_render('library_tabs', {"depth": 1}) }}
+        {{ knp_menu_render('library_tabs', {depth: 2}) }}
       </nav>
     {% endif %}
   {% endblock %}
@@ -83,6 +83,7 @@
   <fieldset class="form-section">
     <legend>{% trans %}E-contact{% endtrans %}</legend>
     {{ form_row(form.email) }}
+    {{ form_row(form.phone) }}
     {{ form_row(form.homepage) }}
   </fieldset>
 

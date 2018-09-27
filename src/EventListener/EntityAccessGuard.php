@@ -22,7 +22,7 @@ class EntityAccessGuard implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::CONTROLLER => 'onController'
+            KernelEvents::CONTROLLER => ['onController', 1000]
         ];
     }
 

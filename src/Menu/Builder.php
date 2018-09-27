@@ -122,11 +122,11 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             'periods' => 'Periods',
             'services' => 'Services',
             'persons' => 'Staff',
-            'email_addresses' => 'Email addresses',
-            'phone_numbers' => 'Phone Numbers',
-            'links' => 'Websites',
             'pictures' => 'Pictures',
             'departments' => 'Departments',
+            // 'email_addresses' => 'Email addresses',
+            // 'phone_numbers' => 'Phone Numbers',
+            // 'links' => 'Websites',
         ];
 
         if ($entity_type != 'library') {
@@ -142,7 +142,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
 
         foreach ($resources as $resource => $label) {
             $item = $menu->addChild($label, [
-                'route' => "entity.{$entity_type}.resource_collection",
+                'route' => "entity.{$entity_type}.{$resource}",
                 'routeParameters' => [
                     $entity_type => $entity->getId(),
                     'resource' => $resource,
@@ -150,8 +150,8 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             ]);
 
             if ($resource == $request->get('resource')) {
-                $item->addChild('Add', [
-                    'route' => "entity.{$entity_type}.add_resource",
+                $item->addChild('Create new', [
+                    'route' => "entity.{$entity_type}.{$resource}.add",
                     'routeParameters' => [
                         $entity_type => $entity->getId(),
                         'resource' => $resource,
@@ -160,7 +160,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
 
                 if ($rid = $request->get('resource_id')) {
                     $item->addChild('Edit', [
-                        'route' => "entity.{$entity_type}.edit_resource",
+                        'route' => "entity.{$entity_type}.{$resource}.edit",
                         'routeParameters' => [
                             $entity_type => $entity->getId(),
                             'resource' => $resource,
@@ -168,7 +168,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
                         ]
                     ]);
                     $item->addChild('Delete', [
-                        'route' => "entity.{$entity_type}.delete_resource",
+                        'route' => "entity.{$entity_type}.{$resource}.delete",
                         'routeParameters' => [
                             $entity_type => $entity->getId(),
                             'resource' => $resource,
@@ -177,6 +177,31 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
                     ]);
                 }
             }
+        }
+
+        $contacts = [
+            'email_addresses' => 'Email addresses',
+            'phone_numbers' => 'Phone Numbers',
+            'links' => 'Websites',
+        ];
+
+        $contacts_tab = $menu->addChild('Contact info', [
+            'route' => "entity.{$entity_type}.contact_info",
+            'routeParameters' => [
+                $entity_type => $entity->getId(),
+            ]
+        ]);
+
+        $contacts_tab->setExtra('dropdown', true);
+
+        foreach ($contacts as $resource => $label) {
+            $contacts_tab->addChild($label, [
+                'route' => "entity.{$entity_type}.{$resource}",
+                'routeParameters' => [
+                    $entity_type => $entity->getId(),
+                    'resource' => $resource,
+                ]
+            ]);
         }
 
         return $menu;

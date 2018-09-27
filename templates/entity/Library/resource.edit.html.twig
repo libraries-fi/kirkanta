@@ -5,7 +5,10 @@
 
   {% block form_tabs %}
     <nav class="nav-form-tabs">
-      {{ knp_menu_render("library_tabs", {"depth": 1}) }}
+      {{ knp_menu_render("library_tabs", {
+        depth: 2,
+        template: 'component/menu/tabs.html.twig',
+      }) }}
     </nav>
   {% endblock %}
 {% endblock %}

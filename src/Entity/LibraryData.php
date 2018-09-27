@@ -41,14 +41,19 @@ class LibraryData extends EntityDataBase
     private $slogan;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity="EmailAddress")
+     */
+    private $email;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="WebsiteLink")
      */
     private $homepage;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity="PhoneNumber")
      */
-    private $email;
+    private $phone;
 
     /**
      * @ORM\Column(type="string")
@@ -131,24 +136,34 @@ class LibraryData extends EntityDataBase
         $this->parking_instructions = $info;
     }
 
-    public function getEmail() : string
+    public function getEmail() : ?EmailAddress
     {
         return $this->email;
     }
 
-    public function setEmail(string $email) : void
+    public function setEmail(EmailAddress $email) : void
     {
         $this->email = $email;
     }
 
-    public function getHomepage() : ?string
+    public function getHomepage() : ?WebsiteLink
     {
         return $this->homepage;
     }
 
-    public function setHomepage(?string $homepage) : void
+    public function setHomepage(WebsiteLink $homepage) : void
     {
         $this->homepage = $homepage;
+    }
+
+    public function getPhone() : ?PhoneNumber
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(PhoneNumber $phone) : void
+    {
+        $this->phone = $phone;
     }
 
     public function getBuildingName() : ?string

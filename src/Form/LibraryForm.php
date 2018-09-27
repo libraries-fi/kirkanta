@@ -93,11 +93,11 @@ class LibraryForm extends FormType
                     'placeholder' => '-- Select --',
                     'query_builder' => function($repo) use($groups) {
                         return $repo->createQueryBuilder('e')
-                        ->join('e.translations', 'd')
-                        ->orderBy('d.name')
-                        ->andWhere('e.group IN (:groups)')
-                        ->setParameter('groups', $groups)
-                        ;
+                            ->join('e.translations', 'd')
+                            ->orderBy('d.name')
+                            ->andWhere('e.group IN (:groups)')
+                            ->setParameter('groups', $groups)
+                            ;
                     }
                 ]);
             }

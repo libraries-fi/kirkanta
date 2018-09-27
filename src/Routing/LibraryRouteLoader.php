@@ -47,46 +47,57 @@ class LibraryRouteLoader extends Loader
         ];
 
         foreach ($derivatives as $type_id) {
-            $base_path = "/{$type_id}/{{$type_id}}";
+            $defaults = ['entity_type' => $type_id];
+            $requirements = [$type_id => '\d+'];
 
-            $defaults = [
-                'entity_type' => $type_id,
-            ];
+            foreach ($resources as $resource) {
+                $base_path = "/{$type_id}/{{$type_id}}";
 
-            $requirements = [
-                $type_id => '\d+',
-                'resource' => implode('|', $resources),
-            ];
+                if (in_array($resource, ['email_addresses', 'links', 'phone_numbers'])) {
+                    $base_path .= '/contact';
+                }
 
-            $resource_collection = new Route("{$base_path}/{resource}", $defaults + [
-                '_controller' => sprintf('%s:resourceCollection', OrganisationController::class)
-            ], $requirements);
+                $resource_collection = new Route("{$base_path}/{$resource}", $defaults + [
+                    'resource' => $resource,
+                    '_controller' => sprintf('%s:resourceCollection', OrganisationController::class)
+                ], $requirements);
 
-            $add_resource = new Route("{$base_path}/{resource}/add", $defaults + [
-                '_controller' => sprintf('%s:addResource', OrganisationController::class)
-            ], $requirements);
+                $add_resource = new Route("{$base_path}/{$resource}/add", $defaults + [
+                    'resource' => $resource,
+                    '_controller' => sprintf('%s:addResource', OrganisationController::class)
+                ], $requirements);
 
-            $edit_resource = new Route("{$base_path}/{resource}/{resource_id}/edit", $defaults + [
-                '_controller' => sprintf('%s:editResource', OrganisationController::class)
-            ], $requirements + [
-                'resource_id' => '\d+'
+                $edit_resource = new Route("{$base_path}/{$resource}/{resource_id}/edit", $defaults + [
+                    'resource' => $resource,
+                    '_controller' => sprintf('%s:editResource', OrganisationController::class)
+                ], $requirements + [
+                    'resource_id' => '\d+'
+                ]);
+
+                $delete_resource = new Route("{$base_path}/{$resource}/{resource_id}/delete", $defaults + [
+                    'resource' => $resource,
+                    '_controller' => sprintf('%s:editResource', OrganisationController::class)
+                ], $requirements + [
+                    'resource_id' => '\d+'
+                ]);
+
+                $table_sort = new Route("{$base_path}/{$resource}/tablesort", $defaults + [
+                    'resource' => $resource,
+                    '_controller' => sprintf('%s:tableSort', OrganisationController::class)
+                ], $requirements);
+
+                $routes->add("entity.{$type_id}.{$resource}", $resource_collection);
+                $routes->add("entity.{$type_id}.{$resource}.add", $add_resource);
+                $routes->add("entity.{$type_id}.{$resource}.edit", $edit_resource);
+                $routes->add("entity.{$type_id}.{$resource}.delete", $delete_resource);
+                $routes->add("entity.{$type_id}.{$resource}.table_sort", $table_sort);
+            }
+
+            $contact_info = new Route("{$base_path}/contact", $defaults + [
+                '_controller' => sprintf('%s:contactsTab', OrganisationController::class)
             ]);
 
-            $delete_resource = new Route("{$base_path}/{resource}/{resource_id}/delete", $defaults + [
-                '_controller' => sprintf('%s:editResource', OrganisationController::class)
-            ], $requirements + [
-                'resource_id' => '\d+'
-            ]);
-
-            $table_sort = new Route("{$base_path}/{resource}/tablesort", $defaults + [
-                '_controller' => sprintf('%s:tableSort', OrganisationController::class)
-            ], $requirements);
-
-            $routes->add("entity.{$type_id}.resource_collection", $resource_collection);
-            $routes->add("entity.{$type_id}.add_resource", $add_resource);
-            $routes->add("entity.{$type_id}.edit_resource", $edit_resource);
-            $routes->add("entity.{$type_id}.delete_resource", $delete_resource);
-            $routes->add("entity.{$type_id}.table_sort", $table_sort);
+            $routes->add("entity.{$type_id}.contact_info", $contact_info);
         }
 
         return $routes;

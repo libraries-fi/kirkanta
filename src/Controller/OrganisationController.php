@@ -95,27 +95,33 @@ class OrganisationController extends Controller
 
         switch ($resource) {
             case 'departments':
-            case 'email_addresses':
-            case 'links':
             case 'pictures':
-            case 'phone_numbers':
                 $table->useAsTemplate('name');
-                $table->transform('name', function($entity) use ($entity_type) {
-                    return str_replace('%entity_type%', $entity_type, '<a href="{{ path("entity.%entity_type%.edit_resource", {
-                        %entity_type%: row.parent.id,
-                        resource: app.request.get("resource"),
-                        resource_id: row.id
-                    }) }}">{{ row.name }}</a>');
+                $table->transform('name', function($entity) use ($entity_type, $resource) {
+                    return str_replace(['%entity_type%', '%resource%'], [$entity_type, $resource], '
+                        <a href="{{ path("entity.%entity_type%.%resource%.edit", {
+                            %entity_type%: row.parent.id,
+                            resource: app.request.get("resource"),
+                            resource_id: row.id
+                        }) }}">{{ row.name }}</a>
+                    ');
                 });
                 break;
 
+            case 'email_addresses':
+            case 'links':
+            case 'phone_numbers':
             case 'periods':
                 $table->useAsTemplate('name');
-                $table->transform('name', function($entity) {
+                $table->transform('name', function($entity) use($entity_type) {
                     return '
-                        <a href="{{ path("entity.library.edit_resource", {
-                            library: row.parent.id,
-                            resource: app.request.get("resource"),
+                        {% set entity_type = app.request.get("entity_type") %}
+                        {% set resource = app.request.get("resource") %}
+                        {% set route_name = "entity.%s.%s.edit"|format(entity_type, resource) %}
+
+                        <a href="{{ path(route_name, {
+                            (entity_type): row.parent.id,
+                            resource: resource,
                             resource_id: row.id
                         }) }}">{{ row.name }}</a>
 
@@ -130,24 +136,33 @@ class OrganisationController extends Controller
                 $table->useAsTemplate('name');
                 $table->transform('name', function($entity) {
                     return '
-                        <a href="{{ path("entity.library.edit_resource", {
-                            library: row.library.id,
-                            resource: app.request.get("resource"),
+                        {% set entity_type = app.request.get("entity_type") %}
+                        {% set resource = app.request.get("resource") %}
+                        {% set route_name = "entity.%s.%s.edit"|format(entity_type, resource) %}
+
+                        <a href="{{ path(route_name, {
+                            (entity_type): row.library.id,
+                            resource: resource,
                             resource_id: row.id
                         }) }}">{{ row.listName }}</a>
                     ';
-
                 });
                 break;
 
             case 'services':
                 $table->useAsTemplate('standard_name');
                 $table->transform('standard_name', function($entity) {
-                    return '<a href="{{ path("entity.library.edit_resource", {
-                        "library": row.parent.id,
-                        "resource": app.request.get("resource"),
-                        "resource_id": row.id
-                    }) }}">{{ row.standardName }}</a>';
+                    return '
+                        {% set entity_type = app.request.get("entity_type") %}
+                        {% set resource = app.request.get("resource") %}
+                        {% set route_name = "entity.%s.%s.edit"|format(entity_type, resource) %}
+
+                        <a href="{{ path(route_name, {
+                            (entity_type): row.parent.id,
+                            resource: resource,
+                            resource_id: row.id
+                        }) }}">{{ row.listName }}</a>
+                    ';
 
                 });
 
@@ -165,8 +180,8 @@ class OrganisationController extends Controller
 
         $actions['add'] = [
             'title' => 'Create new',
-            'route' => "entity.{$entity_type}.add_resource",
-            'params' => [$entity_type => $library->getId(), 'resource' => $resource],
+            'route' => "entity.{$entity_type}.{$resource}.add",
+            'params' => [$entity_type => $library->getId()],
             'icon' => 'fas fa-plus-circle',
         ];
 
@@ -203,9 +218,8 @@ class OrganisationController extends Controller
 
             $this->addFlash('success', 'Resource created successfully.');
 
-            return $this->redirectToRoute("entity.{$entity_type}.edit_resource", [
+            return $this->redirectToRoute("entity.{$entity_type}.{$resource}.edit", [
                 $entity_type => $library->getId(),
-                'resource' => $resource,
                 'resource_id' => $entity->getId(),
             ]);
         }
@@ -236,9 +250,8 @@ class OrganisationController extends Controller
           $this->types->getEntityManager()->flush();
           $this->addFlash('success', 'Changes were saved.');
 
-          return $this->redirectToRoute("entity.{$entity_type}.resource_collection", [
+          return $this->redirectToRoute("entity.{$entity_type}.{$resource}", [
             $entity_type => $library->getId(),
-            'resource' => $resource,
           ]);
         }
 
@@ -317,9 +330,8 @@ class OrganisationController extends Controller
             $em->flush();
             $this->addFlash('success', 'Resources imported successfully.');
 
-            return $this->redirectToRoute('entity.library.list_resources', [
+            return $this->redirectToRoute("entity.library.{$resource}", [
               'id' => $id,
-              'resource' => $resource,
             ]);
         }
 
@@ -434,6 +446,14 @@ class OrganisationController extends Controller
      * @Template("entity/Library/resource.edit.html.twig")
      */
     public function deleteCustomData()
+    {
+
+    }
+
+    /**
+     * @Template("entity/Library/contact-info.index.html.twig")
+     */
+    public function contactsTab(Library $library)
     {
 
     }

@@ -56,7 +56,6 @@ class EntityDataCollectionType extends AbstractType
                     ]);
                 }
             }
-
         });
     }
 
@@ -79,6 +78,7 @@ class EntityDataCollectionType extends AbstractType
 
                 $field->vars['block_prefixes'][] = sprintf('%s_%s', $parent->vars['unique_block_prefix'], $name);
                 $field->vars['language_active'] = $langcode == $this->currentLangcode;
+                $field->vars['langcode'] = $langcode;
                 $field->parent = $parent->children[$name];
                 $parent->children[$name]->children[$langcode] = $field;
             }

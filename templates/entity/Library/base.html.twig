@@ -1,0 +1,14 @@
+{% extends "entity/collection.html.twig" %}
+
+{% block library_tabs %}
+  <nav class="nav-form-tabs">
+    {{ knp_menu_render("library_tabs", {
+      "depth": 1
+    }) }}
+  </nav>
+{% endblock %}
+
+{% block region_main %}
+  {{ block("library_tabs") }}
+  {{ parent() }}
+{% endblock %}

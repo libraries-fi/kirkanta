@@ -95,11 +95,9 @@
         {% endblock %}
 
         {% block region_main %}
-          <div class="row">
-            <main id="l-content" class="col">
-              {% block content %}{% endblock %}
-            </main>
-          </div>
+          <main id="l-main">
+            {% block content %}{% endblock %}
+          </main>
         {% endblock %}
       </div>
     {% endblock %}
