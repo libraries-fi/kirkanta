@@ -3,10 +3,8 @@
 namespace App\Module\ApiCache\Command;
 
 use App\Entity\Feature\StateAwareness;
-use App\Entity\Library;
 use App\Module\ApiCache\DocumentManager;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
-use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

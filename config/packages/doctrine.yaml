@@ -7,21 +7,24 @@ parameters:
 
 doctrine:
     dbal:
-        # configure these for your database server
-        driver: 'pdo_pgsql'
-        server_version: '10.0'
-        charset: utf8
-
-        # With Symfony 3.3, remove the `resolve:` prefix
-        url: '%env(resolve:DATABASE_URL)%'
+        connections:
+            default:
+                driver: 'pdo_pgsql'
+                url: '%env(resolve:DATABASE_URL)%'
+                server_version: '10.0'
+                charset: utf8
+                mapping_types:
+                    _text: text_array
+            db_v3:
+                driver: 'pdo_pgsql'
+                url: '%env(LEGACY_DATABASE_URL)%'
+                charset: utf8
         types:
             geography: 'Jsor\Doctrine\PostGIS\Types\GeographyType'
             text_array: 'Doctrine\DBAL\PostgresTypes\TextArrayType'
             translations: 'App\Doctrine\Types\TranslationsType'
             simple_object: 'App\Doctrine\Types\SimpleObjectType'
             custom_data_collection: 'App\Doctrine\Types\CustomDataCollectionType'
-        mapping_types:
-            _text: text_array
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
