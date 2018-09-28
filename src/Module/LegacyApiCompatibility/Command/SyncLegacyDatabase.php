@@ -16,6 +16,7 @@ class SyncLegacyDatabase extends Command
     private $currentDb;
     private $legacyDb;
     private $em;
+    private $cache;
 
     public function __construct(Connection $current, Connection $legacy, EntityManagerInterface $manager)
     {
@@ -36,44 +37,24 @@ class SyncLegacyDatabase extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output) : void
     {
+        $this->cache = new \stdClass;
         $this->syncLibraries();
     }
 
     private function syncLibraries() : void
     {
-        $BATCH_SIZE = 10;
-        $CACHE = (object)[];
-
         $this->legacyDb->beginTransaction();
 
         $this->synchronize('cities', 'cities', ['id', 'consortium_id'], function(&$row) {
             $row['region_id'] = 1003;
         });
 
-        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'coordinates'], function(&$row) use($CACHE) {
-            $CACHE->coords[$row['id']] = $row['coordinates'];
+        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'coordinates'], function(&$row) {
+            $this->cache->coords[$row['id']] = $row['coordinates'];
             unset($row['coordinates']);
         });
 
         $this->legacyDb->commit();
-    }
-
-    private function readTranslations(array &$document, array $translation, array $fields) : array
-    {
-        $langcode = $translation['langcode'];
-        $flipped = array_flip($fields);
-        $document['translations'][$langcode] = array_intersect($translations, array_flip($fields));
-
-        return $document;
-    }
-
-    private function mergePrimaryTranslation(array &$document, $langcode = 'fi') : array
-    {
-        $translations = json_decode($document['translations']);
-        $document += $translations->fi;
-        unset($translations->fi);
-        $document->translations = json_encode($translations);
-        return $document;
     }
 
     private function synchronize(string $current_table, string $legacy_table, array $fields, callable $mapper = null)
