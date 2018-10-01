@@ -43,15 +43,74 @@ class SyncLegacyDatabase extends Command
 
     private function syncLibraries() : void
     {
+        $smtContact = $this->currentDb->prepare('
+            SELECT type, contact
+            FROM contact_info
+            WHERE id IN (?, ?)
+        ');
+
         $this->legacyDb->beginTransaction();
 
-        $this->synchronize('cities', 'cities', ['id', 'consortium_id'], function(&$row) {
-            $row['region_id'] = 1003;
-        });
+        // $this->synchronize('cities', 'cities', ['id', 'consortium_id'], function(&$row) {
+        //     // Set a fallback value because API users don't really care about this,
+        //     // so we don't bother syncing regions.
+        //     $row['region_id'] = 1003;
+        // });
+        //
+        // $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'coordinates'], function(&$row) {
+        //     // In legacy DB, coordinates exist in organisations table.
+        //     $this->cache->coords[$row['id']] = $row['coordinates'];
+        //     unset($row['coordinates']);
+        // });
 
-        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'coordinates'], function(&$row) {
-            $this->cache->coords[$row['id']] = $row['coordinates'];
-            unset($row['coordinates']);
+        $this->synchronize('organisations', 'organisations', [
+            'role',
+            // 'type',
+            'id',
+            'group_id',
+            'city_id',
+            'address_id',
+            'mail_address_id',
+            'founded',
+            'isil',
+            'identificator',
+            'construction_year',
+            'building_architect',
+            'interior_designer',
+            'created',
+            'modified',
+            'state',
+        ], function(&$row) use($smtContact) {
+            $role = $row['role'];
+            unset($row['role']);
+
+            if (!in_array($role, ['library', 'foreign'])) {
+                throw new SkipSynchronizationException;
+            }
+
+            foreach ($row['translations'] as $langcode => &$data) {
+                /*
+                 * Contact details are now entity references vs. strings in old DB.
+                 * Also, there only exist fields for email and homepage, NOT phone.
+                 */
+                $smtContact->execute([
+                    $data['email_id'] ?: 0,
+                    $data['homepage_id'] ?: 0,
+                ]);
+
+                foreach ($smtContact->fetchAll() as $contact) {
+                    $keys = [
+                        'email' => 'email',
+                        'website' => 'homepage',
+                    ];
+                    $data[$keys[$contact['type']]] = $contact['contact'];
+                }
+
+                unset($data['email_id']);
+                unset($data['homepage_id']);
+                unset($data['phone_id']);
+                unset($data['slug']);
+            }
         });
 
         $this->legacyDb->commit();
@@ -61,11 +120,18 @@ class SyncLegacyDatabase extends Command
     {
         $read = read_query($this->currentDb, $current_table, $fields);
 
-        foreach (result_iterator($read) as $document) {
-            if ($mapper) {
-                $mapper($document);
+        foreach (result_iterator($read, [], false) as $document) {
+            try {
+                if ($mapper) {
+                    $mapper($document);
+                }
+
+                $document = merge_primary_translation($document);
+                $document['translations'] = json_encode($document['translations']);
+                insert_query($this->legacyDb, $legacy_table, $document);
+            } catch (SkipSynchronizationException $e) {
+                // pass
             }
-            insert_query($this->legacyDb, $legacy_table, $document);
         }
     }
 }
@@ -90,7 +156,7 @@ function result_iterator(Statement $statement, array $values = [], $encode_trans
 
             if (isset($document['translations'])) {
                 $document['translations'] = json_decode($document['translations'], true);
-                $document = merge_primary_translation($document);
+                // $document = merge_primary_translation($document);
 
                 if ($encode_translations) {
                     $document['translations'] = json_encode($document['translations']);
@@ -112,6 +178,7 @@ function read_query(Connection $db, string $table, array $fields) : Statement {
 
     $sql = "
         SELECT
+            id,
             {$fields},
             jsonb_object_agg(t.langcode, to_jsonb(t) - 'langcode' - 'entity_id') AS translations
         FROM {$table} a
@@ -126,6 +193,10 @@ function read_query(Connection $db, string $table, array $fields) : Statement {
 }
 
 function insert_query(Connection $db, string $table, array $values) : void {
+    if (empty($values['id'])) {
+        throw new \InvalidArgumentException('Document ID is required');
+    }
+
     $fields = array_keys($values);
     $placeholders = array_map(function($f) { return ":{$f}"; }, $fields);
     $updates = array_map(function($f) { return "{$f} = EXCLUDED.{$f}"; }, $fields);
@@ -142,4 +213,9 @@ function insert_query(Connection $db, string $table, array $values) : void {
     ";
 
     $db->executeQuery($sql, $values);
+}
+
+class SkipSynchronizationException extends \Exception
+{
+
 }
