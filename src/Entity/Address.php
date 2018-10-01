@@ -41,11 +41,6 @@ class Address extends EntityBase implements Translatable
      */
     private $translations;
 
-    /**
-     * @ORM\OneToOne(targetEntity="LibraryBase")
-     */
-    private $library;
-
     public function isNull() : bool
     {
         if (!empty($this->street)) {
@@ -115,16 +110,6 @@ class Address extends EntityBase implements Translatable
     public function setBoxNumber($number) : void
     {
         $this->box_number = $number;
-    }
-
-    public function getLibrary() : Library
-    {
-        return $this->library;
-    }
-
-    public function setLibrary(Library $organisation) : void
-    {
-        $this->library = $organisation;
     }
 
     public function getCity() : ?City

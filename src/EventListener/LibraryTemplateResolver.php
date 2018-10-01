@@ -48,15 +48,12 @@ class LibraryTemplateResolver implements EventSubscriberInterface
 
             if (in_array($entity_type, ['library', 'service_point'])) {
                 if ($type = $this->libraryResources[$resource]) {
-                    $entity_type = $type;
-                    $resource = null;
+                    $action = $action ?: 'collection';
+                } else {
+                    $action = 'collection';
                 }
 
-                if (!$action) {
-                    $action = $resource ?: 'collection';
-                }
-
-                if ($template = $this->resolveTemplate($action, $entity_type)) {
+                if ($template = $this->resolveTemplate($action, $resource)) {
                     $object = new Template(['template' => $template]);
                     $attributes->set('_template', $object);
                 }

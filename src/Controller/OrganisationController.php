@@ -160,9 +160,8 @@ class OrganisationController extends Controller
                             (entity_type): row.parent.id,
                             resource: resource,
                             resource_id: row.id
-                        }) }}">{{ row.listName }}</a>
+                        }) }}">{{ row.standardName }}</a>
                     ';
-
                 });
 
                 $actions['import'] = [
