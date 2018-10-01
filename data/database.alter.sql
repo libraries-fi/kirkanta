@@ -1807,3 +1807,82 @@ ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_inf
 
 
 -- COMMIT PLACEHOLDER --
+
+
+
+WITH insert_entity AS (
+  INSERT INTO contact_info (type, attached_to, parent_id, contact)
+  SELECT ('email', 'library', id, email)
+  FROM organisations
+  WHERE role IN ('library', 'foreign')
+  RETURNING id AS contact_id
+), insert_tr_fi AS (
+  INSERT INTO contact_info_data (entity_id, langcode, name)
+  SELECT contact_id, 'fi', 'Oletussähköposti'
+  FROM insert_entity
+), insert_tr_sv AS (
+  INSERT INTO contact_info_data (entity_id, langcode, name)
+  SELECT contact_id, 'sv', 'Oletussähköposti'
+  FROM insert_entity
+)
+INSERT INTO contact_info_data (entity_id, langcode, name)
+SELECT contact_id, 'en', 'Default email address'
+FROM insert_entity
+;
+
+-- MAX id before this: 202091
+
+WITH insert_entity AS (
+  INSERT INTO contact_info (type, attached_to, parent_id, contact)
+  SELECT 'email', a.role, a.id, b.email
+  FROM organisations a
+  INNER JOIN organisations_data b ON a.id = b.entity_id
+  WHERE a.role IN ('library', 'foreign') AND COALESCE(b.email, '') <> ''
+  RETURNING id AS contact_id, parent_id
+)
+INSERT INTO contact_info_data (entity_id, langcode, name)
+SELECT contact_id, b.langcode, 'Oletussähköposti'
+FROM insert_entity a
+INNER JOIN organisations_data b ON parent_id = b.entity_id
+;
+
+UPDATE organisations_data a
+SET email_id = b.id
+FROM contact_info b
+INNER JOIN contact_info_data c ON b.id = c.entity_id
+WHERE a.entity_id = b.parent_id
+  AND a.langcode = c.langcode
+  AND b.type = 'email'
+  AND a.email_id IS NULL
+;
+
+
+
+
+
+WITH insert_entity AS (
+  INSERT INTO contact_info (type, attached_to, parent_id, contact)
+  SELECT 'website', a.role, a.id, b.email
+  FROM organisations a
+  INNER JOIN organisations_data b ON a.id = b.entity_id
+  WHERE a.role IN ('library', 'foreign') AND COALESCE(b.homepage, '') <> ''
+  RETURNING id AS contact_id, parent_id
+)
+INSERT INTO contact_info_data (entity_id, langcode, name)
+SELECT contact_id, b.langcode, 'Kirjaston kotisivut'
+FROM insert_entity a
+INNER JOIN organisations_data b ON parent_id = b.entity_id
+;
+
+
+
+
+UPDATE organisations_data a
+SET homepage_id = b.id
+FROM contact_info b
+INNER JOIN contact_info_data c ON b.id = c.entity_id
+WHERE a.entity_id = b.parent_id
+  AND a.langcode = c.langcode
+  AND b.type = 'website'
+  AND a.homepage_id IS NULL
+;
