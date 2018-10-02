@@ -18,6 +18,8 @@ class SyncLegacyDatabase extends Command
     private $em;
     private $cache;
 
+    const GROUP_NOBODY = 2;
+
     public function __construct(Connection $current, Connection $legacy, EntityManagerInterface $manager)
     {
         parent::__construct();
@@ -38,7 +40,65 @@ class SyncLegacyDatabase extends Command
     protected function execute(InputInterface $input, OutputInterface $output) : void
     {
         $this->cache = new \stdClass;
-        $this->syncLibraries();
+
+        // $this->syncConsortiums();
+        // $this->syncLibraries();
+
+        $this->syncServices();
+
+        // $this->syncStaff();
+    }
+
+    private function syncConsortiums() : void
+    {
+        $this->legacyDb->beginTransaction();
+
+        $this->synchronize('consortiums', 'consortiums', [
+            'id',
+            'logo',
+            'created',
+            'modified',
+            'state',
+        ]);
+
+        $cache = new \stdClass;
+
+        $result = $this->currentDb->query('
+            SELECT
+                parent_id,
+                library_id,
+                service_point_id
+            FROM finna_service_point_bindings
+        ');
+
+        foreach ($result as $row) {
+            $cache->bindings[$row['parent_id']] = $row['library_id'] ?? $row['service_point_id'];
+        }
+
+        $this->synchronize('finna_additions', 'finna_consortium_data', [
+            'finna_id',
+            'finna_coverage',
+            'exclusive',
+        ], function(&$row) use($cache) {
+            $row['service_point_id'] = $cache->bindings[$row['id']] ?? null;
+
+            $cache->exclusive[$row['id']] = $row['exclusive'];
+            unset($row['exclusive']);
+
+            $row['consortium_id'] = $row['id'];
+            unset($row['id']);
+
+        }, [
+            'insert_id' => 'consortium_id'
+        ]);
+
+        $smtExclusive = $this->legacyDb->prepare('UPDATE consortiums SET special = ? WHERE id = ?');
+
+        foreach ($cache->exclusive as $id => $state) {
+            $smtExclusive->execute([$state ? 't' : 'f', $id]);
+        }
+
+        $this->legacyDb->commit();
     }
 
     private function syncLibraries() : void
@@ -51,17 +111,17 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->beginTransaction();
 
-        // $this->synchronize('cities', 'cities', ['id', 'consortium_id'], function(&$row) {
-        //     // Set a fallback value because API users don't really care about this,
-        //     // so we don't bother syncing regions.
-        //     $row['region_id'] = 1003;
-        // });
-        //
-        // $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'coordinates'], function(&$row) {
-        //     // In legacy DB, coordinates exist in organisations table.
-        //     $this->cache->coords[$row['id']] = $row['coordinates'];
-        //     unset($row['coordinates']);
-        // });
+        $this->synchronize('cities', 'cities', ['id', 'consortium_id'], function(&$row) {
+            // Set a fallback value because API users don't really care about this,
+            // so we don't bother syncing regions.
+            $row['region_id'] = 1003;
+        });
+
+        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'coordinates'], function(&$row) {
+            // In legacy DB, coordinates exist in organisations table.
+            $this->cache->coords[$row['id']] = $row['coordinates'];
+            unset($row['coordinates']);
+        });
 
         $this->synchronize('organisations', 'organisations', [
             'role',
@@ -87,6 +147,8 @@ class SyncLegacyDatabase extends Command
             if (!in_array($role, ['library', 'foreign'])) {
                 throw new SkipSynchronizationException;
             }
+
+            $row['coordinates'] = $this->cache->coords[$row['address_id']] ?? null;
 
             foreach ($row['translations'] as $langcode => &$data) {
                 /*
@@ -116,8 +178,73 @@ class SyncLegacyDatabase extends Command
         $this->legacyDb->commit();
     }
 
-    private function synchronize(string $current_table, string $legacy_table, array $fields, callable $mapper = null)
+    private function syncServices() : void
     {
+        // NOTE: Pay attention to confusing table names!
+
+        $this->legacyDb->beginTransaction();
+
+        $this->synchronize('services', 'service_types', [
+            'type',
+            'created',
+            'modified',
+        ]);
+
+        $this->synchronize('service_instances', 'services_new', [
+            'parent_id',
+            'template_id',
+            'picture',
+            'for_loan',
+            'phone_number',
+            'email',
+            'created',
+            'modified',
+            'shared',
+        ], function(&$row) {
+            $row['organisation_id'] = $row['parent_id'];
+            unset($row['parent_id']);
+
+            $row['for_loan'] = $row['for_loan'] ? 't' : 'f';
+            $row['shared'] = $row['shared'] ? 't' : 'f';
+        });
+
+        $this->legacyDb->commit();
+    }
+
+    private function syncStaff() : void
+    {
+        $this->legacyDb->beginTransaction();
+
+        $this->synchronize('persons', 'persons', [
+            'first_name',
+            'last_name',
+            'qualities',
+            'email',
+            'email_public',
+            'phone',
+            'url',
+            'is_head',
+            'created',
+            'modified',
+            'library_id',
+            'state'
+        ], function(&$row) {
+            $row['organisation_id'] = $row['library_id'];
+            unset($row['library_id']);
+
+            $row['email_public'] = $row['email_public'] ? 't' : 'f';
+            $row['is_head'] = $row['is_head'] ? 't' : 'f';
+
+            $row['group_id'] = self::GROUP_NOBODY;
+        });
+
+        $this->legacyDb->commit();
+    }
+
+    private function synchronize(string $current_table, string $legacy_table, array $fields, callable $mapper = null, array $options = [])
+    {
+        $insert_id = $options['insert_id'] ?? 'id';
+
         $read = read_query($this->currentDb, $current_table, $fields);
 
         foreach (result_iterator($read, [], false) as $document) {
@@ -128,7 +255,7 @@ class SyncLegacyDatabase extends Command
 
                 $document = merge_primary_translation($document);
                 $document['translations'] = json_encode($document['translations']);
-                insert_query($this->legacyDb, $legacy_table, $document);
+                insert_query($this->legacyDb, $legacy_table, $document, $insert_id);
             } catch (SkipSynchronizationException $e) {
                 // pass
             }
@@ -192,8 +319,8 @@ function read_query(Connection $db, string $table, array $fields) : Statement {
     return $db->prepare($sql);
 }
 
-function insert_query(Connection $db, string $table, array $values) : void {
-    if (empty($values['id'])) {
+function insert_query(Connection $db, string $table, array $values, string $id_field = 'id') : void {
+    if (empty($values[$id_field])) {
         throw new \InvalidArgumentException('Document ID is required');
     }
 
@@ -207,7 +334,7 @@ function insert_query(Connection $db, string $table, array $values) : void {
 
     $sql = "
         INSERT INTO {$table} ($fields) VALUES ({$placeholders})
-        ON CONFLICT (id)
+        ON CONFLICT ({$id_field})
         DO
         UPDATE SET {$updates}
     ";
