@@ -137,7 +137,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
         return $this->email;
     }
 
-    public function setEmail(string $email) : void
+    public function setEmail(?string $email) : void
     {
         $this->email = $email;
     }
@@ -147,7 +147,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
         return $this->phone_number;
     }
 
-    public function setPhoneNumber(string $number) : void
+    public function setPhoneNumber(?string $number) : void
     {
         $this->phone_number = $number;
     }
