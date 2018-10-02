@@ -45,7 +45,11 @@
                   {% trans with {'%id%': service.id} %}Service #%id%{% endtrans %}
                 </label>
               </div>
-              <span class="badge badge-primary">{{ service.type }}</span>
+              <span class="badge badge-primary badge-type">{{ service.type }}</span>
+
+              {% for langcode in service.translations|keys %}
+                <span class="badge badge-danger badge-langcode">{{ langcode }}</span>
+              {% endfor %}
             </div>
 
             <div class="inputs">

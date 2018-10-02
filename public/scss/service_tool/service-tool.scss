@@ -10,4 +10,13 @@
   .badge {
     line-height: 1.2rem;
   }
+
+  .badge-type {
+    margin-right: spacing(4);
+  }
+
+  .badge-langcode {
+    min-width: 2rem;
+    margin-left: spacing(2);
+  }
 }

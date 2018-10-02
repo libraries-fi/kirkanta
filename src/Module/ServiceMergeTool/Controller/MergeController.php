@@ -61,6 +61,10 @@ class MergeController extends Controller
         $services = $this->types->getRepository('service')
             ->findBy(['id' => $request->query->get('s')]);
 
+        usort($services, function($a, $b) {
+            return count($b->getTranslations()) - count($a->getTranslations());
+        });
+
         $form = $this->createForm(ServiceMergeForm::class, new FormData([
             // 'keep' => 55872,
             'services' => $services,
