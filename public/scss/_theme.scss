@@ -57,10 +57,13 @@ label.required:after {
   }
 
   .navbar-secondary {
+    .nav-item {
+      border-radius: .5rem;
+    }
+    
     .nav-link {
       padding-top: spacing(1);
       padding-bottom: spacing(1);
-      border-radius: .5rem;
     }
   }
 
