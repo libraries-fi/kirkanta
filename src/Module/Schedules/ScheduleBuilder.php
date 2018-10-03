@@ -34,6 +34,10 @@ class ScheduleBuilder
             $days = [];
 
             foreach ($periods as $i => $period) {
+                if ($period->isContinuous() && $period->isLegacyFormat()) {
+                    throw new Exception\LegacyPeriodException;
+                }
+
                 if ($period->isContinuous()) {
                     if (isset($periods[$i+1]) and $periods[$i+1]->isContinuous()) {
                         $to = min($periods[$i+1]->getValidFrom(), $end);
@@ -107,6 +111,15 @@ class ScheduleBuilder
     private function filter(array $periods, DateTimeInterface $begin, DateTimeInterface $end) : array
     {
         $periods = array_filter($periods, function(Period $p) use($begin, $end) {
+            if ($p->getSection() != 'default') {
+                /*
+                 * FIXME: Remove this check after removing support for legacy periods.
+                 *
+                 * Cannot index periods from legacy sections as they would mess up the generator.
+                 */
+                return false;
+            }
+
             if (!$p->getDays()) {
                 return false;
             }
@@ -167,6 +180,7 @@ class ScheduleBuilder
             }
 
             $schedules[$date->format('Y-m-d')] = $day;
+            $index++;
         }
 
         return $schedules;

@@ -23,7 +23,7 @@ class PeriodListBuilder extends EntityListBuilder
         }
 
         // CheckboxType always returns a value.
-        if ($search['only_valid'] ?? false) {
+        if (empty($search['past_periods'])) {
             $builder->andWhere('(e.valid_from >= :now OR e.valid_until IS NULL) OR e.valid_until >= :now');
             $builder->setParameter('now', new DateTime);
         }
@@ -42,7 +42,8 @@ class PeriodListBuilder extends EntityListBuilder
         $table = parent::build($entities)
             ->setColumns([
                 'state' => ['label' => false],
-                'name' => ['mapping' => ['d.name'], 'expand' => true],
+                'name' => ['mapping' => ['d.name']],
+                'type' => ['label' => false],
                 'valid_from',
                 'valid_until',
                 'owner'
@@ -53,6 +54,7 @@ class PeriodListBuilder extends EntityListBuilder
             ->setSorting('valid_from', 'desc')
             ->useAsTemplate('state')
             ->useAsTemplate('name')
+            ->useAsTemplate('type')
             ->transform('state', function($p) {
                 if ($p->isActive()) {
                     $class = 'text-success';
@@ -76,7 +78,13 @@ class PeriodListBuilder extends EntityListBuilder
                 if ($p->getValidUntil()) {
                     return $p->getValidUntil()->format('Y-m-d');
                 }
-            });
+            })
+            ->transform('type', function($p) {
+                if (!$p->isContinuous()) {
+                    return '<span class="badge badge-pill badge-warning">{% trans %}Exception schedules{% endtrans %}</span>';
+                }
+            })
+            ;
 
         return $table;
     }

@@ -2,7 +2,6 @@
 
 namespace App\Module\LegacyApiCompatibility\Command;
 
-use Doctrine\Common\Persistence\ConnectionRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 Use Doctrine\ORM\EntityManagerInterface;
@@ -15,18 +14,16 @@ class SyncLegacyDatabase extends Command
 {
     private $currentDb;
     private $legacyDb;
-    private $em;
     private $cache;
 
     const GROUP_NOBODY = 2;
 
-    public function __construct(Connection $current, Connection $legacy, EntityManagerInterface $manager)
+    public function __construct(Connection $current, Connection $legacy)
     {
         parent::__construct();
 
         $this->currentDb = $current;
         $this->legacyDb = $legacy;
-        $this->em = $manager;
     }
 
     protected function configure() : void
@@ -44,9 +41,11 @@ class SyncLegacyDatabase extends Command
         // $this->syncConsortiums();
         // $this->syncLibraries();
 
-        $this->syncServices();
+        // $this->syncServices();
 
         // $this->syncStaff();
+
+        $this->syncPeriods();
     }
 
     private function syncConsortiums() : void
@@ -239,6 +238,39 @@ class SyncLegacyDatabase extends Command
         });
 
         $this->legacyDb->commit();
+    }
+
+    private function syncPeriods() : void
+    {
+        $smtRead = $this->currentDb->prepare('
+            SELECT
+                id,
+                parent_id,
+                valid_from,
+                valid_until,
+                created,
+                modified,
+                days,
+                jsonb_object_agg(t.langcode, to_jsonb(t) - \'langcode\' - \'entity_id\') AS translations
+            FROM periods a
+            INNER JOIN periods_data t ON a.id = t.entity_id
+            WHERE COALESCE(a.valid_until, NOW()) >= NOW()
+                AND a.parent_id IS NOT NULL
+                AND section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
+
+                AND a.id = 299673
+            GROUP BY a.id
+            ORDER BY a.id
+            LIMIT :limit
+            OFFSET :offset
+        ');
+
+        foreach (result_iterator($smtRead) as $row) {
+            $row['days'] = json_decode($row['days']);
+            $row['translations'] = json_decode($row['translations']);
+            var_dump($row);
+            exit;
+        }
     }
 
     private function synchronize(string $current_table, string $legacy_table, array $fields, callable $mapper = null, array $options = [])

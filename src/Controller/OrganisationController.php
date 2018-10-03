@@ -229,6 +229,7 @@ class OrganisationController extends Controller
      */
     public function editResource(Request $request, $library, string $entity_type, string $resource, int $resource_id)
     {
+        var_dump(get_class($request->getSession()->getFlashBag()));
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
         $entity = $this->types->getRepository($type_id)->findOneBy(['id' => $resource_id]);
 

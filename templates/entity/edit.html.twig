@@ -59,10 +59,12 @@
 
       {% do form.actions.submit.setRendered(true) %}
 
-      <button type="submit" class="btn btn-primary">
-        <i class="fas fa-save"></i>
-        {% trans %}Save{% endtrans %}
-      </button>
+      {% block form_submit_button %}
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i>
+          {% trans %}Save{% endtrans %}
+        </button>
+      {% endblock %}
     </div>
   </div>
 

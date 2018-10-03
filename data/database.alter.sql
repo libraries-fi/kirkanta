@@ -1886,3 +1886,10 @@ WHERE a.entity_id = b.parent_id
   AND b.type = 'website'
   AND a.homepage_id IS NULL
 ;
+
+
+
+
+
+ALTER TABLE periods ADD COLUMN is_legacy_format bool NOT NULL DEFAULT false;
+UPDATE periods SET is_legacy_format = true;

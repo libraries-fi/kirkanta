@@ -1,6 +1,22 @@
 {% block form %}
   {{ form_start(form) }}
   {{ block("form_header") }}
+
+  {% if period is defined %}
+    {% do form.is_legacy_format.setRendered(true) %}
+    {% if period.section != 'default' %}
+      <ul class="alert alert-danger">
+        <li>{% trans %}This period is in the old format and cannot be edited anymore.{% endtrans %}</li>
+        <li>{% trans %}Create a new period or modify the primary period of this library.{% endtrans %}</li>
+      </ul>
+    {% elseif period.isLegacyFormat %}
+      <ul class="alert alert-warning">
+        <li>{% trans %}This period was converted from the old format.{% endtrans %}</li>
+        <li>{% trans %}If this library has self-service schedules, you will need to modify this period and add them <b>or they will be lost</b>.{% endtrans %}</li>
+      </ul>
+    {% endif %}
+  {% endif %}
+
   <div class="container">
     <div class="row">
       <fieldset class="col-lg-6 form-section">
@@ -68,6 +84,13 @@
 {% block _period_form_days_row %}
   <fieldset class="form-group" id="period-form-period-days">
     <legend>{% trans %}Days{% endtrans %}</legend>
+      {% with { period: form.parent.vars.value} %}
+        {% if period and period.isLegacyFormat %}
+          <ul class="alert alert-warning mx-3">
+            <li>{% trans %}For self-service times, uncheck the "Staff" checkbox.{% endtrans %}</li>
+          </ul>
+        {% endif %}
+      {% endwith %}
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
   </fieldset>
@@ -233,9 +256,21 @@
       <!-- <button type="button" class="btn btn-link btn-delete-row" title="{{ 'Delete row'|trans }}" data-action="delete-time-row" data-target="#{{ id }}">
         <i class="fas fa-minus-circle"></i>
       </button> -->
-      <button type="button" class="btn btn-success btn-add-row" title="{{ 'Add row'|trans }}" data-action="add-time-row" data-target="#{{ parent_id }}">
+      <button type="button" class="btn btn-success btn-add-row pr-3" title="{{ 'Add row'|trans }}" data-action="add-time-row" data-target="#{{ parent_id }}">
+        <i class="fas fa-plus-circle" style="color: white"></i>
         Add
       </button>
     </div>
   </div>
+{% endblock %}
+
+
+{% block form_submit_button %}
+  {% if period is defined and period.section != "default" %}
+    {% set disable_submit = true %}
+  {% endif %}
+  <button type="submit" class="btn btn-primary" {% if disable_submit is defined %}disabled{% endif %}>
+    <i class="fas fa-save"></i>
+    {% trans %}Save{% endtrans %}
+  </button>
 {% endblock %}

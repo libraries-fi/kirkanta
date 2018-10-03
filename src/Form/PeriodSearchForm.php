@@ -25,6 +25,8 @@ class PeriodSearchForm extends SearchFormType
             ]);
         }
 
-        $builder->add('only_valid', CheckboxType::class);
+        $builder->add('past_periods', CheckboxType::class, [
+            'label' => 'Include past periods'
+        ]);
     }
 }

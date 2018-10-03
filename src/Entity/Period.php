@@ -31,6 +31,8 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     private $valid_until;
 
     /**
+     * NOTE: Required for migrating data but will be dropped after that.
+     *
      * @ORM\Column(type="string")
      */
     private $section = 'default';
@@ -59,6 +61,11 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
      * @ORM\Column(type="json_array")
      */
     private $days = [];
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_legacy_format = false;
 
     public function __toString()
     {
@@ -116,13 +123,13 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
 
     public function getSection() : string
     {
-        trigger_error('Period::getSection() is deprecated', E_USER_DEPRECATED);
+        // trigger_error('Period::getSection() is deprecated', E_USER_DEPRECATED);
         return $this->section;
     }
 
     public function setSection(string $section) : void
     {
-        trigger_error('Period::setSection() is deprecated.', E_USER_DEPRECATED);
+        // trigger_error('Period::setSection() is deprecated.', E_USER_DEPRECATED);
         $this->section = $section;
     }
 
@@ -185,5 +192,18 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     {
         debug_print_backtrace(2);
         exit('called');
+    }
+
+    public function isLegacyFormat() : bool
+    {
+        return $this->is_legacy_format;
+    }
+
+    /*
+     * Form actually sends a NULL value for FALSE but that's okay because this is a temporary field.
+     */
+    public function setIsLegacyFormat(?bool $state) : void
+    {
+        $this->is_legacy_format = (bool)$state;
     }
 }
