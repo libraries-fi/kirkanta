@@ -248,6 +248,9 @@ class OrganisationController extends Controller
 
         return [
             'form' => $form->createView(),
+            'type_label' => $this->types->getTypeLabel($type_id),
+            'entity_type' => $type_id,
+            $type_id => $entity,
         ];
     }
 
