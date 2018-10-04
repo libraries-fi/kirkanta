@@ -2,9 +2,12 @@
 
 namespace App\Form\EntityData;
 
+use App\Entity\EmailAddress;
 use App\Entity\Library;
 use App\Entity\LibraryData;
+use App\Entity\PhoneNumber;
 use App\Entity\ServicePoint;
+use App\Entity\WebsiteLink;
 use App\Form\I18n\EntityDataType;
 use App\Form\Type\RichtextType;
 use App\Form\Type\SlugType;
@@ -82,39 +85,24 @@ class LibraryDataType extends EntityDataType
             };
 
             if ($data instanceof LibraryData) {
-                $class_map = [
-                    Library::class => [
-                        'email' => \App\Entity\EmailAddress::class,
-                        'homepage' => \App\Entity\WebsiteLink::class,
-                        'phone' => \App\Entity\PhoneNumber::class,
-                    ],
-                    ServicePoint::class => [
-                        'email' => \App\Entity\EmailAddress::class,
-                        'homepage' => \App\Entity\WebsiteLink::class,
-                        'phone' => \App\Entity\PhoneNumber::class,
-                    ]
-                ];
-
-                $parent_class = get_class($data->getEntity());
-
                 $event->getForm()
                     ->add('email', EntityType::class, [
                         'label' => 'Email address',
-                        'class' => $class_map[$parent_class]['email'],
+                        'class' => EmailAddress::class,
                         'required' => false,
                         'placeholder' => '-- Select --',
                         'query_builder' => $qb,
                     ])
                     ->add('homepage', EntityType::class, [
                         'label' => 'Homepage',
-                        'class' => $class_map[$parent_class]['homepage'],
+                        'class' => WebsiteLink::class,
                         'required' => false,
                         'placeholder' => '-- Select --',
                         'query_builder' => $qb,
                     ])
                     ->add('phone', EntityType::class, [
                         'label' => 'Primary phone number',
-                        'class' => $class_map[$parent_class]['phone'],
+                        'class' => PhoneNumber::class,
                         'required' => false,
                         'placeholder' => '-- Select --',
                         'query_builder' => $qb,

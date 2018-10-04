@@ -17,7 +17,7 @@ class AddressType extends AbstractType
         $builder
             ->add('street')
             ->add('area', null, [
-                'required' => false
+                'required' => false,
             ])
             ->add('info', null, [
                 'required' => false,
@@ -38,7 +38,8 @@ class AddressType extends AbstractType
     {
         parent::configureOptions($options);
         $options->setDefaults([
-            'data_class' => Address::class
+            'data_class' => Address::class,
+            'langcode' => null,
         ]);
     }
 }
