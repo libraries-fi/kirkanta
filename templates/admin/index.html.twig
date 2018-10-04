@@ -7,10 +7,11 @@
 {% block region_main %}
   <div class="row">
     <div class="col-md-3">
-      <fieldset class="form-section">
+      <fieldset class="form-section pb-3">
         <legend>{% trans %}Content{% endtrans %}</legend>
         {{ knp_menu_render("admin", {
-          "vertical": true
+          vertical: true,
+          template: "component/menu/sidebar.html.twig"
         }) }}
       </fieldset>
     </div>

@@ -1,0 +1,15 @@
+{% extends "component/menu/menu.html.twig" %}
+
+{% block menu %}
+  {% set children = item.children %}
+  <ul class="list-group">
+    {{ block("children") }}
+  </ul>
+{% endblock %}
+
+{% block menu_item %}
+  {% set link_attrs = link_attrs|merge({class: link_attrs.class|replace({"nav-link": ""})}) %}
+  <li class="list-group-item">
+    {{ block("menu_link") }}
+  </li>
+{% endblock %}

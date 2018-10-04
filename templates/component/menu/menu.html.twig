@@ -48,22 +48,24 @@
         {% set attrs = attrs|merge({class: _classes}) %}
         {% set link_attrs = link_attrs|merge({class: _link_classes}) %}
 
-        {% block item %}
+        {% block menu_item %}
           <li {{ knp_menu.attributes(attrs) }}>
-            <a {% if item.uri %}href="{{ item.uri }}"{% endif %} {{ knp_menu.attributes(link_attrs) }}>
-              {% if icon %}<i class="{{ icon }}"></i>{% endif %}
-              {{ item.label|trans }}
-            </a>
+            {% block menu_link %}
+              <a {% if item.uri %}href="{{ item.uri }}"{% endif %} {{ knp_menu.attributes(link_attrs) }}>
+                {% if icon %}<i class="{{ icon }}"></i>{% endif %}
+                {{ item.label|trans }}
+              </a>
 
-            {% if dropdown %}
-              {% block dropdown %}
-                <div class="dropdown-menu">
-                  {% for item in item.children %}
-                    {{ knp_menu.menu_link(item, {class: "dropdown-item"}) }}
-                  {% endfor %}
-                </div>
-              {% endblock %}
-            {% endif %}
+              {% if dropdown %}
+                {% block dropdown %}
+                  <div class="dropdown-menu">
+                    {% for item in item.children %}
+                      {{ knp_menu.menu_link(item, {class: "dropdown-item"}) }}
+                    {% endfor %}
+                  </div>
+                {% endblock %}
+              {% endif %}
+            {% endblock %}
           </li>
         {% endblock %}
       {% endfor %}
