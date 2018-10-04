@@ -4,7 +4,7 @@ namespace App\Module\Finna\Entity;
 
 use App\Entity\EntityBase;
 use App\Entity\Library;
-use App\Entity\LibraryBase;
+use App\Entity\LibraryInterface;
 use App\Entity\ServicePoint;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
@@ -31,7 +31,7 @@ class DefaultServicePointBinding
      */
     private $library;
 
-    public function __construct(FinnaAdditions $parent, LibraryBase $entity)
+    public function __construct(FinnaAdditions $parent, LibraryInterface $entity)
     {
         $this->setParent($parent);
 
@@ -65,12 +65,12 @@ class DefaultServicePointBinding
         return $this->service_point;
     }
 
-    public function getTargetEntity() : LibraryBase
+    public function getTargetEntity() : LibraryInterface
     {
         return $this->library ?: $this->service_point;
     }
 
-    public function setTargetEntity(LibraryBase $entity) : void
+    public function setTargetEntity(LibraryInterface $entity) : void
     {
         if ($entity instanceof Library) {
             $this->library = $entity;

@@ -13,17 +13,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * a source for Doctrine (as per the Table annotation).
  *
  * @ORM\Entity
- * @ORM\Table(name="contact_info_doctrine")
+ * @ORM\Table(name="contact_info")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *     "library:email" = "EmailAddress",
- *     "library:phone" = "PhoneNumber",
- *     "library:website" = "WebsiteLink",
- *     "foreign:email" = "ServicePointEmailAddress",
- *     "foreign:phone" = "ServicePointPhoneNumber",
- *     "foreign:website" = "ServicePointWebsiteLink",
- *     "finna_organisation:website" = "App\Module\Finna\Entity\FinnaOrganisationWebsiteLink",
+ *      "email": "EmailAddress",
+ *      "phone": "PhoneNumber",
+ *      "website": "WebsiteLink",
+ *      "finna_organisation:website" = "App\Module\Finna\Entity\FinnaOrganisationWebsiteLink",
  * })
  */
 abstract class ContactInfo extends EntityBase implements Translatable, Weight

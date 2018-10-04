@@ -2,10 +2,9 @@
 
 namespace App\Form\EntityData;
 
+use App\Entity\Library;
 use App\Entity\LibraryData;
-use App\Entity\EmailAddress;
-use App\Entity\PhoneNumber;
-use App\Entity\WebsiteLink;
+use App\Entity\ServicePoint;
 use App\Form\I18n\EntityDataType;
 use App\Form\Type\RichtextType;
 use App\Form\Type\SlugType;
@@ -65,30 +64,14 @@ class LibraryDataType extends EntityDataType
                 'label' => 'Building name',
                 'required' => false,
             ])
-            // ->add('email', EntityType::class, [
-            //     'label' => 'Email address',
-            //     'class' => EmailAddress::class,
-            //     'required' => false,
-            //     'placeholder' => '-- Select --',
-            // ])
-            // ->add('homepage', EntityType::class, [
-            //     'label' => 'Homepage',
-            //     'class' => WebsiteLink::class,
-            //     'required' => false,
-            //     'placeholder' => '-- Select --',
-            // ])
-            // ->add('phone', EntityType::class, [
-            //     'label' => 'Primary phone number',
-            //     'class' => PhoneNumber::class,
-            //     'required' => false,
-            //     'placeholder' => '-- Select --',
-            // ])
             ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
             $data = $event->getData();
 
             $qb = function($repo) use($data) {
+                // var_dump($repo);
+                // exit('ok');
                 return $repo->createQueryBuilder('e')
                     ->join('e.translations', 'd', 'WITH', 'd.langcode = :langcode')
                     ->andWhere('e.parent = :library')
@@ -99,24 +82,39 @@ class LibraryDataType extends EntityDataType
             };
 
             if ($data instanceof LibraryData) {
+                $class_map = [
+                    Library::class => [
+                        'email' => \App\Entity\EmailAddress::class,
+                        'homepage' => \App\Entity\WebsiteLink::class,
+                        'phone' => \App\Entity\PhoneNumber::class,
+                    ],
+                    ServicePoint::class => [
+                        'email' => \App\Entity\EmailAddress::class,
+                        'homepage' => \App\Entity\WebsiteLink::class,
+                        'phone' => \App\Entity\PhoneNumber::class,
+                    ]
+                ];
+
+                $parent_class = get_class($data->getEntity());
+
                 $event->getForm()
                     ->add('email', EntityType::class, [
                         'label' => 'Email address',
-                        'class' => EmailAddress::class,
+                        'class' => $class_map[$parent_class]['email'],
                         'required' => false,
                         'placeholder' => '-- Select --',
                         'query_builder' => $qb,
                     ])
                     ->add('homepage', EntityType::class, [
                         'label' => 'Homepage',
-                        'class' => WebsiteLink::class,
+                        'class' => $class_map[$parent_class]['homepage'],
                         'required' => false,
                         'placeholder' => '-- Select --',
                         'query_builder' => $qb,
                     ])
                     ->add('phone', EntityType::class, [
                         'label' => 'Primary phone number',
-                        'class' => PhoneNumber::class,
+                        'class' => $class_map[$parent_class]['phone'],
                         'required' => false,
                         'placeholder' => '-- Select --',
                         'query_builder' => $qb,

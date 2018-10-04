@@ -1812,28 +1812,6 @@ ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_inf
 
 WITH insert_entity AS (
   INSERT INTO contact_info (type, attached_to, parent_id, contact)
-  SELECT ('email', 'library', id, email)
-  FROM organisations
-  WHERE role IN ('library', 'foreign')
-  RETURNING id AS contact_id
-), insert_tr_fi AS (
-  INSERT INTO contact_info_data (entity_id, langcode, name)
-  SELECT contact_id, 'fi', 'Oletussähköposti'
-  FROM insert_entity
-), insert_tr_sv AS (
-  INSERT INTO contact_info_data (entity_id, langcode, name)
-  SELECT contact_id, 'sv', 'Oletussähköposti'
-  FROM insert_entity
-)
-INSERT INTO contact_info_data (entity_id, langcode, name)
-SELECT contact_id, 'en', 'Default email address'
-FROM insert_entity
-;
-
--- MAX id before this: 202091
-
-WITH insert_entity AS (
-  INSERT INTO contact_info (type, attached_to, parent_id, contact)
   SELECT 'email', a.role, a.id, b.email
   FROM organisations a
   INNER JOIN organisations_data b ON a.id = b.entity_id
@@ -1893,3 +1871,11 @@ WHERE a.entity_id = b.parent_id
 
 ALTER TABLE periods ADD COLUMN is_legacy_format bool NOT NULL DEFAULT false;
 UPDATE periods SET is_legacy_format = true;
+
+
+
+
+
+DROP VIEW contact_info_doctrine;
+UPDATE contact_info SET type = 'finna_organisation:website' WHERE attached_to = 'finna_organisation';
+ALTER TABLE contact_info DROP column attached_to;

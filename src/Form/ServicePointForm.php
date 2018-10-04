@@ -45,10 +45,11 @@ class ServicePointForm extends LibraryForm
                     'placeholder' => '-- Select --',
                     'query_builder' => function($repo) use($groups) {
                         return $repo->createQueryBuilder('e')
-                        ->join('e.translations', 'd')
+                        ->join('e.translations', 'd', 'WITH', 'd.langcode = :langcode')
                         ->orderBy('d.name')
                         ->andWhere('e.group IN (:groups)')
                         ->setParameter('groups', $groups)
+                        ->setParameter('langcode', 'fi')
                         ;
                     }
                 ]);

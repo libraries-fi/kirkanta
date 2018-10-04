@@ -13,7 +13,7 @@ class WebsiteLink extends ContactInfo
     use WebsiteLinkTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="links")
+     * @ORM\ManyToOne(targetEntity="Facility", inversedBy="links")
      */
     protected $parent;
 

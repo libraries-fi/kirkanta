@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Provides additional features for contact info attached to Library entities.
+ * Provides additional features for contact info attached to LibraryInterface entities.
  */
 trait ContactInfoTrait
 {
@@ -25,22 +25,22 @@ trait ContactInfoTrait
         return $this->department;
     }
 
-    public function setLibrary(Library $library) : void
+    public function setLibrary(LibraryInterface $library) : void
     {
         $this->setParent($library);
     }
 
-    public function getLibrary() : Library
+    public function getLibrary() : LibraryInterface
     {
         return $this->getParent();
     }
 
-    public function getParent() : Library
+    public function getParent() : LibraryInterface
     {
         return $this->parent;
     }
 
-    public function setParent(Library $library) : void
+    public function setParent(LibraryInterface $library) : void
     {
         $this->parent = $library;
     }

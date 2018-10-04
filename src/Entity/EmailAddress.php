@@ -20,7 +20,7 @@ class EmailAddress extends ContactInfo
     protected $department;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="email_addresses")
+     * @ORM\ManyToOne(targetEntity="Facility", inversedBy="email_addresses")
      */
     protected $parent;
 

@@ -13,24 +13,6 @@ class Library extends Facility implements LibraryInterface
     use LibraryTrait;
 
     /**
-     * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"weight": "ASC"})
-     */
-    protected $phone_numbers;
-
-    /**
-     * @ORM\OneToMany(targetEntity="EmailAddress", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"weight": "ASC"})
-     */
-    protected $email_addresses;
-
-    /**
-     * @ORM\OneToMany(targetEntity="WebsiteLink", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
-     */
-    protected $links;
-
-    /**
      * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
      */
@@ -68,12 +50,10 @@ class Library extends Facility implements LibraryInterface
         $this->services = new ArrayCollection;
         $this->departments = new ArrayCollection;
         $this->persons = new ArrayCollection;
-        $this->links = new ArrayCollection;
 
         $this->accessibility = new ArrayCollection;
         $this->mobile_stops = new ArrayCollection;
         $this->periods = new ArrayCollection;
-        $this->phone_numbers = new ArrayCollection;
         $this->pictures = new ArrayCollection;
     }
 
