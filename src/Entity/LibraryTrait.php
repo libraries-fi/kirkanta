@@ -3,18 +3,15 @@
 namespace App\Entity;
 
 use App\I18n\Translations;
-use App\Module\ApiCache\Entity\Feature\ApiCacheable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * This middleware is required to properly map e.g. contact info classes in concrete implementations.
- *
- * @ORM\MappedSuperclass
+ * Provides implementation of LibraryInterface.
  */
-abstract class LibraryBase extends Facility implements ApiCacheable
+trait LibraryTrait
 {
     use ApiCacheableTrait;
 
@@ -92,11 +89,6 @@ abstract class LibraryBase extends Facility implements ApiCacheable
      * @ORM\ManyToOne(targetEntity="Consortium", inversedBy="libraries", fetch="LAZY")
      */
     private $consortium;
-
-    /**
-     * @ORM\OneToMany(targetEntity="LibraryData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
-     */
-    protected $translations;
 
     public function __construct()
     {

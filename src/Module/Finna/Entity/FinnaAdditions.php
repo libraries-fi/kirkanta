@@ -5,7 +5,7 @@ namespace App\Module\Finna\Entity;
 use App\Entity\Consortium;
 use App\Entity\EntityBase;
 use App\Entity\Feature;
-use App\Entity\LibraryBase;
+use App\Entity\LibraryInterface;
 use App\Entity\UserGroup;
 use App\Entity\Feature\GroupOwnership;
 use App\Entity\Feature\StateAwareness;
@@ -99,7 +99,7 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
         }
     }
 
-    public function getServicePoint() : ?LibraryBase
+    public function getServicePoint() : LibraryInterface
     {
         if ($this->service_point) {
             return $this->service_point->getTargetEntity();
@@ -108,7 +108,7 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
         }
     }
 
-    public function setServicePoint(?LibraryBase $entity) : void
+    public function setServicePoint(?LibraryInterface $entity) : void
     {
         if ($entity) {
             if ($this->service_point) {

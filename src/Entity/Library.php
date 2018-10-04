@@ -8,8 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class Library extends LibraryBase
+class Library extends Facility implements LibraryInterface
 {
+    use LibraryTrait;
+
     /**
      * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"weight": "ASC"})
@@ -67,6 +69,12 @@ class Library extends LibraryBase
         $this->departments = new ArrayCollection;
         $this->persons = new ArrayCollection;
         $this->links = new ArrayCollection;
+
+        $this->accessibility = new ArrayCollection;
+        $this->mobile_stops = new ArrayCollection;
+        $this->periods = new ArrayCollection;
+        $this->phone_numbers = new ArrayCollection;
+        $this->pictures = new ArrayCollection;
     }
 
     public function getDepartments() : Collection

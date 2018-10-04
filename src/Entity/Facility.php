@@ -32,6 +32,11 @@ abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAw
     use Feature\StateAwarenessTrait;
     use Feature\TranslatableTrait;
 
+    /**
+     * @ORM\OneToMany(targetEntity="LibraryData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
+     */
+    protected $translations;
+
     public function __construct()
     {
         parent::__construct();

@@ -9,8 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity
  */
-class ServicePoint extends LibraryBase
+class ServicePoint extends Facility implements LibraryInterface
 {
+    use LibraryTrait;
+
     /**
      * @ORM\OneToMany(targetEntity="ServicePointPhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
@@ -36,4 +38,13 @@ class ServicePoint extends LibraryBase
      * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $pictures;
+
+    public function __construct()
+    {
+        $this->accessibility = new ArrayCollection;
+        $this->mobile_stops = new ArrayCollection;
+        $this->periods = new ArrayCollection;
+        $this->phone_numbers = new ArrayCollection;
+        $this->pictures = new ArrayCollection;
+    }
 }
