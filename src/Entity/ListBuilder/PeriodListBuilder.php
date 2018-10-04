@@ -80,6 +80,10 @@ class PeriodListBuilder extends EntityListBuilder
                 }
             })
             ->transform('type', function($p) {
+                if ($p->getSection() != 'default') {
+                    // FIXME: Remove this condition after dropping the section field!
+                    return '<span class="badge badge-pill badge-secondary">{% trans %}Legacy period{% endtrans %}</span>';
+                }
                 if (!$p->isContinuous()) {
                     return '<span class="badge badge-pill badge-warning">{% trans %}Exception schedules{% endtrans %}</span>';
                 }
