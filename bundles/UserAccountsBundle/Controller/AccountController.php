@@ -15,7 +15,7 @@ class AccountController extends Controller
     /**
      * @Route("/register", name="user.register")
      */
-    public function register(Request $request)
+    public function registerAction(Request $request)
     {
         $form = $this->createForm(UserRegistration::class);
         $form->handleRequest($request);
@@ -47,7 +47,7 @@ class AccountController extends Controller
     /**
      * @Route("/login", name="user.login")
      */
-    public function login()
+    public function loginAction()
     {
         $auth = $this->get('security.authentication_utils');
         $error = $auth->getLastAuthenticationError();
@@ -63,7 +63,7 @@ class AccountController extends Controller
     /**
      * @Route("/logout", name="user.logout")
      */
-    public function logout()
+    public function logoutAction()
     {
 
     }
