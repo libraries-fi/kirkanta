@@ -20,7 +20,7 @@ class EntityAccessVoter extends Voter
 
     protected function supports($attribute, $subject) : bool
     {
-        return $attribute = self::EDIT_ATTRIBUTE && $subject instanceof GroupOwnership;
+        return $attribute == self::EDIT_ATTRIBUTE && $subject instanceof GroupOwnership;
     }
 
     protected function voteOnAttribute($attribute, $entity, TokenInterface $token) : bool

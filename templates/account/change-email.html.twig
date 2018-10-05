@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  {% trans %}Change your password{% endtrans %}
+{% endblock %}
+
+{% block content %}
+  {{ form_start(form) }}
+    <fieldset class="form-section">
+      {{ form_row(form.email) }}
+    </fieldset>
+    <div class="form-actions">
+      {{ form_widget(form.submit, {attr: {class: "btn btn-primary"}}) }}
+    </div>
+  {{ form_end(form) }}
+{% endblock %}

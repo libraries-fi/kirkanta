@@ -9,7 +9,7 @@
     <div class="alert alert-warning">{% trans with {"%date%": user.expires|date()} %}This account is set to expire on %date%{% endtrans %}</div>
   {% endif %}
 
-  <div class="border p-3">
+  <div class="border p-3 mb-3">
     <dl>
       <dt>{% trans %}Username{% endtrans %}</dt>
       <dd>{{ user.username }}</dd>
@@ -27,14 +27,20 @@
     {% endif %}
   </div>
 
-  <div class="border p-3 mt-3">
-    <ul class="mb-0">
-      <li>
-        <a href="{{ path('account.change_password') }}">{% trans %}Change password{% endtrans %}</a>
-      </li>
-      <li>
-        <a href="{{ path('account.change_email') }}">{% trans %}Change email address{% endtrans %}</a>
-      </li>
+  {% if user.isMunicipalAccount %}
+    <ul class="alert alert-danger">
+      <li>{% trans %}Changing credentials is forbidden for municipal accounts.{% endtrans %}</li>
     </ul>
-  </div>
+  {% else %}
+    <div class="border p-3">
+        <ul class="mb-0">
+          <li>
+            <a href="{{ path('account.change_password') }}">{% trans %}Change password{% endtrans %}</a>
+          </li>
+          <li>
+            <a href="{{ path('account.change_email') }}">{% trans %}Change email address{% endtrans %}</a>
+          </li>
+        </ul>
+    </div>
+  {% endif %}
 {% endblock %}
