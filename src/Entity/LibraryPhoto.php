@@ -41,12 +41,12 @@ class LibraryPhoto extends Picture implements Translatable
      */
     private $parent;
 
-    public function getParent() : LibraryBase
+    public function getParent() : LibraryInterface
     {
         return $this->parent;
     }
 
-    public function setParent(LibraryBase $library) : void
+    public function setParent(LibraryInterface $library) : void
     {
         $this->parent = $library;
     }
