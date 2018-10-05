@@ -4,6 +4,15 @@
   {{ notification.subject}}
 {% endblock %}
 
+{% block page_title %}
+  <h1 class="hud-legend">
+    {{ block("title_text") }}
+  </h1>
+{% endblock %}
+
 {% block content %}
-  <div>{{ notification.message|raw }}</div>
+  <div class="border p-3">
+    <i class="fas fa-exclamation-circle text-primary"></i>
+    <div>{{ notification.message|raw }}</div>
+  </div>
 {% endblock %}
