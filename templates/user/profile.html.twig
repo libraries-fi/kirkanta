@@ -27,11 +27,7 @@
     {% endif %}
   </div>
 
-  {% if user.isMunicipalAccount %}
-    <ul class="alert alert-danger">
-      <li>{% trans %}Changing credentials is forbidden for municipal accounts.{% endtrans %}</li>
-    </ul>
-  {% else %}
+  {% if is_granted("CHANGE_EMAIL", user) %}
     <div class="border p-3">
         <ul class="mb-0">
           <li>
@@ -42,5 +38,9 @@
           </li>
         </ul>
     </div>
+  {% else %}
+    <ul class="alert alert-danger">
+      <li>{% trans %}Changing credentials is not allowed for this account.{% endtrans %}</li>
+    </ul>
   {% endif %}
 {% endblock %}
