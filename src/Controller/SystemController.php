@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+use Symfony\Component\Security\Core\User\UserInterface;
+
 class SystemController extends Controller
 {
     use Feature\ProvideEntityTypeManager;
@@ -93,9 +95,11 @@ class SystemController extends Controller
      * @Route("/profile", name="user.profile")
      * @Template("user/profile.html.twig")
      */
-    public function userProfileAction()
+    public function userProfileAction(UserInterface $user)
     {
-        return [];
+        return [
+            'user' => $user
+        ];
     }
 
     /**

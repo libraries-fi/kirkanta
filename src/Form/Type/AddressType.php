@@ -27,9 +27,6 @@ class AddressType extends BaseType
             ])
             ->add('translations', EntityDataCollectionType::class, [
                 'entry_type' => AddressDataType::class,
-                'entry_options' => [
-                    'address_type' => 'mail_address'
-                ]
             ])
             ;
     }

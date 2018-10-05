@@ -25,6 +25,10 @@ class AddressDataType extends EntityDataType
                 'required' => false,
             ])
             ;
+
+        if ($options['address_type'] == 'mail_address') {
+            $builder->get('area')->addModelTransformer(new CallbackTransformer('mb_strtoupper', 'mb_strtoupper'));
+        }
     }
 
     public function configureOptions(OptionsResolver $options) : void

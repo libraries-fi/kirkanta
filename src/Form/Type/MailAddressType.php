@@ -24,7 +24,10 @@ class MailAddressType extends BaseType
                 'required' => false
             ])
             ->add('translations', EntityDataCollectionType::class, [
-                'entry_type' => AddressDataType::class
+                'entry_type' => AddressDataType::class,
+                'entry_options' => [
+                    'address_type' => 'mail_address',
+                ]
             ])
             ;
 
@@ -36,7 +39,6 @@ class MailAddressType extends BaseType
         parent::configureOptions($options);
         $options->setDefaults([
             'data_class' => Address::class,
-            'address_type' => 'location',
             'current_langcode' => null,
         ]);
     }

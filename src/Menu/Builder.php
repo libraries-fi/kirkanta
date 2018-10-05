@@ -101,7 +101,9 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         if ($this->auth->isGranted('ROLE_ROOT')) {
             $menu->addChild('Admin', [
                 'route' => 'admin',
-            ]);
+                'foo' => 'bar'
+            ])
+                ->setExtra('admin-menu', true);
         }
 
         return $this->filterMenuItems($menu);

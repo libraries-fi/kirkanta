@@ -8,9 +8,17 @@
   {%- endfor -%}
 {% endmacro %}
 
-<ul class="navbar-nav">
-  {% set children = item.children|slice(0, -1) %}
+{% set has_admin_menu = (item.children|last).extra("admin-menu") %}
 
+{% if has_admin_menu %}
+  {% set children = item.children|slice(0, -1) %}
+  {% set admin_menu = item.children|last %}
+  {% do admin_menu.setExtra("icon", "fas fa-lock") %}
+{% else %}
+  {% set children = item.children %}
+{% endif %}
+
+<ul class="navbar-nav">
   {% block children %}
     {% for item in children %}
       {% block item %}
@@ -41,9 +49,10 @@
   {% endblock %}
 </ul>
 
-<ul class="navbar-nav pr-3 navbar-secondary">
-  {% set children = item.children|slice(-1) %}
-
-  {% do (item.children|last).setExtra("icon", "fas fa-lock") %}
-  {{ block("children") }}
-</ul>
+{% if (item.children|last).extra("admin-menu") %}
+  <ul class="navbar-nav pr-3 navbar-secondary">
+    {% with {children: [admin_menu]} %}
+      {{ block("children") }}
+    {% endwith %}
+  </ul>
+{% endif %}

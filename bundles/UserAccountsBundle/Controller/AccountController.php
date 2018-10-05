@@ -15,7 +15,7 @@ class AccountController extends Controller
     /**
      * @Route("/register", name="user.register")
      */
-    public function registerAction(Request $request)
+    public function register(Request $request)
     {
         $form = $this->createForm(UserRegistration::class);
         $form->handleRequest($request);
@@ -28,7 +28,6 @@ class AccountController extends Controller
             $user->setEmail($form->get('email')->getData());
             $user->setUsername($form->get('user')->getData());
             $user->setPassword($password);
-            // $user->setRoles(['ROLE_USER']);
 
             $this->entityManager()->persist($user);
             $this->entityManager()->flush();
@@ -44,10 +43,11 @@ class AccountController extends Controller
         ]);
     }
 
+
     /**
      * @Route("/login", name="user.login")
      */
-    public function loginAction()
+    public function login()
     {
         $auth = $this->get('security.authentication_utils');
         $error = $auth->getLastAuthenticationError();
@@ -63,7 +63,7 @@ class AccountController extends Controller
     /**
      * @Route("/logout", name="user.logout")
      */
-    public function logoutAction()
+    public function logout()
     {
 
     }

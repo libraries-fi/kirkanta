@@ -13,18 +13,16 @@
 {% endblock %}
 
 {% block content %}
-  <div class="form-section">
+  <div class="border p-3 mb-3">
     {% if notifications|default() is not empty %}
-      <p>
         <i class="fa fa-bell text-danger"></i>
         <span class="ml-3">{% transchoice notifications|length %}{1}You have one new notification.|]1,Inf[You have %count% unread notifications.{% endtranschoice %}
         Most recent: <a href="{{ path('user.show_notification', {"notification": notifications[0].id}) }}">{{ notifications[0].subject }}</a></span>
-      </p>
     {% else %}
-      <p><i class="far fa-bell text-muted"></i> <span class="ml-2">{% trans %}No unread notifications.{% endtrans %}</span></p>
+      <i class="far fa-bell text-muted"></i> <span class="ml-2">{% trans %}No unread notifications.{% endtrans %}</span>
     {% endif %}
   </div>
-  
+
   {% if app.user.expires %}
     <div class="alert alert-warning">{% trans with {"%date%": app.user.expires|date()} %}This account is set to expire on %date%{% endtrans %}</div>
   {% endif %}

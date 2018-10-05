@@ -1875,7 +1875,8 @@ UPDATE periods SET is_legacy_format = true;
 
 
 
+ALTER TYPE contact_info_type ADD VALUE 'finna_organisation:website';
+UPDATE contact_info SET type = 'finna_organisation:website' WHERE attached_to = 'finna_organisation';
 
 DROP VIEW contact_info_doctrine;
-UPDATE contact_info SET type = 'finna_organisation:website' WHERE attached_to = 'finna_organisation';
 ALTER TABLE contact_info DROP column attached_to;
