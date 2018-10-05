@@ -1,4 +1,12 @@
 #entity--library--edit {
+  #library-location > .row {
+    margin-top: -2.6rem;
+
+    > div {
+      padding-top: spacing(3);
+    }
+  }
+
   #library-coordinates {
     width: calc(200% + 4 * #{spacing(3)} + 2px);
     background-color: #f5f5f5;

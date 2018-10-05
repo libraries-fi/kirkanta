@@ -68,7 +68,7 @@
     </aside>
   </div>
 
-  <fieldset class="form-section">
+  <fieldset class="form-section" id="library-location">
     <legend>{% trans %}Location{% endtrans %}</legend>
     <div class="row">
       <div class="col-md-6 col-highlight">
@@ -84,9 +84,14 @@
     <legend>{% trans %}Primary contact info{% endtrans %}</legend>
     <p class="text-muted">{% trans %}This information could e.g. be displayed in a summary.{% endtrans %}</p>
 
-    {{ form_row(form.email) }}
-    {{ form_row(form.phone) }}
-    {{ form_row(form.homepage) }}
+    <div class="row">
+      <div class="col-md-6">
+        {{ form_row(form.email) }}
+        {{ form_row(form.phone) }}
+      </div>
+      <div class="col-md-6">
+        {{ form_row(form.homepage) }}
+      </div>
   </fieldset>
 
   <fieldset class="form-section">

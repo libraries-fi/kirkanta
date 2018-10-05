@@ -83,13 +83,8 @@
     z-index: 10;
   }
 
-  > .row {
-    // margin-top: calc(-16px - 1.5rem);
-    margin-top: -2.6rem;
-  }
-
-  > .row > * {
-    padding-top: $spacer;
+  > p {
+    margin-top: -1 * spacing(3);
   }
 }
 
