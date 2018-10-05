@@ -60,7 +60,7 @@ label.required:after {
     .nav-item {
       border-radius: .5rem;
     }
-    
+
     .nav-link {
       padding-top: spacing(1);
       padding-bottom: spacing(1);
@@ -158,5 +158,6 @@ label.required:after {
 @import "service_tree/service-tree-edit";
 @import "service_tool/service-tool";
 @import "hacks";
+@import "entity.library";
 @import "entity.period";
 @import "entity.person";

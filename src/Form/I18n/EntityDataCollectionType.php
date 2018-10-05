@@ -28,6 +28,7 @@ class EntityDataCollectionType extends AbstractType
         $resolver->setDefaults([
             'default_langcode' => SystemLanguages::DEFAULT_LANGCODE,
             'entry_type' => null,
+            'entry_options' => [],
         ]);
     }
 
@@ -46,14 +47,14 @@ class EntityDataCollectionType extends AbstractType
                     'langcode' => $current_langcode,
                     'data_class' => null,
                     'new_translation' => true,
-                ]);
+                ] + $options['entry_options']);
             }
 
             if ($translations) {
                 foreach ($translations as $langcode => $_) {
                     $form->add($langcode, $options['entry_type'], [
                         'langcode' => $langcode,
-                    ]);
+                    ] + $options['entry_options']);
                 }
             }
         });

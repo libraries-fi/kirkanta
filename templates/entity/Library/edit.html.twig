@@ -127,6 +127,36 @@
   </fieldset>
 {% endblock %}
 
+{% block _library_form_address_widget %}
+  {{ form_row(form.street) }}
+  {{ form_row(form.area) }}
+  {{ form_row(form.info) }}
+  {{ form_row(form.zipcode) }}
+  {{ form_row(form.city) }}
+
+  <div id="library-coordinates" class="form-inline">
+    {{ form_row(form.coordinates) }}
+  </div>
+{% endblock %}
+
+{% block _library_form_mail_address_widget %}
+  {{ form_row(form.box_number) }}
+  {{ form_row(form.zipcode) }}
+  {{ form_row(form.area) }}
+  {{ form_row(form.street) }}
+{% endblock %}
+
+{% block _library_form_address_coordinates_widget %}
+  <div class="input-group ml-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <i class="fas fa-map-marker-alt"></i>
+      </span>
+    </div>
+    {{ form_widget(form, {attr: {class: "form-control-lg"}}) }}
+  </div>
+{% endblock %}
+
 {% block _library_form_transit_directions_label %}
   <i class="fa fa-info-circle"></i>
   {{ block("form_label") }}

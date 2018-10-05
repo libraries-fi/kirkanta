@@ -41,9 +41,12 @@ class LibraryForm extends FormType
                 'required' => false,
                 'label' => 'Official identifier',
             ])
-            ->add('address', AddressType::class)
+            ->add('address', AddressType::class, [
+                'current_langcode' => $options['current_langcode'],
+            ])
             ->add('mail_address', MailAddressType::class, [
-                'required' => false
+                'required' => false,
+                'current_langcode' => $options['current_langcode'],
             ])
             ->add('trains', null, [
                 'required' => false,
