@@ -4,6 +4,7 @@ namespace App\Form;
 
 use DateTime;
 use App\Entity\Department;
+use App\Entity\Period;
 use App\Util\FormData;
 use App\Util\PeriodSections;
 use App\Form\Type\PeriodDayCollectionType;
@@ -43,6 +44,7 @@ class PeriodForm extends EntityFormType
             ])
             ;
 
+        // Periods are marked non-legacy when they are saved as the data will be converted.
         $builder->add('is_legacy_format', CheckboxType::class, [
             'data' => false
         ]);
@@ -55,6 +57,7 @@ class PeriodForm extends EntityFormType
                 $organisation = $period->getValues()['library'] ?? null;
                 $event->setData(null);
             } else {
+                $this->fixLegacyFormatDayTranslations($period);
                 $organisation = $period->getParent();
             }
 
@@ -108,5 +111,22 @@ class PeriodForm extends EntityFormType
                 }
             }
         });
+    }
+
+    private function fixLegacyFormatDayTranslations(Period $period) : void
+    {
+        /*
+         * In previous Kirkanta 'info' was the Finnish translation for day info; now it must be
+         * an array of all translations.
+         */
+         
+        $days = $period->getDays();
+        foreach ($days as &$day) {
+            if (is_string($day['info'])) {
+                $day['info'] = ['fi' => $day['info']];
+            }
+        }
+
+        $period->setDays($days);
     }
 }
