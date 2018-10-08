@@ -38,8 +38,9 @@ class FinnaController extends Controller
         $entity = new FinnaAdditions;
         $entity->setConsortium($consortium);
 
-        $form = $this->entityTypeManager->getForm(self::FINNA_ENTITY_TYPE, 'edit', new FormData([
-            'consortium' => $consortium
+        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', new FormData([
+            'consortium' => $consortium,
+            'service_point' => null,
         ]));
 
         $form->remove('exclusive');
@@ -48,7 +49,7 @@ class FinnaController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->entityTypeManager->getEntityManager();
+            $em = $this->types->getEntityManager();
 
             $entity = $em->getRepository(FinnaAdditions::class)->create($form->getData()->getValues());
 
@@ -63,8 +64,8 @@ class FinnaController extends Controller
         }
 
         return [
-            'form' => $form,
-            'type_label' => $this->entityTypeManager->getTypeLabel(self::FINNA_ENTITY_TYPE),
+            'form' => $form->createView(),
+            'type_label' => $this->types->getTypeLabel(self::FINNA_ENTITY_TYPE),
             'entity_type' => 'consortium',
             'consortium' => $consortium
         ];
@@ -80,17 +81,17 @@ class FinnaController extends Controller
      */
     public function createFinnaOrganisation(Request $request)
     {
-        $form = $this->entityTypeManager->getForm(self::FINNA_ENTITY_TYPE);
+        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $values = $form->getData()->getValues();
-            $finna_data = $this->entityTypeManager->getRepository(self::FINNA_ENTITY_TYPE)->create($values);
+            $finna_data = $this->types->getRepository(self::FINNA_ENTITY_TYPE)->create($values);
             $consortium = $finna_data->getConsortium();
 
             $consortium->setFinnaData(null);
 
-            $em = $this->entityTypeManager->getEntityManager();
+            $em = $this->types->getEntityManager();
             $em->persist($consortium);
             $em->flush($consortium);
 

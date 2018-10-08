@@ -27,19 +27,21 @@ class MenuBuilder
             $entity = $this->types->getRepository('finna_organisation')->findOneById($entity);
         }
 
-        $menu->addChild('Basic details', [
-            'route' => 'entity.finna_organisation.edit',
-            'routeParameters' => [
-                'finna_organisation' => $entity->getId()
-            ]
-        ]);
+        if ($entity) {
+            $menu->addChild('Basic details', [
+                'route' => 'entity.finna_organisation.edit',
+                'routeParameters' => [
+                    'finna_organisation' => $entity->getId()
+                ]
+            ]);
 
-        $menu->addChild('Links', [
-            'route' => 'entity.finna_organisation.link_collection',
-            'routeParameters' => [
-                'finna_organisation' => $entity->getId(),
-            ]
-        ]);
+            $menu->addChild('Links', [
+                'route' => 'entity.finna_organisation.link_collection',
+                'routeParameters' => [
+                    'finna_organisation' => $entity->getId(),
+                ]
+            ]);
+        }
 
         return $menu;
     }
