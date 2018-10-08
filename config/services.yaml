@@ -242,3 +242,8 @@ services:
             - { name: twig.extension }
     imagine:
         class: 'Imagine\Gd\Imagine'
+
+
+    # Not provided by the bundle itself...
+    Vich\UploaderBundle\Metadata\MetadataReader:
+        alias: vich_uploader.metadata_reader

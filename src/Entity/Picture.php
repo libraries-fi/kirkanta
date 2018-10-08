@@ -14,7 +14,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Table(name="pictures")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="attached_to", type="string")
- * @ORM\DiscriminatorMap({"organisation"="LibraryPhoto", "service"="ServicePhoto"})
+ * @ORM\DiscriminatorMap({
+ *      "organisation" = "LibraryPhoto",
+ *      "service" = "ServicePhoto",
+ * })
  * @Vich\Uploadable
  */
 abstract class Picture extends EntityBase implements CreatedAwareness, Weight
@@ -42,7 +45,8 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
      */
     private $file;
 
-    static public $default_sizes = [];
+    // Every subclass should define this.
+    // static public $default_sizes = [];
 
     public function getFilename() : ?string
     {

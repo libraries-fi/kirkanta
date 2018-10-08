@@ -13,6 +13,7 @@ import "./service-tool";
 import "./table.drag";
 import "./widget.sluggable";
 import "./widget.radio-collapse";
+import "./widget.file-input";
 import "./period.widgets";
 import "./period.edit";
 

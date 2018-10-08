@@ -5,6 +5,10 @@ vich_uploader:
             uri_prefix: /files/images
             upload_destination: files/images
             namer: vich_uploader.namer_uniqid
+        consortium_logo:
+            uri_prefix: /files/logos
+            upload_destination: files/logos
+            namer: vich_uploader.namer_uniqid
 
     #mappings:
     #    products:

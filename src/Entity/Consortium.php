@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Feature\GroupOwnership;
 use App\Entity\Feature\ModifiedAwareness;
 use App\Entity\Feature\Sluggable;
@@ -14,6 +11,10 @@ use App\I18n\Translations;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheableTrait;
 use App\Module\Finna\Entity\FinnaAdditions;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
@@ -33,7 +34,7 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
      *
      * @ORM\Column(type="string")
      */
-    private $logo;
+    // private $logo;
 
     /**
      * @ORM\Column(type="string")
@@ -59,6 +60,11 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
      * @ORM\OneToOne(targetEntity="App\Module\Finna\Entity\FinnaAdditions", inversedBy="consortium", cascade={"remove"}, orphanRemoval=true)
      */
     private $finna_data;
+
+    /**
+     * @ORM\Column(type="json_document", options={"jsonb": true})
+     */
+    private $logo;
 
     public function __construct()
     {
@@ -102,12 +108,22 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
         $this->translations[$this->langcode]->setDescription($description);
     }
 
-    public function getLogo() : ?string
+    // public function getLogo() : ?string
+    // {
+    //     return $this->logo;
+    // }
+    //
+    // public function setLogo(?string $logo) : void
+    // {
+    //     $this->logo = $logo;
+    // }
+
+    public function getLogo() : ?ConsortiumLogo
     {
         return $this->logo;
     }
 
-    public function setLogo(?string $logo) : void
+    public function setLogo(?ConsortiumLogo $logo) : void
     {
         $this->logo = $logo;
     }

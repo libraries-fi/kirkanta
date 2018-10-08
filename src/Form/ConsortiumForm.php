@@ -15,9 +15,12 @@ class ConsortiumForm extends FormType
     {
         $builder
             ->add('state', StateChoiceType::class)
-            ->add('logo', FileType::class, [
-                'required' => false,
-                'data_class' => null
+            // ->add('logo', FileType::class, [
+            //     'required' => false,
+            //     'data_class' => null
+            // ])
+            ->add('logo', Type\ConsortiumLogoType::class, [
+                
             ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\ConsortiumDataType::class

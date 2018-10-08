@@ -210,30 +210,6 @@ parameters:
             list_builder: 'App\Entity\ListBuilder\ServicePointListBuilder'
             forms:
                 default: 'App\Form\ServicePointForm'
-        service_point_phone:
-            id: service_point_phone
-            label: 'Phone number'
-            label_multiple: 'Phone numbers'
-            class_name: 'App\Entity\ServicePointPhoneNumber'
-            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
-            forms:
-                default: 'App\Form\PhoneNumberForm'
-        service_point_email_address:
-            id: service_point_email_address
-            label: 'Email address'
-            label_multiple: 'Email addresses'
-            class_name: 'App\Entity\ServicePointEmailAddress'
-            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
-            forms:
-                default: 'App\Form\EmailAddressForm'
-        service_point_web_link:
-            id: service_point_web_link
-            label: 'Website'
-            label_multiple: 'Websites'
-            class_name: 'App\Entity\ServicePointWebsiteLink'
-            list_builder: 'App\Entity\ListBuilder\ContactInfoListBuilder'
-            forms:
-                default: 'App\Form\WebsiteLinkForm'
         finna_organisation_web_link:
             id: finna_organisation_web_link
             label: 'Website'

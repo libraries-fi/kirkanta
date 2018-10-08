@@ -1880,3 +1880,14 @@ UPDATE contact_info SET type = 'finna_organisation:website' WHERE attached_to = 
 
 DROP VIEW contact_info_doctrine;
 ALTER TABLE contact_info DROP column attached_to;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+ALTER TABLE consortiums RENAME COLUMN logo TO old_logo_filename;
+ALTER TABLE consortiums ADD COLUMN logo jsonb;

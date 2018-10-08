@@ -25,21 +25,6 @@ App\Entity\WebsiteLink:
     url:
       groups: ['default']
 
-App\Entity\ServicePointEmailAddress:
-  attributes:
-    email:
-      groups: ['default']
-
-App\Entity\ServicePointPhoneNumber:
-  attributes:
-    number:
-      groups: ['default']
-
-App\Entity\ServicePointWebsiteLink:
-  attributes:
-    url:
-      groups: ['default']
-
 App\Module\Finna\Entity\FinnaOrganisationWebsiteLink:
   attributes:
     url:

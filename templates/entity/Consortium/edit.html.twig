@@ -1,5 +1,7 @@
 {% extends "entity/edit.html.twig" %}
 
+{% form_theme form _self %}
+
 {% block form %}
   {{ form_start(form) }}
   {{ block("form_header") }}
@@ -10,9 +12,13 @@
     {{ form_row(form.children.slug) }}
     {{ form_row(form.children.homepage) }}
     {{ form_row(form.children.description) }}
-    {{ form_row(form.children.logo) }}
   </fieldset>
 
+  <fieldset class="form-section">
+    <legend>{% trans %}Logo{% endtrans %}</legend>
+    {{ form_widget(form.children.logo) }}
+  </fieldset>
+  
   {{ form_end(form) }}
 
   {% if consortium is defined and not consortium.deleted %}
@@ -30,4 +36,12 @@
       </ul>
     </div>
   {% endif %}
+{% endblock %}
+
+{% block _consortium_form_logo_widget %}
+  {% if value.filename is defined %}
+    <img src="/files/logos/{{ value.filename }}" alt="{{ value.originalName }}" height="200"/>
+  {% endif %}
+
+  {{ form_row(form.file) }}
 {% endblock %}
