@@ -1,0 +1,20 @@
+{% extends "entity/Library/resource.edit.html.twig" %}
+
+{% form_theme form _self %}
+
+{% block _library_photo_form_filename_row %}
+  {% if value %}
+    <figure class="kirkanta-form-image size-medium">
+      <img src="{{ asset("/files/images/medium/" ~ value) }}"/>
+    </figure>
+  {% else %}
+    {{ block("form_row") }}
+  {% endif %}
+{% endblock %}
+
+{% block form %}
+  {{ form_start(form) }}
+  {{ block("form_header") }}
+  {{ form_errors(form) }}
+  {{ form_end(form) }}
+{% endblock %}

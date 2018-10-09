@@ -1891,3 +1891,6 @@ ALTER TABLE contact_info DROP column attached_to;
 
 ALTER TABLE consortiums RENAME COLUMN logo TO old_logo_filename;
 ALTER TABLE consortiums ADD COLUMN logo jsonb;
+
+
+ALTER TABLE organisations ADD COLUMN photos jsonb;

@@ -37,6 +37,55 @@ class OrganisationController extends Controller
     }
 
     /**
+     * @Route("/library/{library}/photos", defaults={"entity_type": "library"})
+     * @ParamConverter("library", converter="entity_from_type_and_id")
+     */
+    public function photoCollection(Request $request, $library)
+    {
+
+        print_r($library->getPhotos()->toArray());
+
+        return new JsonResponse('ok');
+    }
+
+    /**
+     * @Route("/library/{library}/photos/add", defaults={"entity_type": "library"})
+     * @ParamConverter("library", converter="entity_from_type_and_id")
+     * @Template("entity/Library/photos.edit.html.twig")
+     */
+    public function addPhoto(Request $request, $library)
+    {
+        // $data = new \App\Entity\LibraryNestedPhoto;
+        // $data->filename = 'foobar.jpeg';
+
+        $form = $this->createForm(\App\Form\NestedImageForm::class, null, [
+            'data_class' => \App\Entity\LibraryNestedPhoto::class,
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $image = $form->getData();
+            // $library->getPhotos()->add($image);
+
+            $photos = $library->getPhotos();
+            $photos->add($image);
+
+            $this->types->getEntityManager()->flush();
+
+            $this->addFlash('success', 'Photo was added');
+
+            return $this->redirect('/library/' . $library->getId() . '/photos/add');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'entity_type' => null,
+            'type_label' => 'Photo',
+        ];
+    }
+
+    /**
      * @ParamConverter("library", converter="entity_from_type_and_id")
      */
     public function resourceCollection(Request $request, $library, string $entity_type, string $resource)

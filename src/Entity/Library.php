@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,6 +18,11 @@ class Library extends Facility implements LibraryInterface
      * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
      */
     protected $pictures;
+
+    /**
+     * @ORM\Column(type="json_document", options={"jsonb": true})
+     */
+    protected $photos;
 
     /**
      * @ORM\OneToMany(targetEntity="Person", mappedBy="library", cascade={"persist", "remove"})
@@ -55,6 +61,8 @@ class Library extends Facility implements LibraryInterface
         $this->mobile_stops = new ArrayCollection;
         $this->periods = new ArrayCollection;
         $this->pictures = new ArrayCollection;
+
+        $this->photos = [];
     }
 
     public function getDepartments() : Collection
@@ -75,5 +83,23 @@ class Library extends Facility implements LibraryInterface
     public function getOrganisation() : ?Organisation
     {
         return $this->organisation;
+    }
+
+    public function getPhotos() : Collection
+    {
+        if (!$this->photos) {
+            $this->photos = [];
+        }
+
+        return new \App\Util\ProxyCollection($this->photos);
+
+        // if (!$this->photos) {
+        //     $this->photos = new ArrayCollection;
+        // }
+        // return $this->photos;
+    }
+
+    public function test() {
+        var_dump($this->photos);
     }
 }

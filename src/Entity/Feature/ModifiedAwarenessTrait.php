@@ -20,8 +20,8 @@ trait ModifiedAwarenessTrait
         return $this->modified;
     }
 
-    public function setModified(DateTime $modified) : void
+    public function setModified(DateTime $modified = null) : void
     {
-        $this->modified = $modified;
+        $this->modified = $modified ?: new DateTime;
     }
 }

@@ -40,7 +40,11 @@ class NestedImageType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         if (!$options['file_field']) {
-            throw new RuntimeException("Have to define option 'file_field'");
+            throw new \RuntimeException("Have to define option 'file_field'");
+        }
+
+        if (!$options['data_class']) {
+            throw new \RuntimeException("Have to define option 'data_class'");
         }
 
         $field = $options['file_field'];
