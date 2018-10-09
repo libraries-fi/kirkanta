@@ -16,11 +16,18 @@ class NestedImage
     public $dimensions;
     public $originalName;
     public $type;
-
-    // public $sizes = [];
+    public $sizes = [];
 
     /**
      * @Vich\UploadableField(mapping="consortium_logo", fileNameProperty="filename", size="filesize", mimeType="type", dimensions="dimensions", originalName="originalName")
      */
     public $file;
+
+    const DEFAULT_SIZES = ['small', 'medium', 'large', 'huge'];
+
+    public function __construct()
+    {
+        // Defined in parent class.
+        $this->sizes = static::DEFAULT_SIZES;
+    }
 }

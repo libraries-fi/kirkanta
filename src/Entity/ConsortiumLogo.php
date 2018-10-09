@@ -13,5 +13,5 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class ConsortiumLogo extends NestedImage
 {
-
+    const DEFAULT_SIZES = ['small', 'medium'];
 }

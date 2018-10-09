@@ -15,6 +15,10 @@ use Vich\UploaderBundle\Storage\StorageInterface;
 use Vich\UploaderBundle\Metadata\MetadataReader;
 use Vich\UploaderBundle\Mapping\PropertyMappingFactory;
 
+use App\Events as AppEvents;
+use App\Event\ImageUploadEvent;
+use App\EventListener\ImageResizeSubscriber;
+
 /**
  * Glue to use VichUploader with non-Doctrine objects.
  */
@@ -22,12 +26,15 @@ class NestedImageType extends BaseType
 {
     private $storage;
     private $metaData;
+    private $mappingFactory;
+    private $uploadResizer;
 
-    public function __construct(StorageInterface $storage, MetadataReader $reader, PropertyMappingFactory $factory)
+    public function __construct(StorageInterface $storage, MetadataReader $reader, PropertyMappingFactory $factory, ImageResizeSubscriber $upload_resizer)
     {
         $this->storage = $storage;
         $this->metaData = $reader;
-        $this->factory = $factory;
+        $this->mappingFactory = $factory;
+        $this->uploadResizer = $upload_resizer;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
@@ -50,16 +57,17 @@ class NestedImageType extends BaseType
             ])
             ->add($field_config['propertyName'], FileType::class, [
                 'required' => false,
-                // 'allow_delete' => true,
-                // 'download_uri' => 'upload_'
             ])
             ;
 
-        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) use($field_config) {
-            $entity = $event->getData();
-            $mapping = $this->factory->fromObject($entity, null, $field_config['mapping'])[0];
+        $builder->addEventSubscriber($this->uploadResizer);
 
-            if ($entity->file) {
+        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) use($field_config, $builder) {
+            $entity = $event->getData();
+            $mapping = $this->mappingFactory->fromObject($entity, null, $field_config['mapping'])[0];
+            $field = $field_config['propertyName'];
+
+            if ($entity->{$field}) {
                 $this->storage->upload($entity, $mapping);
 
                 /*
@@ -67,6 +75,8 @@ class NestedImageType extends BaseType
                  * to the database.
                  */
                 $event->setData(clone $entity);
+
+                $builder->getEventDispatcher()->dispatch(AppEvents::IMAGE_UPLOAD, new ImageUploadEvent($entity, $mapping));
             }
         });
     }

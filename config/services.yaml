@@ -2,15 +2,15 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'fi'
+    content_languages: ['fi', 'sv', 'en', 'ru', 'se']
     pager_size: 50
+    user_entity: 'App\Entity\User'
     images_dir: files/images
     image_sizes:
         small: 200x200
         medium: 1000x1000
         large: 1920x1920
         huge: 3840x3840
-    content_languages: ['fi', 'sv', 'en', 'ru', 'se']
-    user_entity: 'App\Entity\User'
 
 services:
     # default configuration for services in *this* file
@@ -33,10 +33,11 @@ services:
     App\Component\Twig\FontAwesomeExtension:
         tags:
             - { name: twig.extension }
-    App\EventListener\ScaleUploadedImages:
+    App\EventListener\ImageResizeSubscriber:
         arguments: ['@imagine', '%image_sizes%']
         tags:
             - { name: kernel.event_subscriber }
+            - { name: form.event_subscriber }
 
     App\Module\Schedules\EventListener\UpdateSchedules:
         tags:
@@ -240,8 +241,12 @@ services:
         class: 'Twig_Extension_StringLoader'
         tags:
             - { name: twig.extension }
+
     imagine:
-        class: 'Imagine\Gd\Imagine'
+        class: Imagine\Gd\Imagine
+
+    Imagine\Image\ImagineInterface: '@imagine'
+
 
 
     # Not provided by the bundle itself...
