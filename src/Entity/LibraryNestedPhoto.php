@@ -13,5 +13,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 class LibraryNestedPhoto extends NestedImage
 {
-    const DEFAULT_SIZES = ['small', 'medium'];
+    const DEFAULT_SIZES = ['small', 'medium', 'large', 'huge'];
+
+    /**
+     * @Vich\UploadableField(mapping="library_photo", fileNameProperty="filename", size="filesize", mimeType="type", dimensions="dimensions", originalName="originalName")
+     */
+    public $file;
 }

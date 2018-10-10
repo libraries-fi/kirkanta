@@ -14,4 +14,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class ConsortiumLogo extends NestedImage
 {
     const DEFAULT_SIZES = ['small', 'medium'];
+    
+    /**
+     * @Vich\UploadableField(mapping="consortium_logo", fileNameProperty="filename", size="filesize", mimeType="type", dimensions="dimensions", originalName="originalName")
+     */
+    public $file;
 }

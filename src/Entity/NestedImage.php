@@ -18,11 +18,6 @@ class NestedImage
     public $type;
     public $sizes = [];
 
-    /**
-     * @Vich\UploadableField(mapping="consortium_logo", fileNameProperty="filename", size="filesize", mimeType="type", dimensions="dimensions", originalName="originalName")
-     */
-    public $file;
-
     const DEFAULT_SIZES = ['small', 'medium', 'large', 'huge'];
 
     public function __construct()
