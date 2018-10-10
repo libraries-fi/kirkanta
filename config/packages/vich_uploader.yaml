@@ -1,9 +1,9 @@
 vich_uploader:
     db_driver: orm
     mappings:
-        image:
-            uri_prefix: /files/images
-            upload_destination: files/images
+        library_photo:
+            uri_prefix: /files/photos
+            upload_destination: files/photos
             namer: vich_uploader.namer_uniqid
         consortium_logo:
             uri_prefix: /files/logos
