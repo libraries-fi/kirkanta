@@ -25,7 +25,7 @@ class LibraryPhotoListBuilder extends EntityListBuilder
             ->useAsTemplate('filename')
             ->useAsTemplate('name')
             ->transform('filename', function() {
-                return "<img src=\"/files/images/small/{{ row.filename }}\" alt=\"{{ row.name }}\" height=\"60\"/>";
+                return "<img src=\"/files/photos/small/{{ row.filename }}\" alt=\"{{ row.name }}\" height=\"60\"/>";
             })
             ->transform('name', function() {
                 return '

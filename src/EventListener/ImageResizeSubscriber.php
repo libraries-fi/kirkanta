@@ -2,13 +2,14 @@
 
 namespace App\EventListener;
 
+use App\Entity\Picture;
 use App\Events;
 use App\Event\ImageUploadEvent;
+use Imagine\Exception\RuntimeException as InvalidImageException;
 use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
-use App\Entity\Picture;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Vich\UploaderBundle\Event\Event as VichEvent;
@@ -46,22 +47,27 @@ class ImageResizeSubscriber implements EventSubscriberInterface
             $basedir = $object->getFile()->getPath();
             $filename = $object->getFile()->getFilename();
             $realpath = realpath(sprintf('%s/%s', $basedir, $filename));
-            $image = $this->imagine->open($realpath);
 
-            foreach (array_reverse($sizes) as $size) {
-                if (!isset($this->sizes[$size])) {
-                    throw new \DomainException(sprintf('Invalid size \'%s\' passed.', $size));
+            try {
+                $image = $this->imagine->open($realpath);
+
+                foreach (array_reverse($sizes) as $size) {
+                    if (!isset($this->sizes[$size])) {
+                        throw new \DomainException(sprintf('Invalid size \'%s\' passed.', $size));
+                    }
+
+                    list($width, $height) = explode('x', $this->sizes[$size]);
+                    $path = sprintf('%s/%s/%s', $basedir, $size, $filename);
+
+                    $resize = $this->scaleSizeForImage($image, new Box($width, $height));
+                    $image->resize($resize);
+                    $image->save($path);
                 }
 
-                list($width, $height) = explode('x', $this->sizes[$size]);
-                $path = sprintf('%s/%s/%s', $basedir, $size, $filename);
-
-                $resize = $this->scaleSizeForImage($image, new Box($width, $height));
-                $image->resize($resize);
-                $image->save($path);
+                $object->setSizes($sizes);
+            } catch (InvalidImageException $e) {
+                // Not a valid image file.
             }
-
-            $object->setSizes($sizes);
         }
     }
 
@@ -69,19 +75,25 @@ class ImageResizeSubscriber implements EventSubscriberInterface
     {
         $image = $event->getImage();
         $file = $image->file;
-        $image_data = $this->imagine->open(implode(DIRECTORY_SEPARATOR, [$event->getMapping()->getUploadDestination(), $image->filename]));
 
-        foreach (array_reverse($image->sizes) as $size) {
-            if (!isset($this->sizes[$size])) {
-                throw new \DomainException(sprintf('Invalid size \'%s\' passed.', $size));
+        try {
+
+            $image_data = $this->imagine->open(implode(DIRECTORY_SEPARATOR, [$event->getMapping()->getUploadDestination(), $image->filename]));
+
+            foreach (array_reverse($image->sizes) as $size) {
+                if (!isset($this->sizes[$size])) {
+                    throw new \DomainException(sprintf('Invalid size \'%s\' passed.', $size));
+                }
+
+                list($width, $height) = explode('x', $this->sizes[$size]);
+                $filepath = implode(DIRECTORY_SEPARATOR, [$event->getMapping()->getUploadDestination(), $size, $image->filename]);
+
+                $size_data = $this->scaleSizeForImage($image_data, new Box($width, $height));
+                $image_data->resize($size_data);
+                $image_data->save($filepath);
             }
-
-            list($width, $height) = explode('x', $this->sizes[$size]);
-            $filepath = implode(DIRECTORY_SEPARATOR, [$event->getMapping()->getUploadDestination(), $size, $image->filename]);
-
-            $size_data = $this->scaleSizeForImage($image_data, new Box($width, $height));
-            $image_data->resize($size_data);
-            $image_data->save($filepath);
+        } catch (InvalidImageException $e) {
+            // Invalid image file.
         }
     }
 

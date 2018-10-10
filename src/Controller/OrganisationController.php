@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+use Knp\Component\Pager\PaginatorInterface;
+
 class OrganisationController extends Controller
 {
     use Feature\ProvideEntityTypeManager;
@@ -39,13 +41,40 @@ class OrganisationController extends Controller
     /**
      * @Route("/library/{library}/photos", defaults={"entity_type": "library"})
      * @ParamConverter("library", converter="entity_from_type_and_id")
+     * @Template("entity/collection.html.twig")
      */
-    public function photoCollection(Request $request, $library)
+    public function photoCollection(Request $request, PaginatorInterface $paginator, $library, int $page = 1)
     {
+        $pager = $paginator->paginate($library->getPhotos(), $page, 50);
 
-        print_r($library->getPhotos()->toArray());
+        $table = (new \App\Component\Element\Table)
+            ->setData($pager)
+            ->setColumns([
+                'filename' => [
+                    'size' => 100
+                ],
+                'link',
+                'dimensions',
+                'type'
+            ])
+            ->useAsTemplate('filename')
+            ->useAsTemplate('link')
+            ->transform('filename', function($p) {
+                return '<img src="{{ asset(\'files/photos/small/\' ~ row.filename) }}" alt="{{ row.filename }}"/>';
+            })
+            ->transform('link', function($p) {
+                return '<a href="photos/{{ row.filename }}">{{ row.filename }}</a>';
+            })
+            ->transform('dimensions', function($p) {
+                return sprintf('%dx%d px', ...$p->dimensions);
+            })
+            ;
 
-        return new JsonResponse('ok');
+        return [
+            'entity_type' => 'library',
+            'type_label' => 'Photos',
+            'table' => $table
+        ];
     }
 
     /**
@@ -55,9 +84,6 @@ class OrganisationController extends Controller
      */
     public function addPhoto(Request $request, $library)
     {
-        // $data = new \App\Entity\LibraryNestedPhoto;
-        // $data->filename = 'foobar.jpeg';
-
         $form = $this->createForm(\App\Form\NestedImageForm::class, null, [
             'data_class' => \App\Entity\LibraryNestedPhoto::class,
         ]);
@@ -80,8 +106,32 @@ class OrganisationController extends Controller
 
         return [
             'form' => $form->createView(),
-            'entity_type' => null,
-            'type_label' => 'Photo',
+        ];
+    }
+
+    /**
+     * @Route("/library/{library}/photos/{filename}", name="entity.library.photos.edit", defaults={"entity_type": "library"})
+     * @ParamConverter("library", converter="entity_from_type_and_id")
+     * @Template("entity/Library/photos.edit.html.twig")
+     */
+    public function editPhoto(Request $request, $library, string $filename)
+    {
+        function find(iterable $photos, string $filename) {
+            foreach ($photos as $p) {
+                if ($p->filename == $filename) {
+                    return $p;
+                }
+            }
+        }
+
+        $photo = find($library->getPhotos(), $filename);
+
+        $form = $this->createForm(\App\Form\NestedImageForm::class, $photo, [
+            'data_class' => \App\Entity\LibraryNestedPhoto::class,
+        ]);
+
+        return [
+            'form' => $form->createView(),
         ];
     }
 
