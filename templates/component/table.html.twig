@@ -27,7 +27,7 @@
         {% endif %}
 
         {% if column.sortable %}
-          <th class="{{ column_class|join(' ') }}">
+          <th class="{{ column_class|join(' ') }}" {% if column.size %}style="width: {{ column.size }}px"{% endif %}>
             <a href="?s={{ column.key }}&amp;d={% if column.sorting == 'desc' %}asc{% else %}desc{% endif %}">{{ column.label|trans }}</a>
             {% if column.sorting %}
               <i class="fa fa-long-arrow-alt-{% if column.sorting == 'desc' %}down{% else %}up{% endif %}"></i>
@@ -36,7 +36,7 @@
             {% endif %}
           </th>
         {% else %}
-          <th class="{{ column_class|join(' ') }}">{{ column.label|trans }}</th>
+          <th class="{{ column_class|join(' ') }}" {% if column.size %}style="width: {{ column.size }}px"{% endif %}>{{ column.label|trans }}</th>
         {% endif %}
       {% endfor %}
     </tr>

@@ -100,4 +100,14 @@ class Column
     {
         return !empty($this->options['expand']);
     }
+
+    public function setSize(int $size) : void
+    {
+        $this->options['size'] = $size;
+    }
+
+    public function getSize() : ?int
+    {
+        return $this->options['size'] ?? null;
+    }
 }
