@@ -20,9 +20,19 @@ class Library extends Facility implements LibraryInterface
     protected $pictures;
 
     /**
+     * An array of nested photos.
+     *
+     * NOTE: Due to a limitation in Doctrine, this property has to be a raw array and not
+     * a Collection nor other kind of object.
+     *
      * @ORM\Column(type="json_document", options={"jsonb": true})
      */
     protected $photos;
+
+    /**
+     * Holds a reference to the Collection that manipulates the photos array.
+     */
+    private $_photos;
 
     /**
      * @ORM\OneToMany(targetEntity="Person", mappedBy="library", cascade={"persist", "remove"})
@@ -87,16 +97,20 @@ class Library extends Facility implements LibraryInterface
 
     public function getPhotos() : Collection
     {
+        /**
+         * Use a Collection object to preserve API compatibility with other collections.
+         */
+
         if (!$this->photos) {
+            // Empty collections are serialized to NULL in order to avoid the [] vs. {} issue.
             $this->photos = [];
         }
 
-        return new \App\Util\ProxyCollection($this->photos);
+        if (!$this->_photos) {
+          $this->_photos = new \App\Util\ProxyCollection($this->photos);
+        }
 
-        // if (!$this->photos) {
-        //     $this->photos = new ArrayCollection;
-        // }
-        // return $this->photos;
+        return $this->_photos;
     }
 
     public function test() {
