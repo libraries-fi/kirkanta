@@ -20,21 +20,6 @@ class Library extends Facility implements LibraryInterface
     protected $pictures;
 
     /**
-     * An array of nested photos.
-     *
-     * NOTE: Due to a limitation in Doctrine, this property has to be a raw array and not
-     * a Collection nor other kind of object.
-     *
-     * @ORM\Column(type="json_document", options={"jsonb": true})
-     */
-    protected $photos;
-
-    /**
-     * Holds a reference to the Collection that manipulates the photos array.
-     */
-    private $_photos;
-
-    /**
      * @ORM\OneToMany(targetEntity="Person", mappedBy="library", cascade={"persist", "remove"})
      */
     protected $persons;
@@ -71,8 +56,6 @@ class Library extends Facility implements LibraryInterface
         $this->mobile_stops = new ArrayCollection;
         $this->periods = new ArrayCollection;
         $this->pictures = new ArrayCollection;
-
-        $this->photos = [];
     }
 
     public function getDepartments() : Collection
@@ -93,27 +76,5 @@ class Library extends Facility implements LibraryInterface
     public function getOrganisation() : ?Organisation
     {
         return $this->organisation;
-    }
-
-    public function getPhotos() : Collection
-    {
-        /**
-         * Use a Collection object to preserve API compatibility with other collections.
-         */
-
-        if (!$this->photos) {
-            // Empty collections are serialized to NULL in order to avoid the [] vs. {} issue.
-            $this->photos = [];
-        }
-
-        if (!$this->_photos) {
-          $this->_photos = new \App\Util\ProxyCollection($this->photos);
-        }
-
-        return $this->_photos;
-    }
-
-    public function test() {
-        var_dump($this->photos);
     }
 }

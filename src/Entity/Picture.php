@@ -17,8 +17,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\DiscriminatorMap({
  *      "organisation" = "LibraryPhoto",
  *      "service" = "ServicePhoto",
+ *      "consortium_logo" = "ConsortiumLogo"
  * })
- * @Vich\Uploadable
  */
 abstract class Picture extends EntityBase implements CreatedAwareness, Weight
 {
@@ -31,6 +31,30 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
     private $filename;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $original_name;
+
+    /**
+     * Value pair consisting of original image file dimensions.
+     *
+     * @ORM\Column(type="int_array")
+     */
+    private $dimensions;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $mime_type;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $filesize;
+
+    /**
+     * Array of size names (small, medium, etc.)
+     *
      * @ORM\Column(type="text_array")
      */
     private $sizes = [];
@@ -40,13 +64,17 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
      */
     private $meta;
 
-    /**
-     * @Vich\UploadableField(mapping="image", fileNameProperty="filename")
-     */
-    private $file;
+    // Annotate in subclasses with @Vich\UploadableField
+    // protected $file;
 
     // Every subclass should define this.
     // static public $default_sizes = [];
+
+    public function __construct()
+    {
+        $this->sizes = static::DEFAULT_SIZES;
+        $this->created = new \DateTIme;
+    }
 
     public function getFilename() : ?string
     {
@@ -56,6 +84,51 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
     public function setFilename(string $filename) : void
     {
         $this->filename = $filename;
+    }
+
+    public function getOriginalName() : string
+    {
+        return $this->original_name;
+    }
+
+    public function setOriginalName(string $name) : void
+    {
+        $this->original_name = $name;
+    }
+
+    public function getPixelCount() : int
+    {
+        return array_product($this->dimensions ?? []);
+    }
+
+    public function getDimensions() : array
+    {
+        return $this->dimensions;
+    }
+
+    public function getMimeType() : string
+    {
+        return $this->mime_type;
+    }
+
+    public function setMimeType(string $type) : void
+    {
+        $this->mime_type = $type;
+    }
+
+    public function getFilesize() : int
+    {
+        return $this->filesize;
+    }
+
+    public function setFilesize(int $bytes) : void
+    {
+        $this->filesize = $bytes;
+    }
+
+    public function setDimensions(array $dimensions) : void
+    {
+        $this->dimensions = $dimensions;
     }
 
     public function getSizes() : array

@@ -18,7 +18,7 @@
     <legend>{% trans %}Logo{% endtrans %}</legend>
     {{ form_widget(form.children.logo) }}
   </fieldset>
-  
+
   {{ form_end(form) }}
 
   {% if consortium is defined and not consortium.deleted %}
@@ -40,7 +40,9 @@
 
 {% block _consortium_form_logo_widget %}
   {% if value.filename is defined %}
-    <img src="/files/logos/{{ value.filename }}" alt="{{ value.originalName }}" height="200"/>
+    <div class="d-inline-block mb-3">
+      <img src="/files/logos/small/{{ value.filename }}" alt="{{ value.originalName }}"/>
+    </div>
   {% endif %}
 
   {{ form_row(form.file) }}

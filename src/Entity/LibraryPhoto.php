@@ -2,19 +2,21 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Feature\Translatable;
 use App\Entity\Library;
 use App\I18n\Translations;
+use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
+ * @Vich\Uploadable
  */
 class LibraryPhoto extends Picture implements Translatable
 {
     use Feature\TranslatableTrait;
 
-    static public $defaultSizes = ['small', 'medium', 'large', 'huge'];
+    const DEFAULT_SIZES = ['small', 'medium', 'large', 'huge'];
 
     /**
      * @ORM\Column(type="string")
@@ -40,6 +42,11 @@ class LibraryPhoto extends Picture implements Translatable
      * @ORM\ManyToOne(targetEntity="Library", inversedBy="pictures")
      */
     private $parent;
+
+    /**
+     * @Vich\UploadableField(mapping="library_photo", fileNameProperty="filename", size="filesize", mimeType="mime_type", dimensions="dimensions", originalName="originalName")
+     */
+    protected $file;
 
     public function getParent() : LibraryInterface
     {

@@ -21,6 +21,7 @@ doctrine:
                 charset: utf8
         types:
             geography: 'Jsor\Doctrine\PostGIS\Types\GeographyType'
+            int_array: 'Doctrine\DBAL\PostgresTypes\IntArrayType'
             text_array: 'Doctrine\DBAL\PostgresTypes\TextArrayType'
             translations: 'App\Doctrine\Types\TranslationsType'
             simple_object: 'App\Doctrine\Types\SimpleObjectType'

@@ -43,7 +43,6 @@ class ImageResizeSubscriber implements EventSubscriberInterface
 
         if ($object instanceof Picture) {
             $class = get_class($object);
-            $sizes = $class::$defaultSizes;
             $basedir = $object->getFile()->getPath();
             $filename = $object->getFile()->getFilename();
             $realpath = realpath(sprintf('%s/%s', $basedir, $filename));
@@ -51,7 +50,7 @@ class ImageResizeSubscriber implements EventSubscriberInterface
             try {
                 $image = $this->imagine->open($realpath);
 
-                foreach (array_reverse($sizes) as $size) {
+                foreach (array_reverse($object->getSizes()) as $size) {
                     if (!isset($this->sizes[$size])) {
                         throw new \DomainException(sprintf('Invalid size \'%s\' passed.', $size));
                     }
@@ -62,9 +61,14 @@ class ImageResizeSubscriber implements EventSubscriberInterface
                     $resize = $this->scaleSizeForImage($image, new Box($width, $height));
                     $image->resize($resize);
                     $image->save($path);
-                }
 
-                $object->setSizes($sizes);
+                    $object->addMeta([
+                        $size => [
+                            'dimensions' => [$resize->getWidth(), $resize->getHeight()],
+                            'filesize' => filesize($path),
+                        ]
+                    ]);
+                }
             } catch (InvalidImageException $e) {
                 // Not a valid image file.
             }

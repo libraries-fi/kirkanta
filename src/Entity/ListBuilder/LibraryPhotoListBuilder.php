@@ -19,19 +19,37 @@ class LibraryPhotoListBuilder extends EntityListBuilder
     {
         return parent::build($entities)
             ->setColumns([
-                'filename' => ['label' => false],
-                'name' => ['mapping' => ['d.name'], 'expand' => true],
+                'filename' => [
+                    'label' => false,
+                    'size' => 120
+                ],
+                'name' => [
+                    'mapping' => ['d.name']
+                ],
+                'dimensions' => [
+                    'size' => 160
+                ],
             ])
             ->useAsTemplate('filename')
             ->useAsTemplate('name')
+            ->useAsTemplate('dimensions')
             ->transform('filename', function() {
-                return "<img src=\"/files/photos/small/{{ row.filename }}\" alt=\"{{ row.name }}\" height=\"60\"/>";
+                return "<img src=\"/files/photos/small/{{ row.filename }}\" alt=\"{{ row.name }}\" width=\"120\"/>";
             })
             ->transform('name', function() {
                 return '
                     <a href="{{ path("entity.library.edit_resource", {library: row.library.id, "resource": "photos", "resource_id": row.id}) }}">{{ row.name }}</a>
                     <p>{{ row.description }}</p>
                 ';
+            })
+            ->transform('dimensions', function($p) {
+                $data[] = '{{ row.dimensions[0] }}x{{ row.dimensions[1] }} px';
+
+                if ($p->getPixelCount() < 1280*960) {
+                    $data[] = '<small class="d-block text-danger">{% trans %}Picture is too small{% endtrans %}</small>';
+                }
+
+                return implode(PHP_EOL, $data);
             })
             ;
     }

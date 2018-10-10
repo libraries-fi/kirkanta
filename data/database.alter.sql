@@ -1894,3 +1894,21 @@ ALTER TABLE consortiums ADD COLUMN logo jsonb;
 
 
 ALTER TABLE organisations ADD COLUMN photos jsonb;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+ALTER TABLE consortiums DROP COLUMN logo;
+
+ALTER TABLE consortiums ADD COLUMN logo_id int;
+ALTER TABLE consortiums ADD FOREIGN KEY(logo_id) REFERENCES pictures(id) ON DELETE CASCADE;
+
+
+
+
+ALTER TABLE pictures ADD COLUMN original_name varchar(255);
+ALTER TABLE pictures ADD COLUMN dimensions int[2];
+ALTER TABLE pictures ADD COLUMN mime_type varchar(100);
+ALTER TABLE pictures ADD COLUMN filesize int;

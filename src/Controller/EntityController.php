@@ -117,6 +117,9 @@ class EntityController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // var_dump($entity->getLogoAlt());
+
             $this->entityTypeManager->getEntityManager()->flush();
             $this->addFlash('form.success', 'Changes were saved.');
 

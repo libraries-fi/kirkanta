@@ -62,7 +62,7 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
     private $finna_data;
 
     /**
-     * @ORM\Column(type="json_document", options={"jsonb": true})
+     * @ORM\OneToOne(targetEntity="ConsortiumLogo", inversedBy="consortium", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $logo;
 
@@ -107,16 +107,6 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
     {
         $this->translations[$this->langcode]->setDescription($description);
     }
-
-    // public function getLogo() : ?string
-    // {
-    //     return $this->logo;
-    // }
-    //
-    // public function setLogo(?string $logo) : void
-    // {
-    //     $this->logo = $logo;
-    // }
 
     public function getLogo() : ?ConsortiumLogo
     {

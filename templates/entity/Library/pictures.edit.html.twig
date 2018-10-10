@@ -5,7 +5,7 @@
 {% block _library_photo_form_filename_row %}
   {% if value %}
     <figure class="kirkanta-form-image size-medium">
-      <img src="{{ asset("/files/images/medium/" ~ value) }}"/>
+      <img src="{{ asset("/files/photos/medium/" ~ value) }}"/>
     </figure>
   {% else %}
     {{ block("form_row") }}

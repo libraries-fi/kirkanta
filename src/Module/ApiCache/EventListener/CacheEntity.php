@@ -61,5 +61,11 @@ class CacheEntity
                 return $parent;
             }
         }
+
+        if (method_exists($entity, 'getConsortium')) {
+            if ($parent = $entity->getConsortium()) {
+                return $parent;
+            }
+        }
     }
 }
