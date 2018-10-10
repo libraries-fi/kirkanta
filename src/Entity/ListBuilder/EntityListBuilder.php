@@ -8,7 +8,7 @@ use App\Entity\Feature\StateAwareness;
 use App\Entity\Feature\Translatable;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -31,7 +31,7 @@ abstract class EntityListBuilder
 
     protected $langcode = 'fi';
 
-    public function __construct(EntityRepository $storage, Paginator $paginator, RequestStack $request_stack, AuthorizationCheckerInterface $auth, TokenStorageInterface $tokens, int $page_size = 50)
+    public function __construct(EntityRepository $storage, PaginatorInterface $paginator, RequestStack $request_stack, AuthorizationCheckerInterface $auth, TokenStorageInterface $tokens, int $page_size = 50)
     {
         $this->storage = $storage;
         $this->paginator = $paginator;
