@@ -43,7 +43,11 @@ class LibraryPhotoListBuilder extends EntityListBuilder
                 ';
             })
             ->transform('dimensions', function($p) {
-                $data[] = '{{ row.dimensions[0] }}x{{ row.dimensions[1] }} px';
+                if (!$p->getDimensions()) {
+                    return '<i>{% trans %}Invalid data{% endtrans %}</i>';
+                }
+
+                $data[] = '{{ row.dimensions|join("x") }} px';
 
                 if ($p->getPixelCount() < 1280*960) {
                     $data[] = '<small class="d-block text-danger">{% trans %}Picture is too small{% endtrans %}</small>';
