@@ -61,16 +61,21 @@ class CreateConsortiumLogoEntities extends Command
             /**
              * NOTE: No originals preserved before so we only copy small and medium.
              */
+
+            // usleep(10);
+
+            $new_filebasename = str_replace('.', '', uniqid('', true));
+
             foreach (['small', 'medium'] as $size) {
                 try {
                     $old_filepath = sprintf('%s/%s/%s', dirname($old_upload_dir), $size, $consortium->getOldLogoFilename());
-                    $new_filename = sprintf('%s.%s', str_replace('.', '', uniqid('', true)), substr(strrchr($old_filepath, '.'), 1));
+                    $new_filename = sprintf('%s.%s', $new_filebasename, substr(strrchr($old_filepath, '.'), 1));
                     $new_dirname = sprintf('%s/%s', dirname($new_upload_dir), $size);
 
                     $file = new File($old_filepath);
                     $file->move($new_dirname, $new_filename);
 
-                    // $output->writeln("MOVE: {$old_filepath} -> {$new_dirname}/{$new_filename}");
+                    $output->writeln("MOVE: {$old_filepath} -> {$new_dirname}/{$new_filename}");
 
                     /**
                      * No originals were preserved so copy the medium size as original.
@@ -80,20 +85,22 @@ class CreateConsortiumLogoEntities extends Command
                         $original_filepath = sprintf('%s/%s/%s', dirname($new_dirname), 'original', $new_filename);
                         copy("{$new_dirname}/{$new_filename}", $original_filepath);
 
-                        // $output->writeln("COPY: {$new_dirname}/{$new_filename} -> {$original_filepath}");
+                        $output->writeln("COPY: {$new_dirname}/{$new_filename} -> {$original_filepath}");
                     }
-
-                    $logo = new ConsortiumLogo;
-                    $logo->setFilename($new_filename);
-                    $logo->setOriginalName(basename($old_filepath));
-
-                    $consortium->setLogo($logo);
-
-                    $this->em->persist($logo);
                 } catch (FileNotFoundException $e) {
                     // pass
                     $output->writeln('MISSING: ' . $old_filepath);
                 }
+            }
+
+            if (isset($new_filename)) {
+                $logo = new ConsortiumLogo;
+                $logo->setFilename($new_filename);
+                $logo->setOriginalName(basename($old_filepath));
+
+                $consortium->setLogo($logo);
+
+                $this->em->persist($logo);
             }
         }
 
