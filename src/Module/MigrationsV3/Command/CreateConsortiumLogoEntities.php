@@ -85,6 +85,8 @@ class CreateConsortiumLogoEntities extends Command
 
                     $logo = new ConsortiumLogo;
                     $logo->setFilename($new_filename);
+                    $logo->setOriginalName(basename($old_filepath));
+
                     $consortium->setLogo($logo);
 
                     $this->em->persist($logo);
