@@ -1912,3 +1912,9 @@ ALTER TABLE pictures ADD COLUMN original_name varchar(255);
 ALTER TABLE pictures ADD COLUMN dimensions int[2];
 ALTER TABLE pictures ADD COLUMN mime_type varchar(100);
 ALTER TABLE pictures ADD COLUMN filesize int;
+
+
+
+-- COMMIT PLACEHOLDER --
+
+UPDATE consortiums SET old_logo_filename = NULL WHERE old_logo_filename = '';

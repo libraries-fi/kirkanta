@@ -19,8 +19,10 @@ class ConsortiumLogoType extends BaseType
             ;
 
         $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
-            if ($event->getData()->getFile()) {
-                $event->getData()->setFilename('');
+            if ($entity = $event->getData()) {
+                if ($entity->getFile()) {
+                    $event->getData()->setFilename('');
+                }
             }
         });
     }

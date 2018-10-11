@@ -30,18 +30,6 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
     use Feature\TranslatableTrait;
 
     /**
-     * Basename of the logo file
-     *
-     * @ORM\Column(type="string")
-     */
-    // private $logo;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $legacy_id;
-
-    /**
      * @ORM\OneToMany(targetEntity="ConsortiumData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
      */
     private $translations;
@@ -65,6 +53,25 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
      * @ORM\OneToOne(targetEntity="ConsortiumLogo", inversedBy="consortium", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $logo;
+
+    /**
+     * Identifier of this entity in the Elasticsearch database of API v1/v2 Elasticsearch DB.
+     *
+     * @deprecated
+     *
+     * @ORM\Column(type="string")
+     */
+    private $legacy_id;
+
+    /**
+     * Filename of attached logo. Used to store filename on disk while migrating to entities.
+     *
+     * @see App\Module\MigrationsV3\Command\CreateConsortiumLogoEntities
+     * @deprecated
+     *
+     * @ORM\Column(type="string")
+     */
+    private $old_logo_filename;
 
     public function __construct()
     {
@@ -131,5 +138,10 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
     public function getLibraries() : Collection
     {
         return $this->libraries;
+    }
+
+    public function getOldLogoFilename() : ?string
+    {
+        return $this->old_logo_filename;
     }
 }

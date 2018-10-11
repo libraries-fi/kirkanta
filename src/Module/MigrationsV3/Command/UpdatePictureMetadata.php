@@ -17,10 +17,10 @@ use Vich\UploaderBundle\Mapping\PropertyMappingFactory;
  */
 class UpdatePictureMetadata extends Command
 {
+    const WEBROOT = 'public';
+
     private $em;
     private $mappings;
-
-    const WEBROOT = 'public';
 
     public function __construct(EntityManagerInterface $entities, PropertyMappingFactory $mappings)
     {

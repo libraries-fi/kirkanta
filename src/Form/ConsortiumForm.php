@@ -20,7 +20,7 @@ class ConsortiumForm extends FormType
             //     'data_class' => null
             // ])
             ->add('logo', Type\ConsortiumLogoType::class, [
-
+                'required' => false,
             ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\ConsortiumDataType::class
