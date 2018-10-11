@@ -36,13 +36,6 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
     private $original_name;
 
     /**
-     * Value pair consisting of original image file dimensions.
-     *
-     * @ORM\Column(type="int_array")
-     */
-    private $dimensions;
-
-    /**
      * @ORM\Column(type="string")
      */
     private $mime_type;
@@ -51,6 +44,15 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
      * @ORM\Column(type="integer")
      */
     private $filesize;
+
+    /**
+     * Value pair consisting of original image file dimensions.
+     *
+     * FIXME: Type int_array does not like NULLs.
+     *
+     * @ORM\Column(type="int_array")
+     */
+    private $dimensions = [];
 
     /**
      * Array of size names (small, medium, etc.)
@@ -73,7 +75,7 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
     public function __construct()
     {
         $this->sizes = static::DEFAULT_SIZES;
-        $this->created = new \DateTIme;
+        $this->created = new \DateTime;
     }
 
     public function getFilename() : ?string

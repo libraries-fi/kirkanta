@@ -51,29 +51,34 @@ class UpdatePictureMetadata extends Command
                 $result = $this->em->getRepository($class)->findBy([], ['id' => 'asc'], $BATCH_SIZE, $BATCH_SIZE * $ROUND++);
 
                 foreach ($result as $entity) {
-                    $basedir = sprintf('%s/%s', self::WEBROOT, $this->mappings->fromField($entity, 'file')->getUploadDestination());
-                    $filepath = sprintf('%s/%s', $basedir, $entity->getFilename());
+                    try {
+                        $basedir = sprintf('%s/%s', self::WEBROOT, $this->mappings->fromField($entity, 'file')->getUploadDestination());
+                        $filepath = sprintf('%s/%s', $basedir, $entity->getFilename());
 
-                    $file = new File($filepath);
+                        $file = new File($filepath);
 
-                    $entity->setMimeType($file->getMimeType());
-                    $entity->setFilesize($file->getSize());
-                    $entity->setDimensions($this->getImageSize($filepath));
-                    $entity->setSizes($class::DEFAULT_SIZES);
+                        $entity->setMimeType($file->getMimeType());
+                        $entity->setFilesize($file->getSize());
+                        $entity->setDimensions($this->getImageSize($filepath));
+                        $entity->setSizes($class::DEFAULT_SIZES);
 
-                    foreach ($entity->getSizes() as $size) {
-                        try {
-                            $file = new File("{$basedir}/{$size}/" . $entity->getFilename());
+                        foreach ($entity->getSizes() as $size) {
+                            try {
+                                $sizepath = sprintf('%s/%s/%s', dirname($basedir), $size, $entity->getFilename());
+                                $file = new File($sizepath);
 
-                            $entity->addMeta([
-                                $size => [
-                                    'dimensions' => $this->getImageSize($file->getRealPath()),
-                                    'filesize' => $file->getSize(),
-                                ]
-                            ]);
-                        } catch (FileNotFoundException $e) {
-                            // pass
+                                $entity->addMeta([
+                                    $size => [
+                                        'dimensions' => $this->getImageSize($file->getRealPath()),
+                                        'filesize' => $file->getSize(),
+                                    ]
+                                ]);
+                            } catch (FileNotFoundException $e) {
+                                // pass
+                            }
                         }
+                    } catch (FileNotFoundException $e) {
+                        // pass
                     }
                 }
 

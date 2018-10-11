@@ -48,8 +48,14 @@ class CreateConsortiumLogoEntities extends Command
 
         $new_upload_dir = sprintf('%s/%s', self::WEBROOT, $this->mappings->fromField(new ConsortiumLogo, 'file')->getUploadDestination());
 
-        $criteria = Criteria::create()->where(Criteria::expr()->neq('old_logo_filename', null));
-        $consortiums = $this->em->getRepository(Consortium::class)->matching($criteria);
+        // $criteria = Criteria::create()->where(Criteria::expr()->neq('old_logo_filename', null));
+        // $consortiums = $this->em->getRepository(Consortium::class)->matching($criteria);
+
+        $consortiums = $this->em->getRepository(Consortium::class)->createQueryBuilder('c')
+            ->andWhere('c.old_logo_filename IS NOT NULL')
+            ->andWhere('c.logo IS NULL')
+            ->getQuery()
+            ->getResult();
 
         foreach ($consortiums as $consortium) {
             /**
@@ -72,7 +78,7 @@ class CreateConsortiumLogoEntities extends Command
                      */
                     if ($size == 'medium') {
                         $original_filepath = sprintf('%s/%s/%s', dirname($new_dirname), 'original', $new_filename);
-                        copy($file->getRealPath(), $original_filepath);
+                        copy("{$new_dirname}/{$new_filename}", $original_filepath);
 
                         // $output->writeln("COPY: {$new_dirname}/{$new_filename} -> {$original_filepath}");
                     }
@@ -84,6 +90,7 @@ class CreateConsortiumLogoEntities extends Command
                     $this->em->persist($logo);
                 } catch (FileNotFoundException $e) {
                     // pass
+                    $output->writeln('MISSING: ' . $old_filepath);
                 }
             }
         }
