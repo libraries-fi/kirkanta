@@ -27,7 +27,6 @@ class ImageResizeSubscriber implements EventSubscriberInterface
     {
         return [
             VichEvents::POST_UPLOAD => 'postUpload',
-            Events::IMAGE_UPLOAD => 'onImageUpload',
         ];
     }
 
@@ -56,7 +55,7 @@ class ImageResizeSubscriber implements EventSubscriberInterface
                     }
 
                     list($width, $height) = explode('x', $this->sizes[$size]);
-                    $path = sprintf('%s/%s/%s', $basedir, $size, $filename);
+                    $path = sprintf('%s/%s/%s', dirname($basedir), $size, $filename);
 
                     $resize = $this->scaleSizeForImage($image, new Box($width, $height));
                     $image->resize($resize);
@@ -72,32 +71,6 @@ class ImageResizeSubscriber implements EventSubscriberInterface
             } catch (InvalidImageException $e) {
                 // Not a valid image file.
             }
-        }
-    }
-
-    public function onImageUpload(ImageUploadEvent $event) : void
-    {
-        $image = $event->getImage();
-        $file = $image->file;
-
-        try {
-
-            $image_data = $this->imagine->open(implode(DIRECTORY_SEPARATOR, [$event->getMapping()->getUploadDestination(), $image->filename]));
-
-            foreach (array_reverse($image->sizes) as $size) {
-                if (!isset($this->sizes[$size])) {
-                    throw new \DomainException(sprintf('Invalid size \'%s\' passed.', $size));
-                }
-
-                list($width, $height) = explode('x', $this->sizes[$size]);
-                $filepath = implode(DIRECTORY_SEPARATOR, [$event->getMapping()->getUploadDestination(), $size, $image->filename]);
-
-                $size_data = $this->scaleSizeForImage($image_data, new Box($width, $height));
-                $image_data->resize($size_data);
-                $image_data->save($filepath);
-            }
-        } catch (InvalidImageException $e) {
-            // Invalid image file.
         }
     }
 

@@ -3,11 +3,11 @@ vich_uploader:
     mappings:
         library_photo:
             uri_prefix: /files/photos
-            upload_destination: files/photos
+            upload_destination: files/photos/original
             namer: vich_uploader.namer_uniqid
         consortium_logo:
             uri_prefix: /files/logos
-            upload_destination: files/logos
+            upload_destination: files/logos/original
             namer: vich_uploader.namer_uniqid
 
     #mappings:
