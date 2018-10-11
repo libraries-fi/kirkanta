@@ -36,13 +36,14 @@ class SyncLegacyDatabase extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output) : void
     {
+        $this->currentDb->setSQLLogger(null);
+        $this->legacyDb->setSQLLogger(null);
+
         $this->cache = new \stdClass;
 
         // $this->syncConsortiums();
         // $this->syncLibraries();
-
         // $this->syncServices();
-
         // $this->syncStaff();
 
         $this->syncPeriods();
