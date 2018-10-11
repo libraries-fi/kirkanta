@@ -86,21 +86,19 @@ class CreateConsortiumLogoEntities extends Command
                         copy("{$new_dirname}/{$new_filename}", $original_filepath);
 
                         $output->writeln("COPY: {$new_dirname}/{$new_filename} -> {$original_filepath}");
+
+                        $logo = new ConsortiumLogo;
+                        $logo->setFilename($new_filename);
+                        $logo->setOriginalName(basename($old_filepath));
+
+                        $consortium->setLogo($logo);
+
+                        $this->em->persist($logo);
                     }
                 } catch (FileNotFoundException $e) {
                     // pass
                     $output->writeln('MISSING: ' . $old_filepath);
                 }
-            }
-
-            if (isset($new_filename)) {
-                $logo = new ConsortiumLogo;
-                $logo->setFilename($new_filename);
-                $logo->setOriginalName(basename($old_filepath));
-
-                $consortium->setLogo($logo);
-
-                $this->em->persist($logo);
             }
         }
 
