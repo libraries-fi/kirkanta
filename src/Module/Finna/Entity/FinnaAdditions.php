@@ -99,7 +99,7 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
         }
     }
 
-    public function getServicePoint() : LibraryInterface
+    public function getServicePoint() : ?LibraryInterface
     {
         if ($this->service_point) {
             return $this->service_point->getTargetEntity();
