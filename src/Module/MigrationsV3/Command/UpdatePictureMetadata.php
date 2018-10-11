@@ -57,6 +57,11 @@ class UpdatePictureMetadata extends Command
 
                         $file = new File($filepath);
 
+                        /**
+                         * No trace of original name so fallback.
+                         */
+                        $entity->setOriginalName($entity->getFilename());
+                        
                         $entity->setMimeType($file->getMimeType());
                         $entity->setFilesize($file->getSize());
                         $entity->setDimensions($this->getImageSize($filepath));
