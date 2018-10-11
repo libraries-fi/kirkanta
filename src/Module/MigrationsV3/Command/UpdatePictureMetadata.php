@@ -51,8 +51,6 @@ class UpdatePictureMetadata extends Command
                 $result = $this->em->getRepository($class)->findBy([], ['id' => 'asc'], $BATCH_SIZE, $BATCH_SIZE * $ROUND++);
 
                 foreach ($result as $entity) {
-                    $entity->setSizes($class::DEFAULT_SIZES);
-
                     $basedir = sprintf('%s/%s', self::WEBROOT, $this->mappings->fromField($entity, 'file')->getUploadDestination());
                     $filepath = sprintf('%s/%s', $basedir, $entity->getFilename());
 
@@ -61,6 +59,7 @@ class UpdatePictureMetadata extends Command
                     $entity->setMimeType($file->getMimeType());
                     $entity->setFilesize($file->getSize());
                     $entity->setDimensions($this->getImageSize($filepath));
+                    $entity->setSizes($class::DEFAULT_SIZES);
 
                     foreach ($entity->getSizes() as $size) {
                         try {
