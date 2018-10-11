@@ -202,6 +202,8 @@ class Table implements IteratorAggregate
 
     public function dragHandle(string $column) : self
     {
+        $this->columns[$column]->setSize(10);
+
         return $this->useAsTemplate($column)->transform($column, function() {
             return '
                 <a class="drag-handle" title="{{ \'Drag row\'|trans }}" data-drag-id="{{ row.id }}">
