@@ -4,6 +4,7 @@ namespace App\Form\EntityData;
 
 use App\Entity\ServiceInstanceData;
 use App\Form\I18n\EntityDataType;
+use App\Form\Type\RichtextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,11 +28,12 @@ class ServiceInstanceDataType extends EntityDataType
                 'required' => false,
                 'langcode' => $options['langcode'],
             ])
-            ->add('description', TextareaType::class, [
+            ->add('description', RichtextType::class, [
                 'required' => false,
                 'langcode' => $options['langcode'],
                 'attr' => [
-                    'rows' => 6
+                    'rows' => 6,
+                    'richtext' => true,
                 ]
             ])
             ->add('price', null, [
