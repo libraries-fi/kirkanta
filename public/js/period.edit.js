@@ -3,24 +3,24 @@
 
   /***** DEFINE FUNCTIONS *****/
 
-  var NAME_PLACEHOLDER = /__name__/g;
+  let NAME_PLACEHOLDER = /__name__/g;
 
   function open_description(event) {
-    var button = $(event.target);
+    let button = $(event.target);
     button.hide();
     button.siblings(".day-description-value").removeClass("hidden");
   }
 
   function insert_first_time(event) {
-    var target_id = event.currentTarget.dataset.target;
-    var container = $(target_id);
-    var proto = container[0].dataset.prototype.replace(NAME_PLACEHOLDER, container.children().length);
-    var item = $(proto);
+    let target_id = event.currentTarget.dataset.target;
+    let container = $(target_id);
+    let proto = container[0].dataset.prototype.replace(NAME_PLACEHOLDER, container.children().length);
+    let item = $(proto);
 
     item.appendTo(container);
 
     // container.closest(".hidden").removeClass("hidden");
-    var day_row = container.closest(".period-day-data");
+    let day_row = container.closest(".period-day-data");
     day_row.find(".period-day-data-times").removeClass("hidden");
     day_row.find(".period-day-closed").addClass("hidden");
 
@@ -29,11 +29,11 @@
   }
 
   function add_time_row(event) {
-    var container = $(event.target).closest("[data-prototype]");
-    var proto = container[0].dataset.prototype.replace(NAME_PLACEHOLDER, container.children().length);
-    var item = $(proto);
+    let container = $(event.target).closest("[data-prototype]");
+    let proto = container[0].dataset.prototype.replace(NAME_PLACEHOLDER, container.children().length);
+    let item = $(proto);
 
-    var previous = container.children().last().find("input[type=\"text\"]").last().val();
+    let previous = container.children().last().find("input[type=\"text\"]").last().val();
 
     item.find("input[type=\"text\"]").first().val(previous);
     item.find("input[type=\"checkbox\"]").prop("checked", true);
@@ -44,13 +44,13 @@
   }
 
   function delete_time_row(event) {
-    var row = $(event.currentTarget.dataset.target);
-    var container = row.parent();
+    let row = $(event.currentTarget.dataset.target);
+    let container = row.parent();
 
     row.remove();
 
     if (container.children().length == 0) {
-      var day_row = container.closest(".period-day-data");
+      let day_row = container.closest(".period-day-data");
       day_row.find(".period-day-data-times").addClass("hidden");
       day_row.find(".period-day-closed").removeClass("hidden");
     }
@@ -76,7 +76,7 @@
   }
 
   function change_day_count(container, template, field_count) {
-    var children = $(container).children();
+    let children = $(container).children();
 
     if (children.length > field_count) {
       children.slice(field_count).each(function(i, node) {
@@ -85,22 +85,38 @@
     }
 
     if (children.length < field_count) {
-      var collection = $(container);
-      for (var i = children.length + 1; i <= field_count; i++) {
-        var child = $(template.replace(NAME_PLACEHOLDER, i - 1));
+      let collection = $(container);
+      for (let i = children.length + 1; i <= field_count; i++) {
+        let child = $(template.replace(NAME_PLACEHOLDER, i - 1));
         collection.append(child);
         init_day_row(child);
       }
     }
   }
 
+  function update_day_names(day_fields, mode, first_date) {
+    let date = moment(first_date);
 
+    day_fields.find(".day-name").each(function(i, element) {
+      if (mode == MODE_WITH_DATES) {
+        // element.innerText = date.format("dddd D.M.");
+        $(element)
+          .empty()
+          .append($("<time/>").attr("datetime", date.format("Y-M-D")).text(date.format("dddd, D.M.")));
 
-  // return;
+        date.add(1, "days");
+      } else {
+        element.innerText = date.isoWeekday(i + 1).format("dddd");
 
+        if (i % 7 == 0) {
+          $(element).closest(".row").attr("data-label", "Week " + (i / 7 + 1));
+        }
+      }
+    });
+  }
 
-
-  /***** BEGIN INITIALIZATION *****/
+  const MODE_REGULAR = 1;
+  const MODE_WITH_DATES = 2;
 
   $("form.period_form").each(function(i, form) {
     init_day_row(form);
@@ -110,59 +126,46 @@
   $("[data-show]").on("click", show_element);
   $("[data-hide]").on("click", hide_element);
 
-  var days = $("[data-app=\"period-days\"]");
-  var slider = $("[data-app=\"period-slider\"]");
+  let days = $("[data-app=\"period-days\"]");
+  let slider = $("[data-app=\"period-slider\"]");
+  let date_pickers = $("[data-app=\"date-picker\"]");
 
-  // Really dirty hacks!
-  $("[data-app=\"date-picker\"]")
+  date_pickers
     .on("kirkantaDateChange", function() {
-      var inputs = $("[data-app=\"date-picker\"]");
-      var a = new Date(inputs[0].value);
-      var b = new Date(inputs[1].value);
-      var day_count = Math.min(moment(b).diff(a, "days") + 1);
+      let inputs = $("[data-app=\"date-picker\"]");
+      let a = new Date(inputs[0].value);
+      let b = new Date(inputs[1].value);
+      let day_count = Math.min(moment(b).diff(a, "days") + 1);
 
-      this.dataset.dayCount = day_count;
+      this.dataset.dayCount = day_count || 999;
       this.dataset.firstDate = moment(a).format("YYYY-MM-DD");
       this.dataset.lastDate = moment(b).format("YYYY-MM-DD");
     })
     .on("kirkantaDateChange", function() {
-      var day_count = parseInt(this.dataset.dayCount);
+      let day_count = parseInt(this.dataset.dayCount);
 
       if (day_count > 0) {
-        var container = days[0];
-        var template = container.dataset.prototype;
-        var field_count = Math.min(day_count, parseInt(slider.val()) * 7);
-
-        change_day_count(container, template, field_count);
-
         slider.prop("disabled", day_count < 14);
         slider.find("option[value=3]").prop("disabled", day_count < 21);
         slider.find("option[value=4]").prop("disabled", day_count < 28);
         slider.find("option[value=5]").prop("disabled", day_count < 35);
       }
-    })
-    .on("kirkantaDateChange", function() {
-      var day_count = parseInt(this.dataset.dayCount);
-      var date = moment(this.dataset.firstDate);
-      var range = parseInt(slider.val()) * 7;
 
-      days.find(".day-name").each(function(i, element) {
-        if (day_count < 7) {
-          // element.innerText = date.format("dddd D.M.");
-          $(element)
-            .empty()
-            .append($("<time/>").attr("datetime", date.format("Y-M-D")).text(date.format("dddd, D.M.")));
+      slider.trigger("change");
+    });
 
-          date.add(1, "days");
-        } else {
-          element.innerText = date.isoWeekday(i + 1).format("dddd");
+    slider.on("change", (event) => {
+      let day_count = date_pickers.get(0).dataset.dayCount;
+      let first_date = date_pickers.get(0).dataset.firstDate;
 
-          if (i % 7 == 0) {
-            $(element).closest(".row").attr("data-label", "Week " + (i / 7 + 1));
-          }
-        }
-      });
-    })
-    .first()
-    .trigger("kirkantaDateChange");
+      let container = days[0];
+      let template = container.dataset.prototype;
+      let field_count = Math.min(day_count, parseInt(slider.val()) * 7);
+      let mode = field_count < 7 ? MODE_WITH_DATES : MODE_REGULAR;
+
+      change_day_count(container, template, field_count);
+      update_day_names(days, mode, first_date);
+    });
+
+    date_pickers.first().trigger("kirkantaDateChange");
 }(jQuery));
