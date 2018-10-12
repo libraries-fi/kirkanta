@@ -2,8 +2,9 @@
   {{ form_start(form) }}
   {{ block("form_header") }}
 
+  {% do form.is_legacy_format.setRendered(true) %}
+
   {% if period is defined %}
-    {% do form.is_legacy_format.setRendered(true) %}
     {% if period.section != 'default' %}
       <ul class="alert alert-danger">
         <li>{% trans %}This period is in the old format and cannot be edited anymore.{% endtrans %}</li>
