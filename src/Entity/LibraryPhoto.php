@@ -39,7 +39,7 @@ class LibraryPhoto extends Picture implements Translatable
     private $translations;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="pictures")
+     * @ORM\ManyToOne(targetEntity="Facility", inversedBy="pictures")
      */
     private $parent;
 
