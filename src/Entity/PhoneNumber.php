@@ -13,7 +13,7 @@ class PhoneNumber extends ContactInfo
     use PhoneNumberTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="phone_numbers")
+     * @ORM\ManyToOne(targetEntity="Facility", inversedBy="phone_numbers")
      */
     protected $parent;
 

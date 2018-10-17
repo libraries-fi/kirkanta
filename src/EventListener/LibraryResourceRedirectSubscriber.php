@@ -35,9 +35,15 @@ class LibraryResourceRedirectSubscriber implements EventSubscriberInterface
 
         if ($request->isMethod('POST') && $response->getStatusCode() == 302 && preg_match('/^entity\.(library|service_point)\.(\w+)\.(\w+)$/', $route_name, $match)) {
             $target_route = "entity.{$match[1]}.{$match[2]}";
+            $entity_id = $request->attributes->get($match[1]);
+
+            if (is_object($entity_id)) {
+                $entity_id = $entity_id->getId();
+            }
+
 
             $url = $this->urls->generate($target_route, [
-                $match[1] => $request->attributes->get($match[1])->getId()
+                $match[1] => $entity_id
             ]);
 
             $response->setTargetUrl($url);
