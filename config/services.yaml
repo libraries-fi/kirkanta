@@ -209,8 +209,11 @@ services:
         arguments: ['@kirkanta.normalizer.entity']
         tags:
             - { name: serializer.normalizer, priority: -998}
-
     App\Module\ApiCache\Serializer\Normalizer\PersonNormalizer:
+        arguments: ['@kirkanta.normalizer.entity']
+        tags:
+            - { name: serializer.normalizer, priority: -998}
+    App\Module\ApiCache\Serializer\Normalizer\ConsortiumNormalizer:
         arguments: ['@kirkanta.normalizer.entity']
         tags:
             - { name: serializer.normalizer, priority: -998}

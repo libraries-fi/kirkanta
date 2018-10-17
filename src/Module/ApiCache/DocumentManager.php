@@ -44,6 +44,10 @@ class DocumentManager
             $entity_class = $this->types->getEntityClass($type_id);
             $dql = "UPDATE {$entity_class} e SET e.cached_document = :document WHERE e.id = :id";
 
+            // header('Content-Type: application/json');
+            // print_r($document);
+            // exit;
+
             $query = $this->types->getEntityManager()->createQuery($dql);
             $query->execute([
                 'document' => $document,
