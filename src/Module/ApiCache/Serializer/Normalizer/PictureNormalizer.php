@@ -4,14 +4,19 @@ namespace App\Module\ApiCache\Serializer\Normalizer;
 
 use App\Entity\Picture;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Vich\UploaderBundle\Mapping\PropertyMappingFactory;
 
 class PictureNormalizer implements NormalizerInterface
 {
     private $inner;
+    private $mappings;
 
-    public function __construct(NormalizerInterface $inner)
+    const BASE_URL_PREFIX = 'https://kirkanta.kirjastot.fi';
+
+    public function __construct(NormalizerInterface $inner, PropertyMappingFactory $mappings)
     {
         $this->inner = $inner;
+        $this->mappings = $mappings;
     }
 
     public function supportsNormalization($data, $format = null)
@@ -23,24 +28,18 @@ class PictureNormalizer implements NormalizerInterface
     {
         $values = $this->inner->normalize($object, $format, $context);
         $meta = $object->getMeta();
+        $basedir = $this->mappings->fromObject($object)[0]->getUriPrefix();
 
         foreach ($object->getSizes() as $size) {
-            $values['files'][$size] = $this->toUrl($object->getFilename(), $size);
+            // NOTE: $basedir starts with a slash, hence BASE_URL_PREFIX is not in the array too.
+            $values['files'][$size]['url'] = self::BASE_URL_PREFIX . implode('/', [$basedir, $size, $object->getFilename()]);
 
-            if (isset($meta['resolution'][$size])) {
-                $values['sizes'][$size] = $meta['resolution'][$size];
+            if (isset($meta[$size])) {
+                $values['files'][$size]['resolution'] = implode('x', $meta[$size]['dimensions']);
+                $values['files'][$size]['size'] = $meta[$size]['filesize'];
             }
         }
 
         return $values;
-    }
-
-    private function toUrl(string $filename, string $size) : string
-    {
-        $protocol = 'https://';
-        $domain = 'kirkanta.kirjastot.fi';
-        $path = implode('/', ['/files/images', $size, $filename]);
-
-        return $protocol . $domain . $path;
     }
 }
