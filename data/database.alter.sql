@@ -1918,3 +1918,9 @@ ALTER TABLE pictures ADD COLUMN filesize int;
 -- COMMIT PLACEHOLDER --
 
 UPDATE consortiums SET old_logo_filename = NULL WHERE old_logo_filename = '';
+
+ALTER TABLE departments ALTER COLUMN type DROP NOT NULL;
+
+
+
+-- COMMIT PLACEHOLDER --
