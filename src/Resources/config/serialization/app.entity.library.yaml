@@ -39,6 +39,8 @@ App\Entity\LibraryData:
       groups: ['default']
     email:
       groups: ['default']
+    phone:
+      groups: ['default']
     homepage:
       groups: ['default']
     slogan:
