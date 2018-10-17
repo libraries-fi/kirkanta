@@ -3,20 +3,28 @@
 {% form_theme form _self %}
 
 {% set entity = attribute(_context, entity_type) %}
+{% set cancel_button_url = path("entity." ~ entity_type ~ ".edit", {(entity_type): entity.id}) %}
 
 {% block title_text %}
   {% trans with {"%type%": type_label|trans|lower, "%id%": entity.id} %}Delete %type% #%id%{% endtrans %}
 {% endblock %}
 
 {% block content %}
-  <div class="form-section">
-    <p>{% trans %}Do you really wish to delete this record?{% endtrans %}</p>
+  <div class="form-section pb-3">
+    <p class="mt-0">{% trans %}Do you really wish to delete this record?{% endtrans %}</p>
     <p>{% trans %}This action cannot be undone.{% endtrans %}</p>
-    {{ form(form) }}
+
+    {{ form_start(form) }}
+    {{ form_widget(form.submit, {attr: {class: "btn-danger"}}) }}
+
+    {% block cancel_button %}
+      <a href="{{ cancel_button_url }}" class="btn btn-secondary text-body ml-3">{% trans %}Cancel{% endtrans %}</a>
+    {% endblock %}
+    {{ form_end(form) }}
   </div>
 {% endblock %}
 
-{% block _form_submit_widget %}
+{% block _foasdrm_submit_widget %}
   {# These variables won't inherit from template scope #}
   {% set entity_type = app.request.get('entity_type') %}
   {% set entity_id = app.request.get(entity_type) %}
@@ -27,5 +35,9 @@
     {% trans %}Delete{% endtrans %}
   </button>
 
-  <a href="{{ path('entity.%s.edit'|format(entity_type), {(entity_type): entity_id}) }}" class="btn btn-secondary text-body ml-3">{% trans %}Cancel{% endtrans %}</a>
+  {# Cannot define this at the root of the template as context is cleared. #}
+  {% set cancel_button_url = path("entity." ~ entity_type ~ ".edit", {(entity_type): entity_id}) %}
+
+  {{ block("cancel_button") }}
+
 {% endblock %}

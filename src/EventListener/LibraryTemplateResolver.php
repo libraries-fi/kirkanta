@@ -12,6 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class LibraryTemplateResolver implements EventSubscriberInterface
 {
-    private $types;
+    private $urlMatcher;
     private $loader;
     private $libraryResources;
 
@@ -31,9 +32,9 @@ class LibraryTemplateResolver implements EventSubscriberInterface
         ];
     }
 
-    public function __construct(EntityTypeManager $types, Twig $twig, LibraryResources $resources)
+    public function __construct(UrlMatcherInterface $url_matcher, Twig $twig, LibraryResources $resources)
     {
-        $this->types = $types;
+        $this->urlMatcher = $url_matcher;
         $this->loader = $twig->getLoader();
         $this->libraryResources = $resources;
     }
@@ -41,9 +42,16 @@ class LibraryTemplateResolver implements EventSubscriberInterface
     public function preView(GetResponseForControllerResultEvent $event) : void
     {
         $attributes = $event->getRequest()->attributes;
+        $route_name = $attributes->get('_route');
 
         if (!$attributes->get('_template')) {
-            $route_name = $attributes->get('_route');
+            if (!$route_name) {
+                // Probably processing a forwarded request.
+                
+                $match = $this->urlMatcher->match($event->getRequest()->getPathInfo());
+                $route_name = $match['_route'];
+            }
+
             list($prefix, $entity_type, $resource, $action) = explode('.', $route_name . '...');
 
             if (in_array($entity_type, ['library', 'service_point'])) {

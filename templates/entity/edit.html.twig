@@ -6,6 +6,10 @@
 
 {% set entity_is_trashed = entity.deleted|default(false) %}
 
+{% if not entity_is_trashed %}
+  {% set entity_delete_url = path("entity." ~ entity_type ~ ".delete", {(entity_type): entity.id}) %}
+{% endif %}
+
 {% block title_text %}
   {% if entity is defined %}
     {% trans with {"%type%": type_label|trans|lower, "%id%": entity.id} %}Edit %type% #%id%{% endtrans %}
@@ -53,7 +57,9 @@
     <div class="hud-actions">
       {% if entity is defined and entity_type and entity.id %}
         {% if not entity_is_trashed %}
-          <a href="{{ path('entity.%s.delete'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link text-danger">{% trans %}Delete{% endtrans %}</a>
+          {% block delete_button %}
+            <a href="{{ entity_delete_url }}" class="btn btn-link text-danger">{% trans %}Delete{% endtrans %}</a>
+          {% endblock %}
         {% endif %}
       {% endif %}
 

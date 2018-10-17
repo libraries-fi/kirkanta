@@ -12,6 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -21,6 +22,7 @@ class EntityTemplateResolver implements EventSubscriberInterface
 {
     private $types;
     private $loader;
+    private $urlMatcher;
 
     public static function getSubscribedEvents()
     {
@@ -29,18 +31,26 @@ class EntityTemplateResolver implements EventSubscriberInterface
         ];
     }
 
-    public function __construct(EntityTypeManager $types, Twig $twig)
+    public function __construct(EntityTypeManager $types, Twig $twig, UrlMatcherInterface $url_matcher)
     {
         $this->types = $types;
         $this->loader = $twig->getLoader();
+        $this->urlMatcher = $url_matcher;
     }
 
     public function preView(GetResponseForControllerResultEvent $event) : void
     {
         $attributes = $event->getRequest()->attributes;
+        $route_name = $attributes->get('_route');
 
         if (!$attributes->get('_template')) {
-            $route_name = $attributes->get('_route');
+            if (!$route_name) {
+                // Probably processing a forwarded request.
+                
+                $match = $this->urlMatcher->match($event->getRequest()->getPathInfo());
+                $route_name = $match['_route'];
+            }
+
             list($prefix, $entity_type, $action) = explode('.', $route_name . '..');
 
             if ($prefix == 'entity' && $action) {

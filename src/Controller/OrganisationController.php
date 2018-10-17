@@ -252,15 +252,26 @@ class OrganisationController extends Controller
             'type_label' => $this->types->getTypeLabel($type_id),
             'entity_type' => $type_id,
             $type_id => $entity,
+
+            'parent_entity_type' => $entity_type,
+            'parent_entity' => $library,
+            'resource_type' => $resource,
         ];
     }
 
     /**
-     * @Route("/library/{library}/{resource}/{resource_id}/delete", name="entity.library.delete_resource", requirements={"library": "\d+", "resource": "[a-z]\w+", "resource_id": "\d+"}, defaults={"type": "organisation"})
+     * @ParamConverter("library", converter="entity_from_type_and_id")
      */
-    public function deleteResource(Request $request, int $id, string $resource, int $resource_id)
+    public function deleteResource(Request $request, $library, string $entity_type, string $resource, int $resource_id)
     {
-        exit('delete resource');
+        $type_id = $this->resolveResourceTypeId($entity_type, $resource);
+
+        $response = $this->forward(EntityController::class . '::delete', [
+            'entity_type' => $type_id,
+            $type_id => $resource_id,
+        ]);
+
+        return $response;
     }
 
     /**

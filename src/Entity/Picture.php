@@ -83,7 +83,11 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
         return $this->filename;
     }
 
-    public function setFilename(string $filename) : void
+    /**
+     * NOTE: $filename has to be nullable because VichUploader sets a NULL filename when entity's
+     * being deleted.
+     */
+    public function setFilename(?string $filename) : void
     {
         $this->filename = $filename;
     }
@@ -93,7 +97,11 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
         return $this->original_name;
     }
 
-    public function setOriginalName(string $name) : void
+    /**
+     * NOTE: $filename has to be nullable because VichUploader sets a NULL filename when entity's
+     * being deleted.
+     */
+    public function setOriginalName(?string $name) : void
     {
         $this->original_name = $name;
     }
@@ -113,7 +121,11 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
         return $this->mime_type;
     }
 
-    public function setMimeType(string $type) : void
+    /**
+     * NOTE: $filename has to be nullable because VichUploader sets a NULL filename when entity's
+     * being deleted.
+     */
+    public function setMimeType(?string $type) : void
     {
         $this->mime_type = $type;
     }
@@ -123,12 +135,20 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
         return $this->filesize;
     }
 
-    public function setFilesize(int $bytes) : void
+    /**
+     * NOTE: $filename has to be nullable because VichUploader sets a NULL filename when entity's
+     * being deleted.
+     */
+    public function setFilesize(?int $bytes) : void
     {
         $this->filesize = $bytes;
     }
 
-    public function setDimensions(array $dimensions) : void
+    /**
+     * NOTE: $filename has to be nullable because VichUploader sets a NULL filename when entity's
+     * being deleted.
+     */
+    public function setDimensions(?array $dimensions) : void
     {
         $this->dimensions = $dimensions;
     }

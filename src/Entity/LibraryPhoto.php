@@ -107,4 +107,9 @@ class LibraryPhoto extends Picture implements Translatable
     {
         $this->year = $year;
     }
+
+    public function getLibrary() : LibraryInterface
+    {
+        return $this->getParent();
+    }
 }

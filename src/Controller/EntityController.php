@@ -225,6 +225,10 @@ class EntityController extends Controller
             }
         }
 
+        return [
+            'form' => $form->createView()
+        ];
+
         $template = $this->resolveTemplate('delete', $entity_type);
 
         return $this->render($template, [

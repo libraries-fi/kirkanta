@@ -1,0 +1,7 @@
+{% extends "entity/delete.html.twig" %}
+
+{% block cancel_button %}
+  {# Easiest way to do this due to operating inside a forwarded request with a lack of attributes. #}
+  {% set cancel_button_url = app.request.pathInfo|slice(0, -7) ~ "/edit" %}
+  {{ parent() }}
+{% endblock %}

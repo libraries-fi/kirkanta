@@ -37,29 +37,45 @@ class InjectEntityParameters implements EventSubscriberInterface
     {
         $attributes = $event->getRequest()->attributes;
         $route_name = $attributes->get('_route');
-        list($prefix, $entity_type, $resource, $action) = explode('.', $route_name . '...');
 
-        if ($prefix == 'entity') {
-            $values = $event->getControllerResult();
+        if ($route_name) {
+            list($prefix, $entity_type, $resource, $action) = explode('.', $route_name . '...');
 
-            if ($type = $this->libraryResources[$resource]) {
-                $entity_type = $type;
-            }
+            if ($prefix == 'entity') {
+                $values = $event->getControllerResult();
 
-            if (!$action) {
-                $action = $resource ?: 'collection';
-            }
-
-            if (empty($values['entity_type'])) {
-                $values['type_label'] = $this->types->getTypeLabel($entity_type, $action == 'collection');
-                $values['entity_type'] = $entity_type;
-
-                if ($entity = $attributes->get($entity_type)) {
-                    $values[$entity_type] = $entity;
+                if ($type = $this->libraryResources[$resource]) {
+                    $entity_type = $type;
                 }
 
-                $event->setControllerResult($values);
+                if (!$action) {
+                    $action = $resource ?: 'collection';
+                }
+
+                if (empty($values['entity_type'])) {
+                    $values['type_label'] = $this->types->getTypeLabel($entity_type, $action == 'collection');
+                    $values['entity_type'] = $entity_type;
+
+                    if ($entity = $attributes->get($entity_type)) {
+                        $values[$entity_type] = $entity;
+                    }
+
+                    $event->setControllerResult($values);
+                }
             }
+        } elseif ($entity_type = $attributes->get('entity_type')) {
+            // Probably processing a forwarded request.
+            
+            $action = substr(strrchr($attributes->get('_controller'), '::'), 1);
+            $values = $event->getControllerResult();
+            $values['entity_type'] = $entity_type;
+            $values['type_label'] = $this->types->getTypeLabel($entity_type, $action == 'collection');
+
+            if ($entity = $attributes->get('entity')) {
+                $values[$entity_type] = $entity;
+            }
+
+            $event->setControllerResult($values);
         }
     }
 }

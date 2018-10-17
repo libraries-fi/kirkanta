@@ -76,7 +76,7 @@ class LibraryRouteLoader extends Loader
 
                 $delete_resource = new Route("{$base_path}/{$resource}/{resource_id}/delete", $defaults + [
                     'resource' => $resource,
-                    '_controller' => sprintf('%s:editResource', OrganisationController::class)
+                    '_controller' => sprintf('%s:deleteResource', OrganisationController::class)
                 ], $requirements + [
                     'resource_id' => '\d+'
                 ]);

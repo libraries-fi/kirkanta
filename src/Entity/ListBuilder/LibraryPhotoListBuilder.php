@@ -38,7 +38,7 @@ class LibraryPhotoListBuilder extends EntityListBuilder
             })
             ->transform('name', function() {
                 return '
-                    <a href="{{ path("entity.library.edit_resource", {library: row.library.id, "resource": "photos", "resource_id": row.id}) }}">{{ row.name }}</a>
+                    <a href="{{ path("entity.library.pictures.edit", {library: row.library.id, "resource": "photos", "resource_id": row.id}) }}">{{ row.name }}</a>
                     <p>{{ row.description }}</p>
                 ';
             })
