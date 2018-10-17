@@ -6,6 +6,8 @@ use App\Entity\Library;
 use App\Module\Schedules\Exception\LegacyPeriodException;
 use App\Module\Schedules\ScheduleBuilder;
 use App\Module\Schedules\ScheduleManager;
+use DateInterval;
+use DatePeriod;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -52,11 +54,23 @@ class BuildSchedules extends Command
                 ->getQuery()
                 ->getResult();
 
+            /**
+             * Iterate range in slices to avoid issues with potential LEGACY PERIODS.
+             * If processed range contains a legacy period, schedules cannot be generated.
+             */
             foreach ($result as $library) {
-                try {
-                    $this->schedules->updateSchedules($library, new DateTime('Monday this week'), new DateTime('Sunday +12 months'));
-                } catch (LegacyPeriodException $e) {
-                    // pass
+                $begin = new DateTime('Monday this week');
+                $end = new DateTime('Sunday +12 months');
+                $interval = new DateInterval('P1M');
+                $iterator = new DatePeriod($begin, $interval, $end);
+
+                foreach ($iterator as $end) {
+                    try {
+                        $this->schedules->updateSchedules($library, $begin, $end);
+                        $begin = $end;
+                    } catch (LegacyPeriodException $e) {
+                        // pass
+                    }
                 }
             }
 
