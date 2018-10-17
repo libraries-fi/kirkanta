@@ -8,6 +8,7 @@ use App\Entity\Feature\StateAwareness;
 use App\Entity\Feature\Translatable;
 use App\Entity\Address;
 use App\Entity\City;
+use App\Entity\ContactInfo;
 use App\Entity\Facility;
 use App\Entity\Library;
 use App\Entity\Period;
@@ -29,6 +30,8 @@ class EntityNormalizer extends ObjectNormalizer
 
         $normalizer->setOverride(Address::class, 'city', [$normalizer, 'cityName']);
         $normalizer->setOverride(Address::class, 'coordinates', [__CLASS__, 'splitCoordinates']);
+
+        $normalizer->setOverride(ContactInfo::class, 'department', [__class__, 'entityId']);
 
         $normalizer->setOverride(City::class, 'consortium', [__CLASS__, 'entityId']);
         $normalizer->setOverride(City::class, 'region', [__CLASS__, 'entityId']);

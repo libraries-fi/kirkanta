@@ -1,5 +1,7 @@
 App\Entity\ContactInfo:
   attributes:
+    department:
+      groups: ['default', 'index']
     translations:
       groups: ['default', 'index']
 
