@@ -3,6 +3,7 @@
 namespace App\Module\Schedules\Command;
 
 use App\Entity\Library;
+use App\Module\Schedules\Exception\LegacyPeriodException;
 use App\Module\Schedules\ScheduleBuilder;
 use App\Module\Schedules\ScheduleManager;
 use DateTime;
@@ -52,7 +53,11 @@ class BuildSchedules extends Command
                 ->getResult();
 
             foreach ($result as $library) {
-                $this->schedules->updateSchedules($library, new DateTime('Monday this week'), new DateTime('Sunday +12 months'));
+                try {
+                    $this->schedules->updateSchedules($library, new DateTime('Monday this week'), new DateTime('Sunday +12 months'));
+                } catch (LegacyPeriodException $e) {
+                    // pass
+                }
             }
 
             $output->writeln('Progress: ' . ($BATCH_SIZE * $ROUND));
