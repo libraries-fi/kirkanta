@@ -222,9 +222,6 @@ services:
         tags:
             - { name: serializer.normalizer, priority: -998 }
 
-    app.normalizer.odm_collection:
-        alias: App\Serializer\Normalizer\OdmCollectionNormalizer
-
 
 
 
@@ -255,10 +252,3 @@ services:
     # Not provided by the bundle itself...
     Vich\UploaderBundle\Metadata\MetadataReader:
         alias: vich_uploader.metadata_reader
-
-    dunglas_doctrine_json_odm.serializer:
-        class: Symfony\Component\Serializer\Serializer
-        arguments:
-          - ['@app.normalizer.odm_collection', '@dunglas_doctrine_json_odm.normalizer.object']
-          - ['@serializer.encoder.json']
-        public: true

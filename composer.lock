@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b71098be6325d3436c81f360f87757e2",
-    "content-hash": "c21fd51f1ae51eb5572cdb7d8c9f3666",
+    "hash": "c18f0f050128090b9e09b86dfcee8d81",
+    "content-hash": "41a2bbe8771b79482c0ed91d8ec17192",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1214,71 +1214,6 @@
                 "reflection"
             ],
             "time": "2018-06-14 14:45:07"
-        },
-        {
-            "name": "dunglas/doctrine-json-odm",
-            "version": "0.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dunglas/doctrine-json-odm.git",
-                "reference": "91f3629b65f3b7bb07d04e26ac8f69dfd9909da0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dunglas/doctrine-json-odm/zipball/91f3629b65f3b7bb07d04e26ac8f69dfd9909da0",
-                "reference": "91f3629b65f3b7bb07d04e26ac8f69dfd9909da0",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/orm": "^2.5",
-                "php": ">=5.5.9",
-                "symfony/property-access": "^2.8 || ^3.0 || ^4.0",
-                "symfony/property-info": "^2.8 || ^3.0 || ^4.0",
-                "symfony/serializer": "^2.8 || ^3.0 || ^4.0"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "^1.6",
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0",
-                "symfony/finder": "^2.8 || ^3.0 || ^4.0",
-                "symfony/framework-bundle": "^2.8 || ^3.0 || ^4.0"
-            },
-            "suggest": {
-                "symfony/framework-bundle": "To use the provided bundle."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Dunglas\\DoctrineJsonOdm\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kévin Dunglas",
-                    "email": "dunglas@gmail.com",
-                    "homepage": "https://dunglas.fr"
-                }
-            ],
-            "description": "An object document mapper for Doctrine ORM using JSON types of modern RDBMS.",
-            "homepage": "https://dunglas.fr",
-            "keywords": [
-                "database",
-                "json",
-                "mysql",
-                "odm",
-                "orm",
-                "postgresql",
-                "rdbms"
-            ],
-            "time": "2018-08-23 18:52:18"
         },
         {
             "name": "egulias/email-validator",
@@ -3776,7 +3711,7 @@
         },
         {
             "name": "symfony/inflector",
-            "version": "v4.1.4",
+            "version": "v4.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/inflector.git",
@@ -4409,16 +4344,16 @@
         },
         {
             "name": "symfony/property-access",
-            "version": "v4.1.4",
+            "version": "v4.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-access.git",
-                "reference": "ae8561ba08af38e12dc5e21582ddb4baf66719ca"
+                "reference": "ae5620fb79729bc8b5dd83b75507cbcae24f83ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/property-access/zipball/ae8561ba08af38e12dc5e21582ddb4baf66719ca",
-                "reference": "ae8561ba08af38e12dc5e21582ddb4baf66719ca",
+                "url": "https://api.github.com/repos/symfony/property-access/zipball/ae5620fb79729bc8b5dd83b75507cbcae24f83ee",
+                "reference": "ae5620fb79729bc8b5dd83b75507cbcae24f83ee",
                 "shasum": ""
             },
             "require": {
@@ -4472,11 +4407,11 @@
                 "property path",
                 "reflection"
             ],
-            "time": "2018-08-24 10:22:26"
+            "time": "2018-10-02 12:40:59"
         },
         {
             "name": "symfony/property-info",
-            "version": "v4.1.4",
+            "version": "v4.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-info.git",
@@ -4786,16 +4721,16 @@
         },
         {
             "name": "symfony/serializer",
-            "version": "v4.1.4",
+            "version": "v4.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
-                "reference": "2f134b6cad1cefa0613a4339b08e480124914c85"
+                "reference": "2704442b2b85429b95659fdce1696cb8f009385f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/serializer/zipball/2f134b6cad1cefa0613a4339b08e480124914c85",
-                "reference": "2f134b6cad1cefa0613a4339b08e480124914c85",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/2704442b2b85429b95659fdce1696cb8f009385f",
+                "reference": "2704442b2b85429b95659fdce1696cb8f009385f",
                 "shasum": ""
             },
             "require": {
@@ -4862,7 +4797,7 @@
             ],
             "description": "Symfony Serializer Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26 09:10:45"
+            "time": "2018-10-02 12:40:59"
         },
         {
             "name": "symfony/serializer-pack",

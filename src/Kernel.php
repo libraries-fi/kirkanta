@@ -59,18 +59,4 @@ class Kernel extends BaseKernel
         }
         $routes->import($confDir.'/routes'.self::CONFIG_EXTS, '/', 'glob');
     }
-
-    public function boot() : void
-    {
-        parent::boot();
-
-        /*
-         * Set compiler context in order to enable filtering object properties using
-         * standard YAML-based configuration.
-         */
-        $jsonType = Type::getType('json_document');
-        $jsonType->setSerializationContext([
-            'groups' => ['default']
-        ]);
-    }
 }
