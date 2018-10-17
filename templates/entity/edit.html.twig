@@ -6,7 +6,7 @@
 
 {% set entity_is_trashed = entity.deleted|default(false) %}
 
-{% if not entity_is_trashed %}
+{% if entity is defined and not entity_is_trashed %}
   {% set entity_delete_url = path("entity." ~ entity_type ~ ".delete", {(entity_type): entity.id}) %}
 {% endif %}
 
