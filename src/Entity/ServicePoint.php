@@ -19,15 +19,11 @@ class ServicePoint extends Facility implements LibraryInterface
      */
     protected $periods;
 
-    /**
-     * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     */
-    protected $pictures;
-
     public function __construct()
     {
+        parent::__construct();
+
         $this->accessibility = new ArrayCollection;
         $this->periods = new ArrayCollection;
-        $this->pictures = new ArrayCollection;
     }
 }

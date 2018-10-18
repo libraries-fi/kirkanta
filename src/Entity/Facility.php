@@ -33,6 +33,12 @@ abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAw
     use Feature\TranslatableTrait;
 
     /**
+     * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
+     */
+    protected $pictures;
+
+    /**
      * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"weight": "ASC"})
      */
@@ -61,7 +67,8 @@ abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAw
         $this->links = new ArrayCollection;
         $this->email_addresses = new ArrayCollection;
         $this->phone_numbers = new ArrayCollection;
-        
+        $this->pictures = new ArrayCollection;
+
         $this->translations = new ArrayCollection;
     }
 }

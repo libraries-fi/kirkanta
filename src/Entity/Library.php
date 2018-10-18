@@ -14,12 +14,6 @@ class Library extends Facility implements LibraryInterface
     use LibraryTrait;
 
     /**
-     * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
-     */
-    protected $pictures;
-
-    /**
      * @ORM\OneToMany(targetEntity="Person", mappedBy="library", cascade={"persist", "remove"})
      */
     protected $persons;
@@ -48,6 +42,7 @@ class Library extends Facility implements LibraryInterface
     public function __construct()
     {
         parent::__construct();
+        
         $this->services = new ArrayCollection;
         $this->departments = new ArrayCollection;
         $this->persons = new ArrayCollection;
@@ -55,7 +50,6 @@ class Library extends Facility implements LibraryInterface
         $this->accessibility = new ArrayCollection;
         $this->mobile_stops = new ArrayCollection;
         $this->periods = new ArrayCollection;
-        $this->pictures = new ArrayCollection;
     }
 
     public function getDepartments() : Collection
