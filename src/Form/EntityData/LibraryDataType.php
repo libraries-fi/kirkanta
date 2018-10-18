@@ -76,6 +76,7 @@ class LibraryDataType extends EntityDataType
                 // var_dump($repo);
                 // exit('ok');
                 return $repo->createQueryBuilder('e')
+                    ->addSelect('d')
                     ->join('e.translations', 'd', 'WITH', 'd.langcode = :langcode')
                     ->andWhere('e.parent = :library')
                     ->orderBy('d.name')
