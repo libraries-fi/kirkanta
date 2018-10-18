@@ -1926,7 +1926,16 @@ ALTER TABLE departments ALTER COLUMN type DROP NOT NULL;
 -- COMMIT PLACEHOLDER --
 
 
+
+
 ALTER TABLE organisations RENAME COLUMN cached_document TO api_document;
 ALTER TABLE consortiums RENAME COLUMN cached_document TO api_document;
 ALTER TABLE services RENAME COLUMN cached_document TO api_document;
 ALTER TABLE finna_additions RENAME COLUMN cached_document TO api_document;
+
+ALTER TABLE organisations ADD COLUMN api_keywords tsvector;
+
+
+
+
+-- COMMIT PLACEHOLDER --
