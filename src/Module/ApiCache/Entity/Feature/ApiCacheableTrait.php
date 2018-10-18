@@ -47,11 +47,17 @@ trait ApiCacheableTrait
             }
 
             if ($data) {
-                $values[] = mb_strtolower($data);
+                if (is_array($data)) {
+                    // Handle translated fields.
+                    $values = array_merge($values, array_map('mb_strtolower', array_values($data)));
+                } else {
+                    $values[] = mb_strtolower($data);
+                }
             }
         }
 
-        return array_unique($values);
+        // NOTE: Don't remove duplicates as word instance count increases document importance.
+        return $values;
     }
 
 
