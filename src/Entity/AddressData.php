@@ -56,7 +56,7 @@ class AddressData extends EntityDataBase
         return $this->info;
     }
 
-    public function setInfo(string $info) : void
+    public function setInfo(?string $info) : void
     {
         $this->info = $info;
     }

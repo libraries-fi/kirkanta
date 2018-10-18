@@ -116,8 +116,8 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
-    "opensoft/doctrine-postgres-types": {
-        "version": "1.3.1"
+    "opsway/doctrine-dbal-postgresql": {
+        "version": "v0.8.1"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"

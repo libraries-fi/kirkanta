@@ -90,6 +90,16 @@ trait LibraryTrait
      */
     private $consortium;
 
+    /**
+     * NOTE: Avoid persisting this value without an explicit DQL query because as of now we can't
+     * define the parser mode used by to_tsvector in this column definition...
+     *
+     * ALWAYS use 'simple' mode with DQL.
+     *
+     * @ORM\Column(type="tsvector")
+     */
+    private $api_keywords;
+
     public function __construct()
     {
         parent::__construct();
@@ -368,5 +378,19 @@ trait LibraryTrait
     public function setCustomData(array $entries) : void
     {
         $this->custom_data = $entries ?: null;
+    }
+
+    public function getApiKeywords() : array
+    {
+        $document = $this->getApiDocument();
+        $k1 = self::extractApiKeywords($document, ['name', 'fi'], ['shortName', 'fi'], ['slug', 'fi'], ['address', 'city', 'fi'], ['address', 'area', 'fi'], ['address', 'zipcode']);
+        $k2 = self::extractApiKeywordsArray($document['services'], ['name', 'fi'], ['standardName', 'fi']);
+
+        $keywords = array_merge($k1, $k2);
+
+        return $keywords;
+
+
+        exit('get keywords');
     }
 }

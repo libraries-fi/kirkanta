@@ -3,15 +3,15 @@
 namespace App\Module\ApiCache;
 
 use App\Entity\Feature\Translatable;
-use App\EntityTypeManager;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
 use Doctrine\DBAL\Driver\Connection;
+Use Doctrine\ORM\EntityManagerInterface;
 use OutOfBoundsException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class DocumentManager
 {
-    private $types;
+    private $em;
     private $database;
     private $serializer;
 
@@ -20,9 +20,9 @@ class DocumentManager
         'service',
     ];
 
-    public function __construct(EntityTypeManager $types, Connection $database, SerializerInterface $serializer)
+    public function __construct(EntityManagerInterface $entities, Connection $database, SerializerInterface $serializer)
     {
-        $this->types = $types;
+        $this->em = $entities;
         $this->database = $database;
         $this->serializer = $serializer;
     }
@@ -32,27 +32,38 @@ class DocumentManager
         return $this->database;
     }
 
-    public function getEntityTypeManager() : EntityTypeManager
-    {
-        return $this->types;
-    }
-
-    public function write(ApiCacheable $entity)
+    public function write(ApiCacheable $entity) : void
     {
         try {
-            list($type_id, $document, $translations) = $this->serialize($entity);
-            $entity_class = $this->types->getEntityClass($type_id);
-            $dql = "UPDATE {$entity_class} e SET e.api_document = :document WHERE e.id = :id";
-
-            // header('Content-Type: application/json');
-            // print_r($document);
-            // exit;
-
-            $query = $this->types->getEntityManager()->createQuery($dql);
-            $query->execute([
-                'document' => $document,
-                'id' => $entity->getId(),
+            $document = $this->serializer->normalize($entity, 'json', [
+                'groups' => ['default', 'api_cache']
             ]);
+
+            $serialized = $this->serializer->serialize($document, 'json', [
+                'groups' => ['default', 'api_cache']
+            ]);
+
+            $query = $this->em->getRepository(get_class($entity))
+                ->createQueryBuilder('e')
+                ->update()
+                ->where('e.id = :id')
+                ->setParameter('id', $entity->getId())
+                ;
+
+            $query
+                ->set('e.api_document', ':document')
+                ->setParameter('document', $serialized)
+                ;
+
+            if ($entity->supportsApiKeywords()) {
+                $entity->setApiDocument($document);
+                $query
+                    ->set('e.api_keywords', 'To_TsVector(\'simple\', :keywords)')
+                    ->setParameter('keywords', implode(' ', $entity->getApiKeywords()))
+                    ;
+            }
+
+            $query->getQuery()->execute();
         } catch (OutOfBoundsException $e) {
             // Unmanaged entity type.
 
@@ -64,12 +75,12 @@ class DocumentManager
     protected function serialize($entity) : array
     {
         $context = ['groups' => ['default', 'api_cache']];
-        $normalized = $this->serializer->normalize($entity, 'json', $context);
-        $values = $this->serializer->serialize($entity, 'json', $context);
+        $document = $this->serializer->normalize($entity, 'json', $context);
+        // $serialized = $this->serializer->serialize($entity, 'json', $context);
 
         $class_name = get_class($entity);
         $type_id = $this->types->getTypeId($class_name);
 
-        return [$type_id, $values, null];
+        return [$type_id, $document, null];
     }
 }

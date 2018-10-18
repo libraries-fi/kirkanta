@@ -13,16 +13,17 @@ doctrine:
                 url: '%env(resolve:DATABASE_URL)%'
                 server_version: '10.0'
                 charset: utf8
-                mapping_types:
-                    _text: text_array
             db_v3:
                 driver: 'pdo_pgsql'
                 url: '%env(LEGACY_DATABASE_URL)%'
                 charset: utf8
         types:
             geography: 'Jsor\Doctrine\PostGIS\Types\GeographyType'
-            int_array: 'Doctrine\DBAL\PostgresTypes\IntArrayType'
-            text_array: 'Doctrine\DBAL\PostgresTypes\TextArrayType'
+
+            tsvector: 'Opsway\Doctrine\DBAL\Types\TsVector'
+            integer[]: 'Opsway\Doctrine\DBAL\Types\ArrayInt'
+            text[]: 'Opsway\Doctrine\DBAL\Types\ArrayText'
+
             translations: 'App\Doctrine\Types\TranslationsType'
             simple_object: 'App\Doctrine\Types\SimpleObjectType'
             custom_data_collection: 'App\Doctrine\Types\CustomDataCollectionType'
@@ -35,6 +36,8 @@ doctrine:
                 ST_Distance: 'Jsor\Doctrine\PostGIS\Functions\ST_Distance'
                 ST_GeomFromText: 'Jsor\Doctrine\PostGIS\Functions\ST_GeomFromText'
                 Trans: 'App\Doctrine\Functions\Trans'
+                To_TsVector: 'Opsway\Doctrine\ORM\Query\AST\Functions\ToTsvector'
+
         mappings:
             App:
                 is_bundle: false

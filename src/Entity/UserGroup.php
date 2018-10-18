@@ -34,7 +34,7 @@ class UserGroup extends EntityBase
     private $children;
 
     /**
-     * @ORM\Column(type="text_array")
+     * @ORM\Column(type="text[]")
      */
     private $roles;
 
@@ -46,6 +46,7 @@ class UserGroup extends EntityBase
     public function __construct($name = null)
     {
         parent::__construct();
+
         $this->name = $role_id;
         $this->children = new ArrayCollection;
     }
@@ -104,7 +105,7 @@ class UserGroup extends EntityBase
 
     public function getRoles() : array
     {
-        return $this->roles;
+        return $this->roles ?? [];
     }
 
     public function setRoles(array $roles) : void

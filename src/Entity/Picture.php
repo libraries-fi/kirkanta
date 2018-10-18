@@ -50,14 +50,14 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
      *
      * FIXME: Type int_array does not like NULLs.
      *
-     * @ORM\Column(type="int_array")
+     * @ORM\Column(type="integer[]")
      */
     private $dimensions = [];
 
     /**
      * Array of size names (small, medium, etc.)
      *
-     * @ORM\Column(type="text_array")
+     * @ORM\Column(type="text[]")
      */
     private $sizes = [];
 

@@ -38,7 +38,7 @@ trait BasicUserImplementation
     protected $last_login;
 
     /**
-     * @ORM\Column(type="text_array")
+     * @ORM\Column(type="text[]")
      */
     protected $roles = [];
 

@@ -225,6 +225,10 @@ services:
         arguments: ['@kirkanta.normalizer.entity']
         tags:
             - { name: serializer.normalizer, priority: -998 }
+    App\Module\ApiCache\Serializer\Normalizer\ServiceInstanceNormalizer:
+        arguments: ['@kirkanta.normalizer.entity']
+        tags:
+            - { name: serializer.normalizer, priority: -998 }
     App\Module\ApiCache\Serializer\Normalizer\CollectionNormalizer:
         tags:
             - { name: serializer.normalizer, priority: -998 }

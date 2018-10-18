@@ -2,6 +2,7 @@
 
 namespace App\Module\ApiCache\Command;
 
+use App\EntityTypeManager;
 use App\Entity\Feature\StateAwareness;
 use App\Module\ApiCache\DocumentManager;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
@@ -15,11 +16,11 @@ class IndexEntities extends Command
 {
     private $cache;
 
-    public function __construct(DocumentManager $cache)
+    public function __construct(DocumentManager $cache, EntityTypeManager $types)
     {
         parent::__construct();
         $this->cache = $cache;
-        $this->types = $this->cache->getEntityTypeManager();
+        $this->types = $types;
     }
 
     protected function configure() : void
@@ -52,6 +53,9 @@ class IndexEntities extends Command
             $parameters = is_a($entity_class, StateAwareness::class, true)
             ? ['state' => StateAwareness::PUBLISHED]
             : [];
+
+            // DEBUG ONLY
+            // $parameters['id'] = 84924;
 
             $result = $this->types
                 ->getRepository($entity_type)
