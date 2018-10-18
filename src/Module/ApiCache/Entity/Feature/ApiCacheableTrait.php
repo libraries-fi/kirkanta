@@ -9,15 +9,15 @@ trait ApiCacheableTrait
     /**
      * @ORM\Column(type="json_array")
      */
-    protected $cached_document;
+    protected $api_document;
 
-    public function getCachedDocument() : ?array
+    public function getApiDocument() : ?array
     {
-        return $this->cached_document;
+        return $this->api_document;
     }
 
-    public function setCachedDocument(array $document) : void
+    public function setApiDocument(array $document) : void
     {
-        $this->cached_document = $document;
+        $this->api_document = $document;
     }
 }
