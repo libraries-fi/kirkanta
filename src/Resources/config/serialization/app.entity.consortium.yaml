@@ -11,6 +11,8 @@ App\Entity\ConsortiumData:
   attributes:
     name:
       groups: ['default', 'index']
+    slug:
+      groups: ['default', 'index']
     homepage:
       groups: ['default']
     description:
