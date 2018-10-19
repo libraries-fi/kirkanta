@@ -1,17 +1,19 @@
 App\Entity\Service:
   attributes:
-    translations:
-      groups: ['default', 'index']
     id:
+      groups: ['default', 'index']
+    type:
+      groups: ['default', 'index']
+    translations:
       groups: ['default', 'index']
     # instances:
       # groups: ['api_cache']
 
 App\Entity\ServiceData:
   attributes:
-    name:
+    slug:
       groups: ['default', 'index']
-    description:
+    name:
       groups: ['default', 'index']
 
 App\Entity\ServiceInstance:
