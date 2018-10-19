@@ -1939,3 +1939,8 @@ ALTER TABLE organisations ADD COLUMN api_keywords tsvector;
 
 
 -- COMMIT PLACEHOLDER --
+
+
+
+-- Flip coordinates because they were stored upside-down...
+UPDATE addresses SET coordinates = ST_GeomFromText('POINT(' || ST_Y(coordinates::geometry) || ' ' || ST_X(coordinates::geometry) || ')', 4326) WHERE ST_X(coordinates::geometry) > 50;
