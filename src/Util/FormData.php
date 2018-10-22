@@ -22,11 +22,23 @@ class FormData
         return $this->data;
     }
 
+    public function isNew() : bool
+    {
+        return true;
+    }
+
     public function __call($method, $params) {
-        if (substr($method, 0, 3) == 'get') {
-            $prop = strtolower(preg_replace('/([A-Z])/', '_$1', $method));
-            $prop = substr($prop, 4);
-            return $this->data[$prop];
+        $op = substr($method, 0, 3);
+        $prop = strtolower(preg_replace('/([A-Z])/', '_$1', $method));
+        $prop = substr($prop, 4);
+
+        switch ($op) {
+            case 'get':
+                return $this->data[$prop];
+
+            case 'set':
+                $this->data[$prop] = reset($params);
+                break;
         }
     }
 
@@ -37,5 +49,9 @@ class FormData
     public function __set($key, $value)
     {
         $this->data[$key] = $value;
+    }
+
+    public function __isset($key) {
+        return isset($this->data);
     }
 }

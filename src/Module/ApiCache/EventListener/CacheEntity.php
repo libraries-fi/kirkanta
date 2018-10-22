@@ -25,6 +25,9 @@ class CacheEntity
     {
         if ($entity = $this->getParentEntity($event->getEntity())) {
             $this->manager->write($entity);
+
+            // Need to flush even though DocumentManager executes a DQL query.
+            $this->manager->getEntityManager()->flush($entity);
         }
     }
 

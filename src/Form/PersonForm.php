@@ -53,32 +53,36 @@ class PersonForm extends EntityFormType
             ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
-            if (!$event->getData()) {
-                $event->setData(['email_public' => true]);
+            if ($event->getData()->isNew()) {
+                $event->getData()->setEmailPublic(true);
             }
         });
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
-            $person = $event->getData();
-
-            if ($person instanceof Person) {
-                $groups = $person->getGroup()->getTree();
+            if ($options['context_entity']) {
+                $event->getData()->setLibrary($options['context_entity']);
             } else {
-                $groups = $this->auth->getUser()->getGroup()->getTree();
-            }
+                $person = $event->getData();
 
-            if ($groups) {
-                $event->getForm()->add('library', EntityType::class, [
-                    'class' => Library::class,
-                    'query_builder' => function($repo) use($groups) {
-                        return $repo->createQueryBuilder('e')
-                        ->join('e.translations', 'd')
-                        ->orderBy('d.name')
-                        ->andWhere('e.group IN (:groups)')
-                        ->setParameter('groups', $groups)
-                        ;
-                    }
-                ]);
+                if ($person instanceof Person) {
+                    $groups = $person->getGroup()->getTree();
+                } else {
+                    $groups = $this->auth->getUser()->getGroup()->getTree();
+                }
+
+                if ($groups) {
+                    $event->getForm()->add('library', EntityType::class, [
+                        'class' => Library::class,
+                        'query_builder' => function($repo) use($groups) {
+                            return $repo->createQueryBuilder('e')
+                            ->join('e.translations', 'd')
+                            ->orderBy('d.name')
+                            ->andWhere('e.group IN (:groups)')
+                            ->setParameter('groups', $groups)
+                            ;
+                        }
+                    ]);
+                }
             }
         });
     }

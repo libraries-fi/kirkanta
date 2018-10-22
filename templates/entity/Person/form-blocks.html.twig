@@ -24,10 +24,10 @@
     <legend>{% trans %}Work info{% endtrans %}</legend>
     {% if form.library is defined %}
       {{ form_row(form.library) }}
-      {{ form_row(form.head) }}
     {% else %}
-      <p>{% trans %}Cannot change library{% endtrans %}</p>
+      <p class="h5 mb-3">{{ form.vars.value.library }}</p>
     {% endif %}
+    {{ form_row(form.head) }}
     {{ form_row(form.job_title) }}
     {{ form_row(form.responsibility) }}
     {{ form_row(form.qualities) }}

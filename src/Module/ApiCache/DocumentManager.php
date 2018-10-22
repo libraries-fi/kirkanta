@@ -32,6 +32,11 @@ class DocumentManager
         return $this->database;
     }
 
+    public function getEntityManager() : EntityManagerInterface
+    {
+        return $this->em;
+    }
+
     public function write(ApiCacheable $entity) : void
     {
         try {
