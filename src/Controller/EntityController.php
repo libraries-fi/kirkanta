@@ -256,12 +256,12 @@ class EntityController extends Controller
 
     /**
      * @Route("/{entity_type}/slugger", name="entity.slugger", requirements={"entity_type": "\w+"})
-     * @Method("POST")
+     * @Method("GET")
      */
     public function generateSlug(Request $request, string $entity_type)
     {
-        $name = $request->request->get('name');
-        $langcode = $request->request->get('langcode');
+        $name = $request->query->get('name');
+        $langcode = $request->query->get('langcode');
 
         $data_class = $this->entityTypeManager->getEntityClass($entity_type) . 'Data';
         $storage = $this->entityTypeManager->getEntityManager()->getRepository($data_class);
