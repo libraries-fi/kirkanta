@@ -126,7 +126,7 @@ class Address extends EntityBase implements Translatable
     {
         if (!$this->parsedCoordinates && $this->coordinates) {
             preg_match('/POINT\((\d+|\d+\.\d+) (\d+|\d+\.\d+)\)/', $this->coordinates, $matches);
-            list($_, $lat, $lon) = $matches;
+            list($_, $lon, $lat) = $matches;
             $this->parsedCoordinates = sprintf('%s, %s', $lat, $lon);
         }
         return $this->parsedCoordinates;
@@ -134,6 +134,10 @@ class Address extends EntityBase implements Translatable
 
     public function setCoordinates(string $coordinates) : void
     {
+        /**
+         * NOTE: Datatype in DB stores coordinates in form of (longitude, latitude)!
+         */
+
         $this->parsedCoordinates = null;
 
         if (!empty($coordinates)) {
@@ -141,7 +145,7 @@ class Address extends EntityBase implements Translatable
             list($lat, $lon) = explode(',', $coordinates);
 
                 // NOTE: Six decimals are enough for precision of one meter.
-                $this->coordinates = sprintf('SRID=4326;POINT(%2.6F %3.6F)', $lat, $lon);
+                $this->coordinates = sprintf('SRID=4326;POINT(%2.6F %3.6F)', $lon, $lat);
             } else {
                 $this->coordinates = null;
             }
