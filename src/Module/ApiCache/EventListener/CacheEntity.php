@@ -11,10 +11,13 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 class CacheEntity
 {
     private $manager;
+    private $queue;
+    private $insideOwnFlush = false;
 
     public function __construct(DocumentManager $manager)
     {
         $this->manager = $manager;
+        $this->queue = [];
     }
 
     public function preUpdate(PreUpdateEventArgs $event) : void
@@ -24,11 +27,36 @@ class CacheEntity
     public function postUpdate(LifecycleEventArgs $event) : void
     {
         if ($entity = $this->getParentEntity($event->getEntity())) {
-            $this->manager->write($entity);
+            $this->queue[] = $entity;
+            // $this->manager->write($entity);
 
             // Need to flush even though DocumentManager executes a DQL query.
-            $this->manager->getEntityManager()->flush($entity);
+            // $this->manager->getEntityManager()->flush($entity);
         }
+    }
+
+    public function postFlush() : void
+    {
+        if ($this->insideOwnFlush) {
+            $this->queue = [];
+            return;
+        }
+
+        $this->insideOwnFlush = true;
+
+        if ($this->queue) {
+            $entities = array_unique($this->queue);
+            $this->queue = [];
+
+            foreach ($entities as $entity) {
+                $this->manager->write($entity);
+            }
+        }
+
+        // Need to flush even though DocumentManager executes a DQL query.
+        $this->manager->getEntityManager()->flush();
+
+        $this->insideOwnFlush = false;
     }
 
     private function getParentEntity($entity)
