@@ -36,7 +36,7 @@ class EntityAccessGuard implements EventSubscriberInterface
     {
         $params = $event->getRequest()->attributes;
 
-        if (preg_match('/^entity.(\w+).(\w+)$/', $params->get('_route'), $match)) {
+        if (preg_match('/^entity.(\w+)\.(\w+)$/', $params->get('_route'), $match)) {
             list($_, $entity_type, $action) = $match;
             $entity_class = $this->types->getEntityClass($entity_type);
 
