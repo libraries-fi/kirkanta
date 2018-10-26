@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Library;
+use App\Entity\LibraryInterface;
 use App\Entity\Feature\Weight;
 use App\EntityTypeManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -18,17 +19,6 @@ use Knp\Component\Pager\PaginatorInterface;
 class OrganisationController extends Controller
 {
     use Feature\ProvideEntityTypeManager;
-
-    public static $resources = [
-        'departments' => 'department',
-        'email_addresses' => 'email_address',
-        'links' => 'web_link',
-        'periods' => 'period',
-        'persons' => 'person',
-        'phone_numbers' => 'phone',
-        'pictures' => 'organisation_photo',
-        'services' => 'service_instance'
-    ];
 
     private $types;
 
@@ -94,6 +84,7 @@ class OrganisationController extends Controller
         $actions = [];
 
         switch ($resource) {
+            case 'contact_groups':
             case 'departments':
             case 'pictures':
                 $table->useAsTemplate('name');
@@ -209,6 +200,10 @@ class OrganisationController extends Controller
                 $entity->setParent($library);
             }
 
+            if (method_exists($entity, 'setLibrary')) {
+                $entity->setLibrary($library);
+            }
+
             $this->types->getEntityManager()->persist($entity);
             $this->types->getEntityManager()->flush();
 
@@ -239,12 +234,12 @@ class OrganisationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-          $this->types->getEntityManager()->flush();
-          $this->addFlash('success', 'Changes were saved.');
+            $this->types->getEntityManager()->flush();
+            $this->addFlash('success', 'Changes were saved.');
 
-          return $this->redirectToRoute("entity.{$entity_type}.{$resource}", [
-            $entity_type => $library->getId(),
-          ]);
+            return $this->redirectToRoute("entity.{$entity_type}.{$resource}", [
+                $entity_type => $library->getId(),
+            ]);
         }
 
         return [
@@ -344,27 +339,56 @@ class OrganisationController extends Controller
 
     /**
      * @Method("POST")
+     * @ParamConverter("library", converter="entity_from_type_and_id")
      */
-    public function tableSort(Request $request, string $resource, EntityTypeManager $manager)
+    public function tableSort(Request $request, LibraryInterface $library, string $resource)
     {
-        $ids = $request->request->get('rows') ?: [];
-        $ids = array_map('intval', $ids);
-        $entities = $manager->getRepository(self::$resources[$resource])->findById($ids);
+        /**
+         * Sort items and write weights into the DB. The idea is to optimize indexing by avoiding
+         * flushing twice. It is impossible to sort the Collection of resources in-place, resulting
+         * in the wrong order being indexed during the first flush.
+         */
 
-        if ($entities) {
-            usort($entities, function($a, $b) {
-                return $a->getWeight() - $b->getWeight();
-            });
+        $accessor = \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor();
+        $resources = $accessor->getValue($library, $resource);
+        $reorder = array_map('intval', $request->request->get('rows') ?: []);
 
-            $base = reset($entities)->getWeight();
+        $matched = $resources->filter(function($r) use($reorder) {
+            return in_array($r->getId(), $reorder);
+        });
 
-            foreach ($entities as $entity) {
-                $new_weight = $base + array_search($entity->getId(), $ids);
-                $entity->setWeight($new_weight);
-            }
+        $start_index = $matched->first()->getWeight();
 
-            $manager->getEntityManager()->flush();
+        foreach ($matched as $entity) {
+            $entity->setWeight($start_index + array_search($entity->getId(), $reorder));
         }
+
+        $data = $resources->toArray();
+
+        usort($data, function($a, $b) {
+            $pa = $a->getWeight() ?? 9999;
+            $pb = $b->getWeight() ?? 9999;
+            return $pa - $pb;
+        });
+
+        $entity_class = $this->types->getEntityClass((new \App\Util\LibraryResources)->offsetGet($resource));
+
+        $query = $this->types->updateQuery((new \App\Util\LibraryResources)->offsetGet($resource))
+            ->set('e.weight', ':weight')
+            ->where('e.id = :id')
+            ->getQuery()
+            ;
+
+        foreach (array_values($data) as $i => $entity) {
+            $entity->setWeight($i);
+            $query->execute([
+                'id' => $entity->getId(),
+                'weight' => $entity->getWeight()
+            ]);
+        }
+
+        $resources->setInitialized(false);
+        $this->types->getEntityManager()->flush();
 
         return new JsonResponse($request->request->get('rows'));
     }
