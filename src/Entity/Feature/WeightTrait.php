@@ -11,9 +11,9 @@ trait WeightTrait
      */
     private $weight;
 
-    public function getWeight() : int
+    public function getWeight() : ?int
     {
-        return $this->weight ?? 0;
+        return $this->weight;
     }
 
     public function setWeight(int $weight) : void

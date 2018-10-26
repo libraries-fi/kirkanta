@@ -11,7 +11,6 @@ use App\Form\Type\PeriodDayCollectionType;
 use App\Form\Type\PeriodDayType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -119,7 +118,7 @@ class PeriodForm extends EntityFormType
          * In previous Kirkanta 'info' was the Finnish translation for day info; now it must be
          * an array of all translations.
          */
-         
+
         $days = $period->getDays();
         foreach ($days as &$day) {
             if (is_string($day['info'])) {

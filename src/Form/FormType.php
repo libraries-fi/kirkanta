@@ -16,6 +16,9 @@ use Symfony\Component\Security\Core\Security;
 
 abstract class FormType extends AbstractType
 {
+    const NESTED_SCOPE = 'nested';
+    const FULL_SCOPE = 'full';
+
     abstract protected function form(FormBuilderInterface $builder, array $options) : void;
 
     private $requestStack;
@@ -30,7 +33,10 @@ abstract class FormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $this->form($builder, $options);
-        $this->actions($builder);
+
+        if ($options['form_actions']) {
+            $this->actions($builder);
+        }
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
             $entity = $event->getData();
@@ -54,8 +60,11 @@ abstract class FormType extends AbstractType
 
         $options->setDefaults([
             'admin' => false,
-            'scope' => 'full',
             'current_langcode' => $langcode,
+            'form_actions' => true,
+
+            // Defines a 'scope' for form i.e. could be used when the form is nested inside another.
+            'scope' => self::FULL_SCOPE,
         ]);
     }
 

@@ -56,7 +56,7 @@ abstract class ContactInfo extends EntityBase implements Translatable, Weight
         return sprintf('%s – %s', $this->getName(), $this->contact);
     }
 
-    public function getContact() : string
+    public function getContact() : ?string
     {
         return $this->contact;
     }

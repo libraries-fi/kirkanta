@@ -15,12 +15,13 @@ class OrganisationPhotoDataType extends EntityDataType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         parent::buildForm($builder, $options);
-        
+
         $builder
             ->add('name', null, [
-                'required' => false,
+                'required' => true,
                 'label' => 'Name',
                 'langcode' => $options['langcode'],
+                'help' => 'Used as a short description to improve accessibility.',
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,

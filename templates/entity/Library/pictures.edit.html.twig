@@ -22,7 +22,10 @@
   {% endif %}
 
   {% if form.file is defined %}
-    {{ form_row(form.file) }}
+    <fieldset class="form-section">
+      <legend>{% trans %}File upload{% endtrans %}</legend>
+      {{ form_row(form.file) }}
+    </fieldset>
   {% endif %}
 
   <fieldset class="form-section">

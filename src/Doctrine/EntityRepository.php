@@ -45,9 +45,12 @@ class EntityRepository extends BaseRepository
     }
 
     /**
+     * Updates weights of the items in the collection.
      *
+     * NOTE: The collection itself will not be re-ordered because it isn't even possible because
+     * it cannot be done in-place.
      */
-    public function updateWeights(Collection $collection, array $weights) : void
+    public function updateWeights(Collection $collection, array $weights = []) : void
     {
         if (!is_a($this->getClassName(), Weight::class, true)) {
             throw new \BadMethodCallException('Method is available only with entities that implement Weight');
@@ -61,24 +64,34 @@ class EntityRepository extends BaseRepository
             foreach ($matched as $entity) {
                 $entity->setWeight($weights[$entity->getId()]);
             }
+        }
 
-            $data = $collection->toArray();
+        /**
+         * Continue re-weighting items. This makes sure that weights are consecutive values.
+         *
+         * Required e.g. when one of the entities has NULL ID because it won't be matched then as
+         * array keys (in $weights) cannot be NULL.
+         *
+         * Also required when one of the entities as deleted.
+         */
 
-            usort($data, function($a, $b) {
-                $pa = $a->getWeight() ?? 9999;
-                $pb = $b->getWeight() ?? 9999;
-                return $pa - $pb;
-            });
+        $data = $collection->toArray();
 
-            foreach (array_values($data) as $i => $entity) {
-                $entity->setWeight($i);
+        usort($data, function($a, $b) use ($weights) {
+            $pa = $a->getWeight() ?? 9999;
+            $pb = $b->getWeight() ?? 9999;
+            $delta = $pa - $pb;
+
+            if ($delta == 0) {
+                // Move the entity whose weight is being updated up in the order.
+                return isset($weights[$b->getId()]) - isset($weights[$a->getId()]);
+            } else {
+                return $delta;
             }
+        });
 
-            // Collection will be re-initialized next time it is accessed.
-            $collection->setInitialized(false);
-
-            // Have to flush before re-using the collection or changes will be lost.
-            $this->getEntityManager()->flush();
+        foreach (array_values($data) as $i => $entity) {
+            $entity->setWeight($i);
         }
     }
 

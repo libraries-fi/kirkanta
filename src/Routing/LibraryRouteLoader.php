@@ -93,12 +93,45 @@ class LibraryRouteLoader extends Loader
                 $routes->add("entity.{$type_id}.{$resource}.table_sort", $table_sort);
             }
 
-            $contact_info = new Route("{$base_path}/contact", $defaults + [
-                '_controller' => sprintf('%s:contactsTab', OrganisationController::class)
-            ]);
-
-            $routes->add("entity.{$type_id}.contact_info", $contact_info);
+            // $contact_info = new Route("{$base_path}/contact", $defaults + [
+            //     '_controller' => sprintf('%s:contactsTab', OrganisationController::class)
+            // ]);
+            //
+            // $routes->add("entity.{$type_id}.contact_info", $contact_info);
         }
+
+        $contact_group_collection = new Route('/library/{library}/contact', [
+            'entity_type' => 'library',
+            'resource' => 'contact_groups',
+            '_controller' => sprintf('%s::resourceCollection', OrganisationController::class)
+        ]);
+
+        $contact_group_add = new Route('/library/{library}/contact/add', [
+            'entity_type' => 'library',
+            'resource' => 'contact_groups',
+            '_controller' => sprintf('%s::addResource', OrganisationController::class)
+        ]);
+
+        $contact_group_edit = new Route('/library/{library}/contact/{resource_id}', [
+            'entity_type' => 'library',
+            'resource' => 'contact_groups',
+            '_controller' => sprintf('%s::editResource', OrganisationController::class)
+        ], $requirements + [
+            'resource_id' => '\d+'
+        ]);
+
+        $contact_group_delete = new Route('/library/{library}/contact/{resource_id}/delete', [
+            'entity_type' => 'library',
+            'resource' => 'contact_groups',
+            '_controller' => sprintf('%s::deleteResource', OrganisationController::class)
+        ], $requirements + [
+            'resource_id' => '\d+'
+        ]);
+
+        $routes->add('entity.library.contact_groups', $contact_group_collection);
+        $routes->add('entity.library.contact_groups.add', $contact_group_add);
+        $routes->add('entity.library.contact_groups.edit', $contact_group_edit);
+        $routes->add('entity.library.contact_groups.delete', $contact_group_delete);
 
         return $routes;
     }

@@ -11,6 +11,7 @@ import "./content-language";
 import "./service-tool";
 
 import "./table.drag";
+import "./widget.collection";
 import "./widget.sluggable";
 import "./widget.radio-collapse";
 import "./widget.file-input";

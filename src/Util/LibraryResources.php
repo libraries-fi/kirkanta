@@ -9,6 +9,7 @@ class LibraryResources extends StringMap
     public function __construct()
     {
         parent::__construct([
+            'contact_groups' => 'contact_info_group',
             'departments' => 'department',
             'email_addresses' => 'email_address',
             'links' => 'web_link',

@@ -126,6 +126,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             'persons' => 'Staff',
             'pictures' => 'Pictures',
             'departments' => 'Departments',
+            // 'contact_groups' => 'Contact info',
             // 'email_addresses' => 'Email addresses',
             // 'phone_numbers' => 'Phone Numbers',
             // 'links' => 'Websites',
@@ -188,7 +189,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         ];
 
         $contacts_tab = $menu->addChild('Contact info', [
-            'route' => "entity.{$entity_type}.contact_info",
+            'route' => "entity.{$entity_type}.contact_groups",
             'routeParameters' => [
                 $entity_type => $entity->getId(),
             ]

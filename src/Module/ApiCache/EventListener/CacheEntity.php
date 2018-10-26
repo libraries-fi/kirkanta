@@ -17,21 +17,19 @@ class CacheEntity
     public function __construct(DocumentManager $manager)
     {
         $this->manager = $manager;
-        $this->queue = [];
     }
 
-    public function preUpdate(PreUpdateEventArgs $event) : void
+    public function postPersist(LifecycleEventArgs $event) : void
     {
+        if ($entity = $this->getParentEntity($event->getEntity())) {
+            $this->queue[] = $entity;
+        }
     }
 
     public function postUpdate(LifecycleEventArgs $event) : void
     {
         if ($entity = $this->getParentEntity($event->getEntity())) {
             $this->queue[] = $entity;
-            // $this->manager->write($entity);
-
-            // Need to flush even though DocumentManager executes a DQL query.
-            // $this->manager->getEntityManager()->flush($entity);
         }
     }
 

@@ -21,7 +21,9 @@ class LibraryPhotoForm extends EntityFormType
                 'mapped' => false,
             ])
             ->add('file', FileType::class, [
+                'required' => true,
                 // 'mapped' => false
+                'help' => 'You can also drag and drop a file from the disk onto the field.',
             ])
             ->add('author', null, [
                 'required' => false,
@@ -55,6 +57,12 @@ class LibraryPhotoForm extends EntityFormType
         $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
             if ($event->getForm()->has('filename')) {
                 $event->getForm()->get('filename')->setData($event->getData()->getFilename());
+            }
+        });
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+            if ($event->getForm()->get('default_picture')->getData()) {
+                $event->getData()->setWeight(0);
             }
         });
     }

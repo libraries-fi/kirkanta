@@ -14,6 +14,11 @@ class Department extends EntityBase implements Translatable
     use Feature\TranslatableTrait;
 
     /**
+     * @ORM\column(type="string")
+     */
+    private $type;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Library", inversedBy="departments")
      */
     private $parent;
@@ -27,28 +32,38 @@ class Department extends EntityBase implements Translatable
      * @ORM\OneToMany(targetEntity="PhoneNumber", mappedBy="department", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"weight": "ASC"})
      */
-    protected $phone_numbers;
+    private $phone_numbers;
 
     /**
      * @ORM\OneToMany(targetEntity="EmailAddress", mappedBy="department", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"weight": "ASC"})
      */
-    protected $email_addresses;
+    private $email_addresses;
 
     /**
      * @ORM\OneToMany(targetEntity="WebsiteLink", mappedBy="department", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
      */
-    protected $links;
+    private $links;
 
     /**
      * @ORM\OneToMany(targetEntity="DepartmentData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
      */
-    protected $translations;
+    private $translations;
 
     public function __toString()
     {
         return $this->getName();
+    }
+
+    public function getType() : string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type) : void
+    {
+        $this->type = $type;
     }
 
     public function getName() : string

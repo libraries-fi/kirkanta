@@ -2,13 +2,14 @@
 
 namespace App;
 
-use OutOfBoundsException;
 use App\Entity\ListBuilder\EntityListBuilder;
 use App\Util\FormData;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Proxy\Proxy;
 use Knp\Component\Pager\PaginatorInterface;
+use OutOfBoundsException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -114,6 +115,9 @@ final class EntityTypeManager {
         return $this->form_factory->create($form_class, $data, $options);
     }
 
+    /**
+     * @deprecated
+     */
     public function createQueryBuilder(?string $type_id, ?string $alias)
     {
         if ($type_id) {
@@ -121,6 +125,17 @@ final class EntityTypeManager {
         } else {
             return $this->entity_manager->createQueryBuilder();
         }
+    }
+
+    public function selectQuery(string $type_id, string $alias = 'e') : QueryBuilder
+    {
+        return $this->getRepository($type_id)->createQueryBuilder($alias);
+    }
+
+    public function updateQuery(string $type_id, string $alias = 'e') : QueryBuilder
+    {
+        $entity_class = $this->getEntityClass($type_id);
+        return $this->entity_manager->createQueryBuilder()->update($entity_class, $alias);
     }
 
     protected function getType(string $type_id) : array

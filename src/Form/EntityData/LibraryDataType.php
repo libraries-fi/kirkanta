@@ -40,6 +40,7 @@ class LibraryDataType extends EntityDataType
             ->add('slug', SlugType::class, [
                 'label' => 'Slug',
                 'entity_type' => 'library',
+                'langcode' => $options['langcode'],
             ])
             ->add('slogan', null, [
                 'required' => true,

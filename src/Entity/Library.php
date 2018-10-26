@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"App\Doctrine\EventListener\LibraryConsortiumInitializer"})
  */
 class Library extends Facility implements LibraryInterface
 {
@@ -42,7 +43,7 @@ class Library extends Facility implements LibraryInterface
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->services = new ArrayCollection;
         $this->departments = new ArrayCollection;
         $this->persons = new ArrayCollection;

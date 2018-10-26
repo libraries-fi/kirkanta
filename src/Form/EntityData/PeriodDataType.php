@@ -15,13 +15,14 @@ class PeriodDataType extends EntityDataType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         parent::buildForm($builder, $options);
-        
+
         $builder
             ->add('name', null, [
                 'label' => 'Name',
                 'langcode' => $options['langcode'],
             ])->add('description', TextareaType::class, [
                 'label' => 'Description',
+                'help' => 'Will be displayed below the schedules',
                 'langcode' => $options['langcode'],
                 'required' => false,
                 'attr' => [

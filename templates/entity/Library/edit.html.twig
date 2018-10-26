@@ -80,19 +80,21 @@
     </div>
   </fieldset>
 
-  <fieldset class="form-section">
-    <legend>{% trans %}Primary contact info{% endtrans %}</legend>
-    <p class="text-muted">{% trans %}This information could e.g. be displayed in a summary.{% endtrans %}</p>
+  {% if library is defined %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Primary contact info{% endtrans %}</legend>
+      <p class="text-muted">{% trans %}This information could e.g. be displayed in a summary.{% endtrans %}</p>
 
-    <div class="row">
-      <div class="col-md-6">
-        {{ form_row(form.email) }}
-        {{ form_row(form.phone) }}
-      </div>
-      <div class="col-md-6">
-        {{ form_row(form.homepage) }}
-      </div>
-  </fieldset>
+      <div class="row">
+        <div class="col-md-6">
+          {{ form_row(form.email) }}
+          {{ form_row(form.phone) }}
+        </div>
+        <div class="col-md-6">
+          {{ form_row(form.homepage) }}
+        </div>
+    </fieldset>
+  {% endif %}
 
   <fieldset class="form-section">
     <legend>{% trans %}Introduction{% endtrans %}</legend>

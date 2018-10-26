@@ -47,8 +47,9 @@ services:
 
     App\Module\ApiCache\EventListener\CacheEntity:
         tags:
-            - { name: doctrine.event_listener, event: preUpdate, lazy: true }
-            - { name: doctrine.event_listener, event: postUpdate, lazy: true }
+            - { name: doctrine.event_listener, event: postPersist, lazy: true, priority: -1000 }
+            - { name: doctrine.event_listener, event: postUpdate, lazy: true, priority: -1000 }
+            - { name: doctrine.event_listener, event: postFlush, lazy: true, priority: -1000 }
 
     App\Form\Extension\EntityTypeExtension:
         tags:
@@ -89,7 +90,12 @@ services:
         arguments: ['@security.token_storage']
         tags:
             - { name: doctrine.event_subscriber }
-
+    App\Doctrine\EventListener\WeightInitializer:
+        tags:
+            - { name: doctrine.event_subscriber }
+    App\Doctrine\EventListener\LibraryConsortiumInitializer:
+        tags:
+            - { name: doctrine.entity_listener }
     entity_type_manager:
         public: true
         class: 'App\EntityTypeManager'

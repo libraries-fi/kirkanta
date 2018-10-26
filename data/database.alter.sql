@@ -1840,7 +1840,7 @@ WHERE a.entity_id = b.parent_id
 
 WITH insert_entity AS (
   INSERT INTO contact_info (type, attached_to, parent_id, contact)
-  SELECT 'website', a.role, a.id, b.email
+  SELECT 'website', a.role, a.id, b.homepage
   FROM organisations a
   INNER JOIN organisations_data b ON a.id = b.entity_id
   WHERE a.role IN ('library', 'foreign') AND COALESCE(b.homepage, '') <> ''
@@ -1851,9 +1851,6 @@ SELECT contact_id, b.langcode, 'Kirjaston kotisivut'
 FROM insert_entity a
 INNER JOIN organisations_data b ON parent_id = b.entity_id
 ;
-
-
-
 
 UPDATE organisations_data a
 SET homepage_id = b.id
@@ -1944,3 +1941,47 @@ ALTER TABLE organisations ADD COLUMN api_keywords tsvector;
 
 -- Flip coordinates because they were stored upside-down...
 UPDATE addresses SET coordinates = ST_GeomFromText('POINT(' || ST_Y(coordinates::geometry) || ' ' || ST_X(coordinates::geometry) || ')', 4326) WHERE ST_X(coordinates::geometry) > 50;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+
+CREATE TABLE contact_info_groups (
+  id serial NOT NULL,
+  library_id int NOT NULL,
+
+  PRIMARY KEY(id),
+  FOREIGN KEY(library_id) REFERENCES organisations(id) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE contact_info_group_data (
+  entity_id int NOT NULL,
+  langcode varchar(2) NOT NULL,
+  name varchar(100) NOT NULL,
+
+  PRIMARY KEY (entity_id, langcode),
+  FOREIGN KEY(entity_id) REFERENCES contact_info_groups(id) ON DELETE CASCADE
+);
+
+
+
+ALTER TABLE contact_info ADD COLUMN group_id int;
+ALTER TABLE contact_info ADD FOREIGN KEY(group_id) REFERENCES contact_info_groups(id);
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+ALTER TYPE department_type ADD VALUE 'meta';
+UPDATE departments SET type = 'department' WHERE type IS NULL;

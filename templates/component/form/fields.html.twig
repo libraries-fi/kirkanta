@@ -1,5 +1,17 @@
 {% extends "bootstrap_4_layout.html.twig" %}
 
+{%- block collection_widget -%}
+  {% if allow_add %}
+    {% set attr = attr|merge({
+      "class": attr.class|default("") ~ " list-group",
+      "data-collection": null,
+      "data-collection-add": null
+    }) %}
+  {% endif %}
+
+  {{ parent() }}
+{%- endblock -%}
+
 {%- block choice_widget_collapsed -%}
   {% if not multiple %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}

@@ -351,14 +351,27 @@ class OrganisationController extends Controller
             return in_array($r->getId(), $reorder);
         });
 
-        $start_index = $matched->first()->getWeight();
+        if (count($matched) > 0) {
+            $start_index = $matched->first()->getWeight();
 
-        foreach ($matched as $entity) {
-            $weights[$entity->getId()] = $start_index + array_search($entity->getId(), $reorder);
+            foreach ($matched as $entity) {
+                $weights[$entity->getId()] = $start_index + array_search($entity->getId(), $reorder);
+            }
+        } else {
+            $weights = [];
         }
 
         $this->types->getRepository((new \App\Util\LibraryResources)->offsetGet($resource))
             ->updateWeights($resources, $weights);
+
+        /*
+         * Collection will be re-initialized the next time it's accessed.
+         * Because indexing is run in post-op hook, the collection will be initialized with
+         * updated weights.
+         */
+        $resources->setInitialized(false);
+
+        $this->types->getEntityManager()->flush();
 
         return new JsonResponse($request->request->get('rows'));
     }
