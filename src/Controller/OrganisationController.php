@@ -343,15 +343,9 @@ class OrganisationController extends Controller
      */
     public function tableSort(Request $request, LibraryInterface $library, string $resource)
     {
-        /**
-         * Sort items and write weights into the DB. The idea is to optimize indexing by avoiding
-         * flushing twice. It is impossible to sort the Collection of resources in-place, resulting
-         * in the wrong order being indexed during the first flush.
-         */
-
         $accessor = \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor();
         $resources = $accessor->getValue($library, $resource);
-        $reorder = array_map('intval', $request->request->get('rows') ?: []);
+        $reorder = $request->request->get('rows') ?: [];
 
         $matched = $resources->filter(function($r) use($reorder) {
             return in_array($r->getId(), $reorder);
@@ -360,35 +354,11 @@ class OrganisationController extends Controller
         $start_index = $matched->first()->getWeight();
 
         foreach ($matched as $entity) {
-            $entity->setWeight($start_index + array_search($entity->getId(), $reorder));
+            $weights[$entity->getId()] = $start_index + array_search($entity->getId(), $reorder);
         }
 
-        $data = $resources->toArray();
-
-        usort($data, function($a, $b) {
-            $pa = $a->getWeight() ?? 9999;
-            $pb = $b->getWeight() ?? 9999;
-            return $pa - $pb;
-        });
-
-        $entity_class = $this->types->getEntityClass((new \App\Util\LibraryResources)->offsetGet($resource));
-
-        $query = $this->types->updateQuery((new \App\Util\LibraryResources)->offsetGet($resource))
-            ->set('e.weight', ':weight')
-            ->where('e.id = :id')
-            ->getQuery()
-            ;
-
-        foreach (array_values($data) as $i => $entity) {
-            $entity->setWeight($i);
-            $query->execute([
-                'id' => $entity->getId(),
-                'weight' => $entity->getWeight()
-            ]);
-        }
-
-        $resources->setInitialized(false);
-        $this->types->getEntityManager()->flush();
+        $this->types->getRepository((new \App\Util\LibraryResources)->offsetGet($resource))
+            ->updateWeights($resources, $weights);
 
         return new JsonResponse($request->request->get('rows'));
     }

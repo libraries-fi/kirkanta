@@ -2,29 +2,96 @@
 
 namespace App\Doctrine;
 
+use App\Entity\Feature\Weight;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository as BaseRepository;
-use App\Entity\EntityBase;
-
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class EntityRepository extends BaseRepository
 {
-    public function create(array $values = []) : EntityBase
+    private $propertyAccessor;
+
+    public function create(array $values = [])
     {
         /*
          * Set properties using the generic Symfony way instead of relying on Doctrine class metadata
          * since not all properties (e,g, $file) are mapped Doctrine fields.
          */
-        $accessor = PropertyAccess::createPropertyAccessor();
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
         $class = $this->getEntityName();
         $entity = new $class;
+        $definitions = $this->getClassMetadata();
 
-        foreach ($values as $key => $value) {
+        foreach ($values as $field => $value) {
+            if ($field != 'translations') {
+                if ($field_definition = $definitions->associationMappings[$field] ?? null) {
+                    if (in_array($field_definition['type'], [ClassMetadata::ONE_TO_MANY, ClassMetadata::MANY_TO_MANY])) {
+                        $this->pushIntoCollection($entity, $field, $value);
+                        continue;
+                    } elseif (is_array($value)) {
+                        $value = $this->getEntityManager()->getRepository($field_definition['targetEntity'])->create($value);
+                    }
+                }
+            }
+
             if (!is_null($value)) {
-                $accessor->setValue($entity, $key, $value);
+                $this->propertyAccessor->setValue($entity, $field, $value);
             }
         }
 
         return $entity;
+    }
+
+    /**
+     *
+     */
+    public function updateWeights(Collection $collection, array $weights) : void
+    {
+        if (!is_a($this->getClassName(), Weight::class, true)) {
+            throw new \BadMethodCallException('Method is available only with entities that implement Weight');
+        }
+
+        $matched = $collection->matching(Criteria::create()->where(Criteria::expr()->in('id', array_keys($weights))));
+
+        if (count($matched) > 0) {
+            $start_index = $matched->first()->getWeight();
+
+            foreach ($matched as $entity) {
+                $entity->setWeight($weights[$entity->getId()]);
+            }
+
+            $data = $collection->toArray();
+
+            usort($data, function($a, $b) {
+                $pa = $a->getWeight() ?? 9999;
+                $pb = $b->getWeight() ?? 9999;
+                return $pa - $pb;
+            });
+
+            foreach (array_values($data) as $i => $entity) {
+                $entity->setWeight($i);
+            }
+
+            // Collection will be re-initialized next time it is accessed.
+            $collection->setInitialized(false);
+
+            // Have to flush before re-using the collection or changes will be lost.
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    private function pushIntoCollection($entity, string $field, iterable $items) : void
+    {
+        $field_definition = $this->getClassMetadata()->associationMappings[$field];
+        $collection = $this->propertyAccessor->getValue($entity, $field);
+
+        foreach ($items as $item) {
+            if (is_array($item)) {
+                $item = $this->getEntityManager()->getRepository($field_definition['targetEntity'])->create($item);
+                $collection->add($item);
+            }
+        }
     }
 }
