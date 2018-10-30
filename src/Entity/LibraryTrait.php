@@ -383,14 +383,13 @@ trait LibraryTrait
     public function getApiKeywords() : array
     {
         $document = $this->getApiDocument();
-        $k1 = self::extractApiKeywords($document, ['name'], ['shortName'], ['slug'], ['address', 'city'], ['address', 'area'], ['address', 'zipcode']);
-        $k2 = self::extractApiKeywordsArray($document['services'], ['name'], ['standardName']);
+        $keywords = self::extractApiKeywords($document, ['name'], ['shortName'], ['slug'], ['address', 'city'], ['address', 'area'], ['address', 'zipcode']);
 
-        $keywords = array_merge($k1, $k2);
+        if (isset($document['services'])) {
+          $k2 = self::extractApiKeywordsArray($document['services'], ['name'], ['standardName']);
+          $keywords = array_merge($keywords, $k2);
+        }
 
         return $keywords;
-
-
-        exit('get keywords');
     }
 }
