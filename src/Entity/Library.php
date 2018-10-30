@@ -20,12 +20,6 @@ class Library extends Facility implements LibraryInterface
     protected $persons;
 
     /**
-     * @ORM\OneToMany(targetEntity="Period", mappedBy="parent", cascade={"persist", "remove"}, indexBy="id")
-     * @ORM\OrderBy({"valid_from" = "desc", "valid_until" = "desc"})
-     */
-    protected $periods;
-
-    /**
      * @ORM\OneToMany(targetEntity="ServiceInstance", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $services;

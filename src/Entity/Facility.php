@@ -33,6 +33,12 @@ abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAw
     use Feature\TranslatableTrait;
 
     /**
+     * @ORM\OneToMany(targetEntity="Period", mappedBy="parent", cascade={"persist", "remove"}, indexBy="id")
+     * @ORM\OrderBy({"valid_from" = "desc", "valid_until" = "desc"})
+     */
+    protected $periods;
+
+    /**
      * @ORM\OneToMany(targetEntity="LibraryPhoto", mappedBy="parent", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\OrderBy({"weight": "ASC", "id": "ASC"})
      */

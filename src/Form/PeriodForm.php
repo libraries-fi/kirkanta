@@ -4,6 +4,7 @@ namespace App\Form;
 
 use DateTime;
 use App\Entity\Department;
+use App\Entity\Library;
 use App\Entity\Period;
 use App\Util\FormData;
 use App\Util\PeriodSections;
@@ -60,7 +61,7 @@ class PeriodForm extends EntityFormType
                 $organisation = $period->getParent();
             }
 
-            if ($organisation) {
+            if ($organisation instanceof Library) {
                 $form->add('department', EntityType::class, [
                     'required' => false,
                     'class' => Department::class,

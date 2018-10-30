@@ -6,7 +6,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
-use App\Entity\Library;
+use App\Entity\LibraryInterface;
 use App\Entity\Period;
 
 class ScheduleManager
@@ -24,7 +24,7 @@ class ScheduleManager
      * NOTE: Field 'opens' is used to deduce the date for a row. If 'closes' is NULL, then
      * the library is closed on that day. Live status is updated via a cron script.
      */
-    public function loadSchedules(Library $library, DateTimeInterface $begin = NULL, DateTimeInterface $end = NULL) : array
+    public function loadSchedules(LibraryInterface $library, DateTimeInterface $begin = NULL, DateTimeInterface $end = NULL) : array
     {
         if (is_null($begin)) {
             $begin = new DateTime('Monday this week');
@@ -56,7 +56,7 @@ class ScheduleManager
         return $schedules;
     }
 
-    public function updateSchedules(Library $library, DateTimeInterface $begin, DateTimeInterface $end) : void
+    public function updateSchedules(LibraryInterface $library, DateTimeInterface $begin, DateTimeInterface $end) : void
     {
         /*
          * NOTE: We're using a Doctrine Connection class here so commit() does not actually

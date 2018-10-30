@@ -2,7 +2,6 @@
 
 namespace App\Module\Schedules;
 
-use App\Entity\Library;
 use App\Entity\Period;
 use DateInterval;
 use DatePeriod;

@@ -48,7 +48,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     private $translations;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Library", inversedBy="periods")
+     * @ORM\ManyToOne(targetEntity="Facility", inversedBy="periods")
      */
     private $parent;
 
@@ -168,12 +168,12 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         return $this->shared == true;
     }
 
-    public function getParent() : ?Library
+    public function getParent() : ?LibraryInterface
     {
         return $this->parent;
     }
 
-    public function setParent(Library $organisation) : void
+    public function setParent(LibraryInterface $organisation) : void
     {
         $this->parent = $organisation;
     }
