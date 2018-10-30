@@ -23,15 +23,35 @@
           {{ form_row(search_form.only_null) }}
         </div>
         <div class="col-md-3">
-          {{ form_widget(search_form.actions.children.submit) }}
+          <button type="submit" class="btn btn-secondary">
+            <i class="fas fa-search"></i>
+            {% trans %}Search{% endtrans %}
+          </button>
         </div>
       </div>
     </div>
+    {% do form_widget(search_form.actions.setRendered(true)) %}
     {{ form_end(search_form) }}
   </fieldset>
-  <div class="form-section">
-    {{ form(form) }}
+
+  {% do form.actions.setRendered(true) %}
+  {{ form_start(form) }}
+  <div class="text-right mb-3">
+    <button type="submit" class="btn btn-primary">
+      <i class="fas fa-save"></i>
+      {% trans %}Save{% endtrans %}
+    </button>
   </div>
+  <div class="form-section">
+    {{ form_rest(form) }}
+  </div>
+  <div class="text-right mb-3">
+    <button type="submit" class="btn btn-primary">
+      <i class="fas fa-save"></i>
+      {% trans %}Save{% endtrans %}
+    </button>
+  </div>
+  {{ form_end(form) }}
 {% endblock %}
 
 {% block _translation_form_translations_widget %}
