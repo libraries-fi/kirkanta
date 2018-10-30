@@ -111,7 +111,7 @@ abstract class Picture extends EntityBase implements CreatedAwareness, Weight
         return array_product($this->dimensions ?? []);
     }
 
-    public function getDimensions() : array
+    public function getDimensions() : ?array
     {
         return $this->dimensions;
     }
