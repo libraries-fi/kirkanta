@@ -24,7 +24,9 @@ class ServiceInstanceNormalizer implements NormalizerInterface
         $values = $this->inner->normalize($object, $format, $context);
         $template = $values['template'];
         $values['id'] = $template['id'];
+        $values['slug'] = $template['slug'];
         $values['standardName'] = $template['name'];
+        $values['type'] = $template['type'];
 
         unset($values['template']);
 

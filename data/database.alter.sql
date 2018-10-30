@@ -1985,3 +1985,19 @@ ALTER TABLE contact_info ADD FOREIGN KEY(group_id) REFERENCES contact_info_group
 
 ALTER TYPE department_type ADD VALUE 'meta';
 UPDATE departments SET type = 'department' WHERE type IS NULL;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+DROP TABLE translations;
+
+CREATE TABLE translations (
+  locale varchar(2) NOT NULL,
+  domain varchar(40) NOT NULL,
+  id text NOT NULL,
+  translation text,
+
+  PRIMARY KEY (locale, domain, id)
+);

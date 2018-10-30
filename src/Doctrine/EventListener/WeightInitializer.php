@@ -22,7 +22,8 @@ class WeightInitializer implements EventSubscriber
 
         if ($entity instanceof Weight) {
             if (is_null($entity->getWeight())) {
-                $weight = $args->getEntityManager()->createQueryBuilder()
+                try {
+                    $weight = $args->getEntityManager()->createQueryBuilder()
                     ->select('e.weight')
                     ->from(get_class($entity), 'e')
                     ->where('e.parent = :library')
@@ -31,6 +32,9 @@ class WeightInitializer implements EventSubscriber
                     ->setMaxResults(1)
                     ->getQuery()
                     ->getSingleScalarResult();
+                } catch (\Doctrine\ORM\NoResultException $e) {
+                    $weight = -1;
+                }
 
                 $entity->setWeight($weight + 1);
             } else {
@@ -43,7 +47,7 @@ class WeightInitializer implements EventSubscriber
                      */
                     $entity->setWeight(-1);
                 }
-                
+
                 $collection = $this->loadRelatedEntities($args);
                 $collection->set(0, $entity);
                 $this->getRepository($args)->updateWeights($collection);

@@ -17,12 +17,16 @@ class DatabaseLoader implements LoaderInterface
 
     public function load($resource, $locale, $domain = 'messages') : MessageCatalogue
     {
-        $statement = $this->db->prepare('SELECT source, message FROM translations WHERE locale = :locale AND domain = :domain');
+        $statement = $this->db->prepare('
+            SELECT id, translation
+            FROM translations
+            WHERE locale = :locale AND domain = :domain
+        ');
         $statement->execute(['locale' => $locale, 'domain' => $domain]);
         $messages = [];
 
         foreach ($statement as $row) {
-            $messages[$row['source']] = $row['message'];
+            $messages[$row['id']] = $row['translation'];
         }
 
         $catalogue = new MessageCatalogue($locale);

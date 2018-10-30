@@ -15,36 +15,38 @@ class TranslationManager
         $this->queue = [];
     }
 
-    public function addMessage(string $locale, string $domain, string $id, string $translation = null)
+    public function addMessage(array $message) : void
     {
-        $this->queue[] = [
-            'locale' => $locale,
-            'domain' => $domain,
-            'source' => $id,
-            'message' => $translation,
+        if (empty($message['id'])) {
+            return;
+        }
+
+        $defaults = [
+            'locale' => null,
+            'domain' => 'messages',
+            'id' => null,
+            'translation' => null,
         ];
+
+        $entry = array_intersect_key($message, $defaults) + $defaults;
+
+        $key = sprintf('%s::%s::%s', $entry['locale'], $entry['domain'], $entry['id']);
+        $this->queue[$key] = $entry;
     }
 
     public function addMessages(iterable $messages) : void
     {
-        foreach ($messages as $entry) {
-            extract($entry);
-
-            if (!isset($locale)) {
-                var_dump($entry);
-                exit;
-            }
-
-            $this->addMessage($locale, $domain, $source, $message);
+        foreach ($messages as $message) {
+            $this->addMessage($message);
         }
     }
 
     public function findMessages(array $search, int $limit = 0, int $from = 0) : array
     {
         $builder = $this->db->createQueryBuilder()
-            ->select('t.locale', 't.domain', 't.source', 't.message')
+            ->select('t.locale', 't.domain', 't.id', 't.translation')
             ->from('translations', 't')
-            ->orderBy('t.source')
+            ->orderBy('t.id')
             ->addOrderBy('t.domain')
             ;
 
@@ -63,12 +65,12 @@ class TranslationManager
         }
 
         if (!empty($search['text'])) {
-            $builder->andWhere('(t.source LIKE :text OR t.message LIKE :text)');
+            $builder->andWhere('(t.id LIKE :text OR t.translation LIKE :text)');
             $builder->setParameter('text', '%' . $search['text'] . '%');
         }
 
         if (!empty($search['only_null'])) {
-            $builder->andWhere('t.message IS NULL');
+            $builder->andWhere('t.translation IS NULL');
         }
 
         return $builder->execute()->fetchAll();
@@ -95,33 +97,25 @@ class TranslationManager
         return $builder->execute()->fetchColumn();
     }
 
-    public function flush()
+    public function flush() : void
     {
         if ($this->queue) {
             $this->db->beginTransaction();
 
             $statement = $this->db->prepare('
                 INSERT INTO translations AS t
-                    (locale, domain, source, message)
+                    (locale, domain, id, translation)
                 VALUES
-                    (:locale, :domain, :source, :message)
+                    (:locale, :domain, :id, :translation)
                 ON CONFLICT
-                    (locale, domain, source)
+                    (locale, domain, id)
                 DO UPDATE
                     SET
-                        message = coalesce(EXCLUDED.message, t.message)
+                        translation = coalesce(EXCLUDED.translation, t.translation)
             ');
 
             foreach ($this->queue as $entry) {
-                if (empty($entry['source'])) {
-                    continue;
-                }
-
-                if (ctype_digit($entry['source'])) {
-                    continue;
-                }
-
-                $statement->execute($entry);
+                $ok = $statement->execute($entry);
             }
 
             $this->db->commit();

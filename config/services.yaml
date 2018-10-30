@@ -103,8 +103,10 @@ services:
     App\EntityTypeManager: '@entity_type_manager'
 
     App\Module\Translation\TranslationManagerFlusher:
-        arguments: ['@translation.logger']
+        # arguments: ['@data_collector.translation']
+        arguments: ['@translator.data_collector']
         tags:
+            - { name: kernel.event_listener, event: kernel.response }
             - { name: kernel.event_listener, event: kernel.terminate }
 
     App\Module\Ptv\Form\Extension\LibraryFormExtension:
@@ -113,19 +115,6 @@ services:
     App\Module\Ptv\EventListener\ExportLibraryListener:
         tags:
             - { name: kernel.event_listener, event: kernel.response }
-
-    translation.manager:
-        class: 'App\Module\Translation\TranslationManager'
-        arguments: ['@database_connection']
-
-    translation.logger:
-        class: 'App\Module\Translation\MissingTranslationLogger'
-        arguments: ['@translation.manager', '@translation.translator.inner']
-
-    translation.translator:
-        class: 'App\Module\Translation\Translator'
-        decorates: translator
-        arguments: ['@translation.translator.inner', '@translation.logger']
 
     menu_builder:
         alias: 'App\Menu\Builder'

@@ -27,7 +27,10 @@ class BreadcrumbBuilder
     {
         $menu = $this->factory->createItem('root');
         $menu->addChild('Kirkanta', [
-            'route' => 'front'
+            'route' => 'front',
+            'extras' => [
+                'translation_domain' => false
+            ]
         ]);
 
         $current_path = $request_stack->getCurrentRequest()->getPathInfo();
@@ -42,6 +45,9 @@ class BreadcrumbBuilder
                     $menu->addChild($title, [
                         'route' => $match['_route'],
                         'routeParameters' => array_filter($match, function($v, $k) { return $k[0] != '_'; }, ARRAY_FILTER_USE_BOTH),
+                        'extras' => [
+                            'translation_domain' => false
+                        ]
                     ]);
                 }
             } catch (ResourceNotFoundException $e) {

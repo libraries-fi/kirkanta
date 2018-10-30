@@ -31,12 +31,12 @@ class TranslationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $messages = $form->getData()['translations'];
+            $messages = $form->get('translations')->getData();
             $manager->addMessages($messages);
             $manager->flush();
 
             $this->reloadCache();
-            $this->addFlash('notice', 'Translations saved.');
+            $this->addFlash('success', 'Translations saved.');
             return $this->redirectToRoute('translation.manage', $request->query->all());
         }
 

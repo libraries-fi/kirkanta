@@ -44,6 +44,7 @@ class FinnaAdditionsForm extends EntityFormType
                 'choices' => [],
                 'choice_label' => 'name',
                 'required' => false,
+                'translation_domain' => false,
             ])
             ->add('finna_coverage', IntegerType::class, [
                 'required' => false
@@ -103,6 +104,7 @@ class FinnaAdditionsForm extends EntityFormType
                 'choices' => $choices,
                 'choice_label' => 'name',
                 'required' => false,
+                'translation_domain' => false,
             ]);
         });
     }

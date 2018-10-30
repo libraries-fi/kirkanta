@@ -54,12 +54,51 @@
 {% endblock %}
 
 {% block _translation_form_translations_entry_row %}
-  <div class="row">
-    <div class="col-md-6">
-      <pre class="form-control-static">{{ form.source.vars.value }}</pre>
-    </div>
-    <div class="col-md-6">
-      {{ form_row(form.message) }}
-    </div>
+  {% for child in form.children %}
+    {% if child.children|length > 0 %}
+      {% with {form: child} %}
+        {{ block("field_collection") }}
+      {% endwith %}
+    {% else %}
+      <div class="row">
+        <div class="col-md-6 col-form-label">
+          {{ form_label(child) }}
+        </div>
+        <div class="col-md-6">
+          {{ form_widget(child) }}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+{% endblock %}
+
+{% block _translation_form_translations_entry_translation_widget %}
+  {% if form.children|length > 0 %}
+
+  {% else %}
+    {{ form_widget(form) }}
+  {% endif %}
+{% endblock %}
+
+{% block field_collection %}
+  <div style="margin: 1rem -1rem; padding: 1rem; border: 1px dashed gray">
+    <b>Plural forms</b>
+
+    {% for child in form %}
+      <div class="row">
+        <div class="col-md-6 col-form-label">
+          {{ form_label(child) }}
+        </div>
+        <div class="col-md-6">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text" style="min-width: 4rem">{{ child.vars.translation_plural }}</div>
+            </div>
+            {{ form_widget(child) }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
   </div>
 {% endblock %}

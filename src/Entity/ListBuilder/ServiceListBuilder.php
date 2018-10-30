@@ -56,7 +56,7 @@ class ServiceListBuilder extends EntityListBuilder
                         {% trans %}Unused{% endtrans %}
                     {% else %}
                         <a href=\"{{ path('entity.service.usage', {service: row.id}) }}\">
-                            {% transchoice {$count} with {'%count': {$count}} %}
+                            {% transchoice {$count} with {'%count%': {$count}} %}
                                 {1} 1 instance|[2,Inf[ %count% instances
                             {% endtranschoice %}
                         </a>
