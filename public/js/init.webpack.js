@@ -1,4 +1,3 @@
-import "@fortawesome/fontawesome-free/js/all";
 
 import "jquery/dist/jquery.min";
 import "moment/min/locales.min";

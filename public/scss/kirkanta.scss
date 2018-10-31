@@ -47,6 +47,7 @@ $bg-faded: red;
 @import "theme";
 @import "react-widgets";
 @import "ckeditor";
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
 
 // There seems to be a bug in Symfony's BS4 template that hides these errors.
 input.is-invalid + label > .invalid-feedback {
