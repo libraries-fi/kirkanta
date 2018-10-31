@@ -1,0 +1,614 @@
+messages:
+    '{1} 1 instance | [2, Inf[ %count% instances':
+        fi: '{1} 1 esiintymä|[2, Inf[ %count% esiintymää'
+    '1 week':
+        fi: '1 viikko'
+    Account:
+        fi: Käyttäjätili
+        sv: Konto
+    Add:
+        fi: Lisää
+    'Add description':
+        fi: 'Lisää kuvaus'
+    'Add new %type%':
+        fi: 'Luo uusi %type%'
+    Address:
+        fi: Osoite
+        sv: Adress
+    'Add row':
+        fi: 'Lisää rivi'
+    Admin:
+        fi: Ylläpito
+        sv: Administration
+    Administrators:
+        fi: Ylläpitäjät
+        sv: Administrators
+    '-- All --':
+        fi: '-- Kaikki --'
+        sv: '--Alla--'
+    '-- Any --':
+        fi: '-- Mikä tahansa --'
+        sv: '--Vilken som helst--'
+    Archive:
+        fi: Arkisto
+        sv: Arkiv
+    Area:
+        fi: Alue
+        sv: Område
+    'Arrival guide':
+        fi: Saapumisohjeet
+        sv: Vägbeskrivning
+    Author:
+        fi: Omistaja
+    'Available for loan':
+        fi: Lainattavissa
+    'Available translations':
+        fi: 'Saatavilla olevat käännökset'
+    'AV production':
+        fi: AV-tuotanto
+    'Basic details':
+        fi: Perustiedot
+    'Basic information':
+        fi: Perustiedot
+        sv: Grundinformation
+    'Book tips':
+        fi: Kirjavinkkaus
+    'Box number':
+        fi: Postilaatikko
+    'Branch type':
+        fi: Alatyyppi
+        sv: Bibliotekstyp
+    'Building architect':
+        fi: Arkkitehti
+        sv: Byggnadsarkitekt
+    'Building information':
+        fi: 'Rakennuksen tiedot'
+        sv: 'Information om byggnaden'
+    'Building name':
+        fi: 'Rakennuksen nimi'
+        sv: 'Byggnadens namn'
+    Buses:
+        fi: Linja-autot
+        sv: Bussar
+    Cancel:
+        fi: Peruuta
+    Category:
+        fi: Kategoria
+    Change:
+        fi: Muuta
+    'Changing these details is restricted to administrators.':
+        fi: 'Näiden tietojen muuttaminen on rajoitettu ylläpitäjille.'
+    'Check if this organisation is not a library consortium.':
+        fi: 'Valitse mikäli organisaatio ei ole kirjastokimppa.'
+    'Children''s library':
+        fi: Lastenkirjasto
+        sv: Barnbibliotek
+    'Children''s library work':
+        fi: Lastenkirjastotyö
+    'Choose file...':
+        fi: 'Valitse tiedosto...'
+    Cities:
+        fi: Kunnat
+        sv: Städer
+    Closes:
+        fi: Kiinni
+    Collection:
+        fi: Kokoelma
+        sv: Samling
+    Collections:
+        fi: Kokoelmat
+    'Combine services':
+        fi: 'Yhdistä palveluita'
+        sv: 'Kombinera tjänster'
+    Communications:
+        fi: Viestintä
+    Consortiums:
+        fi: Kimpat
+        sv: Biblioteksnätverk
+    'Construction year':
+        fi: Rakennusvuosi
+        sv: Byggår
+    'Contact details':
+        fi: Yhteystiedot
+    'Contact info':
+        fi: Yhteystiedot
+        sv: Kontaktinformation
+    Content:
+        fi: Sisältö
+        sv: Innehåll
+    Coordinates:
+        fi: Koordinaatit
+        sv: Koordinater
+    '%count% weeks':
+        fi: '%count% viikkoa'
+    'Create a new period or modify the primary period of this library.':
+        fi: 'Luo uusi tai muokkaa kirjaston pääjaksoa.'
+    'Create new':
+        fi: 'Luo uusi'
+    'Create translation':
+        fi: 'Luo käännös'
+    'Creating a new translation':
+        fi: 'Luodaan uutta käännöstä'
+    'Customer service':
+        fi: Asiakaspalvelu
+    Days:
+        fi: Päivät
+    'Default picture':
+        fi: Oletuskuva
+    Delete:
+        fi: Poista
+        sv: Radera
+    'Delete row':
+        fi: 'Poista rivi'
+    'Delete %type% #%id%':
+        fi: 'Poista %type% #%id%'
+    Department:
+        fi: Osasto
+    Departments:
+        fi: Osastot
+        sv: Avdelningar
+    Description:
+        fi: Kuvaus
+        sv: Beskrivning
+    'Digital publishing':
+        fi: 'Digitaalinen julkaiseminen'
+    Dimensions:
+        fi: Mitat
+    'Do you really wish to delete this record?':
+        fi: 'Haluatko varmasti poistaa tämän tietueen?'
+    Draft:
+        fi: Luonnos
+        sv: Opublicerad
+    'Drag row':
+        fi: 'Raahaa riviä'
+    'Edit %type% #%id%':
+        fi: 'Muokataan tyypin %type% tietuetta #%id%'
+    Education:
+        fi: Opetus
+    'Education planning':
+        fi: 'Opetuksen suunnittelu'
+    Email:
+        fi: Sähköposti
+    'Email address':
+        fi: Sähköpostiosoite
+    'Email address can be published':
+        fi: 'Sähköpostiosoitteen voi julkaista'
+    'Email addresses':
+        fi: Sähköpostiosoitteet
+    English:
+        fi: Englanti
+        sv: Engelska
+    'Exception schedules':
+        fi: Poikkeusaukiolot
+    'Exclusive Finna organisation':
+        fi: 'Vain Finnassa julkaistava organisaatio'
+    'Existing translations':
+        fi: 'Luodut käännökset'
+    File:
+        fi: Tiedosto
+    Filter:
+        fi: Suodi
+        sv: Filtrera
+    Finances:
+        fi: Talous
+    'Finna coverage':
+        fi: 'Kattavuus Finnassa'
+    'Finna ID':
+        fi: Finna-tunniste
+    'Finna information':
+        fi: Finna-tiedot
+    'Finna materials':
+        fi: Finna-aineistot
+    'Finna organisation':
+        fi: Finna-organisaatio
+    'Finna organisations':
+        fi: Finna-organisaatiot
+        sv: 'Finna organisationer'
+    Finnish:
+        fi: Suomi
+        sv: Finska
+    'First name':
+        fi: Etunimi
+    'For self-service times, uncheck the "Staff" checkbox.':
+        fi: 'Ruksi "Henkilökunta" omatoimiajoille'
+    'From template':
+        fi: 'Luo mallipohjasta'
+    Games:
+        fi: Pelit
+    Group:
+        fi: Ryhmä
+        sv: Grupp
+    Hardware:
+        fi: Laitteet
+        sv: Hårdvara
+    'Head of organisation':
+        fi: Kirjastonjohtaja
+    Help:
+        fi: Apua
+        sv: Hjälp
+    Hidden:
+        fi: Piilotettu
+        sv: Gömd
+    Homepage:
+        fi: Kotisivu
+    'Home service':
+        fi: Kotipalvelu
+        sv: 'Boken kommer-service'
+    'Human resources':
+        fi: Henkilöstöpalvelut
+    'If this library has self-service schedules, you will need to modify this period and add them <b>or they will be lost</b>.':
+        fi: 'Mikäli kirjastolla on omatoimiaukioloja, ne on lisättävä tämän jakson tietoihin <b>tai ne menetetään</b>.'
+    'Immigrant library work':
+        fi: Maahanmuuttajakirjastotyö
+    'Include past periods':
+        fi: 'Näytä menneet jaksot'
+    Indexing:
+        fi: Luettelointi
+    Info:
+        fi: Tietoa
+        sv: Info
+    'Information retrieval':
+        fi: Tiedonhaku
+    'Information technology':
+        fi: Tietotekniikka
+    'Institutional library':
+        fi: Laitoskirjasto
+        sv: Anstaltsbibliotek
+    'Interior designer':
+        fi: Sisustussuunnittelija
+        sv: Inredningsarkitekt
+    'International cooperation':
+        fi: 'Kansainvälinen yhteistyö'
+    Introduction:
+        fi: Esittely
+    'Introduction is also required for exporting to Suomi.fi.':
+        fi: 'Esittely on vaadittu Suomi.fi''hin viemiseksi.'
+    'Invalid data':
+        fi: 'Virheellinen arvo'
+    ISIL:
+        fi: ISIL
+        sv: ISIL-kod
+    'Job title':
+        fi: Työnimike
+        sv: Titel
+    Language:
+        fi: Kieli
+    'Last name':
+        fi: Sukunimi
+    'Legacy period':
+        fi: 'Vanhantyyppinen jakso'
+    Libraries:
+        fi: Kirjastot
+        sv: Bibliotek
+    Library:
+        fi: Kirjasto
+        sv: Bibliotek
+    'Library facility work':
+        fi: Kirjastolaitostyö
+    'Library is closed':
+        fi: 'Kirjasto on kiinni'
+    'Library systems':
+        fi: Kirjastojärjestelmät
+    Links:
+        fi: Linki
+    Literature:
+        fi: Kirjallisuus
+    Locale:
+        fi: Lokalisointi
+    Location:
+        fi: Sijainti
+    Login:
+        fi: 'Kirjaudu sisään'
+    'Login required':
+        fi: 'Sisäänkirjautuminen vaadittu'
+    Logo:
+        fi: Logo
+    Logout:
+        fi: 'Kirjaudu ulos'
+        sv: 'Logga ut'
+    'Mail address':
+        fi: Postiosoite
+        sv: Postadress
+    'Main library':
+        fi: Pääkirjasto
+        sv: Huvudbibliotek
+    'Manage translations':
+        fi: 'Hallitse käännöksiä'
+        sv: 'Lägg till/ta bort språk'
+    'Materials purchases':
+        fi: 'Aineiston hankinta'
+    'Materials selection':
+        fi: 'Aineiston valinta'
+    'Material usage':
+        fi: 'Aineiston käyttö'
+    'Media education':
+        fi: Mediakoulutus
+    'Merge services':
+        fi: 'Yhdistä palvelut'
+    Message:
+        fi: Viesti
+        sv: Meddelande
+    Meta:
+        fi: Meta
+    'Mobile libraries':
+        fi: Kirjastoautot
+    'Mobile library':
+        fi: Kirjastoauto
+        sv: Biblioteksbuss
+    'Mobile stop':
+        fi: 'Kirjastoauton pysäkki'
+    Museum:
+        fi: Museo
+        sv: Museum
+    'Music library':
+        fi: Musiikkikirjasto
+        sv: Musikbibliotek
+    'Music library work':
+        fi: Musiikkikirjastotyö
+    Name:
+        fi: Nimi
+        sv: Namn
+    'Name of the holiday etc.':
+        fi: 'Juhlapäivän nimi tms.'
+    Network:
+        fi: Tietoverkko
+        sv: Nätverk
+    Next:
+        fi: Seuraava
+    Notification:
+        fi: Ilmoitus
+    Notifications:
+        fi: Ilmoitukset
+        sv: Aviseringar
+    'No unread notifications.':
+        fi: 'Ei uusia ilmoituksia.'
+        sv: 'Inga olästa aviseringar'
+    'Official identifier':
+        fi: 'Virallinen tunniste'
+        sv: 'Annan identifieringskod'
+    Opens:
+        fi: Aukeaa
+    Options:
+        fi: Valinnat
+    Other:
+        fi: 'Jokin muu'
+    'Other library organisation':
+        fi: 'Muu kirjastoalan organisaatio'
+        sv: 'Annan biblioteksrelaterad organisation'
+    'Override name':
+        fi: 'Muokkaa nimeä'
+    Owner:
+        fi: Omistaja
+    'Parking instructions':
+        fi: Pysäköintiohjeet
+        sv: Parkeringsanvisningar
+    Password:
+        fi: Salasana
+    Pedagogy:
+        fi: Pedagogia
+    Period:
+        fi: Jakso
+    Periods:
+        fi: Jaksot
+        sv: Perioder
+    'Period templates':
+        fi: Jaksopohjat
+        sv: 'Mallar för öppethållningstider'
+    Person:
+        fi: Henkilö
+    'Personal details':
+        fi: 'Henkilökohtaiset tiedot'
+    Persons:
+        fi: Henkilöt
+        sv: Personer
+    Phone:
+        fi: Puhelin
+    'Phone number':
+        fi: Puhelinnumero
+    'Phone Numbers':
+        fi: Puhelinnumerot
+        sv: Telefonnummer
+    Photo:
+        fi: Valokuva
+    Pictures:
+        fi: Kuvat
+        sv: Bilder
+    'Polytechnic library':
+        fi: AMK-kirjasto
+        sv: Yrkeshögskolebibliotek
+    Posted:
+        fi: Julkaistu
+    Preview:
+        fi: Esikatselu
+    Price:
+        fi: Hinta
+    'Primary contact info':
+        fi: Pääyhteystiedot
+        sv: 'Primär kontaktinformation'
+    Published:
+        fi: Julkaistu
+        sv: Publicerad
+    Qualities:
+        fi: Osaamisalueet
+    Region:
+        fi: Maakunta
+    'Regional libraries':
+        fi: Maakuntakirjastot
+        sv: Landskapsbibliotek
+    'Regional library':
+        fi: Maakuntakirjasto
+        sv: Landskapsbibliotek
+    Regions:
+        fi: Maakunnat
+        sv: Regioner
+    Relationships:
+        fi: Suhteet
+    'Remote services':
+        fi: Etäpalvelut
+    Responsibility:
+        fi: Vastuualue
+    Room:
+        fi: Tila
+        sv: Rum
+    Rotation:
+        fi: Kierto
+    Russian:
+        fi: Venäjä
+    Sami:
+        fi: 'Saamen kieli'
+    Save:
+        fi: Tallenna
+        sv: Spara
+    Schedules:
+        fi: Aukiolot
+    'School library':
+        fi: Koulukirjasto
+        sv: Skolbibliotek
+    Search:
+        fi: Hae
+        sv: Sök
+    'Seeking library work':
+        fi: 'Etsivä kirjastotyö'
+    '-- Select --':
+        fi: '-- Valitse --'
+        sv: '--Välj--'
+    Service:
+        fi: Palvelu
+        sv: Tjänst
+    'Service instance':
+        fi: Palveluinstanssi
+    'Service point':
+        fi: Palvelupiste
+    'Service points':
+        fi: Palvelupisteet
+        sv: Serviceenheter
+    Services:
+        fi: Palvelut
+        sv: Tjänster
+    'Service templates':
+        fi: Palvelumallit
+        sv: 'Mallar för tjänster'
+    'Service tree':
+        fi: Palveluhierarkia
+    'Short description':
+        fi: 'Lyhyt kuvaus'
+    'Short name':
+        fi: 'Lyhyt nimi'
+        sv: 'Kort namn'
+    Slogan:
+        fi: Slogan
+        sv: Slogan
+    Slug:
+        fi: URL-tunniste
+        sv: Url-slutled
+    Source:
+        fi: Lähde
+    'Special library':
+        fi: Erikoiskirjasto
+        sv: Specialbibliotek
+    Staff:
+        fi: Henkilökunta
+        sv: Personal
+    'Standard details':
+        fi: Perustiedot
+    'Standard name':
+        fi: Perusnimi
+        sv: Standardnamn
+    State:
+        fi: Tila
+        sv: Status
+    Statistics:
+        fi: Tilastot
+    Street:
+        fi: Katuosoite
+        sv: Gatuadress
+    Subject:
+        fi: Otsikko
+        sv: Ämne
+    Swedish:
+        fi: Ruotsi
+        sv: Svenska
+    Text:
+        fi: Teksti
+        sv: Text
+    'This action cannot be undone.':
+        fi: 'Tätä toimintoa ei voi peruuttaa.'
+    'This information could e.g. be displayed in a summary.':
+        fi: 'Tietoja käytetään esim. yhteenvedossa.'
+    'This period is in the old format and cannot be edited anymore.':
+        fi: 'Tämä jakso on vanhassa muodossa eikä sitä voi enää muokata.'
+    'This period was converted from the old format.':
+        fi: 'Jakso tuotiin vanhasta muodosta'
+    Tools:
+        fi: Työkalut
+        sv: Verktyg
+    'Total of %count% services.':
+        fi: 'Yhteensä %count% palvelua.'
+    Trains:
+        fi: Junat
+        sv: Tåg
+    Trams:
+        fi: Raitiovaunut
+        sv: Spårvagnar
+    'Transit directions':
+        fi: Saapumisohjeet
+        sv: Vägbeskrivning
+    Translation:
+        fi: Kääntäminen
+        sv: Översättning
+    'Translations saved.':
+        sv: 'Översättningen sparades'
+    'Translation was removed.':
+        fi: 'Käännös poistettiin.'
+    Type:
+        fi: Tyyppi
+        sv: Typ
+    'University library':
+        fi: Yliopistokirjasto
+        sv: Universitetsbibliotek
+    'Untranslated only':
+        fi: 'Vain kääntämättömät'
+        sv: 'Bara oöversatta'
+    Unused:
+        fi: 'Ei käytetty'
+    URL:
+        fi: URL
+    'Usage info':
+        fi: 'Käytön tiedot'
+    'Used as a short description to improve accessibility.':
+        fi: 'Käytetään lyhyenä kuvauksena saavutettavuuden parantamiseksi.'
+    'User groups':
+        fi: Käyttäjäryhmät
+        sv: Användargrupper
+    Username:
+        fi: Käyttäjänimi
+    Users:
+        fi: Käyttäjät
+        sv: Användare
+    'Valid from':
+        fi: Alkaen
+    'Valid until':
+        fi: Päättyen
+    'Vocational college library':
+        fi: Ammattikoulukirjasto
+        sv: Yrkesläroanstaltsbibliotek
+    'Web services':
+        fi: Verkkopalvelut
+    Website:
+        fi: Verkkosivu
+    Websites:
+        fi: Verkkosivut
+        sv: Webbplatser
+    'Will be displayed below the schedules':
+        fi: 'Näytetään aukiolotietojen yhteydessä'
+    'Work info':
+        fi: 'Työhön liittyvät tiedot'
+    'Write line numbers only.':
+        fi: 'Kirjoita vain linjanumerot.'
+    Year:
+        fi: Vuosi
+    'Youth library work':
+        fi: Nuorisokirjastotyö
+    Zipcode:
+        fi: Postinumero
+        sv: Postnummer
