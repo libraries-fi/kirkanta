@@ -34,7 +34,7 @@ class IndexEntities extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output) : void
     {
-        $entity_type = $input->getArgument('entity_type');;
+        $entity_type = $input->getArgument('entity_type');
         $entity_class = $this->types->getEntityClass($entity_type);
 
         if (!is_a($entity_class, ApiCacheable::class, true)) {
