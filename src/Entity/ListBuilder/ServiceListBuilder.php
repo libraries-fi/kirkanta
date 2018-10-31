@@ -57,16 +57,11 @@ class ServiceListBuilder extends EntityListBuilder
                     {% else %}
                         <a href=\"{{ path('entity.service.usage', {service: row.id}) }}\">
                             {% transchoice {$count} with {'%count%': {$count}} %}
-                                {1} 1 instance|[2,Inf[ %count% instances
+                                {1} 1 instance | [2, Inf[ %count% instances
                             {% endtranschoice %}
                         </a>
                     {% endif %}
                 ";
-
-                return $count == 1
-                    ? '{% trans %}1 instance{% endtrans %}'
-                    : "{% trans with {'%count%': {$count}} %}%count% instances{% endtrans %}"
-                    ;
             });
 
         return $table;

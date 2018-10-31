@@ -30,11 +30,17 @@
               <input type="checkbox" name="s[]" value="{{ service.id }}" class="mr-4 custom-control-input" id="s-{{ service.id }}"/>
               <label class="custom-control-label pl-2" for="s-{{ service.id }}">{{ service.name }}</label>
             </div>
-            <span class="badge badge-primary">
-              {% transchoice count with {"%count%": count} %}
-                {0} %count% instances | {1} 1 instance | [2, Inf[ %count% instances
-              {% endtranschoice %}
-            </span>
+            {% if count > 0 %}
+              <span class="badge badge-primary">
+                {% transchoice count with {"%count%": count} %}
+                  {1} 1 instance | [2, Inf[ %count% instances
+                {% endtranschoice %}
+              </span>
+            {% else %}
+              <span class="badge badge-secondary">
+                {% trans %}Unused{% endtrans %}
+              </span>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>

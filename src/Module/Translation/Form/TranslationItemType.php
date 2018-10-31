@@ -21,7 +21,7 @@ class TranslationItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
-            $message = $this->processMessage($event->getData());
+            $message = $this->prepareForForm($event->getData());
             $event->setData($message);
             $form = $event->getForm();
 
@@ -81,27 +81,27 @@ class TranslationItemType extends AbstractType
     {
         if ($form->get('translation')->count() > 0) {
             $keys = $form->getData()['keys'];
+
             foreach ($view->children['translation']->children as $i => $child) {
                 $key = $keys[$i];
                 $key = str_replace(['{', '}'], '', $key);
-                $key = str_replace(',Inf[', '+', $key);
+                $key = preg_replace('/,(\s*)Inf\[/', '+', $key);
                 $key = str_replace(['[', '-'], ['', '-'], $key);
                 $child->vars['translation_plural'] = $key;
             }
         }
     }
 
-    private function processMessage(array $message) : array
+    private function prepareForForm(array $message) : array
     {
         if (strpos($message['id'], '|')) {
-            $sources = explode('|', $message['id']);
-            $translations = explode('|', $message['translation']);
+            $sources = preg_split('/(\s*)\|(\s*)/', $message['id']);
+            $translations = preg_split('/(\s*)\|(\s*)/', $message['translation']);
             $values = [];
             $message['keys'] = [];
 
             foreach ($sources as $i => $source) {
-                list($key, $label) = explode(' ', $source, 2);
-
+                list($key, $label) = preg_split('/(?<=[\}\[\]]) /', $source, 2);
                 $values[$i] = null;
                 $message['parts'][$i] = $label;
                 $message['keys'][$i] = $key;
