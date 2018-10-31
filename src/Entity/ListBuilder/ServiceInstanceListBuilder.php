@@ -53,11 +53,13 @@ class ServiceInstanceListBuilder extends EntityListBuilder
             ->setSortable('standard_name')
             ->setSortable('name')
             ->useAsTemplate('standard_name')
+            ->useAsTemplate('type')
             ->transform('standard_name', function() {
                 return '<a href="{{ path("entity.service_instance.edit", {service_instance: row.id}) }}">{{ row.standardName }}</a>';
             })
             ->transform('type', function($s) use ($types) {
-                return $types->search($s->getType());
+                $type = $types->search($s->getType());
+                return "{% trans %}{$type}{% endtrans %}";
             });
 
         return $table;
