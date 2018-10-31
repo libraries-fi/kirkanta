@@ -36,12 +36,14 @@ class ImportTranslations extends Command
         foreach ($data as $domain => $messages) {
             foreach ($messages as $id => $translations) {
                 foreach ($translations as $locale => $translation) {
-                    $this->translations->addMessage([
-                        'domain' => $domain,
-                        'locale' => $locale,
-                        'id' => $id,
-                        'translation' => $translation
-                    ]);
+                    if (!empty($translation)) {
+                        $this->translations->addMessage([
+                            'domain' => $domain,
+                            'locale' => $locale,
+                            'id' => $id,
+                            'translation' => $translation
+                        ]);
+                    }
                 }
             }
         }

@@ -38,6 +38,7 @@ class ExportTranslations extends Command
             SELECT domain, locale, id, translation
             FROM translations
             ORDER BY domain, id, locale
+            WHERE translation IS NOT NULL
         ');
 
         $data = [];
