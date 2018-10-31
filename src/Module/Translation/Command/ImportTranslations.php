@@ -49,5 +49,6 @@ class ImportTranslations extends Command
         }
 
         $this->translations->flush();
+        $output->writeln('Remember to flush cache afterwards!');
     }
 }
