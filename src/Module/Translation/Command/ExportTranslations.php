@@ -37,8 +37,8 @@ class ExportTranslations extends Command
         $result = $this->db->query('
             SELECT domain, locale, id, translation
             FROM translations
-            ORDER BY domain, id, locale
             WHERE translation IS NOT NULL
+            ORDER BY domain, id, locale
         ');
 
         $data = [];
