@@ -1,13 +1,22 @@
 {% block breadcrumb %}
   <ol class="breadcrumb">
     {% for child in item.children %}
-    <li class="breadcrumb-item">
-      {% if child.extra('translation_domain') is same as(false) %}
-        {{ child.name }}
-      {% else %}
-        {{ child.name|trans }}
-      {% endif %}
-    </li>
+      {% with {item: child} %}
+        {% block menu_item %}
+          {% set route_name = item.extra("route") %}
+          {% set route_parameters = item.extra("route_parameters", {}) %}
+
+          <li class="breadcrumb-item">
+            <a href="{{ item.uri }}">
+              {% if item.extra('translation_domain') is same as(false) %}
+                {{ item.name }}
+              {% else %}
+                {{ item.name|trans }}
+              {% endif %}
+            </a>
+          </li>
+        {% endblock %}
+      {% endwith %}
     {% endfor %}
   </ol>
 {% endblock %}
