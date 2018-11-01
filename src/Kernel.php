@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\DependencyInjection\Compiler\BreadcrumbProviderPass;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -33,6 +34,11 @@ class Kernel extends BaseKernel
                 yield new $class();
             }
         }
+    }
+
+    public function build(ContainerBuilder $container) : void
+    {
+        $container->addCompilerPass(new BreadcrumbProviderPass);
     }
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)

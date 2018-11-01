@@ -18,6 +18,9 @@ services:
         autowire: true
         autoconfigure: true
         public: false
+    _instanceof:
+        App\Menu\Breadcrumb\BreadcrumbProviderInterface:
+            tags: ['app.breadcrumb_provider']
 
     App\:
         resource: '../src/*'
@@ -25,7 +28,8 @@ services:
 
     App\Controller\:
         resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+        tags:
+          - { name: controller.service_arguments }
 
     App\Component\Twig\TableExtension:
         tags:
@@ -119,8 +123,14 @@ services:
     menu_builder:
         alias: 'App\Menu\Builder'
 
+    App\Menu\BreadcrumbBuilder: ~
+
     breadcrumb_builder:
-        class: 'App\Menu\BreadcrumbBuilder'
+        alias: 'App\Menu\BreadcrumbBuilder'
+
+    App\Menu\Breadcrumb\LibraryResourceCrumbProvider:
+        tags:
+            - { name: app.breadcrumb_provider, priority: 100 }
 
     kirkanta.menu.main:
         public: true

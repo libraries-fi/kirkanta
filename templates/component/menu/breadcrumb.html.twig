@@ -5,13 +5,14 @@
         {% block menu_item %}
           {% set route_name = item.extra("route") %}
           {% set route_parameters = item.extra("route_parameters", {}) %}
+          {% set translation_domain = item.extra("translation_domain") %}
 
           <li class="breadcrumb-item">
             <a href="{{ item.uri }}">
-              {% if item.extra('translation_domain') is same as(false) %}
+              {% if translation_domain is same as(false) %}
                 {{ item.name }}
               {% else %}
-                {{ item.name|trans }}
+                {{ item.name|trans({}, translation_domain|default("messages")) }}
               {% endif %}
             </a>
           </li>
