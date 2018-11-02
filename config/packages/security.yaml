@@ -5,7 +5,8 @@ security:
         App\Entity\User: bcrypt
     providers:
         user_db:
-            entity: { class: App\Entity\User, property: username }
+            entity:
+                class: App\Entity\User
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

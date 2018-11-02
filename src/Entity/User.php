@@ -16,7 +16,7 @@ use UserAccountsBundle\UserInterface;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Doctrine\UserRepository")
  * @ORM\Table(name="users")
  */
 class User extends EntityBase implements CreatedAwareness, Serializable, UserInterface
