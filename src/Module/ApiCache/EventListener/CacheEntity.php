@@ -43,7 +43,7 @@ class CacheEntity
         $this->insideOwnFlush = true;
 
         if ($this->queue) {
-            $entities = array_unique($this->queue);
+            $entities = array_unique($this->queue, SORT_REGULAR);
             $this->queue = [];
 
             foreach ($entities as $entity) {

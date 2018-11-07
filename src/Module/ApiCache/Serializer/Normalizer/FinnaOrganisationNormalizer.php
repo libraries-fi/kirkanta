@@ -21,6 +21,8 @@ class FinnaOrganisationNormalizer implements NormalizerInterface
 
     public function normalize($object, $format = null, array $context = []) : ?array
     {
+        $context['for_finna_organisation'] = true;
+
         $values = $this->inner->normalize($object, $format, $context);
         $values += $values['consortium'];
         unset($values['consortium']);

@@ -44,9 +44,19 @@ class DocumentManager
                 'groups' => ['default', 'api_cache']
             ]);
 
-            $serialized = $this->serializer->serialize($document, 'json', [
-                'groups' => ['default', 'api_cache']
-            ]);
+            if (is_null($document)) {
+                /**
+                 * NULL would actually be serialized to a string "null" but we want a NULL.
+                 *
+                 * Intent is to allow the normalizer to return NULL for entities that should not
+                 * be offered by the API, e.g. consortiums that are in fact Finna organisations.
+                 */
+                $serialized = null;
+            } else {
+                $serialized = $this->serializer->serialize($document, 'json', [
+                    'groups' => ['default', 'api_cache']
+                ]);
+            }
 
             $query = $this->em->getRepository(get_class($entity))
                 ->createQueryBuilder('e')

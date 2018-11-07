@@ -21,6 +21,10 @@ class ConsortiumNormalizer implements NormalizerInterface
 
     public function normalize($object, $format = null, array $context = [])
     {
+        if (empty($context['for_finna_organisation']) && $object->isFinnaExclusive()) {
+            return null;
+        }
+
         $values = $this->inner->normalize($object, $format, $context);
         $values['logo'] = $values['logo']['files'] ?? null;
         return $values;

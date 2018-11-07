@@ -144,4 +144,12 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
     {
         return $this->old_logo_filename;
     }
+
+    public function isFinnaExclusive() : bool {
+        if ($finna_data = $this->getFinnaData()) {
+            return $finna_data->isExclusive();
+        } else {
+            return false;
+        }
+    }
 }
