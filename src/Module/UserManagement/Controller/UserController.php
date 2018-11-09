@@ -35,7 +35,7 @@ class UserController extends Controller
 
     /**
      * @Route("/user_management", name="user_management.own_group")
-     * @Template("entity/list.html.twig")
+     * @Template("entity/collection.html.twig")
      */
     public function usersFromGroup()
     {
@@ -156,7 +156,7 @@ class UserController extends Controller
         }
 
         return [
-            'form' => $form,
+            'form' => $form->createView(),
         ];
     }
 

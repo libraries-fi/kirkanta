@@ -34,6 +34,11 @@ class Library extends Facility implements LibraryInterface
      */
     private $organisation;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $main_library = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -65,5 +70,15 @@ class Library extends Facility implements LibraryInterface
     public function getOrganisation() : ?Organisation
     {
         return $this->organisation;
+    }
+
+    public function isMainLibrary() : bool
+    {
+        return $this->main_library;
+    }
+
+    public function setMainLibrary(bool $state) : void
+    {
+        $this->main_library = $state;
     }
 }

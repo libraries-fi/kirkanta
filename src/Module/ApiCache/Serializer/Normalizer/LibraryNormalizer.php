@@ -23,6 +23,8 @@ class LibraryNormalizer implements NormalizerInterface
     {
         $values = $this->inner->normalize($object, $format, $context);
         $values['coverPhoto'] = $values['pictures'][0]['files'] ?? null;
+        $values['coordinates'] = $values['address']['coordinates'];
+        unset($values['address']['coordinates']);
         return $values;
     }
 }

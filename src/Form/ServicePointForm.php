@@ -22,6 +22,7 @@ class ServicePointForm extends LibraryForm
          * Override fields to change options.
          */
         $builder
+            ->remove('main_library')
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Select --',
                 'choices' => new ServicePointTypes

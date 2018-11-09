@@ -2,6 +2,7 @@
 
 namespace App\Form\EntityData;
 
+use App\Entity\LibraryData;
 use App\Entity\OrganisationData;
 use App\Form\I18n\EntityDataType;
 use App\Form\Type\RichtextType;
@@ -14,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OrganisationDataType extends EntityDataType
 {
-    protected $dataClass = OrganisationData::class;
+    protected $dataClass = LibraryData::class;
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
@@ -25,11 +26,6 @@ class OrganisationDataType extends EntityDataType
                 'label' => 'Name',
                 'langcode' => $options['langcode'],
             ])
-            ->add('short_name', null, [
-                'required' => false,
-                'label' => 'Short name',
-                'langcode' => $options['langcode']
-            ])
             ->add('slug', SlugType::class, [
                 'label' => 'Slug',
                 'langcode' => $options['langcode'],
@@ -38,15 +34,6 @@ class OrganisationDataType extends EntityDataType
             ->add('description', RichtextType::class, [
                 'required' => false,
                 'label' => 'Description',
-                'langcode' => $options['langcode']
-            ])
-            ->add('email', EmailType::class, [
-                'label' => 'Email',
-                'langcode' => $options['langcode']
-            ])
-            ->add('homepage', UrlType::class, [
-                'required' => false,
-                'label' => 'Homepage',
                 'langcode' => $options['langcode']
             ])
             ;

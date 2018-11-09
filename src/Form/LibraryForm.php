@@ -9,6 +9,7 @@ use App\Form\Type\MailAddressType;
 use App\Form\Type\StateChoiceType;
 use App\Util\LibraryTypes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,6 +25,9 @@ class LibraryForm extends FormType
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Select --',
                 'choices' => new LibraryTypes
+            ])
+            ->add('main_library', CheckboxType::class, [
+                'required' => false,
             ])
             ->add('organisation', EntityType::class, [
                 'property_path' => 'organisation',

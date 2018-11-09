@@ -35,17 +35,6 @@ module.exports = {
         loader: "style-loader!css-loader",
       },
       {
-        test: /\.(png|jpg|gif|eot|woff|ttf|svg)$/,
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              limit: 200,
-            }
-          }
-        ]
-      },
-      {
         test: /\.(png|jpg|gif|eot|woff|woff2|ttf|svg)$/,
         use: [
           {

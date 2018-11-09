@@ -1991,6 +1991,10 @@ UPDATE departments SET type = 'department' WHERE type IS NULL;
 
 -- COMMIT PLACEHOLDER --
 
+
+
+
+
 DROP TABLE translations;
 
 CREATE TABLE translations (
@@ -2001,3 +2005,19 @@ CREATE TABLE translations (
 
   PRIMARY KEY (locale, domain, id)
 );
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+
+ALTER TABLE organisations ADD COLUMN main_library boolean NOT NULL DEFAULT false;
+
+UPDATE organisations SET main_library = true, type = 'library' WHERE type = 'main_library';
+
+UPDATE organisations SET type = 'library' WHERE type = 'regional';

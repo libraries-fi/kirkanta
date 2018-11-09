@@ -10,8 +10,6 @@ class LibraryTypes extends StringMap
     {
         parent::__construct([
             'Library' => 'library',
-            'Main library' => 'main_library',
-            'Regional library' => 'regional',
             'Mobile library' => 'mobile',
             'Home service' => 'home_service',
             'Institutional library' => 'institutional',
