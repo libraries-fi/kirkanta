@@ -24,7 +24,6 @@ class EntityTypeExtension extends AbstractTypeExtension
             return $this->queryBuilder;
         });
 
-        $options->setDefault('translation_domain', false);
         $options->setDefault('choice_translation_domain', false);
     }
 
