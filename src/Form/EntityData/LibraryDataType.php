@@ -103,7 +103,7 @@ class LibraryDataType extends EntityDataType
                         'query_builder' => $qb,
                     ])
                     ->add('phone', EntityType::class, [
-                        'label' => 'Primary phone number',
+                        'label' => 'Phone number',
                         'class' => PhoneNumber::class,
                         'required' => false,
                         'placeholder' => '-- Select --',
