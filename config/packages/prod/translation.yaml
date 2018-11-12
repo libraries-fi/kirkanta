@@ -1,0 +1,5 @@
+services:
+    translator.data_collector:
+        class: 'Symfony\Component\Translation\DataCollectorTranslator'
+        decorates: 'translator'
+        arguments: ['@translator.data_collector.inner']
