@@ -4,6 +4,7 @@
   "description": "Administration interface for hakemisto.kirjastot.fi",
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/polyfill": "^7.0.0",
     "@babel/runtime": "^7.0.0",
     "@ckeditor/ckeditor5-build-classic": "^11.0.1",
     "@ckeditor/ckeditor5-core": "^11.0.0",
@@ -12,7 +13,6 @@
   "devDependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
-    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free": "^5.3.1",

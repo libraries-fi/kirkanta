@@ -95,7 +95,7 @@
         {% endblock %}
 
         {% block region_main %}
-          <main id="l-main">
+          <main>
             {% block content %}{% endblock %}
           </main>
         {% endblock %}
@@ -130,8 +130,10 @@
     {% block javascripts %}
       {% if app.environment == "prod" %}
         <script src="{{ asset('/dist/script.js') }}"></script>
+        <script src="{{ asset('/dist/ckeditor.js') }}"></script>
       {% else %}
         <script src="{{ asset('/dev/script.js') }}"></script>
+        <script src="{{ asset('/dev/ckeditor.js') }}"></script>
       {% endif %}
     {% endblock %}
   </body>

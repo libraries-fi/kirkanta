@@ -1,4 +1,4 @@
-document.querySelectorAll(".custom-file").forEach((container) => {
+Array.from(document.querySelectorAll(".custom-file")).forEach((container) => {
   let input = container.querySelector("input");
   let label = container.querySelector("label");
 

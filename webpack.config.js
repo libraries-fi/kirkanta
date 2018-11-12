@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     script: ["./public/js/init.webpack.js"],
     style: ["./public/scss/kirkanta.scss"],
+    ckeditor: ["./public/js/init.ckeditor.js"],
   },
   output: {
     path: path.resolve(__dirname, "public/dev"),
@@ -48,10 +49,10 @@ module.exports = {
     ],
   },
   plugins: [
-    new CKEditorWebpackPlugin({
-      language: "fi",
-      additionalLanguages: ["sv"]
-    }),
+    // new CKEditorWebpackPlugin({
+    //   language: "fi",
+    //   additionalLanguages: ["sv", "en"]
+    // }),
     new MiniCssExtractPlugin,
     new webpack.ProvidePlugin({
       $: "jquery",

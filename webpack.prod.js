@@ -21,14 +21,14 @@ module.exports = merge(config, {
               ["@babel/preset-env", {
                 modules: false,
                 targets: {
-                  ie: 11
+                  ie: "11"
                 }
               }]
             ],
             plugins: ["@babel/plugin-transform-runtime"]
           }
         }
-      }
+      },
     ]
   },
   plugins: [new UglifyJsPlugin]
