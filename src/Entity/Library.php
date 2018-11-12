@@ -72,6 +72,11 @@ class Library extends Facility implements LibraryInterface
         return $this->organisation;
     }
 
+    public function setOrganisation(?Organisation $parent) : void
+    {
+        $this->organisation = $parent;
+    }
+
     public function isMainLibrary() : bool
     {
         return $this->main_library;
