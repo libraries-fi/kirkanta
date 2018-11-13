@@ -35,6 +35,10 @@
 
   .hud-group {
     flex-basis: 100%;
+
+    .rw-container {
+      flex: 1;
+    }
   }
 
   .hud-actions {
@@ -120,8 +124,7 @@
 
 .input-group {
   .cke {
-    // width: 100%;
-    flex-grow: 1;
+    flex: 1;
   }
 }
 
@@ -177,13 +180,14 @@
       display: flex;
 
       input,
-      select {
+      select,
+      .rw-widget {
         width: 10rem;
       }
     }
 
     .hud-actions {
-      flex-grow: 1;
+      flex: 1;
     }
   }
 

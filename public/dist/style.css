@@ -1697,6 +1697,8 @@ textarea.form-control {
     margin: 0 0 1rem; }
   .hud .hud-group {
     flex-basis: 100%; }
+    .hud .hud-group .rw-container {
+      flex: 1; }
   .hud .hud-actions {
     text-align: right;
     flex-grow: 1; }
@@ -1745,7 +1747,7 @@ textarea.form-control {
     display: block; }
 
 .input-group .cke {
-  flex-grow: 1; }
+  flex: 1; }
 
 .nav-form-tabs {
   margin: 0 0 1rem;
@@ -1781,10 +1783,11 @@ textarea.form-control {
       flex-basis: unset;
       display: flex; }
       .hud .hud-group input,
-      .hud .hud-group select {
+      .hud .hud-group select,
+      .hud .hud-group .rw-widget {
         width: 10rem; }
     .hud .hud-actions {
-      flex-grow: 1; }
+      flex: 1; }
   .hud.position-sticky {
     z-index: 1019; } }
 

@@ -14,10 +14,6 @@ $.fn.datePicker = function() {
       defaultValue: input.value ? new Date(input.value) : null,
       footer: false,
 
-      inputProps: {
-        // readOnly: true
-      },
-
       onChange: (value) => {
         input.value = moment(value).format("YYYY-MM-DD");
         this.first().trigger("kirkantaDateChange");
