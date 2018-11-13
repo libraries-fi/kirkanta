@@ -16,7 +16,7 @@ class LibrarySearchForm extends SearchFormType
     {
         $builder
             ->add('name')
-            ->add('branch_type', ChoiceType::class, [
+            ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Any --',
                 'choices' => new LibraryTypes
             ])

@@ -2,9 +2,8 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import Calendar from "react-widgets/lib/Calendar";
-import DateTimePicker from "react-widgets/lib/DateTimePicker";
-import * as datefns from "date-fns";
+import { Calendar, DateTimePicker } from "react-widgets";
+import { parse as parseDate } from "date-fns";
 
 $.fn.datePicker = function() {
   this.each((i, input) => {
@@ -36,7 +35,7 @@ $.fn.timePicker = function() {
     let widget = React.createElement(DateTimePicker, {
       date: false,
       format: "HH:mm",
-      defaultValue: current_time ? datefns.parse(current_time) : null,
+      defaultValue: current_time ? parseDate(current_time) : null,
       footer: false,
 
       inputProps: {

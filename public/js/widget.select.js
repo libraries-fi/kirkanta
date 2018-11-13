@@ -12,6 +12,7 @@ document.querySelectorAll("select").forEach((select) => {
 
     onChange(option) {
       option.selected = true;
+      select.dispatchEvent(new Event("change"));
     }
   });
 
@@ -20,4 +21,5 @@ document.querySelectorAll("select").forEach((select) => {
   select.parentElement.insertBefore(container, select);
   select.style.display = "none";
   ReactDOM.render(widget, container);
+
 });
