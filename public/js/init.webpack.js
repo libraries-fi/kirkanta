@@ -18,6 +18,7 @@ import "./widget.sluggable";
 import "./widget.radio-collapse";
 import "./widget.file-input";
 import "./widget.sort-select";
+import "./widget.select";
 
 import "./period.widgets";
 import "./period.edit";
