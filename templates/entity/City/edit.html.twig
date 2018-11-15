@@ -12,9 +12,9 @@
 
   <fieldset class="form-section">
     <legend>{% trans %}Relationships{% endtrans %}</legend>
+    {{ form_row(form.consortium) }}
     {{ form_row(form.region) }}
     {# {{ form_row(form.regional_library) }} #}
-    {# {{ form_row(form.consortium) }} #}
   </fieldset>
 
   {{ form_end(form) }}
