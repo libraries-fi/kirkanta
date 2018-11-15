@@ -10,11 +10,28 @@ use App\Util\SystemLanguages;
 
 trait TranslatableTrait
 {
-    protected $langcode = Translations::DEFAULT_LANGCODE;
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $default_langcode;
+
+    // protected $langcode = SystemLanguages::DEFAULT_LANGCODE;
+
+    public function __get($property)
+    {
+        if ($property == 'langcode') {
+            $this->langcode = $this->getDefaultLangcode();
+            return $this->langcode;
+        }
+        exit('GET');
+    }
 
     public function getTranslations() : Collection
     {
-        // $translations is a Doctrine propery so it needs to be declared in the actual entity class.
+        /**
+         * NOTE: $translations is a Doctrine propery so it needs to be declared in
+         * the actual entity class.
+         */
         return $this->translations;
     }
 
@@ -41,6 +58,28 @@ trait TranslatableTrait
 
     public function getDefaultLanguage() : string
     {
+        /**
+         * FIXME: Remove this check and the static fallback after all entities have been migrated
+         * to use $default_langcode.
+         */
+
+        var_dump('@deprecated');
+        exit;
+
+        if (isset($this->default_langcode)) {
+            return $this->default_langcode;
+        }
         return SystemLanguages::DEFAULT_LANGCODE;
     }
+
+    public function setDefaultLangcode(string $langcode) : void
+    {
+        $this->default_langcode = $langcode;
+    }
+
+    public function getDefaultLangcode() : string
+    {
+        return $this->default_langcode;
+    }
+
 }

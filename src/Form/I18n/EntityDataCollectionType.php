@@ -26,7 +26,7 @@ class EntityDataCollectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults([
-            'default_langcode' => SystemLanguages::DEFAULT_LANGCODE,
+            'default_langcode' => SystemLanguages::TEMPORARY_LANGCODE,
             'entry_type' => null,
             'entry_options' => [],
         ]);
@@ -36,8 +36,12 @@ class EntityDataCollectionType extends AbstractType
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($builder, $options) {
             $form_options = $event->getForm()->getParent()->getConfig()->getOptions();
-            $current_langcode = $form_options['current_langcode'];
+            $current_langcode = $form_options['current_langcode'] ?? $event->getForm()->getParent()->getData()->getDefaultLangcode();
+
+            // $current_langcode = $event->getForm()->getParent()->get('content_language')->getData();
             $this->currentLangcode = $current_langcode;
+
+            // var_dump($this->currentLangcode);
 
             $form = $event->getForm();
             $translations = $event->getData();
@@ -57,6 +61,30 @@ class EntityDataCollectionType extends AbstractType
                     ] + $options['entry_options']);
                 }
             }
+        });
+
+        // $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+        //     var_dump($event->getData());
+        //     exit('PRE');
+        // });
+
+        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+            $tl = SystemLanguages::TEMPORARY_LANGCODE;
+
+            // var_dump($data);
+            // exit;
+
+            // if (isset($data[$tl])) {
+            //     // var_dump($event->getForm()->getParent()->get('langcode'));
+            //     // $langcode = $event->getForm()->get('langcode')->getData();
+            //     $data[$tl]->setLangcode('fi');
+            //     $data = ['fi' => $data[$tl]];
+            //
+            //     $event->setData($data);
+            // }
+            // exit('submit');
         });
     }
 

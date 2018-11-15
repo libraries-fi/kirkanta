@@ -92,6 +92,9 @@
   {% block form %}
     {{ form_start(form) }}
     {{ block("form_header") }}
+    {% if form.langcode is defined %}
+      {{ form_row(form.langcode) }}
+    {% endif %}
     {% block form_body %}
       <fieldset class="form-section">
         <legend>{% trans %}Basic information{% endtrans %}</legend>

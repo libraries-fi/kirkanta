@@ -78,13 +78,19 @@ class EntityController extends Controller
 
     public function add(Request $request, string $entity_type)
     {
-        $form = $this->entityTypeManager->getForm($entity_type, 'edit', new FormData);
+        $form = $this->entityTypeManager->getForm($entity_type, 'add', new FormData, [
+            'current_langcode' => SystemLanguages::TEMPORARY_LANGCODE
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entity = $this->entityTypeManager
                 ->getRepository($entity_type)
                 ->create($form->getData()->getValues());
+
+            // var_dump($entity->getTranslations()->getKeys());
+            // var_dump($entity->getDefaultLangcode());
+            // exit('stop');
 
             $this->entityTypeManager->getEntityManager()->persist($entity);
             $this->entityTypeManager->getEntityManager()->flush();

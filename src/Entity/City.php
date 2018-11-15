@@ -70,7 +70,7 @@ class City extends EntityBase implements Sluggable, Translatable
         $this->translations[$this->langcode]->setName($name);
     }
 
-    public function getRegion() : Region
+    public function getRegion() : ?Region
     {
         return $this->region;
     }
@@ -80,7 +80,7 @@ class City extends EntityBase implements Sluggable, Translatable
         $this->region = $region;
     }
 
-    public function getRegionalLibrary() : RegionalLibrary
+    public function getRegionalLibrary() : ?RegionalLibrary
     {
         return $this->regional_library;
     }

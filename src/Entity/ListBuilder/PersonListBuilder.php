@@ -11,8 +11,8 @@ class PersonListBuilder extends EntityListBuilder
         $builder = parent::createQueryBuilder()
             ->addSelect('o')
             ->addSelect('od')
-            ->join('e.library', 'o')
-            ->join('o.translations', 'od', 'WITH', 'od.langcode = :langcode')
+            ->leftJoin('e.library', 'o')
+            ->leftJoin('o.translations', 'od', 'WITH', 'od.langcode = o.default_langcode')
             ;
 
         $search = $this->getSearch();

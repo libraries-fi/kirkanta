@@ -3,10 +3,7 @@
   on the 'staff' tab of Organisation form.
 #}
 
-{% block form %}
-  {{ form_start(form) }}
-  {{ block("form_header") }}
-
+{% block form_body %}
   <fieldset class="form-section">
     <legend>{% trans %}Personal details{% endtrans %}</legend>
     {{ form_row(form.first_name) }}
@@ -32,6 +29,4 @@
     {{ form_row(form.responsibility) }}
     {{ form_row(form.qualities) }}
   </fieldset>
-
-  {{ form_end(form) }}
 {% endblock %}

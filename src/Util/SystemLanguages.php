@@ -7,6 +7,7 @@ use App\I18n\StringMap;
 class SystemLanguages extends StringMap
 {
     const DEFAULT_LANGCODE = 'fi';
+    const TEMPORARY_LANGCODE = 'xx';
 
     public function __construct()
     {

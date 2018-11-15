@@ -126,8 +126,8 @@ abstract class EntityListBuilder
         }
 
         if (is_a($entity_class, Translatable::class, true)) {
-            $builder->addSelect('d')->join('e.translations', 'd', 'WITH', 'd.langcode = :langcode');
-            $builder->setParameter('langcode', $this->langcode);
+            $builder->addSelect('d')->join('e.translations', 'd', 'WITH', 'd.langcode = e.default_langcode');
+            // $builder->setParameter('langcode', $this->langcode);
         }
 
         return $builder;

@@ -13,7 +13,7 @@ class ServiceInstanceListBuilder extends EntityListBuilder
             ->addSelect('t')
             ->addSelect('td')
             ->join('e.template', 't')
-            ->join('t.translations', 'td', 'WITH', 'td.langcode = :langcode')
+            ->join('t.translations', 'td', 'WITH', 'td.langcode = t.default_langcode')
             ->andWhere('COALESCE(IDENTITY(e.parent), 0) = :parent')
             ->setParameter('parent', 0)
             ;
