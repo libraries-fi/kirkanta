@@ -15,12 +15,13 @@ class CityListBuilder extends EntityListBuilder
             ->addSelect('rld')
             ->addSelect('c')
             ->addSelect('cd')
-            ->join('e.region', 'r')
-            ->join('r.translations', 'rd', 'WITH', 'rd.langcode = :langcode')
-            ->join('e.regional_library', 'rl')
-            ->join('rl.translations', 'rld', 'WITH', 'rld.langcode = :langcode')
-            ->join('e.consortium', 'c')
-            ->join('c.translations', 'cd', 'WITH', 'cd.langcode = :langcode')
+            ->leftJoin('e.region', 'r')
+            ->leftJoin('r.translations', 'rd', 'WITH', 'rd.langcode = :langcode')
+            ->leftJoin('e.regional_library', 'rl')
+            ->leftJoin('rl.translations', 'rld', 'WITH', 'rld.langcode = :langcode')
+            ->leftJoin('e.consortium', 'c')
+            ->leftJoin('c.translations', 'cd', 'WITH', 'cd.langcode = :langcode')
+            ->setParameter(':langcode', $this->langcode)
             ;
 
         /*
