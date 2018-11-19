@@ -36,8 +36,8 @@ class SyncLegacyDatabase extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output) : void
     {
-        $this->currentDb->setSQLLogger(null);
-        $this->legacyDb->setSQLLogger(null);
+        $this->currentDb->getConfiguration()->setSQLLogger(null);
+        $this->legacyDb->getConfiguration()->setSQLLogger(null);
 
         $this->cache = new \stdClass;
 
@@ -52,7 +52,7 @@ class SyncLegacyDatabase extends Command
     private function syncConsortiums() : void
     {
         $this->legacyDb->beginTransaction();
-
+ 
         $this->synchronize('consortiums', 'consortiums', [
             'id',
             'logo',
@@ -259,7 +259,7 @@ class SyncLegacyDatabase extends Command
                 AND a.parent_id IS NOT NULL
                 AND section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
-                AND a.id = 299673
+                AND a.id = 299673 -- DEBUG STUFF
             GROUP BY a.id
             ORDER BY a.id
             LIMIT :limit
@@ -269,7 +269,7 @@ class SyncLegacyDatabase extends Command
         foreach (result_iterator($smtRead) as $row) {
             $row['days'] = json_decode($row['days']);
             $row['translations'] = json_decode($row['translations']);
-            var_dump($row);
+            print_r($row);
             exit;
         }
     }
