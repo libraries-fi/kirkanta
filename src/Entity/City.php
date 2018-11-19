@@ -62,6 +62,9 @@ class City extends EntityBase implements Sluggable, Translatable
 
     public function getName() : string
     {
+        if (!isset($this->translations[$this->langcode])) {
+            var_dump($this->id);
+        }
         return $this->translations[$this->langcode]->getName();
     }
 

@@ -2021,3 +2021,21 @@ ALTER TABLE organisations ADD COLUMN main_library boolean NOT NULL DEFAULT false
 UPDATE organisations SET main_library = true, type = 'library' WHERE type = 'main_library';
 
 UPDATE organisations SET type = 'library' WHERE type = 'regional';
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+-- Clear legacy format flag for libraries that don't use self-service schedules.
+UPDATE periods SET is_legacy_format = false WHERE parent_id NOT IN (SELECT DISTINCT parent_id FROM periods WHERE section = 'selfservice' AND parent_id IS NOT NULL);
+
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
