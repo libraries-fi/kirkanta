@@ -13,6 +13,7 @@ use App\I18n\Translations;
 /**
  * @ORM\Entity
  * @ORM\Table(name="periods")
+ * @ORM\EntityListeners({"App\Doctrine\EventListener\ClearSchedulesOnPeriodRemove"})
  */
 class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Translatable
 {

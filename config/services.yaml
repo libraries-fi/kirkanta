@@ -97,6 +97,9 @@ services:
     App\Doctrine\EventListener\WeightInitializer:
         tags:
             - { name: doctrine.event_subscriber }
+    App\Doctrine\EventListener\ClearSchedulesOnPeriodRemove:
+        tags:
+            - { name: doctrine.entity_listener }
     App\Doctrine\EventListener\LibraryConsortiumInitializer:
         tags:
             - { name: doctrine.entity_listener }
