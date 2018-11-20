@@ -326,7 +326,7 @@ class OrganisationController extends Controller
             $this->addFlash('success', 'Resources imported successfully.');
 
             return $this->redirectToRoute("entity.library.{$resource}", [
-              'id' => $id,
+              'library' => $library->getId(),
             ]);
         }
 
