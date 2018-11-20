@@ -155,13 +155,6 @@ class OrganisationController extends Controller
                         }) }}">{{ row.standardName }}</a>
                     ';
                 });
-
-                $actions['import'] = [
-                    'title' => 'From template',
-                    'route' => "entity.{$entity_type}.resource_from_template",
-                    'params' => [$entity_type => $library->getId(), 'resource' => $resource],
-                    'icon' => 'fas fa-copy',
-                ];
                 break;
 
             default:
@@ -174,6 +167,17 @@ class OrganisationController extends Controller
             'params' => [$entity_type => $library->getId()],
             'icon' => 'fas fa-plus-circle',
         ];
+
+        switch ($resource) {
+            case 'periods':
+            case 'services':
+              $actions['import'] = [
+                  'title' => 'From template',
+                  'route' => "entity.{$entity_type}.resource_from_template",
+                  'params' => [$entity_type => $library->getId(), 'resource' => $resource],
+                  'icon' => 'fas fa-copy',
+              ];
+        }
 
         return [
             'table' => $table,
@@ -296,6 +300,28 @@ class OrganisationController extends Controller
                 $instance->setLibrary($library);
 
                 switch ($type_id) {
+                    case 'period':
+                        $instance->setIsLegacyFormat($template->isLegacyFormat());
+                        $instance->setDays($template->getDays());
+                        $instance->setValidFrom(clone $template->getValidFrom());
+
+                        if ($ends = $template->getValidUntil()) {
+                            $instance->setValidUntil(clone $ends);
+                        }
+
+                        foreach ($template->getTranslations() as $langcode => $data) {
+                            $translation = new $data($langcode);
+                            $translation->setName($data->getName());
+                            $translation->setDescription($data->getDescription());
+                            $translation->setEntity($instance);
+                            $instance->getTranslations()->set($langcode, $translation);
+
+                            $em->persist($translation);
+                        }
+
+                        $library->getPeriods()->add($instance);
+                        break;
+
                     case 'service_instance':
                         $instance->setTemplate($template->getTemplate());
                         $instance->setForLoan($template->isForLoan());

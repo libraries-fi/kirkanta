@@ -66,6 +66,7 @@ parameters:
             list_builder: 'App\Entity\ListBuilder\PeriodListBuilder'
             forms:
                 default: 'App\Form\PeriodForm'
+                import: 'App\Form\PeriodImportForm'
                 search: 'App\Form\PeriodSearchForm'
         service_instance:
             id: service_instance

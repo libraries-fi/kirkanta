@@ -207,4 +207,14 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     {
         $this->is_legacy_format = (bool)$state;
     }
+
+    public function getLibrary() : ?LibraryInterface
+    {
+        return $this->getParent();
+    }
+
+    public function setLibrary(LibraryInterface $library) : void
+    {
+        $this->setParent($library);
+    }
 }
