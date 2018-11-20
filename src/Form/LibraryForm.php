@@ -30,14 +30,14 @@ class LibraryForm extends FormType
             ->add('main_library', CheckboxType::class, [
                 'required' => false,
             ])
-            ->add('organisation', EntityType::class, [
-                'property_path' => 'organisation',
-                'label' => 'Parent organisation',
-                'required' => false,
-                'class' => Organisation::class,
-                'placeholder' => '-- Select --',
-                'choice_label' => 'name',
-            ])
+            // ->add('organisation', EntityType::class, [
+            //     'property_path' => 'organisation',
+            //     'label' => 'Parent organisation',
+            //     'required' => false,
+            //     'class' => Organisation::class,
+            //     'placeholder' => '-- Select --',
+            //     'choice_label' => 'name',
+            // ])
             ->add('isil', null, [
                 'required' => false,
                 'label' => 'ISIL',
@@ -104,6 +104,7 @@ class LibraryForm extends FormType
                 $event->getForm()->add('organisation', EntityType::class, [
                     'class' => Organisation::class,
                     'required' => false,
+                    'label' => 'Parent organisation',
                     'placeholder' => '-- Select --',
                     'query_builder' => function($repo) use($groups) {
                         return $repo->createQueryBuilder('e')

@@ -151,7 +151,8 @@
 @include media-breakpoint-up("lg") {
   select,
   input.form-control,
-  select.form-control {
+  select.form-control,
+  .rw-container {
     max-width: 30rem;
   }
 
