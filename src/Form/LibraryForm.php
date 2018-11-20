@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Feature\StateAwareness;
 use App\Entity\Library;
 use App\Entity\Organisation;
 use App\Form\Type\AddressType;
@@ -84,6 +85,11 @@ class LibraryForm extends FormType
             ])
 
             ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+            if (!($event->getData() instanceof LibraryInterface)) {
+                $event->getData()->setState(StateAwareness::DRAFT);
+            }
+        });
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
             $library = $event->getData();
