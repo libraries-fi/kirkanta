@@ -1,5 +1,7 @@
 {% extends "entity/edit.html.twig" %}
 
+{% form_theme form _self %}
+
 {% block form_header %}
   {{ parent() }}
 
@@ -17,15 +19,19 @@
   <fieldset class="form-section">
     <legend>{% trans %}Basic information{% endtrans %}</legend>
 
-    {% with { form: form.children.consortium } %}
-      {{ form_row(form.children.name) }}
-      {{ form_row(form.children.slug) }}
-      {{ form_row(form.children.homepage) }}
-      {{ form_row(form.children.description) }}
-      {{ form_row(form.children.logo) }}
+    {% with { form: form.consortium } %}
+      {{ form_row(form.name) }}
+      {{ form_row(form.slug) }}
+      {{ form_row(form.homepage) }}
+      {{ form_row(form.description) }}
 
       {% do form.setRendered(true) %}
     {% endwith %}
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% trans %}Logo{% endtrans %}</legend>
+    {{ form_widget(form.consortium.logo) }}
   </fieldset>
 
   <fieldset class="form-section">
@@ -34,4 +40,14 @@
   </fieldset>
 
   {{ form_end(form) }}
+{% endblock %}
+
+{% block _finna_additions_form_consortium_logo_widget %}
+  {% if value.filename is defined %}
+    <div class="d-inline-block mb-3">
+      <img src="/files/logos/small/{{ value.filename }}" alt="{{ value.originalName }}"/>
+    </div>
+  {% endif %}
+
+  {{ form_row(form.file) }}
 {% endblock %}

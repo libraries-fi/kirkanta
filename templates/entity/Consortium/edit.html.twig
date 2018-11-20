@@ -8,15 +8,15 @@
 
   <fieldset class="form-section">
     <legend>{% trans %}Basic information{% endtrans %}</legend>
-    {{ form_row(form.children.name) }}
-    {{ form_row(form.children.slug) }}
-    {{ form_row(form.children.homepage) }}
-    {{ form_row(form.children.description) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.slug) }}
+    {{ form_row(form.homepage) }}
+    {{ form_row(form.description) }}
   </fieldset>
 
   <fieldset class="form-section">
     <legend>{% trans %}Logo{% endtrans %}</legend>
-    {{ form_widget(form.children.logo) }}
+    {{ form_widget(form.logo) }}
   </fieldset>
 
   {{ form_end(form) }}
@@ -39,6 +39,7 @@
 {% endblock %}
 
 {% block _consortium_form_logo_widget %}
+
   {% if value.filename is defined %}
     <div class="d-inline-block mb-3">
       <img src="/files/logos/small/{{ value.filename }}" alt="{{ value.originalName }}"/>
