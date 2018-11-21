@@ -55,7 +55,7 @@
           {{ block("user_finna_organisation") }}
         </div>
       </div>
-    {% elseif consortiums|default() is not empty %}
+    {% elseif consortiums is defined %}
       <div class="col">
         <div class="border p-3 mb-3">
           {{ block("user_consortium") }}
@@ -86,33 +86,45 @@
 {% endblock %}
 
 {% block user_consortium %}
+  <a href="{{ path('entity.organisation.add') }}" class="btn btn-pill btn-success float-right">
+    <i class="fas fa-plus-circle"></i>
+    {% trans %}Add new{% endtrans %}
+  </a>
   <h2>{% trans %}Consortiums{% endtrans %}</h2>
   <ul>
     {% for consortium in consortiums %}
       <li>
-        <a href="{{ path('entity.consortium.edit', {consortium: consortium.id})}}">{{ consortium.name }}</a> – Last updated foo.bar.year
+        <a href="{{ path('entity.consortium.edit', {consortium: consortium.id})}}">{{ consortium.name }}</a> – {% trans with {'%date%': consortium.modified|date('d.m.Y')} %}Updated on %date%{% endtrans %}
       </li>
     {% endfor %}
   </ul>
 {% endblock %}
 
 {% block user_finna_organisation %}
+  <a href="{{ path('entity.organisation.add') }}" class="btn btn-pill btn-success float-right">
+    <i class="fas fa-plus-circle"></i>
+    {% trans %}Add new{% endtrans %}
+  </a>
   <h2>{% trans %}Finna organisations{% endtrans %}</h2>
   <ul>
     {% for finna_organisation in finna_organisations %}
       <li>
-        <a href="{{ path('entity.finna_organisation.edit', {finna_organisation: finna_organisation.id})}}">{{ finna_organisation.name }}</a> – Last updated foo.bar.year
+        <a href="{{ path('entity.finna_organisation.edit', {finna_organisation: finna_organisation.id})}}">{{ finna_organisation.name }}</a> – {% trans with {'%date%': finna_organisation.modified|date('d.m.Y')} %}Updated on %date%{% endtrans %}
       </li>
     {% endfor %}
   </ul>
 {% endblock %}
 
 {% block user_parent_organisation %}
+  <a href="{{ path('entity.organisation.add') }}" class="btn btn-pill btn-success float-right">
+    <i class="fas fa-plus-circle"></i>
+    {% trans %}Add new{% endtrans %}
+  </a>
   <h2>{% trans %}Parent organisation{% endtrans %}</h2>
   <ul>
     {% for organisation in organisations %}
       <li>
-        <a href="{{ path('entity.organisation.edit', {organisation: organisation.id})}}">{{ organisation.name }}</a>
+        <a href="{{ path('entity.organisation.edit', {organisation: organisation.id})}}">{{ organisation.name }}</a> – {% trans with {'%date%': organisation.modified|date('d.m.Y')} %}Updated on %date%{% endtrans %}
       </li>
     {% endfor %}
   </ul>
