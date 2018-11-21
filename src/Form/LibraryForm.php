@@ -85,11 +85,6 @@ class LibraryForm extends FormType
             ])
 
             ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
-            if (!($event->getData() instanceof LibraryInterface)) {
-                $event->getData()->setState(StateAwareness::DRAFT);
-            }
-        });
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
             $library = $event->getData();
