@@ -27,7 +27,7 @@
     <div class="alert alert-warning">{% trans with {"%date%": app.user.expires|date()} %}This account is set to expire on %date%{% endtrans %}</div>
   {% endif %}
 
-  {% if app.user.isMunicipalAccount() %}
+  {# if app.user.isMunicipalAccount() %}
     <div class="border p-3 mb-3">
       <div class="alert alert-danger">
         <i class="fas fa-exclamation-circle mr-2"></i>
@@ -39,7 +39,7 @@
         </li>
       </ul>
     </div>
-  {% endif %}
+  {% endif #}
 
   <div class="row">
     {% if organisations|default() is not empty %}
