@@ -123,6 +123,10 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
     public function setLogo(?ConsortiumLogo $logo) : void
     {
         $this->logo = $logo;
+
+        if ($this->logo) {
+            $this->logo->setConsortium($this);
+        }
     }
 
     public function getFinnaData() : ?FinnaAdditions
