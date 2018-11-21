@@ -215,6 +215,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         $entities = [
             'consortium',
             'finna_organisation',
+            'organisation',
             'city',
             'region',
             'regional_library',

@@ -2,8 +2,8 @@ parameters:
     entity_types:
         organisation:
             id: organisation
-            label: 'Organisation'
-            label_multiple: 'Organisations'
+            label: 'Parent organisation'
+            label_multiple: 'Parent organisations'
             class_name: 'App\Entity\Organisation'
             list_builder: 'App\Entity\ListBuilder\OrganisationListBuilder'
             forms:
