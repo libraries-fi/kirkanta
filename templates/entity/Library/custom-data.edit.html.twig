@@ -1,6 +1,12 @@
 {% extends "entity/Library/resource.edit.html.twig" %}
 
 {% block delete_button_outer %}
-  {% set entity_delete_url = "entity.library.custom_data.delete" %}
-  {{ block("delete_button") }}
+  {% if custom_data_pos is defined %}
+    {% set entity_delete_url = path("entity.%s.custom_data.delete"|format(entity_type), {
+      (entity_type): entity.id,
+      custom_data: custom_data_pos
+    }) %}
+
+    {{ block("delete_button") }}
+  {% endif %}
 {% endblock %}

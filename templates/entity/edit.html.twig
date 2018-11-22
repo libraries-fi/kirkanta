@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% if attribute(_context, entity_type) is defined %}
+{% if entity is not defined and attribute(_context, entity_type) is defined %}
   {% set entity = attribute(_context, entity_type) %}
 {% endif %}
 

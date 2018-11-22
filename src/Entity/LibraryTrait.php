@@ -372,7 +372,7 @@ trait LibraryTrait
 
     public function getCustomData() : array
     {
-        return $this->custom_data;
+        return $this->custom_data ?? [];
     }
 
     public function setCustomData(array $entries) : void

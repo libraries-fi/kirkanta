@@ -278,7 +278,7 @@ class OrganisationController extends Controller
      * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resource.import.html.twig")
      */
-    public function createResourceFromTemplate(Request $request, Library $library, string $entity_type, string $resource)
+    public function createResourceFromTemplate(Request $request, LibraryInterface $library, string $entity_type, string $resource)
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
         $entity_class = $this->types->getEntityClass($type_id);
@@ -403,18 +403,17 @@ class OrganisationController extends Controller
     }
 
     /**
-     * @Route("/library/{library}/custom-data", name="entity.library.custom_data", defaults={"entity_type": "library"})
      * @ParamConverter("entity", converter="entity_from_type_and_id")
      */
-    public function listCustomData(Request $request, Library $library, \Knp\Component\Pager\PaginatorInterface $pager)
+    public function listCustomData(Request $request, string $entity_type, $entity, \Knp\Component\Pager\PaginatorInterface $pager)
     {
         // var_dump($router->getRouteCollection()->get('entity.library.edit')->compile()->getVariables());
-        $entries = $library->getCustomData();
+        $entries = $entity->getCustomData();
 
         $table = (new \App\Component\Element\Table)
             ->setColumns(['name', 'value'])
             ->useAsTemplate('name')
-            ->transform('name', function($entry) use($library) {
+            ->transform('name', function($entry) use($entity, $entity_type) {
                 static $i = 0;
                 $i++;
 
@@ -423,7 +422,14 @@ class OrganisationController extends Controller
                 $label = count($values) == 2 ? "{$values[0]} ({$values[1]})" : reset($values);
                 $label = htmlspecialchars($label) ?: 'NULL';
 
-                return str_replace(['{$label}', '{$library_id}', '{$i}'], [$label, $library->getId(), $i], '<a href="{{ path("entity.library.custom_data.edit", {library: {$library_id}, custom_data: {$i}})}}">{$label}</a>');
+                $tokens = [
+                    '{$entity_type}' => $entity_type,
+                    '{$label}' => $label,
+                    '{$library_id}' => $entity->getId(),
+                    '{$i}' => $i,
+                ];
+
+                return str_replace(array_keys($tokens), array_values($tokens), '<a href="{{ path("entity.{$entity_type}.custom_data.edit", {{$entity_type}: {$library_id}, custom_data: {$i}})}}">{$label}</a>');
             })
             ;
 
@@ -438,19 +444,18 @@ class OrganisationController extends Controller
                 'add' => [
                     'icon' => 'fas fa-plus-circle',
                     'title' => 'Create new',
-                    'route' => "entity.library.custom_data.add",
-                    'params' => ['library' => $library->getId()]
+                    'route' => "entity.{$entity_type}.custom_data.add",
+                    'params' => [$entity_type => $entity->getId()]
                 ]
             ]
         ];
     }
 
     /**
-     * @Route("/library/{library}/custom-data/add", name="entity.library.custom_data.add", defaults={"entity_type": "library"})
      * @ParamConverter("entity", converter="entity_from_type_and_id")
      * @Template("entity/Library/custom-data.edit.html.twig")
      */
-    public function addCustomData(Request $request, Library $library)
+    public function addCustomData(Request $request, string $entity_type, LibraryInterface $entity)
     {
         $form = $this->createForm(\App\Form\CustomDataForm::class, (object)[
             'title' => null,
@@ -461,33 +466,33 @@ class OrganisationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entries = $library->getCustomData();
+            $entries = $entity->getCustomData();
             $entries[] = $form->getData();
-            $library->setCustomData($entries);
+            $entity->setCustomData($entries);
 
             $this->getEntityTypeManager()->getEntityManager()->flush();
             $this->addFlash('success', 'Resource created successfully.');
 
-            return $this->redirectToRoute('entity.library.custom_data', [
-                'library' => $library->getId()
+            return $this->redirectToRoute("entity.{$entity_type}.custom_data", [
+                $entity_type => $entity->getId()
             ]);
         }
 
         return [
             'type_label' => 'Custom data',
             'form' => $form->createView(),
+            'entity' => $entity,
         ];
     }
 
     /**
-     * @Route("/library/{library}/custom-data/{custom_data}", name="entity.library.custom_data.edit", defaults={"entity_type": "library"})
      * @ParamConverter("entity", converter="entity_from_type_and_id")
      * @Template("entity/Library/custom-data.edit.html.twig")
      */
-    public function editCustomData(Request $request, Library $library, int $custom_data)
+    public function editCustomData(Request $request, string $entity_type, LibraryInterface $entity, int $custom_data)
     {
         // $id is just a 1-indexed key.
-        $entry = $library->getCustomData()[$custom_data - 1];
+        $entry = $entity->getCustomData()[$custom_data - 1];
 
         $form = $this->createForm(\App\Form\CustomDataForm::class, $entry);
         $form->handleRequest($request);
@@ -497,19 +502,20 @@ class OrganisationController extends Controller
              * Doctrine does not detect a change to a single stdClass instance so we have to
              * replace the whole data source.
              */
-            $data = unserialize(serialize($library->getCustomData()));
+            $data = unserialize(serialize($entity->getCustomData()));
 
-            $library->setCustomData($data);
+            $entity->setCustomData($data);
             $this->getEntityTypeManager()->getEntityManager()->flush();
             $this->addFlash('success', 'Changes were saved.');
 
-            return $this->redirectToRoute('entity.library.custom_data', [
-                'library' => $library->getId()
+            return $this->redirectToRoute("entity.{$entity_type}.custom_data", [
+                $entity_type => $entity->getId()
             ]);
         }
 
         return [
             'type_label' => 'Custom data',
+            'entity' => $entity,
             // 'entity_type' => 'custom_data',
             'custom_data' => $entry,
             'custom_data_pos' => $custom_data,
@@ -518,12 +524,41 @@ class OrganisationController extends Controller
     }
 
     /**
-     * @Route("/library/{library}/custom-data/{custom_data}", name="entity.library.custom_data.delete")
      * @ParamConverter("entity", converter="entity_from_type_and_id")
+     * @Template("entity/Library/custom-data.delete.html.twig")
      */
-    public function deleteCustomData()
+    public function deleteCustomData(Request $request, string $entity_type, LibraryInterface $entity, int $custom_data)
     {
+        $form = $this->createFormBuilder()
+            ->add('submit', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class, [
+                'label' => 'Delete',
+                'attr' => [
+                    'class' => 'btn btn-primary'
+                ]
+            ])
+            ->getForm();
 
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $entity->getCustomData();
+            unset($data[$custom_data - 1]);
+            $entity->setCustomData($data);
+
+            $this->getEntityTypeManager()->getEntityManager()->flush();
+            $this->addFlash('success', 'Record was deleted.');
+
+            return $this->redirectToRoute("entity.{$entity_type}.custom_data", [
+                $entity_type => $entity->getId()
+            ]);
+        }
+
+        return [
+            'type_label' => 'Custom data',
+            'form' => $form->createView(),
+            'entity' => $entity,
+            'custom_data_pos' => $custom_data,
+        ];
     }
 
     /**
