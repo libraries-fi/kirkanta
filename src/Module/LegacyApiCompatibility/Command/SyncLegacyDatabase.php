@@ -7,6 +7,7 @@ use Doctrine\DBAL\Statement;
 Use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -32,6 +33,7 @@ class SyncLegacyDatabase extends Command
         $this
             ->setName('legacy-db:sync')
             ->setDescription('Synchonize legacy database (for API v1, v2 and v3)')
+            ->addArgument('entity_type', InputArgument::REQUIRED, 'Entity type')
             ;
     }
 
@@ -42,12 +44,32 @@ class SyncLegacyDatabase extends Command
 
         $this->cache = new \stdClass;
 
-        $this->syncConsortiums();
-        $this->syncLibraries();
-        $this->syncServices();
-        $this->syncStaff();
+        $entity_type = $input->getArgument('entity_type');
 
-        $this->syncPeriods();
+        switch ($entity_type) {
+            case 'consortium':
+                $this->syncConsortiums();
+                break;
+
+            case 'library':
+                $this->syncLibraries();
+                break;
+
+            case 'service':
+                $this->syncServices();
+                break;
+
+            case 'person':
+                $this->syncStaff();
+                break;
+
+            case 'period':
+                $this->syncPeriods();
+                break;
+
+            default:
+                throw new \Exception('Invalid entity type');
+        }
     }
 
     private function syncConsortiums() : void
@@ -60,8 +82,16 @@ class SyncLegacyDatabase extends Command
             'created',
             'modified',
             'state',
-            'default_langcode'
-        ]);
+            'default_langcode',
+            'logo_id'
+        ], function(&$row) {
+            if ($row['logo_id']) {
+                $logoname = $this->currentDb->query("SELECT filename FROM pictures WHERE id = {$row['logo_id']}")->fetchColumn();
+                $row['logo'] = $logoname;
+            }
+
+            unset($row['logo_id']);
+        });
 
         $cache = new \stdClass;
 
