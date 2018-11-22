@@ -150,7 +150,13 @@ class SyncLegacyDatabase extends Command
             $row['region_id'] = 1003;
         });
 
-        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'coordinates'], function(&$row) {
+        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
+
+            if ($row['coordinates']) {
+                list($lon, $lat) = explode(' ', substr($row['coordinates'], 6, -1));
+                $row['coordinates'] = "{$lat}, {$lon}";
+            }
+
             // In legacy DB, coordinates exist in organisations table.
             $this->cache->coords[$row['id']] = $row['coordinates'];
             unset($row['coordinates']);
@@ -352,6 +358,7 @@ class SyncLegacyDatabase extends Command
             $row['translations'] = json_decode($row['translations'], true);
 
             if ($row['is_legacy_format']) {
+                // Don't touch libraries that still have legacy periods.
                 $dropLibraries[] = $row['organisation_id'];
             } else {
                 unset($row['is_legacy_format']);
@@ -460,7 +467,13 @@ function result_iterator(Statement $statement, array $values = [], $encode_trans
 }
 
 function read_query(Connection $db, string $table, array $fields) : Statement {
-    $fields = array_map(function($f) { return "a.{$f}"; }, $fields);
+    $fields = array_map(function($f) {
+        if (strpos($f, ' AS ')) {
+            return $f;
+        } else {
+            return "a.{$f}";
+        }
+    }, $fields);
     $fields = implode(', ', $fields);
 
     $sql = "
