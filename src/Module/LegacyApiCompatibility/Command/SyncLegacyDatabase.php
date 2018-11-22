@@ -308,7 +308,7 @@ class SyncLegacyDatabase extends Command
                     ]];
 
                     foreach ($day->times as $j => $time) {
-                        if (isset($time->staff) && !$time->taff) {
+                        if (isset($time->staff) && !$time->staff) {
                             unset($day->times[$j]);
                         }
 
