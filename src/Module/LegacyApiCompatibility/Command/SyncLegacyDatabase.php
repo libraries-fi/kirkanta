@@ -299,19 +299,21 @@ class SyncLegacyDatabase extends Command
 
             foreach ($regular['days'] as $i => $day) {
                 if (!empty($day->times)) {
-                    $hasSelf = true;
-
-                    // Self-service times will contain only one entry.
-                    $self['days'][$i]->times = [(object)[
-                        'opens' => reset($day->times)->opens,
-                        'closes' => end($day->times)->closes,
-                    ]];
-
                     foreach ($day->times as $j => $time) {
                         if (isset($time->staff) && !$time->staff) {
                             if (is_object($day->times)) {
                                 // Unsaved imported periods have an stdClass in place of an array.
                                 $day->times = get_object_vars($day->times);
+                            }
+
+                            if (!$hasSelf) {
+                                $hasSelf = true;
+
+                                // Self-service times will contain only one entry.
+                                $self['days'][$i]->times = [(object)[
+                                    'opens' => reset($day->times)->opens,
+                                    'closes' => end($day->times)->closes,
+                                ]];
                             }
                             unset($day->times[$j]);
                         }
