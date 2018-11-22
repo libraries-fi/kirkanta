@@ -758,7 +758,7 @@ INSERT INTO organisations_data
   SELECT
     id,
     'en',
-    name,
+    translations->'en'->>'name',
     coalesce(nullif(translations->'en'->>'slug', ''), slugify(translations->'en'->>'name') || '-' || id),
     substr(translations->'en'->>'short_name', 1, 40),
     translations->'en'->>'slogan',
@@ -778,7 +778,7 @@ INSERT INTO organisations_data
   SELECT
     id,
     'sv',
-    name,
+    translations->'sv'->>'name',
     coalesce(nullif(translations->'sv'->>'slug', ''), slugify(translations->'sv'->>'name') || '-' || id),
     substr(translations->'sv'->>'short_name', 1, 40),
     translations->'sv'->>'slogan',
@@ -798,7 +798,7 @@ INSERT INTO organisations_data
   SELECT
     id,
     'ru',
-    name,
+    translations->'ru'->>'name',
     coalesce(nullif(translations->'ru'->>'slug', ''), slugify(translations->'ru'->>'name') || '-' || id),
     substr(translations->'ru'->>'short_name', 1, 40),
     translations->'ru'->>'slogan',
@@ -818,7 +818,7 @@ INSERT INTO organisations_data
   SELECT
     id,
     'se',
-    name,
+    translations->'se'->>'name',
     coalesce(nullif(translations->'se'->>'slug', ''), slugify(translations->'se'->>'name') || '-' || id),
     substr(translations->'se'->>'short_name', 1, 40),
     translations->'se'->>'slogan',
