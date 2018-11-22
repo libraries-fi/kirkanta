@@ -21,7 +21,7 @@ class CityListBuilder extends EntityListBuilder
             ->leftJoin('rl.translations', 'rld', 'WITH', 'rld.langcode = :langcode')
             ->leftJoin('e.consortium', 'c')
             ->leftJoin('c.translations', 'cd', 'WITH', 'cd.langcode = :langcode')
-            ->setParameter(':langcode', $this->langcode)
+            ->setParameter('langcode', $this->langcode)
             ;
 
         /*
