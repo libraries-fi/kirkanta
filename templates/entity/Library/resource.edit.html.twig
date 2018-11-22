@@ -1,12 +1,12 @@
 {% extends "entity/edit.html.twig" %}
 
-{% block delete_button %}
+{% block delete_button_outer %}
   {% set entity_delete_url = path("entity.%s.%s.delete"|format(parent_entity_type, resource_type), {
     (parent_entity_type): parent_entity.id,
     resource_id: entity.id
   }) %}
 
-  {{ parent() }}
+  {{ block("delete_button") }}
 {% endblock %}
 
 {% block form_header %}

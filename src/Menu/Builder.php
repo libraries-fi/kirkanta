@@ -126,6 +126,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             'persons' => 'Staff',
             'pictures' => 'Pictures',
             'departments' => 'Departments',
+            'custom_data' => 'Custom data',
             // 'contact_groups' => 'Contact info',
             // 'email_addresses' => 'Email addresses',
             // 'phone_numbers' => 'Phone Numbers',
@@ -148,7 +149,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
                 'route' => "entity.{$entity_type}.{$resource}",
                 'routeParameters' => [
                     $entity_type => $entity->getId(),
-                    'resource' => $resource,
+                    'resource' => $resource != 'custom_data' ? $resource : null,
                 ]
             ]);
 

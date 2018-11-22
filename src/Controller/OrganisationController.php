@@ -403,7 +403,7 @@ class OrganisationController extends Controller
     }
 
     /**
-     * @Route("/library/{library}/custom_data", name="entity.library.custom_data")
+     * @Route("/library/{library}/custom-data", name="entity.library.custom_data", defaults={"entity_type": "library"})
      * @ParamConverter("entity", converter="entity_from_type_and_id")
      */
     public function listCustomData(Request $request, Library $library, \Knp\Component\Pager\PaginatorInterface $pager)
@@ -415,12 +415,15 @@ class OrganisationController extends Controller
             ->setColumns(['name', 'value'])
             ->useAsTemplate('name')
             ->transform('name', function($entry) use($library) {
-                $values = array_filter([$entry->getName(), $entry->getId()]);
+                static $i = 0;
+                $i++;
+
+                $values = array_filter([$entry->title, $entry->id]);
                 $values = array_values($values);
                 $label = count($values) == 2 ? "{$values[0]} ({$values[1]})" : reset($values);
                 $label = htmlspecialchars($label) ?: 'NULL';
 
-                return str_replace(['{$label}', '{$library_id}'], [$label, $library->getId()], '<a href="{{ path("entity.custom_data.edit", {library: {$library_id}, custom_data: row.pos})}}">{$label}</a>');
+                return str_replace(['{$label}', '{$library_id}', '{$i}'], [$label, $library->getId(), $i], '<a href="{{ path("entity.library.custom_data.edit", {library: {$library_id}, custom_data: {$i}})}}">{$label}</a>');
             })
             ;
 
@@ -431,48 +434,91 @@ class OrganisationController extends Controller
             'type_label' => 'Custom data',
             'entity_type' => 'custom_data',
             'table' => $table,
-            'actions' => []
+            'actions' => [
+                'add' => [
+                    'icon' => 'fas fa-plus-circle',
+                    'title' => 'Create new',
+                    'route' => "entity.library.custom_data.add",
+                    'params' => ['library' => $library->getId()]
+                ]
+            ]
         ];
     }
 
     /**
-     * @Route("/library/{library}/custom_data/{custom_data}", name="entity.custom_data.edit")
+     * @Route("/library/{library}/custom-data/add", name="entity.library.custom_data.add", defaults={"entity_type": "library"})
      * @ParamConverter("entity", converter="entity_from_type_and_id")
+     * @Template("entity/Library/custom-data.edit.html.twig")
+     */
+    public function addCustomData(Request $request, Library $library)
+    {
+        $form = $this->createForm(\App\Form\CustomDataForm::class, (object)[
+            'title' => null,
+            'id' => null,
+            'value' => null,
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entries = $library->getCustomData();
+            $entries[] = $form->getData();
+            $library->setCustomData($entries);
+
+            $this->getEntityTypeManager()->getEntityManager()->flush();
+            $this->addFlash('success', 'Resource created successfully.');
+
+            return $this->redirectToRoute('entity.library.custom_data', [
+                'library' => $library->getId()
+            ]);
+        }
+
+        return [
+            'type_label' => 'Custom data',
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/library/{library}/custom-data/{custom_data}", name="entity.library.custom_data.edit", defaults={"entity_type": "library"})
+     * @ParamConverter("entity", converter="entity_from_type_and_id")
+     * @Template("entity/Library/custom-data.edit.html.twig")
      */
     public function editCustomData(Request $request, Library $library, int $custom_data)
     {
         // $id is just a 1-indexed key.
         $entry = $library->getCustomData()[$custom_data - 1];
 
-        $form = $this->createFormBuilder($entry)
-            // ->add('name', null)
-            ->add('id')
-            ->add('value')
-            ->add('actions', \App\Form\Type\ActionsType::class, [
-                'mapped' => false,
-            ])
-            ->getForm();
-
+        $form = $this->createForm(\App\Form\CustomDataForm::class, $entry);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /**
+             * Doctrine does not detect a change to a single stdClass instance so we have to
+             * replace the whole data source.
+             */
+            $data = unserialize(serialize($library->getCustomData()));
+
+            $library->setCustomData($data);
             $this->getEntityTypeManager()->getEntityManager()->flush();
+            $this->addFlash('success', 'Changes were saved.');
+
+            return $this->redirectToRoute('entity.library.custom_data', [
+                'library' => $library->getId()
+            ]);
         }
 
         return [
             'type_label' => 'Custom data',
-            'entity_type' => 'custom_data',
+            // 'entity_type' => 'custom_data',
             'custom_data' => $entry,
+            'custom_data_pos' => $custom_data,
             'form' => $form->createView(),
-            'actions' => []
         ];
-
-        var_dump($entry);
-        exit;
     }
 
     /**
-     * @Route("/library/{library}/custom_data/{custom_data}", name="entity.custom_data.delete")
+     * @Route("/library/{library}/custom-data/{custom_data}", name="entity.library.custom_data.delete")
      * @ParamConverter("entity", converter="entity_from_type_and_id")
      */
     public function deleteCustomData()

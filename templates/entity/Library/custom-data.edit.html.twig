@@ -1,0 +1,6 @@
+{% extends "entity/Library/resource.edit.html.twig" %}
+
+{% block delete_button_outer %}
+  {% set entity_delete_url = "entity.library.custom_data.delete" %}
+  {{ block("delete_button") }}
+{% endblock %}
