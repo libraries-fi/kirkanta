@@ -298,6 +298,9 @@ class SyncLegacyDatabase extends Command
             $hasSelf = false;
 
             foreach ($regular['days'] as $i => $day) {
+                if (is_object($day->info)) {
+                    $day->info = $day->info->fi ?? null;
+                }
                 if (!empty($day->times)) {
                     if (is_object($day->times)) {
                         // Unsaved imported periods have an stdClass in place of an array.
