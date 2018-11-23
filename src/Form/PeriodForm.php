@@ -35,10 +35,10 @@ class PeriodForm extends EntityFormType
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd'
             ])
-            ->add('days', PeriodDayCollectionType::class, [
-                'allow_add' => true,
-                'allow_delete' => true,
-            ])
+            // ->add('days', PeriodDayCollectionType::class, [
+            //     'allow_add' => true,
+            //     'allow_delete' => true,
+            // ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\PeriodDataType::class
             ])
@@ -72,6 +72,24 @@ class PeriodForm extends EntityFormType
             }
         });
 
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+            $langcodes = [$event->getForm()->getRoot()->getConfig()->getOptions()['current_langcode']];
+
+            $period = $event->getData();
+
+            if ($period instanceof Period) {
+                $langcodes = array_merge($langcodes, $period->getTranslations()->getKeys());
+            }
+
+            $event->getForm()->add('days', PeriodDayCollectionType::class, [
+                'allow_add' => true,
+                'allow_delete' => true,
+                'entry_options' => [
+                    'available_languages' => $langcodes
+                ],
+            ]);
+        });
+
         $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
             $from = $event->getForm()->get('valid_from');
 
@@ -85,30 +103,6 @@ class PeriodForm extends EntityFormType
 
             if (!$days->getData()) {
                 $days->setData(array_fill(0, 7, []));
-            }
-        });
-
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
-            $form = $event->getForm();
-            $data = $event->getData();
-            $langcodes = $data ? $data->getTranslations()->getKeys() : ['fi'];
-
-            foreach ($form->get('days') as $day) {
-                $info = $day->get('info');
-                $values = [];
-
-                if (!$info->getData()) {
-                    foreach ($langcodes as $langcode) {
-                        $info->add($langcode, TextType::class, [
-                            'langcode' => $langcode,
-                        ]);
-
-                        $info->get($langcode)->setData(null);
-                        $values[$langcode] = null;
-                    }
-
-                    $info->setData($values);
-                }
             }
         });
     }

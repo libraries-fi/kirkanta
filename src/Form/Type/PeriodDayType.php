@@ -22,14 +22,10 @@ class PeriodDayType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $builder
-            // ->add('info', null, [
-            //     'required' => false
-            // ])
             ->add('info', CollectionType::class, [
                 'required' => false,
-                'prototype' => TextType::class,
-                // 'data' =>
                 'help' => 'Name of the holiday etc.',
+                'prototype' => TextType::class,
             ])
             ->add('times', CollectionType::class, [
                 'entry_type' => PeriodDayTimeType::class,
@@ -38,24 +34,18 @@ class PeriodDayType extends BaseType
                 'delete_empty' => true,
             ]);
 
-        $builder->get('info')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $langcodes = $options['available_languages'];
+
+        /**
+         * NOTE: Adding fields has to be done in an event listener in order
+         * to add the fields also on the prototype element.
+         */
+        $builder->get('info')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($langcodes) {
             $form = $event->getForm();
-            $data = $event->getData();
 
-            if ($data) {
-                foreach ($data as $langcode => $_) {
-                    $form->add($langcode, null, [
-                        'langcode' => $langcode,
-                        'label' => false,
-                    ]);
-                }
-            } else {
-                $event->setData(['fi' => null]);
-
-                $parent = $form->getParent();
-
-                $form->add('fi', null, [
-                    'langcode' => 'fi',
+            foreach ($langcodes as $langcode) {
+                $form->add($langcode, null, [
+                    'langcode' => $langcode,
                     'label' => false,
                 ]);
             }
@@ -66,7 +56,7 @@ class PeriodDayType extends BaseType
     {
         parent::configureOptions($options);
         $options->setDefaults([
-            // 'data_class' => ArrayObject::class
+            'available_languages' => []
         ]);
     }
 
