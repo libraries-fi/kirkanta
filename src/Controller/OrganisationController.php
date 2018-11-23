@@ -173,7 +173,7 @@ class OrganisationController extends Controller
             case 'services':
               $actions['import'] = [
                   'title' => 'From template',
-                  'route' => "entity.{$entity_type}.resource_from_template",
+                  'route' => "entity.{$entity_type}.{$resource}.from_template",
                   'params' => [$entity_type => $library->getId(), 'resource' => $resource],
                   'icon' => 'fas fa-copy',
               ];
@@ -274,11 +274,10 @@ class OrganisationController extends Controller
     }
 
     /**
-     * @Route("/library/{library}/{resource}/import", name="entity.library.resource_from_template", defaults={"entity_type": "library"}, requirements={"library": "\d+", "resource": "[a-z]\w+"})
      * @ParamConverter("library", converter="entity_from_type_and_id")
      * @Template("entity/Library/resource.import.html.twig")
      */
-    public function createResourceFromTemplate(Request $request, LibraryInterface $library, string $entity_type, string $resource)
+    public function resourceFromTemplate(Request $request, LibraryInterface $library, string $entity_type, string $resource)
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
         $entity_class = $this->types->getEntityClass($type_id);
@@ -351,13 +350,13 @@ class OrganisationController extends Controller
             $em->flush();
             $this->addFlash('success', 'Resources imported successfully.');
 
-            return $this->redirectToRoute("entity.library.{$resource}", [
-              'library' => $library->getId(),
+            return $this->redirectToRoute("entity.{$entity_type}.{$resource}", [
+              $entity_type => $library->getId(),
             ]);
         }
 
         return [
-            'entity_type' => 'service_instance',
+            'entity_type' => $type_id,
             'type_label' => $this->types->getTypeLabel($type_id),
             'form' => $form->createView(),
         ];
