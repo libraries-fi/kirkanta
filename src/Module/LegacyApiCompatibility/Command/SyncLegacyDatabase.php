@@ -292,7 +292,7 @@ class SyncLegacyDatabase extends Command
 
             $self = $period;
             $self['id'] += self::SELFSERVICE_PERIOD_INCREMENT;
-            $self['days'] = json_decode(json_encode($self['days']));
+            // $self['days'] = json_decode(json_encode($self['days']));
             $self['section'] = 'selfservice';
 
             $hasSelf = false;
@@ -306,9 +306,14 @@ class SyncLegacyDatabase extends Command
                         // Unsaved imported periods have an stdClass in place of an array.
                         $day->times = get_object_vars($day->times);
                     }
+                    $self['days'][$i] = (object)[
+                        'times' => [],
+                        'closed' => true,
+                        'opens' => null,
+                        'closes' => null,
+                    ];
                     foreach ($day->times as $j => $time) {
                         if (isset($time->staff) && !$time->staff) {
-
                             if (!$hasSelf) {
                                 $hasSelf = true;
 
@@ -316,6 +321,10 @@ class SyncLegacyDatabase extends Command
                                 $self['days'][$i]->times = [(object)[
                                     'opens' => reset($day->times)->opens,
                                     'closes' => end($day->times)->closes,
+                                    'times' => [[
+                                        'opens' => reset($day->times)->opens,
+                                        'closes' => end($day->times)->closes,
+                                    ]]
                                 ]];
                             }
                             unset($day->times[$j]);
