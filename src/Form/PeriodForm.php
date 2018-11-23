@@ -35,10 +35,6 @@ class PeriodForm extends EntityFormType
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd'
             ])
-            // ->add('days', PeriodDayCollectionType::class, [
-            //     'allow_add' => true,
-            //     'allow_delete' => true,
-            // ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\PeriodDataType::class
             ])
