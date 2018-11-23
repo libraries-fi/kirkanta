@@ -321,11 +321,10 @@ class SyncLegacyDatabase extends Command
                                 $self['days'][$i]->times = [(object)[
                                     'opens' => reset($day->times)->opens,
                                     'closes' => end($day->times)->closes,
-                                    'times' => [[
-                                        'opens' => reset($day->times)->opens,
-                                        'closes' => end($day->times)->closes,
-                                    ]]
                                 ]];
+                                $self['days'][$i]->opens = reset($day->times)->opens;
+                                $self['days'][$i]->opens = end($day->times)->closes;
+                                $self['days'][$i]->closed = false;
                             }
                             unset($day->times[$j]);
                         }
