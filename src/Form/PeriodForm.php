@@ -28,12 +28,12 @@ class PeriodForm extends EntityFormType
         $builder
             ->add('valid_from', DateType::class, [
                 'widget' => 'single_text',
-                'format' => 'YYYY-MM-dd'
+                'format' => 'yyyy-MM-dd',
             ])
             ->add('valid_until', DateType::class, [
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'YYYY-MM-dd'
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('days', PeriodDayCollectionType::class, [
                 'allow_add' => true,
