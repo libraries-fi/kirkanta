@@ -294,6 +294,7 @@ class SyncLegacyDatabase extends Command
             $self['id'] += self::SELFSERVICE_PERIOD_INCREMENT;
             // $self['days'] = json_decode(json_encode($self['days']));
             $self['section'] = 'selfservice';
+            $self['description'] = null;
 
             $hasSelf = false;
 
