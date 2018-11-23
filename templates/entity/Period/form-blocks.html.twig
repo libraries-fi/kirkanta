@@ -31,6 +31,7 @@
         {% endif %}
       </fieldset>
 
+      {#
       {% with { library: app.request.get('library') } %}
         {% if library is null and entity is defined %}
           {% set library = entity.parent %}
@@ -45,6 +46,7 @@
           </fieldset>
         {% endif %}
       {% endwith %}
+      #}
     </div>
   </div>
   <fieldset class="form-section period-schedules">
