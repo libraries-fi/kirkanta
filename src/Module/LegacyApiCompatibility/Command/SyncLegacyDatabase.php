@@ -316,14 +316,17 @@ class SyncLegacyDatabase extends Command
                         if (isset($time->staff) && !$time->staff) {
                             $hasSelf = true;
 
+                            if (empty($self['days'][$i]->times)) {
+                                $self['days'][$i]->times = [(object)[
+                                    'opens' => reset($day->times)->opens,
+                                    'closes' => end($day->times)->closes,
+                                ]];
+                                $self['days'][$i]->opens = reset($day->times)->opens;
+                                $self['days'][$i]->opens = end($day->times)->closes;
+                                $self['days'][$i]->closed = false;
+                            }
+
                             // Self-service times will contain only one entry.
-                            $self['days'][$i]->times = [(object)[
-                                'opens' => reset($day->times)->opens,
-                                'closes' => end($day->times)->closes,
-                            ]];
-                            $self['days'][$i]->opens = reset($day->times)->opens;
-                            $self['days'][$i]->opens = end($day->times)->closes;
-                            $self['days'][$i]->closed = false;
                             unset($day->times[$j]);
                         }
 
