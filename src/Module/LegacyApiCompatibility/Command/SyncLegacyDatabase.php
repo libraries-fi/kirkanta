@@ -17,6 +17,8 @@ class SyncLegacyDatabase extends Command
     private $legacyDb;
     private $cache;
 
+    public static $TRLANGS = ['en', 'ru', 'se', 'sv'];
+
     const GROUP_NOBODY = 2;
     const SELFSERVICE_PERIOD_INCREMENT = 10000000;
 
@@ -299,6 +301,14 @@ class SyncLegacyDatabase extends Command
             $hasSelf = false;
 
             foreach ($regular['days'] as $i => $day) {
+                foreach (self::$TRLANGS as $langcode) {
+                    if (!isset($day->translations->{$langcode})) {
+                        if (!isset($day->translations)) {
+                            $day->translations = (object)[];
+                        }
+                        $day->translations->{$langcode} = (object)['info' => null];
+                    }
+                }
                 if (is_object($day->info)) {
                     $day->info = $day->info->fi ?? null;
                 }
