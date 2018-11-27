@@ -161,7 +161,7 @@ class UserController extends Controller
 
             $this->addFlash('success', 'Account was created.');
             $this->addFlash('success', 'Activation email sent.');
-            $this->addFlash('success', $token->getNonce());
+            // $this->addFlash('success', $token->getNonce());
             return $this->redirectToRoute('user_management.own_group');
         }
 
