@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+      background: white;
+      color: black;
+    }
+    #message-header,
+    #message-title,
+    #message-body {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    #message-header {
+      background: #2e864d;
+      color: white;
+      padding-top: 0.2rem;
+      padding-bottom: 0.2rem;
+      font-size: small;
+    }
+    #message-title {
+      font-size: larger;
+    }
+  </style>
+</head>
+<body>
+  <div id="message-header">Kirkanta</div>
+  <h1 id="message-title">{% block title_text %}Title{% endblock %}</h1>
+  <div id="message-body">{% block body %}Body{% endblock %}</div>
+</body>
+</html>

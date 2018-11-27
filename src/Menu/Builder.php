@@ -221,7 +221,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             'region',
             'regional_library',
             'service',
-            'user',
+            // 'user',
             'user_group'
         ];
 
@@ -232,6 +232,10 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
                 'route' => sprintf('entity.%s.collection', $type_id),
             ]);
         }
+
+        $menu->addChild('Users', [
+            'route' => 'user_management.create_user'
+        ]);
 
         return $menu;
     }

@@ -15,12 +15,14 @@ class OneTimeTokenRepository extends EntityRepository
         return new OneTimeToken($this->hash($nonce), $purpose);
     }
 
-    public function findToken(string $nonce, string $purpose) : OneTimeToken
+    public function findToken(string $purpose, string $nonce) : ?OneTimeToken
     {
-        return $this->findOneBy([
+        $token = $this->findOneBy([
             'token' => $this->hash($nonce),
             'purpose' => $purpose,
         ]);
+
+        return $token;
     }
 
     public function eraseToken(OneTimeToken $token) : void

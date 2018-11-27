@@ -31,17 +31,24 @@ class OneTimeToken
      */
     protected $user;
 
-    public function __construct(string $token = null, string $purpose = null)
+    private $nonce;
+
+    public static function nonce() : string
+    {
+        return bin2hex(random_bytes(20));
+    }
+
+    public function __construct(string $purpose, string $nonce = null)
     {
         $this->created = new DateTime;
+        $this->nonce = $nonce ?? self::nonce();
+        $this->token = hash('sha256', $this->nonce);
+        $this->purpose = $purpose;
+    }
 
-        if ($token) {
-            $this->setToken($token);
-        }
-
-        if ($purpose) {
-            $this->setPurpose($purpose);
-        }
+    public function getNonce() : ?string
+    {
+        return $this->nonce;
     }
 
     public function getToken() : string
@@ -49,19 +56,9 @@ class OneTimeToken
         return $this->token;
     }
 
-    public function setToken(string $token) : void
-    {
-        $this->token = $token;
-    }
-
     public function getPurpose() : string
     {
         return $this->purpose;
-    }
-
-    public function setPurpose(string $purpose) : void
-    {
-        $this->purpose = $purpose;
     }
 
     public function getUser() : ?UserInterface

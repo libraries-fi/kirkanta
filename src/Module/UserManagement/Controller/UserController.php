@@ -5,13 +5,15 @@ namespace App\Module\UserManagement\Controller;
 use App\EntityTypeManager;
 use App\Entity\ListBuilder\UserListBuilder;
 use App\Entity\UserGroup;
+use App\Module\Email\Mailer;
+use App\Module\UserManagement\AccountCreatedEmail;
+use App\Module\UserManagement\Entity\OneTimeToken;
+use App\Module\UserManagement\Validator\GroupManagerCount;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use UserAccountsBundle\UserInterface;
-
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -21,8 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints;
-
-use App\Module\UserManagement\Validator\GroupManagerCount;
+use UserAccountsBundle\UserInterface;
 
 class UserController extends Controller
 {
@@ -77,7 +78,7 @@ class UserController extends Controller
      * @Route("/user_management/add", name="user_management.create_user", defaults={"entity_type": "user"})
      * @Template("user_management/create-user.html.twig")
      */
-    public function createUser(Request $request, UserPasswordEncoderInterface $passwords)
+    public function createUser(Request $request, UserPasswordEncoderInterface $passwords, Mailer $mailer)
     {
         $builder = $this->createFormBuilder()
             ->add('email', EmailType::class)
@@ -147,11 +148,20 @@ class UserController extends Controller
                 $account->setPassword($password);
             }
 
+            $token = new OneTimeToken('activate_account');
+            $token->setUser($account);
+
+            $message = new AccountCreatedEmail($token);
+            $mailer->send($message);
+
             $em = $this->types->getEntityManager();
             $em->persist($account);
+            $em->persist($token);
             $em->flush();
 
             $this->addFlash('success', 'Account was created.');
+            $this->addFlash('success', 'Activation email sent.');
+            $this->addFlash('success', $token->getNonce());
             return $this->redirectToRoute('user_management.own_group');
         }
 

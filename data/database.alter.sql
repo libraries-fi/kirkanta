@@ -2039,3 +2039,5 @@ UPDATE periods SET is_legacy_format = false WHERE parent_id NOT IN (SELECT DISTI
 
 
 -- COMMIT PLACEHOLDER --
+
+CREATE SEQUENCE user_groups_id_seq START WITH 20000 OWNED BY user_groups.id;
