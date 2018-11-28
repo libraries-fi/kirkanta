@@ -2077,3 +2077,15 @@ DROP TABLE template_references;
 DROP TABLE organisations_links;
 DROP TABLE external_links;
 DROP TABLE services_old;
+
+
+
+
+
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_email_id_fkey;
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_homepage_id_fkey;
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_phone_id_fkey;
+
+ALTER TABLE organisations_data ADD FOREIGN KEY (email_id) REFERENCES contact_info(id) ON DELETE CASCADE;
+ALTER TABLE organisations_data ADD FOREIGN KEY (homepage_id) REFERENCES contact_info(id) ON DELETE CASCADE;
+ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_info(id) ON DELETE CASCADE;
