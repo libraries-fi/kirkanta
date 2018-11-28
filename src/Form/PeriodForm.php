@@ -40,12 +40,23 @@ class PeriodForm extends EntityFormType
             ])
             ;
 
+        if ($options['context_entity'] instanceof Library) {
+            $library = $options['context_entity'];
+            $builder->add('department', EntityType::class, [
+                'required' => false,
+                'class' => Department::class,
+                'choices' => $library->getDepartments(),
+                'placeholder' => $library->getName(),
+                'help' => 'Attach contact info to a department',
+            ]);
+        }
+
         // Periods are marked non-legacy when they are saved as the data will be converted.
         $builder->add('is_legacy_format', CheckboxType::class, [
             'data' => false
         ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
             $form = $event->getForm();
             $period = $event->getData();
 
@@ -55,16 +66,6 @@ class PeriodForm extends EntityFormType
             } else {
                 $this->fixLegacyFormatDayTranslations($period);
                 $organisation = $period->getParent();
-            }
-
-            if ($organisation instanceof Library) {
-                $form->add('department', EntityType::class, [
-                    'required' => false,
-                    'class' => Department::class,
-                    'choices' => $organisation->getDepartments(),
-                    'placeholder' => $organisation->getName(),
-                    'help' => 'Attach contact info to a department',
-                ]);
             }
         });
 
