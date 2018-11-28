@@ -12,6 +12,9 @@ document.querySelectorAll("select").forEach((select) => {
   });
 
   options.forEach((option, i) => {
-    select.appendChild(option);
+    // Keep placeholder options at the top.
+    if (option.value) {
+      select.appendChild(option);
+    }
   });
 });
