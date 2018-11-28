@@ -2060,3 +2060,20 @@ ALTER TABLE periods ADD FOREIGN KEY (department_id) REFERENCES departments(id) O
 
 ALTER TABLE schedules DROP CONSTRAINT schedules_department_fkey;
 ALTER TABLE schedules ADD FOREIGN KEY (department) REFERENCES departments(id) ON DELETE CASCADE;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+
+DROP TABLE phone_numbers;
+DROP TABLE web_links;
+DROP TABLE web_link_groups;
+DROP TABLE template_references;
+DROP TABLE organisations_links;
+DROP TABLE external_links;
+DROP TABLE services_old;
