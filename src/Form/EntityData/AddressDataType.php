@@ -23,6 +23,7 @@ class AddressDataType extends EntityDataType
                 'required' => false,
             ])
             ->add('info', null, [
+                'label' => 'Directions',
                 'required' => false,
             ])
             ;
