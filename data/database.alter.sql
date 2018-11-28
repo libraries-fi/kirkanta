@@ -2040,4 +2040,23 @@ UPDATE periods SET is_legacy_format = false WHERE parent_id NOT IN (SELECT DISTI
 
 -- COMMIT PLACEHOLDER --
 
+
+
+
+
 CREATE SEQUENCE user_groups_id_seq START WITH 20000 OWNED BY user_groups.id;
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+ALTER TABLE periods DROP CONSTRAINT periods_department_id_fkey;
+ALTER TABLE periods ADD FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE;
+
+ALTER TABLE schedules DROP CONSTRAINT schedules_department_fkey;
+ALTER TABLE schedules ADD FOREIGN KEY (department) REFERENCES departments(id) ON DELETE CASCADE;
