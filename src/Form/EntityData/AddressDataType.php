@@ -24,6 +24,7 @@ class AddressDataType extends EntityDataType
             ])
             ->add('info', null, [
                 'label' => 'Directions',
+                'help' => 'Short description for locating the building or entrance.',
                 'required' => false,
             ])
             ;
