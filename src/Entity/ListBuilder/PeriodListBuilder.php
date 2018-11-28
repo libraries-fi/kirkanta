@@ -25,7 +25,7 @@ class PeriodListBuilder extends EntityListBuilder
         // CheckboxType always returns a value.
         if (empty($search['past_periods'])) {
             $builder->andWhere('(e.valid_from >= :now OR e.valid_until IS NULL) OR e.valid_until >= :now');
-            $builder->setParameter('now', new DateTime);
+            $builder->setParameter('now', (new DateTime)->format('Y-m-d'));
         }
 
         if (isset($search['department'])) {
