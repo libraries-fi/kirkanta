@@ -86,10 +86,12 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
 
     public function isExpired(DateTimeInterface $datetime = null) : bool
     {
-        if (!$datetime) {
-            $datetime = new DateTime;
+        if (!$this->valid_until) {
+            return false;
         }
-        return $this->valid_until && $this->valid_until < $datetime;
+
+        $ref = ($datetime ?? new \DateTime)->format('Ymd');
+        return $this->valid_until->format('Ymd') < $ref;
     }
 
     public function getName() : string
