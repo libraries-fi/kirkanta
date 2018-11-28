@@ -295,6 +295,7 @@ class SyncLegacyDatabase extends Command
             $self = $period;
             $self['id'] += self::SELFSERVICE_PERIOD_INCREMENT;
             // $self['days'] = json_decode(json_encode($self['days']));
+            $self['days'] = [];
             $self['section'] = 'selfservice';
             $self['description'] = null;
 
@@ -325,8 +326,6 @@ class SyncLegacyDatabase extends Command
                     ];
                     foreach ($day->times as $j => $time) {
                         if (isset($time->staff) && !$time->staff) {
-                            $hasSelf = true;
-
                             if (empty($self['days'][$i]->times)) {
                                 $self['days'][$i]->times = [(object)[
                                     'opens' => reset($day->times)->opens,
@@ -347,7 +346,7 @@ class SyncLegacyDatabase extends Command
                 }
             }
 
-            return [$regular, $hasSelf ? $self : null];
+            return [$regular, $self];
         };
 
         $smtRead = $this->currentDb->prepare('
@@ -365,7 +364,7 @@ class SyncLegacyDatabase extends Command
                 is_legacy_format
             FROM periods a
             INNER JOIN periods_data t ON a.id = t.entity_id
-            WHERE COALESCE(a.valid_until, NOW()) >= NOW()
+            WHERE COALESCE(a.valid_until, CURRENT_DATE) >= CURRENT_DATE
                 AND a.parent_id IS NOT NULL
                 AND a.section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
