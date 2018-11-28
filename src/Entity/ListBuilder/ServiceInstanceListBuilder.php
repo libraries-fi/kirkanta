@@ -60,7 +60,11 @@ class ServiceInstanceListBuilder extends EntityListBuilder
             ->transform('type', function($s) use ($types) {
                 $type = $types->search($s->getType());
                 return "{% trans %}{$type}{% endtrans %}";
-            });
+            })
+
+            // NOTE: Lazy and insecure way to allow HTML markup from CKEditor in this field.
+            ->useAsTemplate('description')
+            ;
 
         return $table;
     }
