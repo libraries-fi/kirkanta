@@ -13,6 +13,6 @@ class UserGroupSearchForm extends SearchFormType
     protected function form(FormBuilderInterface $builder, array $options) : void
     {
         $builder
-            ->add('role_id');
+            ->add('name');
     }
 }
