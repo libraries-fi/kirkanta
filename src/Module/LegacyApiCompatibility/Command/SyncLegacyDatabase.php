@@ -302,6 +302,13 @@ class SyncLegacyDatabase extends Command
             $hasSelf = false;
 
             foreach ($regular['days'] as $i => $day) {
+                $self['days'][$i] = (object)[
+                    'times' => [],
+                    'closed' => true,
+                    'opens' => null,
+                    'closes' => null,
+                ];
+                
                 foreach (self::$TRLANGS as $langcode) {
                     if (!isset($day->translations->{$langcode})) {
                         if (!isset($day->translations)) {
@@ -318,12 +325,6 @@ class SyncLegacyDatabase extends Command
                         // Unsaved imported periods have an stdClass in place of an array.
                         $day->times = get_object_vars($day->times);
                     }
-                    $self['days'][$i] = (object)[
-                        'times' => [],
-                        'closed' => true,
-                        'opens' => null,
-                        'closes' => null,
-                    ];
                     foreach ($day->times as $j => $time) {
                         if (isset($time->staff) && !$time->staff) {
                             if (empty($self['days'][$i]->times)) {
