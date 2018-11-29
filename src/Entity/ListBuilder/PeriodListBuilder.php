@@ -82,7 +82,7 @@ class PeriodListBuilder extends EntityListBuilder
             ->transform('type', function($p) {
                 if ($p->isLegacyFormat()) {
                     // FIXME: Remove this condition after dropping the section field!
-                    return '<span class="badge badge-pill badge-secondary">{% trans %}Legacy period{% endtrans %}</span>';
+                    return '<span class="badge badge-pill badge-danger">{% trans %}Legacy period{% endtrans %}</span>';
                 }
                 if (!$p->isContinuous()) {
                     return '<span class="badge badge-pill badge-warning">{% trans %}Exception schedules{% endtrans %}</span>';
