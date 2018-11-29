@@ -66,7 +66,7 @@ class SyncLegacyDatabase extends Command
                 break;
 
             case 'period':
-                $this->syncPeriods();
+                $this->syncPeriods($output);
                 break;
 
             default:
@@ -286,7 +286,7 @@ class SyncLegacyDatabase extends Command
         $this->legacyDb->commit();
     }
 
-    private function syncPeriods() : void
+    private function syncPeriods(OutputInterface $output) : void
     {
         $splitSelfService = function(array $period) {
             $regular = $period;
@@ -308,7 +308,7 @@ class SyncLegacyDatabase extends Command
                     'opens' => null,
                     'closes' => null,
                 ];
-                
+
                 foreach (self::$TRLANGS as $langcode) {
                     if (!isset($day->translations->{$langcode})) {
                         if (!isset($day->translations)) {
@@ -370,7 +370,7 @@ class SyncLegacyDatabase extends Command
                 AND a.section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
                 -- AND a.id = 299673 -- DEBUG STUFF
-                -- AND a.parent_id = 85022 -- DEBUG STUFF
+                -- AND a.parent_id = 86600 -- DEBUG STUFF
             GROUP BY a.id
             ORDER BY a.id
             LIMIT :limit
@@ -389,6 +389,8 @@ class SyncLegacyDatabase extends Command
             if ($row['is_legacy_format']) {
                 // Don't touch libraries that still have legacy periods.
                 $dropLibraries[] = $row['organisation_id'];
+
+                $output->writeln("Library #{$row['organisation_id']} has legacy period #{$row['id']}");
             } else {
                 unset($row['is_legacy_format']);
 
@@ -415,23 +417,23 @@ class SyncLegacyDatabase extends Command
 
         $libraryPeriods = array_diff_key($libraryPeriods, array_flip($dropLibraries));
 
-        $this->legacyDb->beginTransaction();
-
-        $smtDeleteOld = $this->legacyDb->prepare('
-            DELETE
-            FROM periods
-            WHERE organisation_id = :library
-        ');
-
         foreach ($libraryPeriods as $id => $periods) {
+            $this->legacyDb->beginTransaction();
+
+            $smtDeleteOld = $this->legacyDb->prepare('
+                DELETE
+                FROM periods
+                WHERE organisation_id = :library
+            ');
             $smtDeleteOld->execute(['library' => $id]);
 
             foreach ($periods as $period) {
                 insert_query($this->legacyDb, 'periods', $period);
             }
+
+            $this->legacyDb->commit();
         }
 
-        $this->legacyDb->commit();
     }
 
     private function synchronize(string $current_table, string $legacy_table, array $fields, callable $mapper = null, array $options = [])
