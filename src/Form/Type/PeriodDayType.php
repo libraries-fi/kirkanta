@@ -32,6 +32,9 @@ class PeriodDayType extends BaseType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'delete_empty' => true,
+                'prototype_data' => [
+                  'staff' => true
+                ]
             ]);
 
         $langcodes = $options['available_languages'];
