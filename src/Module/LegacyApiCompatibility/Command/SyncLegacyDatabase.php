@@ -152,18 +152,6 @@ class SyncLegacyDatabase extends Command
             $row['region_id'] = 1003;
         });
 
-        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
-
-            if ($row['coordinates']) {
-                list($lon, $lat) = explode(' ', substr($row['coordinates'], 6, -1));
-                $row['coordinates'] = "{$lat}, {$lon}";
-            }
-
-            // In legacy DB, coordinates exist in organisations table.
-            $this->cache->coords[$row['id']] = $row['coordinates'];
-            unset($row['coordinates']);
-        });
-
         $this->synchronize('organisations', 'organisations', [
             'role',
             // 'type',
@@ -214,6 +202,30 @@ class SyncLegacyDatabase extends Command
                 unset($data['homepage_id']);
                 unset($data['phone_id']);
                 unset($data['slug']);
+            }
+        });
+
+        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
+
+            if ($row['coordinates']) {
+                list($lon, $lat) = explode(' ', substr($row['coordinates'], 6, -1));
+                $row['coordinates'] = "{$lat}, {$lon}";
+            }
+
+            // In legacy DB, coordinates exist in organisations table.
+            $this->cache->coords[$row['id']] = $row['coordinates'];
+            unset($row['coordinates']);
+        });
+
+        $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover'], function(&$row) {
+            $row['organisation_id'] = $row['parent_id'];
+            unset($row['parent_id']);
+
+            $row['is_default'] = sprintf('%d', $row['cover']);
+            unset($row['cover']);
+
+            foreach ($row['translations'] as $langcode => &$data) {
+              unset($data['entity_type']);
             }
         });
 
