@@ -10,7 +10,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="photos_data")
+ * @ORM\Table(name="pictures_data")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="entity_type", type="string")
  * @ORM\DiscriminatorMap({"organisation"="LibraryPhotoData"})
