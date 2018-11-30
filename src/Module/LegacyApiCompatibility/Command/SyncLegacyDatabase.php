@@ -217,7 +217,7 @@ class SyncLegacyDatabase extends Command
             }
         });
 
-        $this->legacyDb->execute('DELETE FROM pictures WHERE organisation_id IS NOT NULL');
+        $this->legacyDb->query('DELETE FROM pictures WHERE organisation_id IS NOT NULL');
 
         $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover'], function(&$row) {
             $row['organisation_id'] = $row['parent_id'];
