@@ -473,7 +473,7 @@ class SyncLegacyDatabase extends Command
 function merge_primary_translation(array &$document) : array {
 
     $langcode = $document['default_langcode'] ?? 'fi';
-    $document += $document['translations'][$langcode];
+    $document += $document['translations'][$langcode] ?? [];
     unset($document['translations'][$langcode]);
     unset($document['default_langcode']);
     return $document;
