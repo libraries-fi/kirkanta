@@ -58,6 +58,13 @@ class ConvertCustomData extends Command
 
             foreach ($entries as $entry) {
                 if (is_object($entry->title)) {
+                    /**
+                     * Fix an *oops* where we lost a value from the Finnish source field.
+                     */
+                    if (isset($entry->value->ru) && !isset($entry->value->fi)) {
+                        $entry->value->fi = $entry->value->ru;
+                    }
+
                     continue;
                 }
 
@@ -67,6 +74,9 @@ class ConvertCustomData extends Command
                 foreach ($langcodes as $langcode) {
                     if (!isset($entry->title->{$langcode})) {
                         $entry->title->{$langcode} = $entry->translations->{$langcode}->title ?? null;
+                    }
+
+                    if (!isset($entry->value->{$langcode})) {
                         $entry->value->{$langcode} = $entry->translations->{$langcode}->value ?? null;
                     }
                 }
