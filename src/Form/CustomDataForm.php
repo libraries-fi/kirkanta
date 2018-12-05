@@ -27,9 +27,11 @@ class CustomDataForm extends FormType
             ->add('title', CollectionType::class, [
                 'help' => 'Informative name for users.',
                 'prototype' => TextType::class,
+                'required' => false,
             ])
             ->add('value', CollectionType::class, [
-                'prototype' => TextareaType::class
+                'prototype' => TextareaType::class,
+                'required' => false,
             ])
             ->add('content_language', ContentLanguageChoiceType::class, [
                 'mapped' => false,
