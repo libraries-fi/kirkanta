@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
+use App\EntityTypeManager;
 use App\Entity\Library;
 use App\Entity\LibraryInterface;
 use App\Entity\Feature\Weight;
-use App\EntityTypeManager;
+use App\Util\SystemLanguages;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -406,7 +407,6 @@ class OrganisationController extends Controller
      */
     public function listCustomData(Request $request, string $entity_type, $entity, \Knp\Component\Pager\PaginatorInterface $pager)
     {
-        // var_dump($router->getRouteCollection()->get('entity.library.edit')->compile()->getVariables());
         $entries = $entity->getCustomData();
 
         $table = (new \App\Component\Element\Table)
@@ -416,9 +416,10 @@ class OrganisationController extends Controller
                 static $i = 0;
                 $i++;
 
-                $values = array_filter([$entry->title, $entry->id]);
+                $values = array_filter([$entry->title->fi ?? null, $entry->id->fi ?? null]);
                 $values = array_values($values);
                 $label = count($values) == 2 ? "{$values[0]} ({$values[1]})" : reset($values);
+
                 $label = htmlspecialchars($label) ?: 'NULL';
 
                 $tokens = [
@@ -429,6 +430,10 @@ class OrganisationController extends Controller
                 ];
 
                 return str_replace(array_keys($tokens), array_values($tokens), '<a href="{{ path("entity.{$entity_type}.custom_data.edit", {{$entity_type}: {$library_id}, custom_data: {$i}})}}">{$label}</a>');
+            })
+            ->transform('value', function($entry) {
+                return '';
+                return $entry->value->fi ?? 'NULL';
             })
             ;
 
@@ -462,6 +467,8 @@ class OrganisationController extends Controller
             'value' => null,
         ]);
 
+        $langcodes = $entity->getTranslations()->getKeys();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -493,7 +500,12 @@ class OrganisationController extends Controller
         // $id is just a 1-indexed key.
         $entry = $entity->getCustomData()[$custom_data - 1];
 
-        $form = $this->createForm(\App\Form\CustomDataForm::class, $entry);
+        $langcodes = $entity->getTranslations()->getKeys();
+
+        $form = $this->createForm(\App\Form\CustomDataForm::class, $entry, [
+            'current_langcode' => SystemLanguages::DEFAULT_LANGCODE,
+            'available_languages' => $langcodes
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -215,7 +215,7 @@
       {% set langcode = child.vars.langcode %}
       {% set language_active = form.parent.parent.parent.children.name[langcode].vars.language_active %}
 
-      <div class="tr-language-row" data-content-language="{{ child.vars.langcode }}" {% if not language_active %}style="display: none"{% endif %}>
+      <div class="tr-language-row" data-content-language="{{ langcode }}" {% if not language_active %}style="display: none"{% endif %}>
         {{- form_row(child) -}}
       </div>
     {% endfor %}

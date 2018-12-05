@@ -62,11 +62,4 @@ class PeriodDayType extends BaseType
             'available_languages' => []
         ]);
     }
-
-    public function finishView(FormView $view, FormInterface $form, array $options) : void
-    {
-
-
-        // exit;
-    }
 }

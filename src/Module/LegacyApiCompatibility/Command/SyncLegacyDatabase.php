@@ -182,6 +182,7 @@ class SyncLegacyDatabase extends Command
             'modified',
             'state',
             'default_langcode',
+            'custom_data',
         ], function(&$row) use($smtContact) {
             $role = $row['role'];
             unset($row['role']);
@@ -214,6 +215,24 @@ class SyncLegacyDatabase extends Command
                 unset($data['homepage_id']);
                 unset($data['phone_id']);
                 unset($data['slug']);
+            }
+
+            $custom_data = json_decode($row['custom_data']);
+
+            if ($custom_data) {
+                foreach ($custom_data as $entry) {
+                    $entry->translations = (object)[];
+                    foreach (self::$TRLANGS as $langcode) {
+                        $entry->translations->{$langcode} = (object)[
+                            'title' => $entry->title->{$langcode} ?? null,
+                            'value' => $entry->value->{$langcode} ?? null,
+                        ];
+                    }
+                    $entry->title = $entry->title->fi ?? null;
+                    $entry->value = $entry->value->fi ?? null;
+                }
+
+                $row['custom_data'] = json_encode($custom_data);
             }
         });
 
