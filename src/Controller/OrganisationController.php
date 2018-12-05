@@ -416,7 +416,7 @@ class OrganisationController extends Controller
                 static $i = 0;
                 $i++;
 
-                $values = array_filter([$entry->title->fi ?? null, $entry->id->fi ?? null]);
+                $values = array_filter([$entry->title->fi ?? null, $entry->id]);
                 $values = array_values($values);
                 $label = count($values) == 2 ? "{$values[0]} ({$values[1]})" : reset($values);
 
