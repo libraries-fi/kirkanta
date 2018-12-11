@@ -146,108 +146,108 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->beginTransaction();
 
-        // $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function(&$row) {
-        //     // Set a fallback value because API users don't really care about this,
-        //     // so we don't bother syncing regions.
-        //     $row['region_id'] = 1003;
-        // });
-        //
-        // $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
-        //     if ($row['coordinates']) {
-        //         list($lon, $lat) = explode(' ', substr($row['coordinates'], 6, -1));
-        //         $row['coordinates'] = "{$lat}, {$lon}";
-        //     }
-        //
-        //     // In legacy DB, coordinates exist in organisations table.
-        //     $this->cache->coords[$row['id']] = $row['coordinates'];
-        //     unset($row['coordinates']);
-        // });
-        //
-        // $this->synchronize('organisations', 'organisations', [
-        //     'role',
-        //     // 'type',
-        //     'id',
-        //     'group_id',
-        //     'city_id',
-        //     'address_id',
-        //     'mail_address_id',
-        //     'founded',
-        //     'isil',
-        //     'identificator',
-        //     'construction_year',
-        //     'building_architect',
-        //     'interior_designer',
-        //     'created',
-        //     'modified',
-        //     'state',
-        //     'default_langcode',
-        //     'custom_data',
-        // ], function(&$row) use($smtContact) {
-        //     $role = $row['role'];
-        //     unset($row['role']);
-        //
-        //     if (!in_array($role, ['library', 'foreign'])) {
-        //         throw new SkipSynchronizationException;
-        //     }
-        //
-        //     $row['coordinates'] = $this->cache->coords[$row['address_id']] ?? null;
-        //
-        //     foreach ($row['translations'] as $langcode => &$data) {
-        //         /*
-        //          * Contact details are now entity references vs. strings in old DB.
-        //          * Also, there only exist fields for email and homepage, NOT phone.
-        //          */
-        //         $smtContact->execute([
-        //             $data['email_id'] ?: 0,
-        //             $data['homepage_id'] ?: 0,
-        //         ]);
-        //
-        //         foreach ($smtContact->fetchAll() as $contact) {
-        //             $keys = [
-        //                 'email' => 'email',
-        //                 'website' => 'homepage',
-        //             ];
-        //             $data[$keys[$contact['type']]] = $contact['contact'];
-        //         }
-        //
-        //         unset($data['email_id']);
-        //         unset($data['homepage_id']);
-        //         unset($data['phone_id']);
-        //         unset($data['slug']);
-        //     }
-        //
-        //     $custom_data = json_decode($row['custom_data']);
-        //
-        //     if ($custom_data) {
-        //         foreach ($custom_data as $entry) {
-        //             $entry->translations = (object)[];
-        //             foreach (self::$TRLANGS as $langcode) {
-        //                 $entry->translations->{$langcode} = (object)[
-        //                     'title' => $entry->title->{$langcode} ?? null,
-        //                     'value' => $entry->value->{$langcode} ?? null,
-        //                 ];
-        //             }
-        //             $entry->title = $entry->title->fi ?? null;
-        //             $entry->value = $entry->value->fi ?? null;
-        //         }
-        //
-        //         $row['custom_data'] = json_encode($custom_data);
-        //     }
-        // });
-        //
-        // $this->legacyDb->query('DELETE FROM pictures WHERE organisation_id IS NOT NULL');
-        //
-        // $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover'], function(&$row) {
-        //     $row['organisation_id'] = $row['parent_id'];
-        //     unset($row['parent_id']);
-        //
-        //     $row['is_default'] = sprintf('%d', $row['cover']);
-        //     unset($row['cover']);
-        //
-        //     foreach ($row['translations'] as $langcode => &$data) {
-        //       unset($data['entity_type']);
-        //     }
-        // });
+        $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function(&$row) {
+            // Set a fallback value because API users don't really care about this,
+            // so we don't bother syncing regions.
+            $row['region_id'] = 1003;
+        });
+
+        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
+            if ($row['coordinates']) {
+                list($lon, $lat) = explode(' ', substr($row['coordinates'], 6, -1));
+                $row['coordinates'] = "{$lat}, {$lon}";
+            }
+
+            // In legacy DB, coordinates exist in organisations table.
+            $this->cache->coords[$row['id']] = $row['coordinates'];
+            unset($row['coordinates']);
+        });
+
+        $this->synchronize('organisations', 'organisations', [
+            'role',
+            // 'type',
+            'id',
+            'group_id',
+            'city_id',
+            'address_id',
+            'mail_address_id',
+            'founded',
+            'isil',
+            'identificator',
+            'construction_year',
+            'building_architect',
+            'interior_designer',
+            'created',
+            'modified',
+            'state',
+            'default_langcode',
+            'custom_data',
+        ], function(&$row) use($smtContact) {
+            $role = $row['role'];
+            unset($row['role']);
+
+            if (!in_array($role, ['library', 'foreign'])) {
+                throw new SkipSynchronizationException;
+            }
+
+            $row['coordinates'] = $this->cache->coords[$row['address_id']] ?? null;
+
+            foreach ($row['translations'] as $langcode => &$data) {
+                /*
+                 * Contact details are now entity references vs. strings in old DB.
+                 * Also, there only exist fields for email and homepage, NOT phone.
+                 */
+                $smtContact->execute([
+                    $data['email_id'] ?: 0,
+                    $data['homepage_id'] ?: 0,
+                ]);
+
+                foreach ($smtContact->fetchAll() as $contact) {
+                    $keys = [
+                        'email' => 'email',
+                        'website' => 'homepage',
+                    ];
+                    $data[$keys[$contact['type']]] = $contact['contact'];
+                }
+
+                unset($data['email_id']);
+                unset($data['homepage_id']);
+                unset($data['phone_id']);
+                unset($data['slug']);
+            }
+
+            $custom_data = json_decode($row['custom_data']);
+
+            if ($custom_data) {
+                foreach ($custom_data as $entry) {
+                    $entry->translations = (object)[];
+                    foreach (self::$TRLANGS as $langcode) {
+                        $entry->translations->{$langcode} = (object)[
+                            'title' => $entry->title->{$langcode} ?? null,
+                            'value' => $entry->value->{$langcode} ?? null,
+                        ];
+                    }
+                    $entry->title = $entry->title->fi ?? null;
+                    $entry->value = $entry->value->fi ?? null;
+                }
+
+                $row['custom_data'] = json_encode($custom_data);
+            }
+        });
+
+        $this->legacyDb->query('DELETE FROM pictures WHERE organisation_id IS NOT NULL');
+
+        $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover'], function(&$row) {
+            $row['organisation_id'] = $row['parent_id'];
+            unset($row['parent_id']);
+
+            $row['is_default'] = sprintf('%d', $row['cover']);
+            unset($row['cover']);
+
+            foreach ($row['translations'] as $langcode => &$data) {
+              unset($data['entity_type']);
+            }
+        });
 
         $this->legacyDb->query('DELETE FROM phone_numbers');
 
