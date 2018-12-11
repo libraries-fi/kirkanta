@@ -322,7 +322,12 @@ class SyncLegacyDatabase extends Command
     private function syncPeriods(OutputInterface $output) : void
     {
         $splitSelfService = function(array $period) {
+            // $hasGap = function($a, $b) {
+            //     return $a->closes != $b->closes;
+            // };
+
             $regular = $period;
+            $regular['days'] = json_decode(json_encode($regular['days']));
             $regular['section'] = 'default';
 
             $self = $period;
@@ -347,7 +352,10 @@ class SyncLegacyDatabase extends Command
                         if (!isset($day->translations)) {
                             $day->translations = (object)[];
                         }
-                        $day->translations->{$langcode} = (object)['info' => null];
+
+                        if (!isset($day->translations->{$langcode})) {
+                            $day->translations->{$langcode} = (object)['info' => null];
+                        }
                     }
                 }
                 if (is_object($day->info)) {
@@ -366,7 +374,7 @@ class SyncLegacyDatabase extends Command
                                     'closes' => end($day->times)->closes,
                                 ]];
                                 $self['days'][$i]->opens = reset($day->times)->opens;
-                                $self['days'][$i]->opens = end($day->times)->closes;
+                                $self['days'][$i]->closes = end($day->times)->closes;
                                 $self['days'][$i]->closed = false;
                             }
 
@@ -377,6 +385,23 @@ class SyncLegacyDatabase extends Command
                         unset($time->staff);
                     }
                     $day->times = array_values($day->times);
+
+                    for ($j = 1; $j < count($period['days'][$i]->times); $j++) {
+                        $a = $period['days'][$i]->times[$j-1];
+                        $b = $period['days'][$i]->times[$j];
+
+                        if ($a->closes < $b->opens && !empty($self['days'][$i]->times)) {
+                            $selfTimes = &$self['days'][$i]->times;
+                            $k = count($selfTimes) - 1;
+
+                            $selfTimes[] = [
+                                'opens' => $b->opens,
+                                'closes' => $selfTimes[$k]->closes,
+                            ];
+
+                            $selfTimes[$k]->closes = $a->closes;
+                        }
+                    }
                 }
             }
 
@@ -403,7 +428,7 @@ class SyncLegacyDatabase extends Command
                 AND a.section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
                 -- AND a.id = 299673 -- DEBUG STUFF
-                -- AND a.parent_id = 86600 -- DEBUG STUFF
+                -- AND a.parent_id = 84877 -- DEBUG STUFF
             GROUP BY a.id
             ORDER BY a.id
             LIMIT :limit
