@@ -252,6 +252,13 @@ class SyncLegacyDatabase extends Command
         $this->legacyDb->query('DELETE FROM phone_numbers');
 
         $this->synchronize('contact_info', 'phone_numbers', ['id', 'type', 'weight', 'contact', 'parent_id'], function(&$row) {
+            if (!isset($row['parent_id'])) {
+                /**
+                 * Contact info can be bound to a Finna organisation also.
+                 */
+                throw new SkipSynchronizationException;
+            }
+
             if (mb_strlen($row['contact']) > 90) {
                 throw new SkipSynchronizationException;
             }
