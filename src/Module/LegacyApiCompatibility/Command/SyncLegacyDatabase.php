@@ -259,6 +259,9 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->beginTransaction();
 
+        $this->legacyDb->query('DELETE FROM services_new');
+        $this->legacyDb->query('DELETE FROM service_types');
+
         $this->synchronize('services', 'service_types', [
             'type',
             'created',
