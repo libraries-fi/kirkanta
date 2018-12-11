@@ -259,6 +259,10 @@ class SyncLegacyDatabase extends Command
                 throw new SkipSynchronizationException;
             }
 
+            if (!isset($row['translations']['fi'])) {
+                throw new SkipSynchronizationException;
+            }
+
             if (mb_strlen($row['contact']) > 90) {
                 throw new SkipSynchronizationException;
             }
