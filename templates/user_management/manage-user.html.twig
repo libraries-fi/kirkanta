@@ -2,7 +2,13 @@
 
 {% set entity_type = "user" %}
 
-{% block title_text %}Manage user #{{ user.id }}{% endblock %}
+{% block title_text %}
+  {% if user is defined %}
+    {% trans with {"%user%": user.id} %}Manage user #%user%{% endtrans %}
+  {% else %}
+    {% trans with {"%type%": 'User'|trans|lower} %}Add new %type%{% endtrans %}
+  {% endif %}
+{% endblock %}
 
 {% block form_body %}
   {% if user is defined and user.expires %}
@@ -49,7 +55,7 @@
       {% if form.expires is defined %}
         {{ form_row(form.expires) }}
       {% endif %}
-      
+
       <ul>
         <li class="text-muted">{% trans %}Account will be disabled on this date.{% endtrans %}</li>
       </ul>

@@ -19,9 +19,12 @@ class AddressDataType extends EntityDataType
         $builder
             ->add('street')
             ->add('area', null, [
+                'label' => 'Post office',
                 'required' => false,
             ])
             ->add('info', null, [
+                'label' => 'Directions',
+                'help' => 'Short description for locating the building or entrance.',
                 'required' => false,
             ])
             ;

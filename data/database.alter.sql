@@ -758,7 +758,7 @@ INSERT INTO organisations_data
   SELECT
     id,
     'en',
-    name,
+    translations->'en'->>'name',
     coalesce(nullif(translations->'en'->>'slug', ''), slugify(translations->'en'->>'name') || '-' || id),
     substr(translations->'en'->>'short_name', 1, 40),
     translations->'en'->>'slogan',
@@ -778,7 +778,7 @@ INSERT INTO organisations_data
   SELECT
     id,
     'sv',
-    name,
+    translations->'sv'->>'name',
     coalesce(nullif(translations->'sv'->>'slug', ''), slugify(translations->'sv'->>'name') || '-' || id),
     substr(translations->'sv'->>'short_name', 1, 40),
     translations->'sv'->>'slogan',
@@ -798,7 +798,7 @@ INSERT INTO organisations_data
   SELECT
     id,
     'ru',
-    name,
+    translations->'ru'->>'name',
     coalesce(nullif(translations->'ru'->>'slug', ''), slugify(translations->'ru'->>'name') || '-' || id),
     substr(translations->'ru'->>'short_name', 1, 40),
     translations->'ru'->>'slogan',
@@ -818,7 +818,7 @@ INSERT INTO organisations_data
   SELECT
     id,
     'se',
-    name,
+    translations->'se'->>'name',
     coalesce(nullif(translations->'se'->>'slug', ''), slugify(translations->'se'->>'name') || '-' || id),
     substr(translations->'se'->>'short_name', 1, 40),
     translations->'se'->>'slogan',
@@ -2025,20 +2025,107 @@ UPDATE organisations SET type = 'library' WHERE type = 'regional';
 
 
 
+-- COMMIT PLACEHOLDER --
 
---
 
--- CREATE TYPE langcode AS enum('en', 'fi', 'ru', 'se', 'sv');
 
-ALTER TABLE cities ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE regions ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE provincial_libraries ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE consortiums ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
 
-ALTER TABLE organisations ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE persons ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE services ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE service_instances ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE periods ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE finna_additions ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
-ALTER TABLE pictures ADD COLUMN default_langcode varchar(5) NOT NULL DEFAULT 'fi';
+-- Clear legacy format flag for libraries that don't use self-service schedules.
+UPDATE periods SET is_legacy_format = false WHERE parent_id NOT IN (SELECT DISTINCT parent_id FROM periods WHERE section = 'selfservice' AND parent_id IS NOT NULL);
+
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+
+CREATE SEQUENCE user_groups_id_seq START WITH 20000 OWNED BY user_groups.id;
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+ALTER TABLE periods DROP CONSTRAINT periods_department_id_fkey;
+ALTER TABLE periods ADD FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE;
+
+ALTER TABLE schedules DROP CONSTRAINT schedules_department_fkey;
+ALTER TABLE schedules ADD FOREIGN KEY (department) REFERENCES departments(id) ON DELETE CASCADE;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+
+DROP TABLE phone_numbers;
+DROP TABLE web_links;
+DROP TABLE web_link_groups;
+DROP TABLE template_references;
+DROP TABLE organisations_links;
+DROP TABLE external_links;
+DROP TABLE services_old;
+
+
+
+
+
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_email_id_fkey;
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_homepage_id_fkey;
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_phone_id_fkey;
+
+ALTER TABLE organisations_data ADD FOREIGN KEY (email_id) REFERENCES contact_info(id) ON DELETE CASCADE;
+ALTER TABLE organisations_data ADD FOREIGN KEY (homepage_id) REFERENCES contact_info(id) ON DELETE CASCADE;
+ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_info(id) ON DELETE CASCADE;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+ALTER TABLE photos_data RENAME TO pictures_data;
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_email_id_fkey;
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_homepage_id_fkey;
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_phone_id_fkey;
+
+ALTER TABLE organisations_data ADD FOREIGN KEY (email_id) REFERENCES contact_info(id) ON DELETE SET NULL;
+ALTER TABLE organisations_data ADD FOREIGN KEY (homepage_id) REFERENCES contact_info(id) ON DELETE SET NULL;
+ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_info(id) ON DELETE SET NULL;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+UPDATE organisations SET type = 'municipal' WHERE type = 'library';
+
+UPDATE consortiums SET created = modified WHERE created IS NULL;
+ALTER TABLE consortiums ALTER created SET NOT NULL;

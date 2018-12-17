@@ -123,6 +123,10 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
     public function setLogo(?ConsortiumLogo $logo) : void
     {
         $this->logo = $logo;
+
+        if ($this->logo) {
+            $this->logo->setConsortium($this);
+        }
     }
 
     public function getFinnaData() : ?FinnaAdditions
@@ -150,6 +154,15 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
             return $finna_data->isExclusive();
         } else {
             return false;
+        }
+    }
+
+    public function setOwner(UserGroup $owner) : void
+    {
+        $this->group = $owner;
+
+        if ($finna = $this->getFinnaData()) {
+            $finna->setOwner($owner);
         }
     }
 }

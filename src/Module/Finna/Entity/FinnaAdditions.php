@@ -2,12 +2,14 @@
 
 namespace App\Module\Finna\Entity;
 
+use DateTime;
 use App\Entity\Consortium;
 use App\Entity\EntityBase;
 use App\Entity\Feature;
 use App\Entity\LibraryInterface;
 use App\Entity\UserGroup;
 use App\Entity\Feature\GroupOwnership;
+use App\Entity\Feature\ModifiedAwareness;
 use App\Entity\Feature\StateAwareness;
 use App\Entity\Feature\Translatable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
@@ -20,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="finna_additions")
  */
-class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership, Translatable
+class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership, ModifiedAwareness, Translatable
 {
     use ApiCacheableTrait;
     use Feature\TranslatableTrait;
@@ -88,7 +90,10 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
     public function setConsortium(Consortium $consortium) : void
     {
         $this->consortium = $consortium;
-        $this->setOwner($consortium->getOwner());
+
+        if ($consortium->getOwner()) {
+            $this->setOwner($consortium->getOwner());
+        }
 
         if ($consortium->getFinnaData() != $this) {
             $consortium->setFinnaData($this);
@@ -221,5 +226,20 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
     public function getName() : string
     {
         return $this->getConsortium()->getName();
+    }
+
+    public function getCreated() : DateTime
+    {
+        return $this->getConsortium()->getCreated();
+    }
+
+    public function getModified() : DateTime
+    {
+        return $this->getConsortium()->getModified();
+    }
+
+    public function setModified(DateTime $time) : void
+    {
+        $this->getConsortium()->setModified($time);
     }
 }

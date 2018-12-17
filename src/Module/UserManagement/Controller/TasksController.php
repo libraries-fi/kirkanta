@@ -8,8 +8,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 use Swift_Mailer as Mailer;
 use Swift_Message as Email;
@@ -49,11 +53,9 @@ class TasksController extends Controller
             ]);
 
             if ($user) {
-                $nonce = bin2hex(random_bytes(20));
-                $token = $this->storage->createToken($nonce, 'reset_password');
+                $token = new OneTimeToken('reset_password');
                 $token->setUser($user);
-
-                $this->sendEmail($user, $nonce);
+                $this->sendEmail($user, $token->getNonce());
 
                 $this->entities->persist($token);
                 $this->entities->flush();
@@ -71,10 +73,50 @@ class TasksController extends Controller
 
     /**
      * @Route("/reset-password/{token}", name="user_management.reset_password")
+     * @Template("user_management/change-password.html.twig")
      */
-    public function resetPassword(string $token)
+    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwords, string $token)
     {
+        $token_entity = $this->storage->findToken('activate_account', $token);
 
+        if (!$token_entity) {
+            throw new AccessDeniedHttpException;
+        }
+
+        $user = $token_entity->getUser();
+
+        $form = $this->createFormBuilder()
+            ->add('new_password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'first_options' => [
+                    'label' => 'New password'
+                ],
+                'second_options' => [
+                    'label' => 'Verify password',
+                ]
+            ])
+            ->add('submit', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $raw_password = $form->get('new_password')->getData();
+            $password = $passwords->encodePassword($user, $raw_password);
+            $user->setPassword($password);
+
+            $this->storage->eraseToken($token_entity);
+
+            $this->entities->flush();
+
+            $this->addFlash('success', 'Password was changed. You may now login.');
+            return $this->redirectToRoute('front');
+        }
+
+        return [
+            'user' => $user,
+            'form' => $form->createView(),
+        ];
     }
 
     private function sendEmail(UserInterface $user, string $nonce) : void

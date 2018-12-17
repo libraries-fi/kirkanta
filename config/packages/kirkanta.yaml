@@ -2,8 +2,8 @@ parameters:
     entity_types:
         organisation:
             id: organisation
-            label: 'Organisation'
-            label_multiple: 'Organisations'
+            label: 'Parent organisation'
+            label_multiple: 'Parent organisations'
             class_name: 'App\Entity\Organisation'
             list_builder: 'App\Entity\ListBuilder\OrganisationListBuilder'
             forms:
@@ -66,6 +66,7 @@ parameters:
             list_builder: 'App\Entity\ListBuilder\PeriodListBuilder'
             forms:
                 default: 'App\Form\PeriodForm'
+                import: 'App\Form\PeriodImportForm'
                 search: 'App\Form\PeriodSearchForm'
         service_instance:
             id: service_instance

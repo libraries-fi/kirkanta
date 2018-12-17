@@ -69,7 +69,11 @@ class TranslationItemType extends AbstractType
                         $key = $message['keys'][$i];
                         $translation[] = "{$key} {$chunk}";
                     }
-                    $message['translation'] = implode('|', $translation);
+                    $message['translation'] = implode(' | ', $translation);
+
+                    // var_dump($message);
+
+                    // exit('here');
                 }
 
                 return $message;
@@ -108,8 +112,9 @@ class TranslationItemType extends AbstractType
             }
 
             foreach ($translations as $i => $translation) {
-                list($key, $value) = explode(' ', $translation . ' ', 2);
-                $values[$i] = trim($value);
+                $key = $message['keys'][$i];
+                $value = trim(substr($translation, strlen($key)));
+                $values[$i] = $value;
             }
 
             $message['translation'] = $values;

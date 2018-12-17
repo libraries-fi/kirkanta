@@ -9,7 +9,7 @@ class LibraryTypes extends StringMap
     public function __construct()
     {
         parent::__construct([
-            'Library' => 'library',
+            'Municipal library' => 'municipal',
             'Mobile library' => 'mobile',
             'Home service' => 'home_service',
             'Institutional library' => 'institutional',

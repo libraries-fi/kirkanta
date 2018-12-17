@@ -41,7 +41,6 @@ class LibraryResourceRedirectSubscriber implements EventSubscriberInterface
                 $entity_id = $entity_id->getId();
             }
 
-
             $url = $this->urls->generate($target_route, [
                 $match[1] => $entity_id
             ]);

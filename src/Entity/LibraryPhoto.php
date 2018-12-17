@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Feature\Translatable;
+use App\Entity\Feature\Weight;
 use App\Entity\Library;
 use App\I18n\Translations;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,9 +13,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity
  * @Vich\Uploadable
  */
-class LibraryPhoto extends Picture implements Translatable
+class LibraryPhoto extends Picture implements Translatable, Weight
 {
     use Feature\TranslatableTrait;
+    use Feature\WeightTrait;
 
     const DEFAULT_SIZES = ['small', 'medium', 'large', 'huge'];
 

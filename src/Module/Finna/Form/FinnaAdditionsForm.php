@@ -76,6 +76,37 @@ class FinnaAdditionsForm extends EntityFormType
             $form = $event->getForm();
             $data = $event->getData();
 
+            if ($data instanceof FinnaAdditions) {
+                $service_points = $this->types->getRepository('service_point')->findBy([
+                    'consortium' => $data
+                ]);
+
+                $libraries = $this->types->getRepository('library')->findBy([
+                    'consortium' => $data
+                ]);
+
+                $choices = [];
+
+                foreach (array_merge($libraries, $service_points) as $entity) {
+                    $choices[$entity->getId()] = $entity;
+                }
+
+                if ($chosen = $data->getServicePoint()) {
+                    $choices[$chosen->getId()] = $chosen;
+                }
+
+                $form->add('service_point', ChoiceType::class, [
+                    'label' => 'Default service point',
+                    'placeholder' => '-- Select --',
+                    'choices' => $choices,
+                    'choice_label' => 'name',
+                    'required' => false,
+                    'translation_domain' => false,
+                ]);
+            }
+
+            return;
+
             $user_group = $data instanceof FinnaAdditions
                 ? $data->getOwner()
                 : $this->auth->getUser()->getGroup();
@@ -91,7 +122,6 @@ class FinnaAdditionsForm extends EntityFormType
             $choices = [];
 
             foreach (array_merge($libraries, $service_points) as $entity) {
-                // $choices[$entity->getId()] = new DefaultServicePointBinding($entity);
                 $choices[$entity->getId()] = $entity;
             }
 
@@ -101,6 +131,7 @@ class FinnaAdditionsForm extends EntityFormType
 
             $form->add('service_point', ChoiceType::class, [
                 'label' => 'Default service point',
+                'placeholder' => '-- Select --',
                 'choices' => $choices,
                 'choice_label' => 'name',
                 'required' => false,

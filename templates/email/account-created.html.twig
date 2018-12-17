@@ -1,0 +1,13 @@
+{% extends "email/base.html.twig" %}
+
+{% block title_text %}
+  {% trans %}User account created{% endtrans %}
+{% endblock %}
+
+{% block body %}
+  <p>{% trans with {"%website%": "Kirkanta"} from "email" into "fi" %}You have been created a new user account at %website%.{% endtrans %}</p>
+  <p>{% trans from "email" into "fi" %}Login to your account and create password.{% endtrans %}</p>
+  <p>
+    <a href="{{ url('user_management.reset_password', {token: token}) }}">{% trans into "fi" %}Login{% endtrans %}</a>
+  </p>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "entity/Library/resource.edit.html.twig" %}
+
+{% form_theme form _self %}
+
+{% block delete_button_outer %}
+  {% if custom_data_pos is defined %}
+    {% set entity_delete_url = path("entity.%s.custom_data.delete"|format(entity_type), {
+      (entity_type): entity.id,
+      custom_data: custom_data_pos
+    }) %}
+
+    {{ block("delete_button") }}
+  {% endif %}
+{% endblock %}
+
+{% block _custom_data_form_title_widget %}
+  <fieldset class="tr-group collapsed" data-app-group="content-language">
+    {% for child in form %}
+      {% set langcode = child.vars.langcode %}
+      {% set language_active = langcode == form.parent.content_language.vars.value %}
+
+      <div class="tr-language-row" data-content-language="{{ langcode }}" {% if not language_active %}style="display: none"{% endif %}>
+        {{- form_row(child) -}}
+      </div>
+    {% endfor %}
+  </fieldset>
+{% endblock %}
+
+{% block _custom_data_form_value_widget %}
+  <fieldset class="tr-group collapsed" data-app-group="content-language">
+    {% for child in form %}
+      {% set langcode = child.vars.langcode %}
+      {% set language_active = langcode == form.parent.content_language.vars.value %}
+
+      <div class="tr-language-row" data-content-language="{{ langcode }}" {% if not language_active %}style="display: none"{% endif %}>
+        {{- form_row(child) -}}
+      </div>
+    {% endfor %}
+  </fieldset>
+{% endblock %}

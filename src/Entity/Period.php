@@ -13,6 +13,7 @@ use App\I18n\Translations;
 /**
  * @ORM\Entity
  * @ORM\Table(name="periods")
+ * @ORM\EntityListeners({"App\Doctrine\EventListener\ClearSchedulesOnPeriodRemove"})
  */
 class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Translatable
 {
@@ -85,10 +86,12 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
 
     public function isExpired(DateTimeInterface $datetime = null) : bool
     {
-        if (!$datetime) {
-            $datetime = new DateTime;
+        if (!$this->valid_until) {
+            return false;
         }
-        return $this->valid_until && $this->valid_until < $datetime;
+
+        $ref = ($datetime ?? new \DateTime)->format('Ymd');
+        return $this->valid_until->format('Ymd') < $ref;
     }
 
     public function getName() : string
@@ -205,5 +208,15 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     public function setIsLegacyFormat(?bool $state) : void
     {
         $this->is_legacy_format = (bool)$state;
+    }
+
+    public function getLibrary() : ?LibraryInterface
+    {
+        return $this->getParent();
+    }
+
+    public function setLibrary(LibraryInterface $library) : void
+    {
+        $this->setParent($library);
     }
 }

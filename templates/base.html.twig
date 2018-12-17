@@ -50,7 +50,7 @@
                     <a href="{{ path('user.notifications') }}" class="dropdown-item">{% trans %}Notifications{% endtrans %}</a>
 
                     <div class="dropdown-divider"></div>
-                    <a href="#help" class="dropdown-item">{% trans %}Help{% endtrans %}</a>
+                    <a href="{{ path('system.help') }}" class="dropdown-item">{% trans %}Help{% endtrans %}</a>
 
                     <div class="dropdown-divider"></div>
                     <a href="/logout" class="dropdown-item">{% trans %}Logout{% endtrans %}</a>
@@ -77,6 +77,12 @@
     </div>
 
     {% block notifications %}
+      {#
+      <div class="container">
+        <p class="alert alert-warning">{% trans %}New Kirkanta is now online but any changes made will not be published on Kirjastohakemisto, Finna.fi or Helmet.fi etc. This is to make sure that everything works fine. Libraries can now update their schedules and check that contact info is correct.{% endtrans %}</p>
+      </div>
+      #}
+
       <div class="container" id="l-notifications">
         {{ block("flashes", "common-blocks.html.twig") }}
       </div>

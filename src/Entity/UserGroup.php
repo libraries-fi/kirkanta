@@ -47,7 +47,7 @@ class UserGroup extends EntityBase
     {
         parent::__construct();
 
-        $this->name = $role_id;
+        $this->name = $name;
         $this->children = new ArrayCollection;
     }
 
@@ -63,7 +63,7 @@ class UserGroup extends EntityBase
 
     public function setName(string $name) : void
     {
-        $this->name = $id;
+        $this->name = $name;
     }
 
     public function getDescription() : ?string

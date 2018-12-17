@@ -1,7 +1,5 @@
 App\Entity\ContactInfo:
   attributes:
-    department:
-      groups: ['default', 'index']
     translations:
       groups: ['default', 'index']
 
@@ -16,16 +14,22 @@ App\Entity\EmailAddress:
   attributes:
     email:
       groups: ['default']
+    department:
+      groups: ['default', 'index']
 
 App\Entity\PhoneNumber:
   attributes:
     number:
       groups: ['default']
+    department:
+      groups: ['default', 'index']
 
 App\Entity\WebsiteLink:
   attributes:
     url:
       groups: ['default']
+    department:
+      groups: ['default', 'index']
 
 App\Module\Finna\Entity\FinnaOrganisationWebsiteLink:
   attributes:

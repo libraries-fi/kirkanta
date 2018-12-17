@@ -86,11 +86,17 @@ class LibraryRouteLoader extends Loader
                     '_controller' => sprintf('%s:tableSort', OrganisationController::class)
                 ], $requirements);
 
+                $from_template = new Route("{$base_path}/{$resource}/import", $defaults + [
+                    'resource' => $resource,
+                    '_controller' => sprintf('%s::resourceFromTemplate', OrganisationController::class)
+                ], $requirements);
+
                 $routes->add("entity.{$type_id}.{$resource}", $resource_collection);
                 $routes->add("entity.{$type_id}.{$resource}.add", $add_resource);
                 $routes->add("entity.{$type_id}.{$resource}.edit", $edit_resource);
                 $routes->add("entity.{$type_id}.{$resource}.delete", $delete_resource);
                 $routes->add("entity.{$type_id}.{$resource}.table_sort", $table_sort);
+                $routes->add("entity.{$type_id}.{$resource}.from_template", $from_template);
             }
 
             $contact_group_collection = new Route("/{$type_id}/{{$type_id}}/contact", $defaults + [
@@ -121,6 +127,31 @@ class LibraryRouteLoader extends Loader
             $routes->add("entity.{$type_id}.contact_groups.add", $contact_group_add);
             $routes->add("entity.{$type_id}.contact_groups.edit", $contact_group_edit);
             $routes->add("entity.{$type_id}.contact_groups.delete", $contact_group_delete);
+
+            $custom_data_collection = new Route("/{$type_id}/{{$type_id}}/custom-data", $defaults + [
+                '_controller' => sprintf('%s::listCustomData', OrganisationController::class)
+            ]);
+
+            $custom_data_add = new Route("/{$type_id}/{{$type_id}}/custom-data/add", $defaults + [
+                '_controller' => sprintf('%s::addCustomData', OrganisationController::class)
+            ]);
+
+            $custom_data_edit = new Route("/{$type_id}/{{$type_id}}/custom-data/{custom_data}", $defaults + [
+                '_controller' => sprintf('%s::editCustomData', OrganisationController::class)
+            ], $requirements + [
+                'custom_data' => '\d+'
+            ]);
+
+            $custom_data_delete = new Route("/{$type_id}/{{$type_id}}/custom-data/{custom_data}/delete", $defaults + [
+                '_controller' => sprintf('%s::deleteCustomData', OrganisationController::class)
+            ], $requirements + [
+                'custom_data' => '\d+'
+            ]);
+
+            $routes->add("entity.{$type_id}.custom_data", $custom_data_collection);
+            $routes->add("entity.{$type_id}.custom_data.add", $custom_data_add);
+            $routes->add("entity.{$type_id}.custom_data.edit", $custom_data_edit);
+            $routes->add("entity.{$type_id}.custom_data.delete", $custom_data_delete);
         }
 
         return $routes;

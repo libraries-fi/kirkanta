@@ -27,7 +27,7 @@
     <div class="alert alert-warning">{% trans with {"%date%": app.user.expires|date()} %}This account is set to expire on %date%{% endtrans %}</div>
   {% endif %}
 
-  {% if app.user.isMunicipalAccount() %}
+  {# if app.user.isMunicipalAccount() %}
     <div class="border p-3 mb-3">
       <div class="alert alert-danger">
         <i class="fas fa-exclamation-circle mr-2"></i>
@@ -39,7 +39,7 @@
         </li>
       </ul>
     </div>
-  {% endif %}
+  {% endif #}
 
   <div class="row">
     {% if organisations|default() is not empty %}
@@ -55,7 +55,7 @@
           {{ block("user_finna_organisation") }}
         </div>
       </div>
-    {% elseif consortiums|default() is not empty %}
+    {% elseif consortiums is defined %}
       <div class="col">
         <div class="border p-3 mb-3">
           {{ block("user_consortium") }}
@@ -74,7 +74,7 @@
   </div>
   #}
 
-  {% if user_management is defined %}
+  {# if user_management is defined %}
     <div class="row">
       <div class="col">
         <div class="border p-3 mb-3">
@@ -82,44 +82,56 @@
         </div>
       </div>
     </div>
-  {% endif %}
+  {% endif #}
 {% endblock %}
 
 {% block user_consortium %}
-  <h2>Consortium</h2>
+  <a href="{{ path('entity.organisation.add') }}" class="btn btn-pill btn-secondary float-right">
+    <i class="fas fa-plus-circle"></i>
+    {% trans %}Add{% endtrans %}
+  </a>
+  <h2>{% trans %}Consortiums{% endtrans %}</h2>
   <ul>
     {% for consortium in consortiums %}
       <li>
-        <a href="{{ path('entity.consortium.edit', {consortium: consortium.id})}}">{{ consortium.name }}</a> – Last updated foo.bar.year
+        <a href="{{ path('entity.consortium.edit', {consortium: consortium.id})}}">{{ consortium.name }}</a> – {% trans with {'%date%': consortium.modified|date('d.m.Y')} %}Updated on %date%{% endtrans %}
       </li>
     {% endfor %}
   </ul>
 {% endblock %}
 
 {% block user_finna_organisation %}
-  <h2>Finna Organisations</h2>
+  <a href="{{ path('entity.organisation.add') }}" class="btn btn-pill btn-secondary float-right">
+    <i class="fas fa-plus-circle"></i>
+    {% trans %}Add{% endtrans %}
+  </a>
+  <h2>{% trans %}Finna organisations{% endtrans %}</h2>
   <ul>
     {% for finna_organisation in finna_organisations %}
       <li>
-        <a href="{{ path('entity.finna_organisation.edit', {finna_organisation: finna_organisation.id})}}">{{ finna_organisation.name }}</a> – Last updated foo.bar.year
+        <a href="{{ path('entity.finna_organisation.edit', {finna_organisation: finna_organisation.id})}}">{{ finna_organisation.name }}</a> – {% trans with {'%date%': finna_organisation.modified|date('d.m.Y')} %}Updated on %date%{% endtrans %}
       </li>
     {% endfor %}
   </ul>
 {% endblock %}
 
 {% block user_parent_organisation %}
-  <h2>Parent Organisation</h2>
+  <a href="{{ path('entity.organisation.add') }}" class="btn btn-pill btn-secondary float-right">
+    <i class="fas fa-plus-circle"></i>
+    {% trans %}Add{% endtrans %}
+  </a>
+  <h2>{% trans %}Parent organisation{% endtrans %}</h2>
   <ul>
     {% for organisation in organisations %}
       <li>
-        <a href="{{ path('entity.organisation.edit', {organisation: organisation.id})}}">{{ organisation.name }}</a>
+        <a href="{{ path('entity.organisation.edit', {organisation: organisation.id})}}">{{ organisation.name }}</a> – {% trans with {'%date%': organisation.modified|date('d.m.Y')} %}Updated on %date%{% endtrans %}
       </li>
     {% endfor %}
   </ul>
 {% endblock %}
 
 {% block user_status_report %}
-  <h2>Status Report</h2>
+  <h2>{% trans %}Status report{% endtrans %}</h2>
   <h3>Libraries</h3>
   <ul>
     <li class="font-italic">Pasilan kirjasto is outdated</li>

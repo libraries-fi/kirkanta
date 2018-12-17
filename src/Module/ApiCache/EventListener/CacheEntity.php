@@ -22,14 +22,18 @@ class CacheEntity
     public function postPersist(LifecycleEventArgs $event) : void
     {
         if ($entity = $this->getParentEntity($event->getEntity())) {
-            $this->queue[] = $entity;
+            if ($entity instanceof ApiCacheable) {
+                $this->queue[] = $entity;
+            }
         }
     }
 
     public function postUpdate(LifecycleEventArgs $event) : void
     {
         if ($entity = $this->getParentEntity($event->getEntity())) {
-            $this->queue[] = $entity;
+            if ($entity instanceof ApiCacheable) {
+                $this->queue[] = $entity;
+            }
         }
     }
 

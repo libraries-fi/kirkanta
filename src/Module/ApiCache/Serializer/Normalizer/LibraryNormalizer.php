@@ -25,6 +25,14 @@ class LibraryNormalizer implements NormalizerInterface
         $values['coverPhoto'] = $values['pictures'][0]['files'] ?? null;
         $values['coordinates'] = $values['address']['coordinates'];
         unset($values['address']['coordinates']);
+
+        $values['primaryContactInfo'] = [
+            'email' => $values['email'],
+            'phone' => $values['phone'],
+            'homepage' => $values['homepage'],
+        ];
+
+        unset($values['email'], $values['phone'], $values['homepage']);
         return $values;
     }
 }

@@ -372,12 +372,23 @@ trait LibraryTrait
 
     public function getCustomData() : array
     {
-        return $this->custom_data;
+        /**
+         * NOTE: Workaround to an issue where some blobs have been serialized as JS objects
+         * and not arrays.
+         */
+        if ($this->custom_data instanceof \stdClass) {
+            $this->setCustomData(get_object_vars($this->custom_data));
+        }
+        return $this->custom_data ?? [];
     }
 
     public function setCustomData(array $entries) : void
     {
-        $this->custom_data = $entries ?: null;
+        /**
+         * NOTE: Using array_values() to ensure proper indexing so that data is serialized
+         * as '[...]' and not '{...}'.
+         */
+        $this->custom_data = $entries ? array_values($entries): null;
     }
 
     public function getApiKeywords() : array

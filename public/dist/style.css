@@ -1765,7 +1765,8 @@ textarea.form-control {
 @media (min-width: 992px) {
   select,
   input.form-control,
-  select.form-control {
+  select.form-control,
+  .rw-container {
     max-width: 30rem; }
   .tr-group .input-group-text {
     width: 3rem;

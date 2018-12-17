@@ -6,6 +6,10 @@ App\Entity\Consortium:
       groups: ['default', 'index']
     logo:
       groups: ['default', 'index']
+    created:
+      groups: ['default', 'api_cache']
+    modified:
+      groups: ['default', 'api_cache']
 
 App\Entity\ConsortiumData:
   attributes:

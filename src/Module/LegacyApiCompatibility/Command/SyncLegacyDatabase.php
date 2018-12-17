@@ -7,6 +7,7 @@ use Doctrine\DBAL\Statement;
 Use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -16,7 +17,10 @@ class SyncLegacyDatabase extends Command
     private $legacyDb;
     private $cache;
 
+    public static $TRLANGS = ['en', 'ru', 'se', 'sv'];
+
     const GROUP_NOBODY = 2;
+    const SELFSERVICE_PERIOD_INCREMENT = 10000000;
 
     public function __construct(Connection $current, Connection $legacy)
     {
@@ -31,22 +35,43 @@ class SyncLegacyDatabase extends Command
         $this
             ->setName('legacy-db:sync')
             ->setDescription('Synchonize legacy database (for API v1, v2 and v3)')
+            ->addArgument('entity_type', InputArgument::REQUIRED, 'Entity type')
             ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) : void
     {
-        $this->currentDb->setSQLLogger(null);
-        $this->legacyDb->setSQLLogger(null);
+        $this->currentDb->getConfiguration()->setSQLLogger(null);
+        $this->legacyDb->getConfiguration()->setSQLLogger(null);
 
         $this->cache = new \stdClass;
 
-        // $this->syncConsortiums();
-        // $this->syncLibraries();
-        // $this->syncServices();
-        // $this->syncStaff();
+        $entity_type = $input->getArgument('entity_type');
 
-        $this->syncPeriods();
+        switch ($entity_type) {
+            case 'consortium':
+                $this->syncConsortiums();
+                break;
+
+            case 'library':
+                $this->syncLibraries();
+                break;
+
+            case 'service':
+                $this->syncServices();
+                break;
+
+            case 'person':
+                $this->syncStaff();
+                break;
+
+            case 'period':
+                $this->syncPeriods($output);
+                break;
+
+            default:
+                throw new \Exception('Invalid entity type');
+        }
     }
 
     private function syncConsortiums() : void
@@ -55,11 +80,20 @@ class SyncLegacyDatabase extends Command
 
         $this->synchronize('consortiums', 'consortiums', [
             'id',
-            'logo',
+            // 'logo',
             'created',
             'modified',
             'state',
-        ]);
+            'default_langcode',
+            'logo_id'
+        ], function(&$row) {
+            if ($row['logo_id']) {
+                $logoname = $this->currentDb->query("SELECT filename FROM pictures WHERE id = {$row['logo_id']}")->fetchColumn();
+                $row['logo'] = $logoname;
+            }
+
+            unset($row['logo_id']);
+        });
 
         $cache = new \stdClass;
 
@@ -79,6 +113,7 @@ class SyncLegacyDatabase extends Command
             'finna_id',
             'finna_coverage',
             'exclusive',
+            'default_langcode'
         ], function(&$row) use($cache) {
             $row['service_point_id'] = $cache->bindings[$row['id']] ?? null;
 
@@ -111,13 +146,18 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->beginTransaction();
 
-        $this->synchronize('cities', 'cities', ['id', 'consortium_id'], function(&$row) {
+        $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function(&$row) {
             // Set a fallback value because API users don't really care about this,
             // so we don't bother syncing regions.
             $row['region_id'] = 1003;
         });
 
-        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'coordinates'], function(&$row) {
+        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
+            if ($row['coordinates']) {
+                list($lon, $lat) = explode(' ', substr($row['coordinates'], 6, -1));
+                $row['coordinates'] = "{$lat}, {$lon}";
+            }
+
             // In legacy DB, coordinates exist in organisations table.
             $this->cache->coords[$row['id']] = $row['coordinates'];
             unset($row['coordinates']);
@@ -125,7 +165,8 @@ class SyncLegacyDatabase extends Command
 
         $this->synchronize('organisations', 'organisations', [
             'role',
-            // 'type',
+            'type',
+            'main_library',
             'id',
             'group_id',
             'city_id',
@@ -140,6 +181,8 @@ class SyncLegacyDatabase extends Command
             'created',
             'modified',
             'state',
+            'default_langcode',
+            'custom_data',
         ], function(&$row) use($smtContact) {
             $role = $row['role'];
             unset($row['role']);
@@ -147,6 +190,19 @@ class SyncLegacyDatabase extends Command
             if (!in_array($role, ['library', 'foreign'])) {
                 throw new SkipSynchronizationException;
             }
+
+            if ($row['type'] == 'municipal') {
+                $row['type'] = 'library';
+            }
+
+            $row['branch_type'] = $row['type'];
+            unset($row['type']);
+
+            if ($row['main_library']) {
+                $row['branch_type'] = 'main_library';
+            }
+
+            unset($row['main_library']);
 
             $row['coordinates'] = $this->cache->coords[$row['address_id']] ?? null;
 
@@ -173,6 +229,79 @@ class SyncLegacyDatabase extends Command
                 unset($data['phone_id']);
                 unset($data['slug']);
             }
+
+            $custom_data = json_decode($row['custom_data']);
+
+            if ($custom_data) {
+                foreach ($custom_data as $entry) {
+                    $entry->translations = (object)[];
+                    foreach (self::$TRLANGS as $langcode) {
+                        $entry->translations->{$langcode} = (object)[
+                            'title' => $entry->title->{$langcode} ?? null,
+                            'value' => $entry->value->{$langcode} ?? null,
+                        ];
+                    }
+                    $entry->title = $entry->title->fi ?? null;
+                    $entry->value = $entry->value->fi ?? null;
+                }
+
+                $row['custom_data'] = json_encode($custom_data);
+            }
+        });
+
+        $this->legacyDb->query('DELETE FROM pictures WHERE organisation_id IS NOT NULL');
+
+        $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover'], function(&$row) {
+            $row['organisation_id'] = $row['parent_id'];
+            unset($row['parent_id']);
+
+            $row['is_default'] = sprintf('%d', $row['cover']);
+            unset($row['cover']);
+
+            foreach ($row['translations'] as $langcode => &$data) {
+              unset($data['entity_type']);
+            }
+        });
+
+        $this->legacyDb->query('DELETE FROM phone_numbers');
+
+        $this->synchronize('contact_info', 'phone_numbers', ['id', 'type', 'weight', 'contact', 'parent_id'], function(&$row) {
+            if (!isset($row['parent_id'])) {
+                /**
+                 * Contact info can be bound to a Finna organisation also.
+                 */
+                throw new SkipSynchronizationException;
+            }
+
+            if (!isset($row['translations']['fi'])) {
+                throw new SkipSynchronizationException;
+            }
+
+            if (mb_strlen($row['contact']) > 90) {
+                throw new SkipSynchronizationException;
+            }
+
+            if ($row['type'] == 'website') {
+                throw new SkipSynchronizationException;
+            }
+
+            $row['organisation_id'] = $row['parent_id'];
+            unset($row['parent_id']);
+
+            $row['number'] = $row['contact'];
+            unset($row['contact']);
+
+            if (!isset($row['weight'])) {
+                $row['weight'] = 0;
+            }
+
+            if ($row['type'] == 'email') {
+                $row['weight'] += 1000;
+            } elseif ($row['type'] == 'website') {
+                $row['weight'] += 2000;
+            }
+
+            unset($row['type']);
         });
 
         $this->legacyDb->commit();
@@ -184,10 +313,14 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->beginTransaction();
 
+        $this->legacyDb->query('DELETE FROM services_new');
+        $this->legacyDb->query('DELETE FROM service_types');
+
         $this->synchronize('services', 'service_types', [
             'type',
             'created',
             'modified',
+            'default_langcode'
         ]);
 
         $this->synchronize('service_instances', 'services_new', [
@@ -200,6 +333,7 @@ class SyncLegacyDatabase extends Command
             'created',
             'modified',
             'shared',
+            'default_langcode'
         ], function(&$row) {
             $row['organisation_id'] = $row['parent_id'];
             unset($row['parent_id']);
@@ -227,7 +361,8 @@ class SyncLegacyDatabase extends Command
             'created',
             'modified',
             'library_id',
-            'state'
+            'state',
+            'default_langcode'
         ], function(&$row) {
             $row['organisation_id'] = $row['library_id'];
             unset($row['library_id']);
@@ -241,37 +376,179 @@ class SyncLegacyDatabase extends Command
         $this->legacyDb->commit();
     }
 
-    private function syncPeriods() : void
+    private function syncPeriods(OutputInterface $output) : void
     {
+        $splitSelfService = function(array $period) {
+            // $hasGap = function($a, $b) {
+            //     return $a->closes != $b->closes;
+            // };
+
+            $regular = $period;
+            $regular['days'] = json_decode(json_encode($regular['days']));
+            $regular['section'] = 'default';
+
+            $self = $period;
+            $self['id'] += self::SELFSERVICE_PERIOD_INCREMENT;
+            // $self['days'] = json_decode(json_encode($self['days']));
+            $self['days'] = [];
+            $self['section'] = 'selfservice';
+            $self['description'] = null;
+
+            $hasSelf = false;
+
+            foreach ($regular['days'] as $i => $day) {
+                $self['days'][$i] = (object)[
+                    'times' => [],
+                    'closed' => true,
+                    'opens' => null,
+                    'closes' => null,
+                ];
+
+                foreach (self::$TRLANGS as $langcode) {
+                    if (!isset($day->translations->{$langcode})) {
+                        if (!isset($day->translations)) {
+                            $day->translations = (object)[];
+                        }
+
+                        if (!isset($day->translations->{$langcode})) {
+                            $day->translations->{$langcode} = (object)['info' => null];
+                        }
+                    }
+                }
+                if (is_object($day->info)) {
+                    $day->info = $day->info->fi ?? null;
+                }
+                if (!empty($day->times)) {
+                    if (is_object($day->times)) {
+                        // Unsaved imported periods have an stdClass in place of an array.
+                        $day->times = get_object_vars($day->times);
+                    }
+                    foreach ($day->times as $j => $time) {
+                        if (isset($time->staff) && !$time->staff) {
+                            if (empty($self['days'][$i]->times)) {
+                                $self['days'][$i]->times = [(object)[
+                                    'opens' => reset($day->times)->opens,
+                                    'closes' => end($day->times)->closes,
+                                ]];
+                                $self['days'][$i]->opens = reset($day->times)->opens;
+                                $self['days'][$i]->closes = end($day->times)->closes;
+                                $self['days'][$i]->closed = false;
+                            }
+
+                            // Self-service times will contain only one entry.
+                            unset($day->times[$j]);
+                        }
+
+                        unset($time->staff);
+                    }
+                    $day->times = array_values($day->times);
+
+                    for ($j = 1; $j < count($period['days'][$i]->times); $j++) {
+                        $a = $period['days'][$i]->times[$j-1];
+                        $b = $period['days'][$i]->times[$j];
+
+                        if ($a->closes < $b->opens && !empty($self['days'][$i]->times)) {
+                            $selfTimes = &$self['days'][$i]->times;
+                            $k = count($selfTimes) - 1;
+
+                            $selfTimes[] = [
+                                'opens' => $b->opens,
+                                'closes' => $selfTimes[$k]->closes,
+                            ];
+
+                            $selfTimes[$k]->closes = $a->closes;
+                        }
+                    }
+                }
+            }
+
+            return [$regular, $self];
+        };
+
         $smtRead = $this->currentDb->prepare('
             SELECT
                 id,
-                parent_id,
+                parent_id AS organisation_id,
                 valid_from,
                 valid_until,
                 created,
                 modified,
                 days,
-                jsonb_object_agg(t.langcode, to_jsonb(t) - \'langcode\' - \'entity_id\') AS translations
+                (valid_until IS NULL)::int AS continuous,
+                0 AS shared,
+                jsonb_object_agg(t.langcode, to_jsonb(t) - \'langcode\' - \'entity_id\') AS translations,
+                is_legacy_format
             FROM periods a
             INNER JOIN periods_data t ON a.id = t.entity_id
-            WHERE COALESCE(a.valid_until, NOW()) >= NOW()
+            WHERE COALESCE(a.valid_until, CURRENT_DATE) >= CURRENT_DATE
                 AND a.parent_id IS NOT NULL
-                AND section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
+                AND a.section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
-                AND a.id = 299673
+                -- AND a.id = 299673 -- DEBUG STUFF
+                -- AND a.parent_id = 84877 -- DEBUG STUFF
             GROUP BY a.id
             ORDER BY a.id
             LIMIT :limit
             OFFSET :offset
         ');
 
+        $dropLibraries = [];
+        $libraryPeriods = [];
+
         foreach (result_iterator($smtRead) as $row) {
             $row['days'] = json_decode($row['days']);
-            $row['translations'] = json_decode($row['translations']);
-            var_dump($row);
-            exit;
+
+            // Utility functions require decoding as arrays
+            $row['translations'] = json_decode($row['translations'], true);
+
+            if ($row['is_legacy_format']) {
+                // Don't touch libraries that still have legacy periods.
+                $dropLibraries[] = $row['organisation_id'];
+
+                $output->writeln("Library #{$row['organisation_id']} has legacy period #{$row['id']}");
+            } else {
+                unset($row['is_legacy_format']);
+
+                list($regular, $self) = $splitSelfService($row);
+                merge_primary_translation($regular);
+
+                $regular['days'] = json_encode($regular['days']);
+                $regular['translations'] = json_encode($regular['translations']);
+
+                // insert_query($this->legacyDb, 'periods', $regular);
+                $libraryPeriods[$row['organisation_id']][] = $regular;
+
+                if ($self) {
+                    merge_primary_translation($self);
+
+                    $self['days'] = json_encode($self['days']);
+                    $self['translations'] = json_encode($self['translations']);
+
+                    // insert_query($this->legacyDb, 'periods', $self);
+                    $libraryPeriods[$row['organisation_id']][] = $self;
+                }
+            }
         }
+
+        $libraryPeriods = array_diff_key($libraryPeriods, array_flip($dropLibraries));
+
+        foreach ($libraryPeriods as $id => $periods) {
+            $this->legacyDb->beginTransaction();
+
+            $smtDeleteOld = $this->legacyDb->prepare('
+                DELETE
+                FROM periods
+                WHERE organisation_id = :library
+            ');
+            $smtDeleteOld->execute(['library' => $id]);
+
+            foreach ($periods as $period) {
+                insert_query($this->legacyDb, 'periods', $period);
+            }
+
+            $this->legacyDb->commit();
+        }
+
     }
 
     private function synchronize(string $current_table, string $legacy_table, array $fields, callable $mapper = null, array $options = [])
@@ -296,9 +573,12 @@ class SyncLegacyDatabase extends Command
     }
 }
 
-function merge_primary_translation(array &$document, $langcode = 'fi') : array {
-    $document += $document['translations'][$langcode];
+function merge_primary_translation(array &$document) : array {
+
+    $langcode = $document['default_langcode'] ?? 'fi';
+    $document += $document['translations'][$langcode] ?? [];
     unset($document['translations'][$langcode]);
+    unset($document['default_langcode']);
     return $document;
 }
 
@@ -333,7 +613,13 @@ function result_iterator(Statement $statement, array $values = [], $encode_trans
 }
 
 function read_query(Connection $db, string $table, array $fields) : Statement {
-    $fields = array_map(function($f) { return "a.{$f}"; }, $fields);
+    $fields = array_map(function($f) {
+        if (strpos($f, ' AS ')) {
+            return $f;
+        } else {
+            return "a.{$f}";
+        }
+    }, $fields);
     $fields = implode(', ', $fields);
 
     $sql = "

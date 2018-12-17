@@ -8,10 +8,13 @@
 
 document.querySelectorAll("select").forEach((select) => {
   const options = Array.from(select.children).sort((a, b) => {
-    return a.text.localeCompare(b.text);
+    return a.text.localeCompare(b.text, 'fi');
   });
 
   options.forEach((option, i) => {
-    select.appendChild(option);
+    // Keep placeholder options at the top.
+    if (option.value) {
+      select.appendChild(option);
+    }
   });
 });

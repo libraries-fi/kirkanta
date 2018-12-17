@@ -31,6 +31,7 @@
         {% endif %}
       </fieldset>
 
+      {#
       {% with { library: app.request.get('library') } %}
         {% if library is null and entity is defined %}
           {% set library = entity.parent %}
@@ -45,6 +46,7 @@
           </fieldset>
         {% endif %}
       {% endwith %}
+      #}
     </div>
   </div>
   <fieldset class="form-section period-schedules">
@@ -69,12 +71,17 @@
       <div class="col-md-12 col-lg-4">
         <div class="form-group">
           <label>{% trans %}Rotation{% endtrans %}</label>
+
+          {% set current_rotation = form.parent.days.vars.value|length / 7 %}
+
           <select data-app="period-slider" class="form-control custom-select">
-            <option value="1">{% trans %}1 week{% endtrans %}</option>
-            <option value="2">{% trans with{"%count%": 2} %}%count% weeks{% endtrans %}</option>
-            <option value="3">{% trans with{"%count%": 3} %}%count% weeks{% endtrans %}</option>
-            <option value="4">{% trans with{"%count%": 4} %}%count% weeks{% endtrans %}</option>
-            <option value="5">{% trans with{"%count%": 5} %}%count% weeks{% endtrans %}</option>
+            {% for i in range(1, 5) %}
+              <option value="{{ i }}"{% if i == current_rotation %}selected{% endif %}>
+                {% transchoice i with {"%count%": i} %}
+                  {1} 1 week | [2, Inf[ %count% weeks
+                {% endtranschoice %}
+              </option>
+            {% endfor %}
           </select>
         </div>
       </div>
@@ -208,7 +215,7 @@
       {% set langcode = child.vars.langcode %}
       {% set language_active = form.parent.parent.parent.children.name[langcode].vars.language_active %}
 
-      <div class="tr-language-row" data-content-language="{{ child.vars.langcode }}" {% if not language_active %}style="display: none"{% endif %}>
+      <div class="tr-language-row" data-content-language="{{ langcode }}" {% if not language_active %}style="display: none"{% endif %}>
         {{- form_row(child) -}}
       </div>
     {% endfor %}

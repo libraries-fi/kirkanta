@@ -1,10 +1,9 @@
 import "@babel/polyfill";
 
 import "./init.ie-warning";
-// // import "@fortawesome/fontawesome-free/js/all";
+import "./init.moment";
 
 import "jquery/dist/jquery.min";
-import "moment/min/locales.min";
 import "moment/min/moment-with-locales.min";
 import "bootstrap/dist/js/bootstrap.min";
 

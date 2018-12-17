@@ -28,6 +28,10 @@ App\Entity\Library:
       groups: ['pictures', 'api_cache']
     services:
       groups: ['services', 'api_cache']
+    created:
+      groups: ['default', 'api_cache']
+    modified:
+      groups: ['default', 'api_cache']
 
 App\Entity\LibraryData:
   attributes:

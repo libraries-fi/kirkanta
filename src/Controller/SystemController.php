@@ -46,6 +46,8 @@ class SystemController extends Controller
             $view['user_management']['users'] = $managed_users;
         }
 
+        $view['manage_finna_organisations'] = $this->isGranted('ROLE_FINNA');
+
         return $this->render('index.html.twig', $view);
     }
 

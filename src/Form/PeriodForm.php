@@ -28,28 +28,35 @@ class PeriodForm extends EntityFormType
         $builder
             ->add('valid_from', DateType::class, [
                 'widget' => 'single_text',
-                'format' => 'YYYY-MM-dd'
+                'format' => 'yyyy-MM-dd',
             ])
             ->add('valid_until', DateType::class, [
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'YYYY-MM-dd'
-            ])
-            ->add('days', PeriodDayCollectionType::class, [
-                'allow_add' => true,
-                'allow_delete' => true,
+                'format' => 'yyyy-MM-dd'
             ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\PeriodDataType::class
             ])
             ;
 
+        if ($options['context_entity'] instanceof Library) {
+            $library = $options['context_entity'];
+            $builder->add('department', EntityType::class, [
+                'required' => false,
+                'class' => Department::class,
+                'choices' => $library->getDepartments(),
+                'placeholder' => $library->getName(),
+                'help' => 'Attach contact info to a department',
+            ]);
+        }
+
         // Periods are marked non-legacy when they are saved as the data will be converted.
         $builder->add('is_legacy_format', CheckboxType::class, [
             'data' => false
         ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
             $form = $event->getForm();
             $period = $event->getData();
 
@@ -60,16 +67,24 @@ class PeriodForm extends EntityFormType
                 $this->fixLegacyFormatDayTranslations($period);
                 $organisation = $period->getParent();
             }
+        });
 
-            if ($organisation instanceof Library) {
-                $form->add('department', EntityType::class, [
-                    'required' => false,
-                    'class' => Department::class,
-                    'choices' => $organisation->getDepartments(),
-                    'placeholder' => $organisation->getName(),
-                    'help' => 'Attach contact info to a department',
-                ]);
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+            $langcodes = [$event->getForm()->getRoot()->getConfig()->getOptions()['current_langcode']];
+
+            $period = $event->getData();
+
+            if ($period instanceof Period) {
+                $langcodes = array_merge($langcodes, $period->getTranslations()->getKeys());
             }
+
+            $event->getForm()->add('days', PeriodDayCollectionType::class, [
+                'allow_add' => true,
+                'allow_delete' => true,
+                'entry_options' => [
+                    'available_languages' => $langcodes
+                ],
+            ]);
         });
 
         $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
@@ -85,30 +100,6 @@ class PeriodForm extends EntityFormType
 
             if (!$days->getData()) {
                 $days->setData(array_fill(0, 7, []));
-            }
-        });
-
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
-            $form = $event->getForm();
-            $data = $event->getData();
-            $langcodes = $data ? $data->getTranslations()->getKeys() : ['fi'];
-
-            foreach ($form->get('days') as $day) {
-                $info = $day->get('info');
-                $values = [];
-
-                if (!$info->getData()) {
-                    foreach ($langcodes as $langcode) {
-                        $info->add($langcode, TextType::class, [
-                            'langcode' => $langcode,
-                        ]);
-
-                        $info->get($langcode)->setData(null);
-                        $values[$langcode] = null;
-                    }
-
-                    $info->setData($values);
-                }
             }
         });
     }

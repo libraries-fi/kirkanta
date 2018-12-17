@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Feature\CreatedAwareness;
-use App\Entity\Feature\Weight;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
@@ -20,10 +19,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *      "consortium_logo" = "ConsortiumLogo"
  * })
  */
-abstract class Picture extends EntityBase implements CreatedAwareness, Weight
+abstract class Picture extends EntityBase implements CreatedAwareness
 {
     use Feature\CreatedAwarenessTrait;
-    use Feature\WeightTrait;
 
     /**
      * @ORM\Column(type="string")

@@ -2,7 +2,10 @@
 
 {% form_theme form _self %}
 
-{% set entity = attribute(_context, entity_type) %}
+{% if entity is not defined %}
+  {% set entity = attribute(_context, entity_type) %}
+{% endif %}
+
 {% set cancel_button_url = path("entity." ~ entity_type ~ ".edit", {(entity_type): entity.id}) %}
 
 {% block title_text %}
