@@ -2126,3 +2126,6 @@ ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_inf
 
 
 UPDATE organisations SET type = 'municipal' WHERE type = 'library';
+
+UPDATE consortiums SET created = modified WHERE created IS NULL;
+ALTER TABLE consortiums ALTER created SET NOT NULL;
