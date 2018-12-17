@@ -22,8 +22,6 @@ $.fn.sluggable = function() {
     let handler = input.dataset.slugUrl;
     let lock = new TimeoutLock;
 
-    console.log(input.dataset);
-
     $(`input[name="${target}"]`).on("input", (event) => {
       lock.wait(300).then(() => {
         $.get(handler, {name: event.target.value, langcode}).then((result) => {
