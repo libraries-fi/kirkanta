@@ -22,3 +22,7 @@ App\Entity\ServicePoint:
       groups: ['phone_numbers', 'api_cache']
     pictures:
       groups: ['pictures', 'api_cache']
+    created:
+      groups: ['default', 'api_cache']
+    modified:
+      groups: ['default', 'api_cache']
