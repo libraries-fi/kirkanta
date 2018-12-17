@@ -90,7 +90,10 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
     public function setConsortium(Consortium $consortium) : void
     {
         $this->consortium = $consortium;
-        $this->setOwner($consortium->getOwner());
+
+        if ($consortium->getOwner()) {
+            $this->setOwner($consortium->getOwner());
+        }
 
         if ($consortium->getFinnaData() != $this) {
             $consortium->setFinnaData($this);

@@ -156,4 +156,13 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
             return false;
         }
     }
+
+    public function setOwner(UserGroup $owner) : void
+    {
+        $this->group = $owner;
+
+        if ($finna = $this->getFinnaData()) {
+            $finna->setOwner($owner);
+        }
+    }
 }
