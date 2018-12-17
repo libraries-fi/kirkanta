@@ -75,11 +75,6 @@ trait TranslatableTrait
     public function setDefaultLangcode(string $langcode) : void
     {
         $this->default_langcode = $langcode;
-        $tmplang = 'xx';
-
-        if ($this->translations->containsKey($tmplang)) {
-            $this->translations->get($tmplang)->setLangcode($langcode);
-        }
     }
 
     public function getDefaultLangcode() : string

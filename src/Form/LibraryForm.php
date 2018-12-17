@@ -8,6 +8,7 @@ use App\Entity\Organisation;
 use App\Form\Type\AddressType;
 use App\Form\Type\MailAddressType;
 use App\Form\Type\StateChoiceType;
+use App\Util\FormData;
 use App\Util\LibraryTypes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -111,6 +112,23 @@ class LibraryForm extends EntityFormType
                             ;
                     }
                 ]);
+            }
+        });
+
+        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
+            $data = $event->getData();
+            $form = $event->getForm();
+
+            if ($data->isNew()) {
+                $langcode = $form->get('langcode')->getData();
+
+                if ($address = $data->getAddress()) {
+                    FormData::persistTemporaryTranslation($address->getTranslations(), $langcode);
+                }
+
+                if ($address = $data->getMailAddress()) {
+                    FormData::persistTemporaryTranslation($address->getTranslations(), $langcode);
+                }
             }
         });
     }

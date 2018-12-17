@@ -2,6 +2,8 @@
 
 namespace App\Util;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Utility class to use with 'add entity' forms in place of arrays.
  *
@@ -11,6 +13,17 @@ namespace App\Util;
 class FormData
 {
     private $data;
+
+    public static function persistTemporaryTranslation(Collection $translations, string $langcode) : void
+    {
+        $tmplang = SystemLanguages::TEMPORARY_LANGCODE;
+
+        if ($trdata = $translations->get($tmplang)) {
+            $translations[$langcode] = $translations[$tmplang];
+            $translations[$langcode]->setLangcode($langcode);
+            unset($translations[$tmplang]);
+        }
+    }
 
     public function __construct(array $values = [])
     {
