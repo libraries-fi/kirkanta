@@ -15,6 +15,7 @@ class Slugger
         $name = mb_strtolower($name);
         $name = str_replace(['å', 'ä', 'ö'], ['a', 'a', 'o'], $name);
         $name = preg_replace('/[^a-z0-9]+/', '-', $name);
+        $name = trim($name, '-');
         return $name;
     }
 
