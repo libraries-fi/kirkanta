@@ -24,6 +24,7 @@ class SlugType extends TextType
         $options->setDefaults([
             'slug_source' => 'name',
             'entity_type' => null,
+            'help' => 'Changing slug will break bookmarks.',
         ]);
     }
 
