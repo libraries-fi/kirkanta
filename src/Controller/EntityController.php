@@ -123,9 +123,6 @@ class EntityController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // var_dump($entity->getLogoAlt());
-
             $this->entityTypeManager->getEntityManager()->flush();
             $this->addFlash('form.success', 'Changes were saved.');
 
@@ -158,7 +155,7 @@ class EntityController extends Controller
     {
         $languages = (new SystemLanguages)->getData();
         $available = array_diff($languages, $entity->getTranslations()->getKeys());
-        $protected_translations = ['fi'];
+        $protected_translations = [$entity->getDefaultLangcode()];
 
         if ($request->isMethod('post')) {
             $langcode = $request->request->get('langcode');
@@ -170,6 +167,20 @@ class EntityController extends Controller
                     $this->entityTypeManager->getEntityManager()->flush($translation);
 
                     $this->addFlash('success', 'Translation was removed.');
+
+                    return $this->redirectToRoute("entity.{$entity_type}.edit", [
+                        $entity_type => $entity->getId(),
+                    ]);
+
+                case 'change-default-language':
+                    $langcode = $request->request->get('langcode');
+
+                    if ($entity->getTranslations()->containsKey($langcode)) {
+                        $entity->setDefaultLangcode($langcode);
+                        $this->entityTypeManager->getEntityManager()->flush($entity);
+                    }
+
+                    $this->addFlash('success', 'Default language was changed.');
 
                     return $this->redirectToRoute("entity.{$entity_type}.edit", [
                         $entity_type => $entity->getId(),

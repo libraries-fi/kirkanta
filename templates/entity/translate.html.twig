@@ -43,4 +43,22 @@
       {% endfor %}
     </ul>
   </form>
+
+  <form class="border p-3 mb-3" action="{{ path('entity.' ~ entity_type ~ '.translate', {(entity_type): entity_id}) }}" method="post">
+    <input type="hidden" name="action" value="change-default-language"/>
+
+    <h3>{% trans %}Default language{% endtrans %}</h3>
+
+    <div class="form-group border p-3 mt-3 mb-0">
+      <label>{% trans %}Language{% endtrans %}</label>
+      <select name="langcode" class="custom-select">
+        <option>{% trans %}-- Select --{% endtrans %}</option>
+        {% for langcode in translations.keys %}
+          <option value="{{ langcode }}" {% if langcode in protected_translations %}selected{% endif %}>{{ attribute(languages, langcode)|trans }} – {{ langcode }}</option>
+        {% endfor %}
+      </select>
+
+      <button type="submit" class="btn btn-primary mt-3">{% trans %}Save{% endtrans %}</button>
+    </div>
+  </form>
 {% endblock %}
