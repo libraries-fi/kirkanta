@@ -194,7 +194,8 @@ class OrganisationController extends Controller
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
         $form = $this->types->getForm($type_id, 'edit', null, [
-            'context_entity' => $library
+            'context_entity' => $library,
+            // 'current_langcode' => $library->getDefaultLangcode(),
         ]);
         $form->handleRequest($request);
 
@@ -234,7 +235,8 @@ class OrganisationController extends Controller
         $entity = $this->types->getRepository($type_id)->findOneBy(['id' => $resource_id]);
 
         $form = $this->types->getForm($type_id, 'edit', $entity, [
-            'context_entity' => $library
+            'context_entity' => $library,
+            'current_langcode' => $entity->getDefaultLangcode(),
         ]);
         $form->handleRequest($request);
 

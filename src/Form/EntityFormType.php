@@ -36,13 +36,26 @@ abstract class EntityFormType extends FormType
     {
         parent::buildForm($builder, $options);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
             if ($event->getData()->isNew()) {
+                $languages = $this->languages->getData();
+
+                if ($options['context_entity']) {
+                    $enabled = $options['context_entity']->getTranslations()->getKeys();
+                    $languages = array_intersect($languages, $enabled);
+                }
+
                 $event->getForm()->add('langcode', ChoiceType::class, [
                     'label' => 'Language',
                     'placeholder' => '-- Select --',
                     'mapped' => false,
-                    'choices' => $this->languages
+                    'choices' => $languages,
+                    'help' => 'Default language for this record.',
+                    'preferred_choices' => ['fi', 'sv'],
+                    'attr' => [
+                        // Slugger (in JS) uses this attribute to get default langcode.
+                        'data-default-langcode' => true
+                    ]
                 ]);
             }
         });

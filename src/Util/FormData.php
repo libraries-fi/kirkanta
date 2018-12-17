@@ -27,6 +27,11 @@ class FormData
         return true;
     }
 
+    public function getDefaultLangcode() : string
+    {
+        return SystemLanguages::TEMPORARY_LANGCODE;
+    }
+
     public function __call($method, $params) {
         $op = substr($method, 0, 3);
         $prop = strtolower(preg_replace('/([A-Z])/', '_$1', $method));

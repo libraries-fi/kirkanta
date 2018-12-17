@@ -22,8 +22,18 @@ $.fn.sluggable = function() {
     let handler = input.dataset.slugUrl;
     let lock = new TimeoutLock;
 
+    if (langcode == 'xx') {
+      langcode = input.form.querySelector("[data-default-langcode]").value;
+    }
+
     $(`input[name="${target}"]`).on("input", (event) => {
       lock.wait(300).then(() => {
+        const defaultLanguageSelect = input.form.querySelector("[data-default-langcode]");
+
+        if (defaultLanguageSelect) {
+          langcode = defaultLanguageSelect.value;
+        }
+
         $.get(handler, {name: event.target.value, langcode}).then((result) => {
           input.value = result;
         });

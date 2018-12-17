@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class LibraryForm extends FormType
+class LibraryForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
@@ -25,7 +25,8 @@ class LibraryForm extends FormType
             ->add('state', StateChoiceType::class)
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Select --',
-                'choices' => new LibraryTypes
+                'choices' => new LibraryTypes,
+                'preferred_choices' => ['municipal'],
             ])
             ->add('main_library', CheckboxType::class, [
                 'required' => false,

@@ -36,7 +36,15 @@ class EntityDataCollectionType extends AbstractType
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($builder, $options) {
             $form_options = $event->getForm()->getParent()->getConfig()->getOptions();
-            $current_langcode = $form_options['current_langcode'] ?? $event->getForm()->getParent()->getData()->getDefaultLangcode();
+            // $current_langcode = $form_options['current_langcode'] ?? $event->getForm()->getRoot()->getData()->getDefaultLangcode();
+
+            if ($form_options['current_langcode']) {
+                $current_langcode = $form_options['current_langcode'];
+            // } elseif ($form_options['context_entity']) {
+                // $current_langcode = $options['default_langcode'];
+            } else {
+                $current_langcode = $event->getForm()->getParent()->getData()->getDefaultLangcode();
+            }
 
             // $current_langcode = $event->getForm()->getParent()->get('content_language')->getData();
             $this->currentLangcode = $current_langcode;
@@ -46,7 +54,7 @@ class EntityDataCollectionType extends AbstractType
             $form = $event->getForm();
             $translations = $event->getData();
 
-            if (!$translations || !$translations->containsKey($current_langcode)) {
+            if (!$translations || $current_langcode == SystemLanguages::TEMPORARY_LANGCODE || !$translations->containsKey($current_langcode)) {
                 $form->add($current_langcode, $options['entry_type'], [
                     'langcode' => $current_langcode,
                     'data_class' => null,
@@ -61,30 +69,6 @@ class EntityDataCollectionType extends AbstractType
                     ] + $options['entry_options']);
                 }
             }
-        });
-
-        // $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
-        //     var_dump($event->getData());
-        //     exit('PRE');
-        // });
-
-        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
-            $data = $event->getData();
-            $form = $event->getForm();
-            $tl = SystemLanguages::TEMPORARY_LANGCODE;
-
-            // var_dump($data);
-            // exit;
-
-            // if (isset($data[$tl])) {
-            //     // var_dump($event->getForm()->getParent()->get('langcode'));
-            //     // $langcode = $event->getForm()->get('langcode')->getData();
-            //     $data[$tl]->setLangcode('fi');
-            //     $data = ['fi' => $data[$tl]];
-            //
-            //     $event->setData($data);
-            // }
-            // exit('submit');
         });
     }
 

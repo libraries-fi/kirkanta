@@ -25,6 +25,23 @@
   {% endif %}
 {% endblock %}
 
+{% block default_langcode %}
+  {% if form.langcode is defined %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Default language{% endtrans %}</legend>
+      <p class="text-muted">
+        Selected language will be set as default language for this record. It will also be used as the language in list views.
+
+        Default language can later be changed in translation settings.
+      </p>
+
+      <p class="text-danger mt-3">Default language should always be either Finnish or Swedish depending on the region!</p>
+
+      {{ form_row(form.langcode) }}
+    </fieldset>
+  {% endif %}
+{% endblock %}
+
 {% block form_header %}
   <div class="hud position-sticky">
     <h1 class="hud-legend">{{ block("title_text") }}</h1>
@@ -87,6 +104,8 @@
       {% do form.restore.setRendered(true) %}
     </div>
   {% endif %}
+
+  {{ block("default_langcode") }}
 {% endblock %}
 
 {% block content %}
