@@ -2099,3 +2099,26 @@ ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_inf
 
 
 ALTER TABLE photos_data RENAME TO pictures_data;
+
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_email_id_fkey;
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_homepage_id_fkey;
+ALTER TABLE organisations_data DROP CONSTRAINT organisations_data_phone_id_fkey;
+
+ALTER TABLE organisations_data ADD FOREIGN KEY (email_id) REFERENCES contact_info(id) ON DELETE SET NULL;
+ALTER TABLE organisations_data ADD FOREIGN KEY (homepage_id) REFERENCES contact_info(id) ON DELETE SET NULL;
+ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_info(id) ON DELETE SET NULL;
+
+
+
+
+-- COMMIT PLACEHOLDER --
