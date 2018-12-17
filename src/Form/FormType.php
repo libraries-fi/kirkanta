@@ -80,11 +80,13 @@ abstract class FormType extends AbstractType
         $request = $this->requestStack->getCurrentRequest();
 
         // FIXME: Replace with $this->currentLangcode (also in child elements)
-        $langcode = $request->query->get('langcode') ?? SystemLanguages::TEMPORARY_LANGCODE;
+        // $langcode = $request->query->get('langcode') ?? SystemLanguages::TEMPORARY_LANGCODE;
+
+        $langcode = $request->query->get('langcode') ?? null;
 
         $options->setDefaults([
             'admin' => false,
-            'current_langcode' => null,
+            'current_langcode' => $langcode,
             'form_actions' => true,
 
             // Defines a 'scope' for form i.e. could be used when the form is nested inside another.
