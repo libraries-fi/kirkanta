@@ -2122,3 +2122,7 @@ ALTER TABLE organisations_data ADD FOREIGN KEY (phone_id) REFERENCES contact_inf
 
 
 -- COMMIT PLACEHOLDER --
+
+
+
+UPDATE organisations SET type = 'municipal' WHERE type = 'library';

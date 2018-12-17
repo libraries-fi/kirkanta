@@ -165,7 +165,8 @@ class SyncLegacyDatabase extends Command
 
         $this->synchronize('organisations', 'organisations', [
             'role',
-            // 'type',
+            'type',
+            'main_library',
             'id',
             'group_id',
             'city_id',
@@ -189,6 +190,19 @@ class SyncLegacyDatabase extends Command
             if (!in_array($role, ['library', 'foreign'])) {
                 throw new SkipSynchronizationException;
             }
+
+            if ($row['type'] == 'municipal') {
+                $row['type'] = 'library';
+            }
+
+            $row['branch_type'] = $row['type'];
+            unset($row['type']);
+
+            if ($row['main_library']) {
+                $row['branch_type'] = 'main_library';
+            }
+
+            unset($row['main_library']);
 
             $row['coordinates'] = $this->cache->coords[$row['address_id']] ?? null;
 
