@@ -28,7 +28,7 @@ class RichtextType extends TextareaType
                 return $db_value;
             },
             function($user_input) {
-                if ($user_input == '<p>&nbsp;</p>') {
+                if ($user_input == '<p>&nbsp;</p>' || $user_input == '') {
                     return null;
                 } else {
                     return $user_input;
