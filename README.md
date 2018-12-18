@@ -6,7 +6,7 @@ a development version of the next major release. Older versions have not been re
 
 ## Dependencies
 - PHP 7.2+
-- PostgreSQL 9.6+
+- PostgreSQL 9.6+ (10+ with Kirkanta API)
 - PostGIS extensions
 - Node.js for compiling assets (JS/CSS).
 
