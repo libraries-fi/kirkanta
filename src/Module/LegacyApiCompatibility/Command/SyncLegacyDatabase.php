@@ -228,6 +228,10 @@ class SyncLegacyDatabase extends Command
                 unset($data['homepage_id']);
                 unset($data['phone_id']);
                 unset($data['slug']);
+
+                if (mb_strlen($data['slogan']) > 150) {
+                    $data['slogan'] = mb_substr($data['slogan'], 0, 147) . '...';
+                }
             }
 
             $custom_data = json_decode($row['custom_data']);
