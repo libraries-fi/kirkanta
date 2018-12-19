@@ -24,6 +24,10 @@
         <legend>{% trans %}Basic information{% endtrans %}</legend>
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
+
+        {% if form.department is defined %}
+          {{ form_row(form.department) }}
+        {% endif %}
       </fieldset>
     </div>
     <aside class="col-md">
