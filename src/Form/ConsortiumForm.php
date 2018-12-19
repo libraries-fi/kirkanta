@@ -9,10 +9,12 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ConsortiumForm extends FormType
+class ConsortiumForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+        
         $builder
             ->add('state', StateChoiceType::class)
             // ->add('logo', FileType::class, [

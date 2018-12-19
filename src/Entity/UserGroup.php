@@ -95,12 +95,22 @@ class UserGroup extends EntityBase
     {
         $tree = [$this];
         foreach ($this->children as $group) {
-            $tree = array_merge($tree, $group->getTree());
+            $tree = array_merge($tree, $group->getTreeBranches());
         }
         for ($parent = $this->getParent(); $parent; $parent = $parent->getParent()) {
             $tree[] = $parent;
         }
+
         return $tree;
+    }
+
+    private function getTreeBranches() : iterable
+    {
+        $children = [];
+        foreach ($this->children as $child) {
+            $children = array_merge($child->getTreeBranches(), [$child], $children);
+        }
+        return $children;
     }
 
     public function getRoles() : array

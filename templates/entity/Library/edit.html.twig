@@ -30,8 +30,8 @@
 {% endblock %}
 
 {% block form_body %}
-  <div class="row">
-    <div class="col-md-6">
+  <div class="row form-section-grid">
+    <div class="col-md">
       <fieldset class="form-section">
         <legend>{% trans %}Basic information{% endtrans %}</legend>
         {{ form_row(form.name) }}
@@ -41,13 +41,13 @@
         {% if form.main_library is defined %}
           {{ form_row(form.main_library) }}
         {% endif %}
-        
+
         {{ form_row(form.isil) }}
         {{ form_row(form.identificator) }}
       </fieldset>
     </div>
 
-    <aside class="col-md-6">
+    <aside class="col-md">
       {% if form.ptv is defined %}
         <fieldset class="form-section">
           <legend>{% trans %}PTV export{% endtrans %}</legend>
@@ -58,6 +58,7 @@
       <fieldset class="form-section">
         <legend>{% trans %}Administrators{% endtrans %}</legend>
         {{ form_row(form.slug) }}
+        {{ form_row(form.owner) }}
       </fieldset>
 
       <fieldset class="form-section">

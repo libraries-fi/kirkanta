@@ -25,6 +25,8 @@ class FinnaAdditionsForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('state', StateChoiceType::class, [
                 // 'property_path' => 'consortium.state'

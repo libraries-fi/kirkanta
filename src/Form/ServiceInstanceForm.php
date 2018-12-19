@@ -14,6 +14,8 @@ class ServiceInstanceForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+        
         $builder
             ->add('template', EntityType::class, [
                 'class' => Service::class,

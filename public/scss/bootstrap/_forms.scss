@@ -67,6 +67,17 @@
   }
 }
 
+.form-section-grid {
+  .col-md {
+    display: flex;
+    flex-flow: column;
+  }
+  
+  .form-section {
+    flex: 1;
+  }
+}
+
 .search-form {
   .form-check {
     margin-top: 2.5rem;

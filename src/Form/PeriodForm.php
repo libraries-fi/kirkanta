@@ -25,6 +25,8 @@ class PeriodForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+        
         $builder
             ->add('valid_from', DateType::class, [
                 'widget' => 'single_text',

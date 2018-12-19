@@ -18,24 +18,40 @@
   {% else %}
     <fieldset class="form-section">
       <legend>{% trans %}Service{% endtrans %}</legend>
-      {{ form_row(form.children.template) }}
+      {{ form_row(form.template) }}
     </fieldset>
   {% endif %}
 
+  <div class="row form-section-grid">
+    <div class="col-md">
+      <fieldset class="form-section">
+        <legend>{% trans %}Basic information{% endtrans %}</legend>
+        {{ form_row(form.name) }}
+        {{ form_row(form.price) }}
+        {{ form_row(form.for_loan) }}
+      </fieldset>
+    </div>
+    {% if form.owner is defined %}
+      <aside class="col-md">
+        <fieldset class="form-section">
+          <legend>{% trans %}Administrators{% endtrans %}</legend>
+            {{ form_row(form.owner) }}
+        </fieldset>
+      </aside>
+    {% endif %}
+  </div>
+
   <fieldset class="form-section">
-    <legend>{% trans %}Basic details{% endtrans %}</legend>
-    {{ form_row(form.children.name) }}
-    {{ form_row(form.children.short_description) }}
-    {{ form_row(form.children.description) }}
-    {{ form_row(form.children.price) }}
-    {{ form_row(form.children.for_loan) }}
+    <legend>{% trans %}Description{% endtrans %}</legend>
+    {{ form_row(form.short_description) }}
+    {{ form_row(form.description) }}
   </fieldset>
 
   <fieldset class="form-section">
     <legend>{% trans %}Contact details{% endtrans %}</legend>
-    {{ form_row(form.children.email) }}
-    {{ form_row(form.children.phone_number) }}
-    {{ form_row(form.children.website) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.phone_number) }}
+    {{ form_row(form.website) }}
   </fieldset>
 
   {{ form_end(form) }}

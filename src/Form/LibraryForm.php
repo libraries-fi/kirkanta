@@ -17,10 +17,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class LibraryForm extends FormType
+class LibraryForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('state', StateChoiceType::class)
             ->add('type', ChoiceType::class, [
