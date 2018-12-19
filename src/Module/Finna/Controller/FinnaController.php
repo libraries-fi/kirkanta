@@ -44,8 +44,6 @@ class FinnaController extends Controller
         ]));
 
         $form->remove('exclusive');
-
-        // $form->get('consortium')->setData($consortium);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -210,7 +208,7 @@ class FinnaController extends Controller
      * @Route("/finna_organisation/{finna_organisation}/links/add", name="entity.finna_organisation.add_link")
      * @Template("entity/FinnaAdditions/links.edit.html.twig")
      */
-    public function addLink(Request $request, FinnaAdditions $finna_organisation)
+    public function addWebLink(Request $request, FinnaAdditions $finna_organisation)
     {
         $type_id = 'finna_organisation_web_link';
         $form = $this->types->getForm($type_id, 'edit');
