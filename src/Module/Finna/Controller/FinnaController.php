@@ -53,6 +53,8 @@ class FinnaController extends Controller
 
             $entity = $em->getRepository(FinnaAdditions::class)->create($form->getData()->getValues());
 
+            $entity->setExclusive(false);
+
             $em->persist($entity);
             $em->flush();
 
