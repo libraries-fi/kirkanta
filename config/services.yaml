@@ -99,10 +99,17 @@ services:
             - { name: doctrine.event_subscriber }
     App\Doctrine\EventListener\ClearSchedulesOnPeriodRemove:
         tags:
-            - { name: doctrine.entity_listener }
+            - { name: doctrine.orm.entity_listener }
+    App\Doctrine\EntityListener\ConsortiumGroupOwnershipInitializer:
+        arguments: ['@security.token_storage']
+        tags:
+            -
+                name: doctrine.orm.entity_listener
+                entity: App\Entity\Consortium
+                event: prePersist
     App\Doctrine\EventListener\LibraryConsortiumInitializer:
         tags:
-            - { name: doctrine.entity_listener }
+            - { name: doctrine.orm.entity_listener }
     entity_type_manager:
         public: true
         class: 'App\EntityTypeManager'
