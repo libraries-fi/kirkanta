@@ -511,7 +511,7 @@ class SyncLegacyDatabase extends Command
                 AND a.section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
                 -- AND a.id = 299673 -- DEBUG STUFF
-                AND a.parent_id = 84877 -- DEBUG STUFF
+                -- AND a.parent_id = 84877 -- DEBUG STUFF
             GROUP BY a.id
             ORDER BY a.id
             LIMIT :limit
