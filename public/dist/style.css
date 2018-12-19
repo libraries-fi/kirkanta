@@ -1713,6 +1713,13 @@ textarea.form-control {
   .search-form-container form .btn {
     margin-top: 2rem; }
 
+.form-section-grid .col-md {
+  display: flex;
+  flex-flow: column; }
+
+.form-section-grid .form-section {
+  flex: 1; }
+
 .search-form .form-check {
   margin-top: 2.5rem; }
 
