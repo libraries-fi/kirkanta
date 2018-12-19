@@ -451,12 +451,38 @@ class SyncLegacyDatabase extends Command
                             $selfTimes = &$self['days'][$i]->times;
                             $k = count($selfTimes) - 1;
 
-                            $selfTimes[] = [
+                            $selfTimes[] = (object)[
                                 'opens' => $b->opens,
                                 'closes' => $selfTimes[$k]->closes,
                             ];
 
                             $selfTimes[$k]->closes = $a->closes;
+                            unset($selfTimes);
+                        }
+                    }
+
+                    /**
+                     * Handle special case of Pähkinärinne:
+                     * The library is totally closed in between hours and we have
+                     * to adapt self-service schedules for that because helmet.fi fails.
+                     */
+                    if ($period['organisation_id'] == 84877) {
+                        $selfDay = $self['days'][$i];
+
+                        foreach ($selfDay->times as $j => $selfTime) {
+                            foreach ($regular['days'][$i]->times as $regTime) {
+                                if ($regTime->opens == $selfTime->opens && $regTime->closes == $selfTime->closes) {
+                                    unset($selfDay->times[$j]);
+                                }
+                            }
+                        }
+
+                        if (empty($selfDay->times)) {
+                            $selfDay->closed = true;
+                            unset($selfDay->opens, $selfDay->closes);
+                        } else {
+                            $selfDay->opens = reset($selfDay->times)->opens;
+                            $selfDay->closes = end($selfDay->times)->closes;
                         }
                     }
                 }
@@ -485,7 +511,7 @@ class SyncLegacyDatabase extends Command
                 AND a.section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
                 -- AND a.id = 299673 -- DEBUG STUFF
-                -- AND a.parent_id = 84877 -- DEBUG STUFF
+                AND a.parent_id = 84877 -- DEBUG STUFF
             GROUP BY a.id
             ORDER BY a.id
             LIMIT :limit
