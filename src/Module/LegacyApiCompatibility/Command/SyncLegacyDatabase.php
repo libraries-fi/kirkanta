@@ -265,6 +265,10 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->query('DELETE FROM phone_numbers');
 
+        /**
+         * Handle phone numbers and email addresses.
+         * Email addresses are copied as "phone numbers" of legacy reasons.
+         */
         $this->synchronize('contact_info', 'phone_numbers', ['id', 'type', 'weight', 'contact', 'parent_id'], function(&$row) {
             if (!isset($row['parent_id'])) {
                 /**
@@ -299,6 +303,42 @@ class SyncLegacyDatabase extends Command
                 $row['weight'] += 1000;
             } elseif ($row['type'] == 'website') {
                 $row['weight'] += 2000;
+            }
+
+            unset($row['type']);
+        });
+
+        $this->legacyDb->query('DELETE FROM web_links');
+
+        /**
+         * Handle website links.
+         */
+        $this->synchronize('contact_info', 'web_links', ['id', 'type', 'weight', 'contact', 'parent_id'], function(&$row) {
+            if ($row['type'] != 'website') {
+                throw new SkipSynchronizationException;
+            }
+
+            if (empty($row['parent_id'])) {
+                throw new SkipSynchronizationException;
+            }
+
+            if (!isset($row['translations']['fi'])) {
+                throw new SkipSynchronizationException;
+            }
+
+            $row['organisation_id'] = $row['parent_id'];
+            unset($row['parent_id']);
+
+            $row['url'] = $row['contact'];
+            unset($row['contact']);
+
+            // Just pick a random existing ID, hopefully it does not break anything.
+            $row['link_group_id'] = 1474;
+
+            $row['entity'] = 'organisation';
+
+            if (!isset($row['weight'])) {
+                $row['weight'] = 0;
             }
 
             unset($row['type']);
