@@ -454,8 +454,16 @@ class SyncLegacyDatabase extends Command
                             $day->translations = (object)[];
                         }
 
+                        if (!isset($self['days'][$i]->translations)) {
+                            $self['days'][$i]->translations = (object)[];
+                        }
+
                         if (!isset($day->translations->{$langcode})) {
                             $day->translations->{$langcode} = (object)['info' => null];
+                        }
+
+                        if (!isset($self['days'][$i]->translations->{$langcode})) {
+                            $self['days'][$i]->translations->{$langcode} = (object)['info' => null];
                         }
                     }
                 }
