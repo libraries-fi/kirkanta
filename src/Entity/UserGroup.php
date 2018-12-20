@@ -93,10 +93,7 @@ class UserGroup extends EntityBase
 
     public function getTree() : iterable
     {
-        $tree = [$this];
-        foreach ($this->children as $group) {
-            $tree = array_merge($tree, $group->getTreeBranches());
-        }
+        $tree = array_merge($this->getTreeBranches(), [$this]);
         for ($parent = $this->getParent(); $parent; $parent = $parent->getParent()) {
             $tree[] = $parent;
         }
