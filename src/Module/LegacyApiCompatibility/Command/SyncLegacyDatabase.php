@@ -446,6 +446,7 @@ class SyncLegacyDatabase extends Command
                     'closed' => true,
                     'opens' => null,
                     'closes' => null,
+                    'info' => null,
                     'translations' => (object)[]
                 ];
 
