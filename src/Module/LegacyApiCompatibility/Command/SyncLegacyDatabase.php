@@ -446,24 +446,19 @@ class SyncLegacyDatabase extends Command
                     'closed' => true,
                     'opens' => null,
                     'closes' => null,
+                    'translations' => (object)[]
                 ];
 
                 foreach (self::$TRLANGS as $langcode) {
+                    $self['days'][$i]->translations->{$langcode} = (object)['info' => null];
+
                     if (!isset($day->translations->{$langcode})) {
                         if (!isset($day->translations)) {
                             $day->translations = (object)[];
                         }
 
-                        if (!isset($self['days'][$i]->translations)) {
-                            $self['days'][$i]->translations = (object)[];
-                        }
-
                         if (!isset($day->translations->{$langcode})) {
                             $day->translations->{$langcode} = (object)['info' => null];
-                        }
-
-                        if (!isset($self['days'][$i]->translations->{$langcode})) {
-                            $self['days'][$i]->translations->{$langcode} = (object)['info' => null];
                         }
                     }
                 }
