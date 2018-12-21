@@ -94,7 +94,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         return $this->valid_until->format('Ymd') < $ref;
     }
 
-    public function getName() : string
+    public function getName() : ?string
     {
         return $this->translations[$this->langcode]->getName();
     }
@@ -116,7 +116,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
 
     public function getDays() : array
     {
-        return $this->days;
+        return $this->days ?? [];
     }
 
     public function setDays(array $days) : void
@@ -124,7 +124,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         $this->days = $days;
     }
 
-    public function getSection() : string
+    public function getSection() : ?string
     {
         // trigger_error('Period::getSection() is deprecated', E_USER_DEPRECATED);
         return $this->section;
@@ -136,7 +136,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         $this->section = $section;
     }
 
-    public function getValidFrom() : DateTime
+    public function getValidFrom() : ?DateTime
     {
         return $this->valid_from;
     }

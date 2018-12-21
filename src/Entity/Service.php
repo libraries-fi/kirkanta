@@ -74,7 +74,7 @@ class Service extends EntityBase implements ApiCacheable, Translatable
         $this->translations[$this->langcode]->setDescription($description);
     }
 
-    public function getType() : string
+    public function getType() : ?string
     {
         return $this->type;
     }

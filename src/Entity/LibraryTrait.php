@@ -136,7 +136,7 @@ trait LibraryTrait
         $this->translations[$this->langcode]->setShortName($name);
     }
 
-    public function getType() : string
+    public function getType() : ?string
     {
         return $this->type;
     }

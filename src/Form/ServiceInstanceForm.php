@@ -3,19 +3,21 @@
 namespace App\Form;
 
 use App\Entity\Service;
+use App\Entity\ServiceInstance;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceInstanceForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         parent::form($builder, $options);
-        
+
         $builder
             ->add('template', EntityType::class, [
                 'class' => Service::class,
@@ -44,5 +46,13 @@ class ServiceInstanceForm extends EntityFormType
                 $event->getForm()->remove('template');
             }
         });
+    }
+
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => ServiceInstance::class
+        ]);
     }
 }

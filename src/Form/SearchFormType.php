@@ -13,6 +13,15 @@ abstract class SearchFormType extends FormType
         return 'search_form';
     }
 
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'parent' => null,
+            'data_class' => \App\Util\FormData::class,
+        ]);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         parent::buildForm($builder, $options);
@@ -23,13 +32,5 @@ abstract class SearchFormType extends FormType
         foreach ($builder as $field) {
             $field->setRequired(false);
         }
-    }
-
-    public function configureOptions(OptionsResolver $options) : void
-    {
-        parent::configureOptions($options);
-        $options->setDefaults([
-            'parent' => null
-        ]);
     }
 }

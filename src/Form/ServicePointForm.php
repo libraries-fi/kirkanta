@@ -11,9 +11,18 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServicePointForm extends LibraryForm
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => ServicePoint::class,
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         parent::form($builder, $options);

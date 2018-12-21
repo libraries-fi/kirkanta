@@ -9,9 +9,18 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LibraryPhotoForm extends EntityFormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => LibraryPhoto::class,
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         $builder

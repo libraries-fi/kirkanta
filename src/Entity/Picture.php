@@ -72,6 +72,7 @@ abstract class Picture extends EntityBase implements CreatedAwareness
 
     public function __construct()
     {
+        parent::__construct();
         $this->sizes = static::DEFAULT_SIZES;
         $this->created = new \DateTime;
     }

@@ -43,15 +43,20 @@ abstract class EntityFormType extends FormType
                     $help = 'Changing this value will change user permissions for this record.';
 
                     if ($this->auth->isGranted('foobar')) {
-                        $preferred_groups = $entity->getOwner()->getTree();
+                        $owner = $entity->getOwner() ?? $this->auth->getUser()->getGroup();
+                        $preferred_groups = $owner->getTree();
+
                         $form->add('owner', EntityType::class, [
                             'help' => $help,
                             'class' => UserGroup::class,
                             'query_builder' => function($repo) {
-                                return $repo->createQueryBuilder('e');
+                                return $repo->createQueryBuilder('e')
+                                    ->orderBy('e.parent');
                             },
                             'preferred_choices' => $preferred_groups
                         ]);
+
+                        $event->getData()->setOwner($owner);
                     } else {
                         $group = $this->auth->getUser()->getGroup();
                         do {

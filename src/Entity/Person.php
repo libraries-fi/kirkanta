@@ -75,17 +75,25 @@ class Person extends EntityBase implements CreatedAwareness, GroupOwnership, Sta
      */
     private $library;
 
-    public function getName() : string
+    public function getName() : ?string
     {
-        return sprintf('%s %s', $this->first_name, $this->last_name);
+        if ($this->getFirstName()) {
+            return sprintf('%s %s', $this->first_name, $this->last_name);
+        } else {
+            return null;
+        }
     }
 
     public function getListName() : string
     {
-        return sprintf('%s, %s', $this->last_name, $this->first_name);
+        if ($this->getFirstName()) {
+            return sprintf('%s, %s', $this->last_name, $this->first_name);
+        } else {
+            return null;
+        }
     }
 
-    public function getLastName() : string
+    public function getLastName() : ?string
     {
         return $this->last_name;
     }
@@ -95,7 +103,7 @@ class Person extends EntityBase implements CreatedAwareness, GroupOwnership, Sta
         $this->last_name = $name;
     }
 
-    public function getFirstName() : string
+    public function getFirstName() : ?string
     {
         return $this->first_name;
     }
@@ -173,7 +181,7 @@ class Person extends EntityBase implements CreatedAwareness, GroupOwnership, Sta
 
     public function getQualities() : array
     {
-        return $this->qualities;
+        return $this->qualities ?? [];
     }
 
     public function setQualities(array $qualities) : void

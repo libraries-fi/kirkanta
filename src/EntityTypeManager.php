@@ -108,11 +108,15 @@ final class EntityTypeManager {
     public function getForm(string $type_id, string $form_id = 'default', $data = null, array $options = [])
     {
         if (is_null($data) || is_array($data)) {
-            $data = new FormData($data ?? []);
+            // $data = new FormData($data ?? []);
         }
 
         $form_class = $this->getFormClass($type_id, $form_id);
         return $this->form_factory->create($form_class, $data, $options);
+    }
+
+    public function create(string $type_id, array $values = []) {
+        return $this->getRepository($type_id)->create($values);
     }
 
     /**

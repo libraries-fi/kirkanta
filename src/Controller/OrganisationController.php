@@ -200,7 +200,9 @@ class OrganisationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $this->types->getRepository($type_id)->create($form->getData()->getValues());
+            // $entity = $this->types->getRepository($type_id)->create($form->getData()->getValues());
+
+            $entity = $form->getData();
 
             if (method_exists($entity, 'setParent')) {
                 $entity->setParent($library);
@@ -463,13 +465,15 @@ class OrganisationController extends Controller
      */
     public function addCustomData(Request $request, string $entity_type, LibraryInterface $entity)
     {
-        $form = $this->createForm(\App\Form\CustomDataForm::class, (object)[
-            'title' => null,
-            'id' => null,
-            'value' => null,
-        ]);
-
         $langcodes = $entity->getTranslations()->getKeys();
+        $form = $this->createForm(\App\Form\CustomDataForm::class, (object)[
+            'id' => null,
+            'title' => (object)[],
+            'value' => (object)[],
+        ], [
+            'available_languages' => $langcodes,
+            'current_langcode' => SystemLanguages::DEFAULT_LANGCODE
+        ]);
 
         $form->handleRequest($request);
 

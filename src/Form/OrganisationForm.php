@@ -2,10 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\City;
-use App\Entity\Consortium;
-use App\Form\Type\AddressType;
-use App\Form\Type\MailAddressType;
 use App\Form\Type\StateChoiceType;
 use App\Util\LibraryTypes;
 use App\Util\OrganisationTypes;
@@ -16,11 +12,22 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class OrganisationForm extends FormType
+class OrganisationForm extends EntityFormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => \App\Entity\Organisation::class,
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+        
         $builder
             ->add('state', StateChoiceType::class)
             // ->add('address', AddressType::class, [

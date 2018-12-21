@@ -36,7 +36,7 @@ class EntityController extends Controller
         $types = $this->entityTypeManager;
         $list_builder = $this->entityTypeManager->getListBuilder($entity_type);
 
-        if ($this->entityTypeManager->hasForm($entity_type, 'search')) {
+        if ($this->entityTypeManager->hasForm($entity_type, 'search', new FormData)) {
             $search_form = $this->entityTypeManager->getForm($entity_type, 'search', null, ['admin' => true]);
             $search_form->handleRequest($request);
 
@@ -78,14 +78,12 @@ class EntityController extends Controller
 
     public function add(Request $request, string $entity_type)
     {
-        $form = $this->entityTypeManager->getForm($entity_type, 'edit', new FormData);
+        $entity = $this->entityTypeManager->create($entity_type);
+        $form = $this->entityTypeManager->getForm($entity_type, 'edit', $entity);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $this->entityTypeManager
-                ->getRepository($entity_type)
-                ->create($form->getData()->getValues());
-
+            // $entity = $form->getData();
             $this->entityTypeManager->getEntityManager()->persist($entity);
             $this->entityTypeManager->getEntityManager()->flush();
             $this->addFlash('form.success', 'Record was created.');

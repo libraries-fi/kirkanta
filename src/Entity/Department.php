@@ -56,7 +56,7 @@ class Department extends EntityBase implements Translatable
         return $this->getName();
     }
 
-    public function getType() : string
+    public function getType() : ?string
     {
         return $this->type;
     }

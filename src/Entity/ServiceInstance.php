@@ -67,12 +67,12 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
      */
     private $translations;
 
-    public function getStandardName() : string
+    public function getStandardName() : ?string
     {
         return $this->getTemplate()->getName();
     }
 
-    public function getType() : string
+    public function getType() : ?string
     {
         return $this->getTemplate()->getType();
     }
@@ -162,7 +162,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
         $this->translations[$this->langcode]->setWebsite($url);
     }
 
-    public function getTemplate() : Service
+    public function getTemplate() : ?Service
     {
         return $this->template;
     }

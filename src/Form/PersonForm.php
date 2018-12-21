@@ -14,9 +14,18 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PersonForm extends EntityFormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => Person::class,
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         $builder
@@ -64,10 +73,10 @@ class PersonForm extends EntityFormType
             } else {
                 $person = $event->getData();
 
-                if ($person instanceof Person) {
-                    $groups = $person->getGroup()->getTree();
-                } else {
+                if ($person->isNew()) {
                     $groups = $this->auth->getUser()->getGroup()->getTree();
+                } else {
+                    $groups = $person->getGroup()->getTree();
                 }
 
                 if ($groups) {

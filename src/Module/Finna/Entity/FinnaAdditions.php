@@ -82,7 +82,7 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
         $this->links = new ArrayCollection;
     }
 
-    public function getConsortium() : Consortium
+    public function getConsortium() : ?Consortium
     {
         return $this->consortium;
     }
@@ -131,7 +131,7 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
         return $this->links;
     }
 
-    public function getFinnaId() : string
+    public function getFinnaId() : ?string
     {
         return $this->finna_id;
     }

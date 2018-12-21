@@ -29,21 +29,25 @@ class EntityDataType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
-        /*
+        /**
          * Data transformer will not be triggered if we set it in the PRE_SUBMIT event handler.
          * But we also cannot access the owning entity until that event, so we have to pass
          * the owner using a function call.
          */
-
         if ($options['new_translation']) {
             $transformer = new EntityDataTransformer($this->dataClass, $options['langcode']);
             $builder->addModelTransformer($transformer);
 
             $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) use($transformer) {
-                if ($collection = $event->getForm()->getParent()->getData()) {
-                    $parent = $collection->getOwner();
-                    $transformer->setOwnerEntity($parent);
-                }
+                /**
+                 * NOTE: Don't use getForm()->getRoot() here because we might
+                 * be operating on a nested entity and no the root entity.
+                 */
+                $entity = $event->getForm()
+                    ->getParent()
+                    ->getParent()
+                    ->getData();
+                $transformer->setOwnerEntity($entity);
             });
         }
     }
