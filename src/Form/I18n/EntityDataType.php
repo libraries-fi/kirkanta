@@ -34,21 +34,21 @@ class EntityDataType extends AbstractType
          * But we also cannot access the owning entity until that event, so we have to pass
          * the owner using a function call.
          */
-        if ($options['new_translation']) {
-            $transformer = new EntityDataTransformer($this->dataClass, $options['langcode']);
-            $builder->addModelTransformer($transformer);
-
-            $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) use($transformer) {
-                /**
-                 * NOTE: Don't use getForm()->getRoot() here because we might
-                 * be operating on a nested entity and no the root entity.
-                 */
-                $entity = $event->getForm()
-                    ->getParent()
-                    ->getParent()
-                    ->getData();
-                $transformer->setOwnerEntity($entity);
-            });
-        }
+        // if ($options['new_translation']) {
+        //     $transformer = new EntityDataTransformer($this->dataClass, $options['langcode']);
+        //     $builder->addModelTransformer($transformer);
+        //
+        //     $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) use($transformer) {
+        //         /**
+        //          * NOTE: Don't use getForm()->getRoot() here because we might
+        //          * be operating on a nested entity and no the root entity.
+        //          */
+        //         $entity = $event->getForm()
+        //             ->getParent()
+        //             ->getParent()
+        //             ->getData();
+        //         $transformer->setOwnerEntity($entity);
+        //     });
+        // }
     }
 }

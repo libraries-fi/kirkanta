@@ -76,7 +76,7 @@ class LibraryData extends EntityDataBase
      */
     protected $entity;
 
-    public function getName() : string
+    public function getName() : ?string
     {
         return $this->name;
     }

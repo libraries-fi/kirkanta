@@ -42,10 +42,12 @@ class EntityDataCollectionType extends AbstractType
             $form = $event->getForm();
             $translations = $event->getData();
 
+            $data_class = $form->getParent()->getConfig()->getOption('data_class') . 'Data';
+
             if (!$translations || !$translations->containsKey($current_langcode)) {
                 $form->add($current_langcode, $options['entry_type'], [
                     'langcode' => $current_langcode,
-                    'data_class' => null,
+                    'data_class' => $data_class,
                     'new_translation' => true,
                 ] + $options['entry_options']);
             }
@@ -53,8 +55,24 @@ class EntityDataCollectionType extends AbstractType
             if ($translations) {
                 foreach ($translations as $langcode => $_) {
                     $form->add($langcode, $options['entry_type'], [
+                        'data_class' => $data_class,
                         'langcode' => $langcode,
                     ] + $options['entry_options']);
+                }
+            }
+        });
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+            $translations = $event->getData();
+            $entity = $event->getForm()->getParent()->getData();
+
+            foreach ($translations as $key => $translation) {
+                if ($translation) {
+                    $translation->setLangcode($key);
+                }
+
+                if ($entity) {
+                    $translation->setEntity($entity);
                 }
             }
         });

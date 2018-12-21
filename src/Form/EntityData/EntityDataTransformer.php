@@ -25,26 +25,14 @@ class EntityDataTransformer implements DataTransformerInterface
 
     public function reverseTransform($norm_data)
     {
-        if (is_array($norm_data)) {
-            $accessor = PropertyAccess::createPropertyAccessor();
-            $translation = new $this->data_class($this->langcode);
-
-            foreach ($norm_data as $key => $value) {
-                $accessor->setValue($translation, $key, $value);
-            }
-
-            if ($this->owner) {
-                $accessor->setValue($translation, 'entity', $this->owner);
-            }
-
-            return $translation;
-        } else {
-            return $norm_data;
-        }
+        $norm_data->setLangcode($this->langcode);
+        // $norm_data->setEntity($this->owner);
+        return $norm_data;
     }
 
     public function setOwnerEntity($owner) : void
     {
+
         $this->owner = $owner;
     }
 }

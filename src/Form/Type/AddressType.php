@@ -9,6 +9,8 @@ use App\Form\I18n\EntityDataCollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\BaseType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddressType extends BaseType
@@ -29,6 +31,20 @@ class AddressType extends BaseType
                 'entry_type' => AddressDataType::class,
             ])
             ;
+
+        // $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+        //
+        //     $entity = $event->getData();
+        //
+        //     // foreach ($entity->getTranslato)
+        //
+        //     // var_Dump($entity->getTranslations());
+        //
+        //
+        //
+        //
+        //     // exit('ssdada');
+        // });
     }
 
     public function configureOptions(OptionsResolver $options) : void

@@ -83,7 +83,7 @@ class EntityController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $entity = $form->getData();
+            $entity = $form->getData();
             $this->entityTypeManager->getEntityManager()->persist($entity);
             $this->entityTypeManager->getEntityManager()->flush();
             $this->addFlash('form.success', 'Record was created.');
