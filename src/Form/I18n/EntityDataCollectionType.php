@@ -44,20 +44,23 @@ class EntityDataCollectionType extends AbstractType
 
             $data_class = $form->getParent()->getConfig()->getOption('data_class') . 'Data';
 
+            $entry_options = array_replace(
+                ['data_class' => $data_class],
+                $options['entry_options']
+            );
+
             if (!$translations || !$translations->containsKey($current_langcode)) {
                 $form->add($current_langcode, $options['entry_type'], [
                     'langcode' => $current_langcode,
-                    'data_class' => $data_class,
                     'new_translation' => true,
-                ] + $options['entry_options']);
+                ] + $entry_options);
             }
 
             if ($translations) {
                 foreach ($translations as $langcode => $_) {
                     $form->add($langcode, $options['entry_type'], [
-                        'data_class' => $data_class,
                         'langcode' => $langcode,
-                    ] + $options['entry_options']);
+                    ] + $entry_options);
                 }
             }
         });

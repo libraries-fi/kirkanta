@@ -27,7 +27,7 @@ class ContactInfoData extends EntityDataBase
      */
     private $description;
 
-    public function getName() : string
+    public function getName() : ?string
     {
         return $this->name;
     }
