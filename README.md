@@ -12,7 +12,6 @@ a development version of the next major release. Older versions have not been re
 
 ## Deployment
 Currently there is no schema nor a data dump publicly available. These will be prepared sometime in the future.
-release.
 
 ## Kirkanta repository family
 - [Kirjastohakemisto](https://github.com/libraries-fi/kirjastohakemisto) -- frontend
