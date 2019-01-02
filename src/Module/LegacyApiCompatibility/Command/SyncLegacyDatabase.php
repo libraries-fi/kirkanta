@@ -146,11 +146,11 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->beginTransaction();
 
-        $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function(&$row) {
-            // Set a fallback value because API users don't really care about this,
-            // so we don't bother syncing regions.
-            $row['region_id'] = 1003;
-        });
+        // $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function(&$row) {
+        //     // Set a fallback value because API users don't really care about this,
+        //     // so we don't bother syncing regions.
+        //     $row['region_id'] = 1003;
+        // });
 
         $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
             if ($row['coordinates']) {
@@ -158,10 +158,19 @@ class SyncLegacyDatabase extends Command
                 $row['coordinates'] = "{$lat}, {$lon}";
             }
 
+            static $xoo = 0;
+
+            // print $row['id'] . PHP_EOL;
+
+            // print ++$xoo . PHP_EOL;
+
             // In legacy DB, coordinates exist in organisations table.
             $this->cache->coords[$row['id']] = $row['coordinates'];
             unset($row['coordinates']);
         });
+
+        $this->legacyDb->commit();
+        exit('sync addr');
 
         $this->synchronize('organisations', 'organisations', [
             'role',
@@ -554,7 +563,7 @@ class SyncLegacyDatabase extends Command
                 is_legacy_format
             FROM periods a
             INNER JOIN periods_data t ON a.id = t.entity_id
-            WHERE COALESCE(a.valid_until, CURRENT_DATE) >= CURRENT_DATE
+            WHERE COALESCE(a.valid_until, CURRENT_DATE) >= :week_start
                 AND a.parent_id IS NOT NULL
                 AND a.section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
@@ -566,10 +575,13 @@ class SyncLegacyDatabase extends Command
             OFFSET :offset
         ');
 
+        $weekStart = (new \DateTime('Monday this week'))->format('Y-m-d');
+        // $smtRead->setParameter('week_start', $week_start);
+
         $dropLibraries = [];
         $libraryPeriods = [];
 
-        foreach (result_iterator($smtRead) as $row) {
+        foreach (result_iterator($smtRead, ['week_start' => $weekStart]) as $row) {
             $row['days'] = json_decode($row['days']);
 
             // Utility functions require decoding as arrays
@@ -665,6 +677,8 @@ function result_iterator(Statement $statement, array $values = [], $encode_trans
         $statement->execute($values);
         $found = false;
 
+        printf("%d %d\n", $values['offset'], $BATCH_SIZE);
+
         while ($document = $statement->fetch()) {
             $found = true;
 
@@ -698,7 +712,7 @@ function read_query(Connection $db, string $table, array $fields) : Statement {
 
     $sql = "
         SELECT
-            id,
+            a.id,
             {$fields},
             jsonb_object_agg(t.langcode, to_jsonb(t) - 'langcode' - 'entity_id') AS translations
         FROM {$table} a
