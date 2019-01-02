@@ -350,22 +350,22 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->commit();
 
-        $smtTest = $this->currentDb->prepare('
-            SELECT id
-            FROM organisations
-            WHERE state = -1
-        ');
-
-        $smtDelete = $this->legacyDb->prepare('
-            DELETE
-            FROM organisations
-            WHERE id = :id
-        ');
-
-        foreach ($smtTest as $row) {
-            $smtDelete->execute($row);
-            printf("Deleted library %d\n", $row['id']);
-        }
+        // $smtTest = $this->currentDb->prepare('
+        //     SELECT id
+        //     FROM organisations
+        //     WHERE state = -1
+        // ');
+        //
+        // $smtDelete = $this->legacyDb->prepare('
+        //     DELETE
+        //     FROM organisations
+        //     WHERE id = :id
+        // ');
+        //
+        // foreach ($smtTest as $row) {
+        //     $smtDelete->execute($row);
+        //     printf("Deleted library %d\n", $row['id']);
+        // }
     }
 
     private function syncServices() : void
