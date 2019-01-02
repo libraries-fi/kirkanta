@@ -146,11 +146,11 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->beginTransaction();
 
-        // $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function(&$row) {
-        //     // Set a fallback value because API users don't really care about this,
-        //     // so we don't bother syncing regions.
-        //     $row['region_id'] = 1003;
-        // });
+        $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function(&$row) {
+            // Set a fallback value because API users don't really care about this,
+            // so we don't bother syncing regions.
+            $row['region_id'] = 1003;
+        });
 
         $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
             if ($row['coordinates']) {
@@ -158,19 +158,10 @@ class SyncLegacyDatabase extends Command
                 $row['coordinates'] = "{$lat}, {$lon}";
             }
 
-            static $xoo = 0;
-
-            // print $row['id'] . PHP_EOL;
-
-            // print ++$xoo . PHP_EOL;
-
             // In legacy DB, coordinates exist in organisations table.
             $this->cache->coords[$row['id']] = $row['coordinates'];
             unset($row['coordinates']);
         });
-
-        $this->legacyDb->commit();
-        exit('sync addr');
 
         $this->synchronize('organisations', 'organisations', [
             'role',
@@ -358,6 +349,35 @@ class SyncLegacyDatabase extends Command
         });
 
         $this->legacyDb->commit();
+
+        $smtRead = $this->legacyDb->query('
+            SELECT
+                id
+            FROM organisations
+            WHERE type = \'library\'
+            ORDER BY id
+        ');
+
+        $smtTest = $this->currentDb->prepare('
+            SELECT COUNT(*)
+            FROM organisations
+            WHERE id = :id
+        ');
+
+        $smtDelete = $this->legacyDb->prepare('
+            DELETE
+            FROM organisations
+            WHERE id = :id
+        ');
+
+        foreach ($smtRead as $row) {
+            $smtTest->execute($row);
+
+            if (!$smtTest->fetchColumn()) {
+                $smtDelete->execute($row);
+                printf("Deleted library %d\n", $row['id']);
+            }
+        }
     }
 
     private function syncServices() : void
@@ -677,7 +697,7 @@ function result_iterator(Statement $statement, array $values = [], $encode_trans
         $statement->execute($values);
         $found = false;
 
-        printf("%d %d\n", $values['offset'], $BATCH_SIZE);
+        // printf("%d %d\n", $values['offset'], $BATCH_SIZE);
 
         while ($document = $statement->fetch()) {
             $found = true;

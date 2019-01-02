@@ -2129,3 +2129,11 @@ UPDATE organisations SET type = 'municipal' WHERE type = 'library';
 
 UPDATE consortiums SET created = modified WHERE created IS NULL;
 ALTER TABLE consortiums ALTER created SET NOT NULL;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+-- Delete empty address entities created after change to using entities instead of FormData.
+DELETE FROM addresses WHERE id IN (SELECT a.id FROM addresses a LEFT JOIN addresses_data b ON a.id = b.entity_id WHERE b.entity_id IS NULL);
