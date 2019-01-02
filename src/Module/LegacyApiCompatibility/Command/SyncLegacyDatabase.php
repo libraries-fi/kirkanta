@@ -350,18 +350,10 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->commit();
 
-        $smtRead = $this->legacyDb->query('
-            SELECT
-                id
-            FROM organisations
-            WHERE type = \'library\'
-            ORDER BY id
-        ');
-
         $smtTest = $this->currentDb->prepare('
-            SELECT COUNT(*)
+            SELECT id
             FROM organisations
-            WHERE id = :id
+            WHERE state = -1
         ');
 
         $smtDelete = $this->legacyDb->prepare('
@@ -370,13 +362,9 @@ class SyncLegacyDatabase extends Command
             WHERE id = :id
         ');
 
-        foreach ($smtRead as $row) {
-            $smtTest->execute($row);
-
-            if (!$smtTest->fetchColumn()) {
-                $smtDelete->execute($row);
-                printf("Deleted library %d\n", $row['id']);
-            }
+        foreach ($smtTest as $row) {
+            $smtDelete->execute($row);
+            printf("Deleted library %d\n", $row['id']);
         }
     }
 
