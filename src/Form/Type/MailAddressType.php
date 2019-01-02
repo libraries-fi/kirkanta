@@ -30,8 +30,6 @@ class MailAddressType extends BaseType
                 ]
             ])
             ;
-
-        // $builder->get('area')->addModelTransformer(new CallbackTransformer('mb_strtoupper', 'mb_strtoupper'));
     }
 
     public function configureOptions(OptionsResolver $options) : void

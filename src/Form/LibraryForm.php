@@ -123,5 +123,14 @@ class LibraryForm extends EntityFormType
                 ]);
             }
         });
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+            $library = $event->getData();
+            $mailAddress = $library->getMailAddress();
+
+            if (!count($mailAddress->getTranslations())) {
+                $library->setMailAddress(null);
+            }
+        });
     }
 }
