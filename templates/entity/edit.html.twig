@@ -33,9 +33,15 @@
       <div class="hud-group">
         <div class="input-group">
           <div class="input-group-prepend">
-            <a href="{{ path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link" aria-label="{{ 'Manage translations'|trans }}" title="{{ 'Manage translations'|trans }}" id="btn-manage-entity-translations">
-              <i class="fas fa-globe" aria-hidden="true"></i>
-            </a>
+            {% block translate_button_outer %}
+              {% set translate_button_url = path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) %}
+
+              {% block translate_button %}
+                <a href="{{ translate_button_url }}" class="btn btn-link" aria-label="{{ 'Manage translations'|trans }}" title="{{ 'Manage translations'|trans }}" id="btn-manage-entity-translations">
+                  <i class="fas fa-globe" aria-hidden="true"></i>
+                </a>
+              {% endblock %}
+            {% endblock %}
           </div>
           {{ form_widget(form.content_language, {"attr": {"data-app": "content-language"}}) }}
         </div>
@@ -74,6 +80,10 @@
       {% endblock %}
     </div>
   </div>
+
+  {% block form_header_appendix %}
+
+  {% endblock %}
 
   {% with {flash_namespace: "form"} %}
     {{ block("flashes", "common-blocks.html.twig") }}

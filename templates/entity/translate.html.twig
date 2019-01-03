@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-  <form class="border p-3 mb-3" action="{{ path('entity.' ~ entity_type ~ '.translate', {(entity_type): entity_id}) }}" method="post">
+  <form class="border p-3 mb-3" method="post">
     <input type="hidden" name="action" value="add"/>
 
     <h3>{% trans %}Available translations{% endtrans %}</h3>

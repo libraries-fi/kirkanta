@@ -174,7 +174,6 @@ class EntityController extends Controller
                     ]);
 
             }
-            exit('POST');
         }
 
         return [

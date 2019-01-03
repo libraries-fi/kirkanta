@@ -251,6 +251,11 @@ class OrganisationController extends Controller
             ]);
         }
 
+        $langcode = $request->query->get('langcode');
+        if ($langcode && !$entity->hasTranslation($langcode)) {
+            $this->addFlash('form.warning', 'Creating a new translation');
+        }
+
         return [
             'form' => $form->createView(),
             'type_label' => $this->types->getTypeLabel($type_id),
@@ -275,6 +280,20 @@ class OrganisationController extends Controller
             $type_id => $resource_id,
         ]);
 
+        return $response;
+    }
+
+    /**
+     * @ParamConverter("library", converter="entity_from_type_and_id")
+     */
+    public function translateResource(Request $request, $library, string $entity_type, string $resource, int $resource_id)
+    {
+        $type_id = $this->resolveResourceTypeId($entity_type, $resource);
+
+        $response = $this->forward(EntityController::class . '::translate', [
+            'entity_type' => $type_id,
+            $type_id => $resource_id,
+        ]);
         return $response;
     }
 
