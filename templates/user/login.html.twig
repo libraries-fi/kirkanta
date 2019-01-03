@@ -10,7 +10,7 @@
 
         {% if error %}
           <div class="alert alert-danger">
-            <p>{{ error }}</p>
+            {{ error.message|trans }}
           </div>
         {% endif %}
         <form method="post">
