@@ -2137,3 +2137,13 @@ ALTER TABLE consortiums ALTER created SET NOT NULL;
 
 -- Delete empty address entities created after change to using entities instead of FormData.
 DELETE FROM addresses WHERE id IN (SELECT a.id FROM addresses a LEFT JOIN addresses_data b ON a.id = b.entity_id WHERE b.entity_id IS NULL);
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+UPDATE service_instances SET shared = true WHERE parent_id IS NULL AND shared = false;
