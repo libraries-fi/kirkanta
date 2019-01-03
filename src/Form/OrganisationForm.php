@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Entity\LibraryData;
+use App\Entity\Organisation;
 use App\Form\Type\StateChoiceType;
 use App\Util\LibraryTypes;
 use App\Util\OrganisationTypes;
@@ -20,14 +22,14 @@ class OrganisationForm extends EntityFormType
     {
         parent::configureOptions($options);
         $options->setDefaults([
-            'data_class' => \App\Entity\Organisation::class,
+            'data_class' => Organisation::class,
         ]);
     }
 
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         parent::form($builder, $options);
-        
+
         $builder
             ->add('state', StateChoiceType::class)
             // ->add('address', AddressType::class, [
@@ -38,6 +40,9 @@ class OrganisationForm extends EntityFormType
             // ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\OrganisationDataType::class,
+                'entry_options' => [
+                    'data_class' => LibraryData::class
+                ]
             ])
 
             ;
