@@ -6,6 +6,7 @@ use App\Form\SearchFormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SearchForm extends SearchFormType
 {
@@ -26,6 +27,14 @@ class SearchForm extends SearchFormType
 
         $builder->add('only_null', CheckboxType::class, [
             'label' => 'Untranslated only'
+        ]);
+    }
+
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => null,
         ]);
     }
 }
