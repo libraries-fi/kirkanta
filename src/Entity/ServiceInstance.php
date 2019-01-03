@@ -60,7 +60,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
     /**
      * @ORM\Column(type="boolean")
      */
-    private $shared = false;
+    private $shared = true;
 
     /**
      * @ORM\OneToMany(targetEntity="ServiceInstanceData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
@@ -195,6 +195,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
     {
         $this->parent = $library;
         $this->parent->getServices()->add($this);
+        $this->shared = false;
     }
 
     public function getLibrary() : ?Library
