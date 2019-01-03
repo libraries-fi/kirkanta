@@ -573,6 +573,7 @@ class SyncLegacyDatabase extends Command
             INNER JOIN periods_data t ON a.id = t.entity_id
             WHERE COALESCE(a.valid_until, CURRENT_DATE) >= :week_start
                 AND a.parent_id IS NOT NULL
+                AND a.department_id IS NULL
                 AND a.section = \'default\' -- THIS FIELD WILL BE DROPPED ON DB UPGRADE
 
                 -- AND a.id = 299673 -- DEBUG STUFF
