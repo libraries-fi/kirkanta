@@ -227,7 +227,7 @@ class SyncLegacyDatabase extends Command
                 unset($data['email_id']);
                 unset($data['homepage_id']);
                 unset($data['phone_id']);
-                unset($data['slug']);
+                // unset($data['slug']);
 
                 if (mb_strlen($data['slogan']) > 150) {
                     $data['slogan'] = mb_substr($data['slogan'], 0, 147) . '...';
