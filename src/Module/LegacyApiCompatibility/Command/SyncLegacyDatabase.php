@@ -253,6 +253,12 @@ class SyncLegacyDatabase extends Command
             }
         });
 
+        $this->legacyDb->query('
+            UPDATE organisations
+            SET type = \'library\'
+            WHERE type IS NULL
+        ');
+
         $this->legacyDb->query('DELETE FROM pictures WHERE organisation_id IS NOT NULL');
 
         $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover'], function(&$row) {
