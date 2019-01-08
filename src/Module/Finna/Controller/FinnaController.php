@@ -38,21 +38,15 @@ class FinnaController extends Controller
         $entity = new FinnaAdditions;
         $entity->setConsortium($consortium);
 
-        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', new FormData([
-            'consortium' => $consortium,
-            'service_point' => null,
-        ]));
+        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', $entity);
 
         $form->remove('exclusive');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->types->getEntityManager();
-
-            $entity = $em->getRepository(FinnaAdditions::class)->create($form->getData()->getValues());
-
             $entity->setExclusive(false);
 
+            $em = $this->types->getEntityManager();
             $em->persist($entity);
             $em->flush();
 
