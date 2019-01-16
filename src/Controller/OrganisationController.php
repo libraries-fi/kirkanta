@@ -193,7 +193,8 @@ class OrganisationController extends Controller
     public function addResource(Request $request, $library, string $entity_type, string $resource)
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
-        $form = $this->types->getForm($type_id, 'edit', null, [
+        $entity = $this->types->create($type_id);
+        $form = $this->types->getForm($type_id, 'edit', $entity, [
             'context_entity' => $library,
             'disable_ownership' => true,
         ]);
