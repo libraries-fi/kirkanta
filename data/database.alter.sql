@@ -2147,3 +2147,16 @@ DELETE FROM addresses WHERE id IN (SELECT a.id FROM addresses a LEFT JOIN addres
 
 
 UPDATE service_instances SET shared = true WHERE parent_id IS NULL AND shared = false;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+ALTER TABLE persons RENAME COLUMN qualities TO qualities_old;
+ALTER TABLE persons ADD COLUMN qualities text[];
+
+-- Convert person qualities from JSON array to text[].
+UPDATE persons SET qualities = array(SELECT jsonb_array_elements_text(qualities_old)) WHERE jsonb_typeof(qualities_old) = 'array';
+
+ALTER TABLE

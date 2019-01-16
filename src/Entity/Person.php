@@ -46,7 +46,7 @@ class Person extends EntityBase implements CreatedAwareness, GroupOwnership, Sta
     private $email_public = true;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="text[]")
      */
     private $qualities;
 
