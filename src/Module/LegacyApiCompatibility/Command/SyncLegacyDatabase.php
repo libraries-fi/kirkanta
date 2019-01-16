@@ -438,6 +438,14 @@ class SyncLegacyDatabase extends Command
             $row['is_head'] = $row['is_head'] ? 't' : 'f';
 
             $row['group_id'] = self::GROUP_NOBODY;
+
+
+            if ($row['qualities']) {
+                $row['qualities'] = json_encode($row['qualities']);
+                // var_dump($row);
+                // exit('stop');
+
+            }
         });
 
         $this->legacyDb->commit();
