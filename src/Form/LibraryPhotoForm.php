@@ -55,11 +55,11 @@ class LibraryPhotoForm extends EntityFormType
             ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
-            if ($event->getData() instanceof LibraryPhoto) {
+            if ($event->getData()->isNew()) {
+                $event->getForm()->remove('filename');
+            } else {
                 $event->getForm()->remove('file');
                 $event->getForm()->get('filename')->setData($event->getData()->getFilename());
-            } else {
-                $event->getForm()->remove('filename');
             }
         });
 
