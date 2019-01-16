@@ -2158,5 +2158,3 @@ ALTER TABLE persons ADD COLUMN qualities text[];
 
 -- Convert person qualities from JSON array to text[].
 UPDATE persons SET qualities = array(SELECT jsonb_array_elements_text(qualities_old)) WHERE jsonb_typeof(qualities_old) = 'array';
-
-ALTER TABLE
