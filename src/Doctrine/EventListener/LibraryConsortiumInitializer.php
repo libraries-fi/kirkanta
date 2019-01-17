@@ -21,7 +21,7 @@ class LibraryConsortiumInitializer
 
     private function initializeConsortium(LibraryInterface $library) : void
     {
-        $allowed_types = ['library', 'mail_library', 'music', 'regional', 'mobile'];
+        $allowed_types = ['municipal', 'main_library', 'music', 'regional', 'mobile'];
 
         if (in_array($library->getType(), $allowed_types)) {
             if (!$library->getConsortium()) {
