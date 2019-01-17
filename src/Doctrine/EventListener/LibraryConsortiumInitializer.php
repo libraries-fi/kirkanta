@@ -2,24 +2,24 @@
 
 namespace App\Doctrine\EventListener;
 
-use App\Entity\LibraryInterface;
+use App\Entity\Library;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 
 class LibraryConsortiumInitializer
 {
-    public function prePersist(LibraryInterface $library, LifecycleEventArgs $args) : void
+    public function prePersist(Library $library, LifecycleEventArgs $args) : void
     {
         $this->initializeConsortium($library);
     }
 
-    public function preUpdate(LibraryInterface $library, LifecycleEventArgs $args) : void
+    public function preUpdate(Library $library, LifecycleEventArgs $args) : void
     {
         $this->initializeConsortium($library);
     }
 
-    private function initializeConsortium(LibraryInterface $library) : void
+    private function initializeConsortium(Library $library) : void
     {
         $allowed_types = ['municipal', 'main_library', 'music', 'regional', 'mobile'];
 
