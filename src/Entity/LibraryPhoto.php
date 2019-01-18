@@ -11,6 +11,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"App\Doctrine\EntityListener\DefaultPictureListener"})
  * @Vich\Uploadable
  */
 class LibraryPhoto extends Picture implements Translatable, Weight
@@ -49,6 +50,12 @@ class LibraryPhoto extends Picture implements Translatable, Weight
      * @Vich\UploadableField(mapping="library_photo", fileNameProperty="filename", size="filesize", mimeType="mime_type", dimensions="dimensions", originalName="originalName")
      */
     protected $file;
+
+    /**
+     * NOT a Doctrine property. Instead will be used to sort a collection
+     * of photos in an entity listener.
+     */
+    private $default_picture = false;
 
     public function getParent() : LibraryInterface
     {
@@ -113,5 +120,16 @@ class LibraryPhoto extends Picture implements Translatable, Weight
     public function getLibrary() : LibraryInterface
     {
         return $this->getParent();
+    }
+
+    public function setDefaultPicture($state = true) : void
+    {
+        $this->default_picture = $state;
+        $this->setWeight(0);
+    }
+
+    public function isDefaultPicture() : bool
+    {
+        return $this->getWeight() === 0;
     }
 }

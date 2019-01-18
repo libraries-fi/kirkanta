@@ -46,12 +46,10 @@ class LibraryPhotoForm extends EntityFormType
             ])
             ->add('default_picture', CheckboxType::class, [
                 'required' => false,
-                'mapped' => false,
             ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\OrganisationPhotoDataType::class
             ])
-
             ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
@@ -66,12 +64,6 @@ class LibraryPhotoForm extends EntityFormType
         $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
             if ($event->getForm()->has('filename')) {
                 $event->getForm()->get('filename')->setData($event->getData()->getFilename());
-            }
-        });
-
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
-            if ($event->getForm()->get('default_picture')->getData()) {
-                $event->getData()->setWeight(0);
             }
         });
     }
