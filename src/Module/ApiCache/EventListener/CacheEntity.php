@@ -44,21 +44,21 @@ class CacheEntity
             return;
         }
 
-        $this->insideOwnFlush = true;
-
         if ($this->queue) {
+            $this->insideOwnFlush = true;
             $entities = array_unique($this->queue, SORT_REGULAR);
             $this->queue = [];
 
             foreach ($entities as $entity) {
                 $this->manager->write($entity);
             }
+
+            // Need to flush even though DocumentManager executes a DQL query.
+            $this->manager->getEntityManager()->flush();
+
+            $this->insideOwnFlush = false;
         }
 
-        // Need to flush even though DocumentManager executes a DQL query.
-        $this->manager->getEntityManager()->flush();
-
-        $this->insideOwnFlush = false;
     }
 
     private function getParentEntity($entity)
