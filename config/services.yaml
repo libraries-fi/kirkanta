@@ -53,7 +53,7 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, lazy: true, priority: -1000 }
             - { name: doctrine.event_listener, event: postUpdate, lazy: true, priority: -1000 }
-            - { name: doctrine.event_listener, event: postFlush, lazy: true, priority: -1000 }
+            - { name: kernel.event_listener, event: kernel.terminate }
 
     App\Form\Extension\EntityTypeExtension:
         tags:

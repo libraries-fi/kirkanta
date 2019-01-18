@@ -21,6 +21,15 @@ class LibraryNormalizer implements NormalizerInterface
 
     public function normalize($object, $format = null, array $context = [])
     {
+        /**
+         * Reset all weighted collections to ensure that entries are
+         * ordered correctly after a possible re-order.
+         */
+        $object->getPictures()->setInitialized(false);
+        $object->getPhoneNumbers()->setInitialized(false);
+        $object->getLinks()->setInitialized(false);
+        $object->getEmailAddresses()->setInitialized(false);
+
         $values = $this->inner->normalize($object, $format, $context);
         $values['coverPhoto'] = $values['pictures'][0]['files'] ?? null;
         $values['coordinates'] = $values['address']['coordinates'];
@@ -33,6 +42,7 @@ class LibraryNormalizer implements NormalizerInterface
         ];
 
         unset($values['email'], $values['phone'], $values['homepage']);
+
         return $values;
     }
 }

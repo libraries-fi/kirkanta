@@ -4,6 +4,7 @@ namespace App\Doctrine\EntityListener;
 
 use App\Entity\LibraryPhoto;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\PersistentCollection;
 
 class DefaultPictureListener
 {

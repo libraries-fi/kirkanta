@@ -37,15 +37,9 @@ class CacheEntity
         }
     }
 
-    public function postFlush() : void
+    public function onKernelTerminate()
     {
-        if ($this->insideOwnFlush) {
-            $this->queue = [];
-            return;
-        }
-
         if ($this->queue) {
-            $this->insideOwnFlush = true;
             $entities = array_unique($this->queue, SORT_REGULAR);
             $this->queue = [];
 
@@ -55,10 +49,7 @@ class CacheEntity
 
             // Need to flush even though DocumentManager executes a DQL query.
             $this->manager->getEntityManager()->flush();
-
-            $this->insideOwnFlush = false;
         }
-
     }
 
     private function getParentEntity($entity)
