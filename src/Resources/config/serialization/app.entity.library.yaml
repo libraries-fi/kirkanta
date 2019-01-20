@@ -32,6 +32,12 @@ App\Entity\Library:
       groups: ['default', 'api_cache']
     modified:
       groups: ['default', 'api_cache']
+    buses:
+      groups: ['default']
+    trains:
+      groups: ['default']
+    trams:
+      groups: ['default']
 
 App\Entity\LibraryData:
   attributes:
@@ -50,6 +56,10 @@ App\Entity\LibraryData:
     slogan:
       groups: ['default']
     description:
+      groups: ['default']
+    transit_directions:
+      groups: ['default']
+    parking_instructions:
       groups: ['default']
 
 App\Entity\Address:

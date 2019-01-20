@@ -43,6 +43,16 @@ class LibraryNormalizer implements NormalizerInterface
 
         unset($values['email'], $values['phone'], $values['homepage']);
 
+        $values['transitInfo'] = [
+            'buses' => $values['buses'],
+            'trams' => $values['trams'],
+            'trains' => $values['trains'],
+            'parking' => $values['parkingInstructions'],
+            'directions' => $values['transitDirections'],
+        ];
+
+        unset($values['buses'], $values['trams'], $values['trains'], $values['parkingInstructions'], $values['transitDirections']);
+
         return $values;
     }
 }

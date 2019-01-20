@@ -26,3 +26,9 @@ App\Entity\ServicePoint:
       groups: ['default', 'api_cache']
     modified:
       groups: ['default', 'api_cache']
+    buses:
+      groups: ['default']
+    trains:
+      groups: ['default']
+    trams:
+      groups: ['default']
