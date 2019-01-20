@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Feature\StateAwareness;
 use App\Entity\Library;
+use App\Entity\LibraryData;
 use App\Entity\Organisation;
 use App\Form\Type\AddressType;
 use App\Form\Type\MailAddressType;
@@ -93,6 +94,9 @@ class LibraryForm extends EntityFormType
             ])
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\LibraryDataType::class,
+                'entry_options' => [
+                    'data_class' => LibraryData::class,
+                ]
             ])
 
             ;
