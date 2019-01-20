@@ -44,9 +44,9 @@ class LibraryNormalizer implements NormalizerInterface
         unset($values['email'], $values['phone'], $values['homepage']);
 
         $values['transitInfo'] = [
-            'buses' => $values['buses'],
-            'trams' => $values['trams'],
-            'trains' => $values['trains'],
+            'buses' => $values['buses'] ?: null,
+            'trams' => $values['trams'] ?: null,
+            'trains' => $values['trains'] ?: null,
             'parking' => $values['parkingInstructions'],
             'directions' => $values['transitDirections'],
         ];
