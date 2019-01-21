@@ -236,16 +236,6 @@ trait LibraryTrait
         $this->translations[$this->langcode]->setParkingInstructions($info);
     }
 
-    public function getEmail() : string
-    {
-        return $this->translations[$this->langcode]->getEmail();
-    }
-
-    public function setEmail(string $email) : void
-    {
-        $this->translations[$this->langcode]->setEmail($email);
-    }
-
     public function getHomepage() : ?string
     {
         return $this->translations[$this->langcode]->getHomepage();
@@ -370,6 +360,16 @@ trait LibraryTrait
         return $this->links;
     }
 
+    public function getEmail() : ?EmailAddress
+    {
+        return $this->translations[$this->langcode]->getEmail();
+    }
+
+    public function setEmail(?EmailAddress $email) : void
+    {
+        $this->translations[$this->langcode]->setEmail($email);
+    }
+
     public function getCustomData() : array
     {
         /**
@@ -402,5 +402,12 @@ trait LibraryTrait
         }
 
         return $keywords;
+    }
+
+    public function getCoordinates() : ?string
+    {
+        if ($a = $this->getAddress()) {
+            return $a->getCoordinates();
+        }
     }
 }

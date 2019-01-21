@@ -255,6 +255,9 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         $menu->addChild('Service tree', [
             'route' => 'entity.service_category.collection',
         ]);
+        $menu->addChild('Export contact info', [
+            'route' => 'export.library-contact-info'
+        ]);
 
         return $menu;
     }

@@ -47,8 +47,8 @@ interface LibraryInterface extends ApiCacheable
   public function getParkingInstructions() : ?string;
   public function setParkingInstructions(?string $info) : void;
 
-  public function getEmail() : string;
-  public function setEmail(string $email) : void;
+  public function getEmail() : ?EmailAddress;
+  public function setEmail(?EmailAddress $email) : void;
 
   public function getHomepage() : ?string;
   public function setHomepage(?string $homepage) : void;
@@ -85,4 +85,6 @@ interface LibraryInterface extends ApiCacheable
 
   public function getCustomData() : array;
   public function setCustomData(array $entries) : void;
+
+  public function getCoordinates() : ?string;
 }

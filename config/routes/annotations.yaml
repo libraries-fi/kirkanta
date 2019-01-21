@@ -14,6 +14,10 @@ finna_additions:
     type: annotation
     resource: '../../src/Module/Finna/Controller/'
 
+export_library_contact_info:
+    type: annotation
+    resource: '../../src/Module/ExportLibraryContactInfo/Controller/'
+
 controllers:
     type: annotation
     resource: '../../src/Controller/'
