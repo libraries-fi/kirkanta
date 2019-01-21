@@ -161,7 +161,7 @@ class ExportController extends Controller
         if ($is_mail_address) {
             $street = $address->getStreet();
             $zipcode = $address->getZipcode();
-            $city = $address->getArea();
+            $city = mb_strtoupper($address->getArea());
             $postBox = $address->getBoxNumber();
 
             $formatted = "{$zipcode} {$city}";
