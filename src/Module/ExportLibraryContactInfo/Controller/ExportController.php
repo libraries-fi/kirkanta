@@ -115,7 +115,7 @@ class ExportController extends Controller
                         $export[] = [];
                     }
                     $lastCity = $library->getCity();
-                    $export[][$headers[0]] = $lastCity->getName();
+                    $export[][$headers[0]] = mb_strtoupper($lastCity->getName());
                 }
             }
 
