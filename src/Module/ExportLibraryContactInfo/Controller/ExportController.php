@@ -136,6 +136,10 @@ class ExportController extends Controller
             array_pop($headers);
         }
 
+        if (!$lastModified) {
+            $lastModified = new \DateTime;
+        }
+
         $date = date('Y-m-d');
 
         $headers = [
