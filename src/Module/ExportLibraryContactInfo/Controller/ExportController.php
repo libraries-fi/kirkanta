@@ -52,6 +52,13 @@ class ExportController extends Controller
 
         $form->handleRequest($request);
 
+        if (!$form->isSubmitted()) {
+            $form->setData([
+                'types' => ['municipal'],
+                'group' => true,
+            ]);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             // return $this->forward('App\Module\ExportLibraryContactInfo\Controller\ExportController::export');
 
