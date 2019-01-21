@@ -60,8 +60,6 @@ class ExportController extends Controller
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // return $this->forward('App\Module\ExportLibraryContactInfo\Controller\ExportController::export');
-
             return $this->export((object)$form->getData());
         }
 
