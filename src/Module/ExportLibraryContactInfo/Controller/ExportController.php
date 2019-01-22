@@ -144,7 +144,7 @@ class ExportController extends Controller
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => "attachment;filename=Kirjastojen yhteystiedot {$date}.csv",
+            'Content-Disposition' => "attachment; filename=\"Kirjastojen yhteystiedot {$date}.csv\"",
             'Last-Modified' => $lastModified->format('D, d M Y H:i:s \G\M\T'),
         ];
 
