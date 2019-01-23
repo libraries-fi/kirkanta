@@ -104,10 +104,10 @@ class LibraryForm extends EntityFormType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
             $library = $event->getData();
 
-            if ($library instanceof Library) {
-                $groups = $library->getGroup()->getTree();
-            } else {
+            if ($library->isNew()) {
                 $groups = $this->auth->getUser()->getGroup()->getTree();
+            } else {
+                $groups = $library->getGroup()->getTree();
             }
 
             if ($groups) {
