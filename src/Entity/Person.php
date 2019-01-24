@@ -148,7 +148,7 @@ class Person extends EntityBase implements CreatedAwareness, GroupOwnership, Sta
         return $this->email;
     }
 
-    public function setEmail(string $email) : void
+    public function setEmail(?string $email) : void
     {
         $this->email = $email;
     }
@@ -158,7 +158,7 @@ class Person extends EntityBase implements CreatedAwareness, GroupOwnership, Sta
         return $this->phone;
     }
 
-    public function setPhone(string $phone) : void
+    public function setPhone(?string $phone) : void
     {
         $this->phone = $phone;
     }
