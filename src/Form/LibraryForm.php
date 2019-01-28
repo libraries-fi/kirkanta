@@ -96,6 +96,8 @@ class LibraryForm extends EntityFormType
                 'entry_type' => EntityData\LibraryDataType::class,
                 'entry_options' => [
                     'data_class' => LibraryData::class,
+                    'is_library_form' => is_a($options['data_class'], Library::class, true),
+
                 ]
             ])
 
