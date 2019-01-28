@@ -44,6 +44,7 @@ class EntityRouteLoader extends Loader
             'period',
             'person',
             'service_instance',
+            'service_point',
         ];
 
         foreach ($types as $type_id => $definition) {
