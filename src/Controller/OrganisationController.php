@@ -286,6 +286,7 @@ class OrganisationController extends Controller
 
     /**
      * @ParamConverter("library", converter="entity_from_type_and_id")
+     * @ParamConverter("service_point", converter="entity_from_type_and_id")
      */
     public function translateResource(Request $request, $library, string $entity_type, string $resource, int $resource_id)
     {
