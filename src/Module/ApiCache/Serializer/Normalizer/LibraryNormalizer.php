@@ -31,6 +31,24 @@ class LibraryNormalizer implements NormalizerInterface
         $object->getEmailAddresses()->setInitialized(false);
 
         $values = $this->inner->normalize($object, $format, $context);
+        $sortedPictures = [];
+
+        /**
+         * Despite all sort of tricks and hacks, the pictures seem to not be sorted
+         * properly in the source collection. So we resort to manually sorting them
+         * here. Maybe this should then be applied to other sortable collections
+         * as well but pictures are most critical due to the upfront nature of
+         * the cover photo.
+         */
+        foreach ($object->getPictures() as $i => $picture) {
+            $sortedPictures[] = [$picture->getWeight(), $values['pictures'][$i]];
+        }
+
+        usort($sortedPictures, function($a, $b) {
+            return $a[0] - $b[0];
+        });
+
+        $values['pictures'] = array_column($sortedPictures, 1);
         $values['coverPhoto'] = $values['pictures'][0]['files'] ?? null;
         $values['coordinates'] = $values['address']['coordinates'];
         unset($values['address']['coordinates']);
