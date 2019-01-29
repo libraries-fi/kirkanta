@@ -51,12 +51,6 @@ class LibraryPhoto extends Picture implements Translatable, Weight
      */
     protected $file;
 
-    /**
-     * NOT a Doctrine property. Instead will be used to sort a collection
-     * of photos in an entity listener.
-     */
-    private $default_picture = false;
-
     public function getParent() : LibraryInterface
     {
         return $this->parent;
@@ -124,12 +118,21 @@ class LibraryPhoto extends Picture implements Translatable, Weight
 
     public function setDefaultPicture($state = true) : void
     {
-        $this->default_picture = $state;
-        $this->setWeight(0);
+        $this->cover = $state;
+
+        if ($state) {
+            $this->setWeight(0);
+        }
     }
 
     public function isDefaultPicture() : bool
     {
-        return $this->getWeight() === 0;
+        return $this->cover;
+    }
+
+    public function setWeight(int $weight) : void
+    {
+        $this->weight = $weight;
+        $this->cover = $weight == 0;
     }
 }
