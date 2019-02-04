@@ -104,6 +104,7 @@ class ScheduleManager
                         $row['staff'] = isset($tuple['staff']) ? ($tuple['staff'] ? 't' : 'f') : 't';
 
                         $insert->execute($row);
+                        $row['info'] = null;
                     }
                 }
             }
