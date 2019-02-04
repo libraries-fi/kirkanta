@@ -20,6 +20,8 @@ App\Entity\ServicePoint:
       groups: ['phone_numbers', 'api_cache']
     email_addresses:
       groups: ['phone_numbers', 'api_cache']
+    custom_data:
+      groups: ['custom_data', 'api_cache']
     pictures:
       groups: ['pictures', 'api_cache']
     created:

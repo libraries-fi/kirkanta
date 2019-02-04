@@ -72,7 +72,9 @@ class LibraryNormalizer implements NormalizerInterface
 
         unset($values['buses'], $values['trams'], $values['trains'], $values['parkingInstructions'], $values['transitDirections']);
 
-        $values['customData'] = $this->extractCustomData($object->getCustomData());
+        if (isset($values['customData'])) {
+            $values['customData'] = $this->extractCustomData($object->getCustomData());
+        }
 
         return $values;
     }
