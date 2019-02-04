@@ -31,6 +31,7 @@ class LibraryNormalizer implements NormalizerInterface
         $object->getEmailAddresses()->setInitialized(false);
 
         $values = $this->inner->normalize($object, $format, $context);
+
         $sortedPictures = [];
 
         /**
@@ -71,6 +72,54 @@ class LibraryNormalizer implements NormalizerInterface
 
         unset($values['buses'], $values['trams'], $values['trains'], $values['parkingInstructions'], $values['transitDirections']);
 
+        $values['customData'] = $this->extractCustomData($object->getCustomData());
+
         return $values;
+    }
+
+    private function extractCustomData(array $customData)
+    {
+        $entries = [];
+
+        foreach ($customData as $item) {
+            if (isset($item->translations)) {
+                $item = $this->convertLegacyData($item);
+            }
+
+            $entry = get_object_vars($item);
+            $fallback = null;
+
+            foreach ($item->value as $value) {
+                if (strlen($value) > 0) {
+                    $fallback = $value;
+                    break;
+                }
+            }
+
+            foreach ($entry['value'] as $langcode => $value) {
+                if (strlen($value) == 0) {
+                    $entry['value']->{$langcode} = $fallback;
+                }
+            }
+
+            $entries[] = $entry;
+        }
+
+        return $entries;
+    }
+
+    private function convertLegacyData(\stdClass $legacyItem) {
+        $item = (object)[
+            'id' => $legacyItem->id,
+            'title' => (object)['fi' => $legacyItem->title],
+            'value' => (object)['fi' => $legacyItem->value],
+        ];
+
+        foreach ($legacyItem->translations as $langcode => $trdata) {
+            $item->title->{$langcode} = $trdata->title;
+            $item->value->{$langcode} = $trdata->value;
+        }
+
+        return $item;
     }
 }

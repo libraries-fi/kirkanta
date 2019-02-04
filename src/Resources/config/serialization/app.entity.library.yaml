@@ -1,3 +1,6 @@
+stdClass:
+  attributes: ~
+
 App\Entity\Library:
   attributes:
     translations:
@@ -22,6 +25,8 @@ App\Entity\Library:
       groups: ['phone_numbers', 'api_cache']
     email_addresses:
       groups: ['phone_numbers', 'api_cache']
+    custom_data:
+      groups: ['custom_data', 'api_cache']
     persons:
       groups: ['persons', 'api_cache']
     pictures:
