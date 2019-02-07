@@ -76,6 +76,13 @@ class LibraryNormalizer implements NormalizerInterface
             $values['customData'] = $this->extractCustomData($object->getCustomData());
         }
 
+        if (empty($values['mailAddress']['zipcode']) && empty($values['mailAddress']['boxNumber'])) {
+            $values['mailAddress'] = null;
+        } else {
+            unset($values['mailAddress']['city']);
+            unset($values['mailAddress']['coordinates']);
+        }
+
         return $values;
     }
 
