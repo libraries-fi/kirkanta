@@ -7241,7 +7241,9 @@ form.period_form fieldset.period-schedules {
             columns: 4; } }
 
 #entity--user--add #user_form_expires .custom-select,
-#entity--user--add #user_form_expires .rw-dropdown-list {
+#entity--user--add #user_form_expires .rw-dropdown-list,
+#entity--user--edit #user_form_expires .custom-select,
+#entity--user--edit #user_form_expires .rw-dropdown-list {
   width: 8rem;
   margin-right: 1rem; }
 
