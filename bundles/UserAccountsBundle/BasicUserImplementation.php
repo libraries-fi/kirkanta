@@ -54,10 +54,10 @@ trait BasicUserImplementation
 
     public function getId() : int
     {
-        return $this->id;
+        return $this->id ?: 0;
     }
 
-    public function getUsername() : string
+    public function getUsername() : ?string
     {
         return $this->username;
     }

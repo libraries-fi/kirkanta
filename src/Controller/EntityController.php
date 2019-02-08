@@ -94,16 +94,11 @@ class EntityController extends Controller
         }
 
         return [
-            'form' => $form->createView(),
-        ];
-
-        $template = $this->resolveTemplate('edit', $entity_type);
-
-        return $this->render($template, [
             'type_label' => $this->entityTypeManager->getTypeLabel($entity_type),
             'form' => $form->createView(),
             'entity_type' => $entity_type,
-        ]);
+            $entity_type => $entity,
+        ];
     }
 
     /**

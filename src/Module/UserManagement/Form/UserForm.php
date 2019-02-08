@@ -38,6 +38,9 @@ class UserForm extends FormType
             ->add('expires', DateType::class, [
                 'label' => 'Expiration date',
                 'required' => false,
+                'attr' => [
+                    'data-no-custom'
+                ],
                 'placeholder' => [
                     'day' => '-- Day --',
                     'month' => '-- Month --',
