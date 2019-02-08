@@ -51,7 +51,6 @@ class EntityController extends Controller
 
         $result = $list_builder->load();
         $table = $list_builder->build($result);
-        $template = $this->resolveTemplate('collection', $entity_type);
 
         $actions = [
             'add' => [
