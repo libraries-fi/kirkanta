@@ -99,7 +99,11 @@ trait BasicUserImplementation
 
     public function getRoles() : array
     {
-        return $this->roles ?? [];
+        /**
+         * At least one role has to exist for the authentication to work.
+         * ROLE_USER is de facto in Symfony.
+         */
+        return array_merge($this->roles ?? [], ['ROLE_USER']);
     }
 
     public function setRoles(array $roles) : void

@@ -15,6 +15,22 @@
     </ul>
   </fieldset>
 
+  {% if form.group is defined %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Settings{% endtrans %}</legend>
+        {{ form_row(form.group) }}
+
+      {% if form.group_manager is defined %}
+        {{ form_row(form.group_manager) }}
+      {% endif %}
+
+      <ul>
+        <li class="text-muted">{% trans %}Group administrators are allowed to create new user accounts.{% endtrans %}</li>
+        <li class="text-danger">{% trans %}For safety reasons, the number of group administrators is limited.{% endtrans %}</li>
+      </ul>
+    </fieldset>
+  {% endif %}
+
   {% if form.password is defined %}
     <fieldset class="form-section">
       <legend>{% trans %}Password{% endtrans %}</legend>
@@ -26,21 +42,11 @@
     </fieldset>
   {% endif %}
 
-  <fieldset class="form-section">
-    <legend>{% trans %}Settings{% endtrans %}</legend>
-    {{ form_row(form.group) }}
-
-    {% if form.group_manager is defined %}
-      {{ form_row(form.group_manager) }}
-    {% endif %}
-
-    <ul>
-      <li class="text-muted">{% trans %}Group administrators are allowed to create new user accounts.{% endtrans %}</li>
-      <li class="text-danger">{% trans %}For safety reasons, the number of group administrators is limited.{% endtrans %}</li>
-    </ul>
-  </fieldset>
-
   {% block form_extra_groups %}
-
+    <fieldset class="form-section">
+      <legend>{% trans %}Permissions{% endtrans %}</legend>
+      {{ form_row(form.roles) }}
+      {{ form_row(form.expires) }}
+    </fieldset>
   {% endblock %}
 {% endblock %}

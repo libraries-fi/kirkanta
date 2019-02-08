@@ -44,6 +44,13 @@
     </fieldset>
   {% endblock %}
 
+  {% if form.password is defined %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Change password{% endtrans %}</legend>
+      {{ form_row(form.password) }}
+    </fieldset>
+  {% endif %}
+
   {% block form_account_management %}
     <fieldset class="form-section">
       <legend>{% trans %}User management{% endtrans %}</legend>
