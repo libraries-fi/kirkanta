@@ -25,7 +25,7 @@
     <ul>
       <li class="text-muted">{% trans %}Forgotten passwords can be changed by ordering a recovery link by email.{% endtrans %}</li>
       <li>
-        <a href="{{ path('user_management.request_reset_password') }}" class="btn btn-link pl-0">{% trans %}Send a recovery link{% endtrans %}</a>
+        <a href="{{ path('user_management.request_reset_password', { user: user.id }) }}" class="btn btn-link pl-0">{% trans %}Send a recovery link{% endtrans %}</a>
       </li>
     </ul>
   </fieldset>

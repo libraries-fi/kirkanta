@@ -14,6 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 use Swift_Mailer as Mailer;
 use Swift_Message as Email;
@@ -24,12 +26,15 @@ class TasksController extends Controller
 {
     private $entities;
     private $storage;
+    private $mailer;
+    private $auth;
 
-    public function __construct(EntityManagerInterface $entities, Mailer $mailer)
+    public function __construct(EntityManagerInterface $entities, Mailer $mailer, AuthorizationCheckerInterface $auth)
     {
         $this->entities = $entities;
         $this->storage = $entities->getRepository(OneTimeToken::class);
         $this->mailer = $mailer;
+        $this->auth = $auth;
     }
 
     /**
@@ -43,6 +48,22 @@ class TasksController extends Controller
                 'label' => 'Email address'
             ])
             ->getForm();
+
+        $requestUser = null;
+
+        if ($this->auth->isGranted('IS_AUTHENTICATED_FULLY')) {
+            /**
+             * Autofill email only when an admin requests password on behalf of
+             * other users. Attempt at preventing leaking of email addresses.
+             */
+            if ($uid = $request->query->get('user')) {
+                $requestUser = $this->entities->getRepository('App:User')->findOneById($uid);
+
+                if ($requestUser) {
+                    $form->setData(['email' => $requestUser->getEmail()]);
+                }
+            }
+        }
 
         $form->handleRequest($request);
 
@@ -61,9 +82,14 @@ class TasksController extends Controller
                 $this->entities->flush();
             }
 
-            $this->addFlash('success', 'If there was an account with this email address, you will be emailed with a recovery link.');
 
-            return $this->redirectToRoute('user_management.request_reset_password');
+            if ($requestUser) {
+                $this->addFlash('success', 'Recoery link was sent to the user.');
+                return $this->redirectToRoute('entity.user.collection');
+            } else {
+                $this->addFlash('success', 'If there was an account with this email address, you will be emailed with a recovery link.');
+                return $this->redirectToRoute('user_management.request_reset_password');
+            }
         }
 
         return [
