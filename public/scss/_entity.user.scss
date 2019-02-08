@@ -1,0 +1,9 @@
+#entity--user--add {
+  #user_form_expires {
+    .custom-select,
+    .rw-dropdown-list {
+      width: 8rem;
+      margin-right: spacing(3);
+    }
+  }
+}

@@ -19,7 +19,7 @@ document.querySelectorAll("select").forEach((select) => {
       } else if (b.tagName == 'OPTGROUP') {
         return 1;
       }
-      return a.text.localeCompare(b.text, 'fi');
+      return a.text.localeCompare(b.text, 'fi', { numeric: true });
     });
 
     sortableChildren.forEach((option, i) => {

@@ -7048,6 +7048,14 @@ label.required:after {
 .col-highlight {
   background-color: rgba(255, 255, 150, 0.35); }
 
+html {
+  margin-left: calc(100vw - 100%); }
+
+#nav-main,
+#l-breadcrumb {
+  margin-left: calc(100% - 100vw);
+  padding-left: calc(15px + 100vw - 100%); }
+
 .action-links {
   margin: 1rem;
   margin-right: 0;
@@ -7231,6 +7239,11 @@ form.period_form fieldset.period-schedules {
   #entity--library--persons--edit #person_form_qualities {
     -webkit-columns: 4;
             columns: 4; } }
+
+#entity--user--add #user_form_expires .custom-select,
+#entity--user--add #user_form_expires .rw-dropdown-list {
+  width: 8rem;
+  margin-right: 1rem; }
 
 /*
  * FIXME: variables.scss is copied here in-line due to pending issues.
