@@ -69,12 +69,18 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
 
     public function getStandardName() : ?string
     {
-        return $this->getTemplate()->getName();
+        if ($template = $this->getTemplate()) {
+            return $template->getName();
+        }
+        return null;
     }
 
     public function getType() : ?string
     {
-        return $this->getTemplate()->getType();
+        if ($template = $this->getTemplate()) {
+            return $template->getType();
+        }
+        return null;
     }
 
     public function isShared() : bool

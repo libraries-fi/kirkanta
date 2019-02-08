@@ -201,10 +201,6 @@ class OrganisationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $entity = $this->types->getRepository($type_id)->create($form->getData()->getValues());
-
-            $entity = $form->getData();
-
             if (method_exists($entity, 'setParent')) {
                 $entity->setParent($library);
             }
@@ -226,6 +222,9 @@ class OrganisationController extends Controller
 
         return [
             'form' => $form->createView(),
+            'type_label' => $this->types->getTypeLabel($type_id),
+            'entity_type' => $type_id,
+            $type_id => $entity,
         ];
     }
 

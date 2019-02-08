@@ -2,7 +2,12 @@
   {{ form_start(form) }}
   {{ block("form_header") }}
 
-  {% if entity is defined %}
+  {% if entity.new %}
+    <fieldset class="form-section">
+      <legend>{% trans %}Service{% endtrans %}</legend>
+      {{ form_row(form.template) }}
+    </fieldset>
+  {% else %}
     <fieldset class="form-section">
       <legend>{% trans %}Standard details{% endtrans %}</legend>
       <div class="form-group">
@@ -14,11 +19,6 @@
         <p class="form-control-static">{{ entity.type }}</p>
       </div>
       <p class="text-muted">{% trans %}Changing these details is restricted to administrators.{% endtrans %}</p>
-    </fieldset>
-  {% else %}
-    <fieldset class="form-section">
-      <legend>{% trans %}Service{% endtrans %}</legend>
-      {{ form_row(form.template) }}
     </fieldset>
   {% endif %}
 
