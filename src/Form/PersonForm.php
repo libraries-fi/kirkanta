@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Library;
 use App\Entity\Person;
+use App\Form\DataTransformer\PhoneNumberTransformer;
 use App\Form\Type\SimpleEntityType;
 use App\Form\Type\StateChoiceType;
 use App\Util\PersonQualities;
@@ -60,6 +61,8 @@ class PersonForm extends EntityFormType
                 'entry_type' => EntityData\PersonDataType::class
             ])
             ;
+
+        $builder->get('phone')->addModelTransformer(new PhoneNumberTransformer);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
             if ($event->getData()->isNew()) {

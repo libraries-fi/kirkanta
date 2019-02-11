@@ -25,7 +25,6 @@ class PhoneNumberForm extends ContactInfoForm
             'label' => 'Phone number'
         ]);
 
-        $builder->get('contact')
-          ->addModelTransformer(new PhoneNumberTransformer);
+        $builder->get('contact')->addModelTransformer(new PhoneNumberTransformer);
     }
 }
