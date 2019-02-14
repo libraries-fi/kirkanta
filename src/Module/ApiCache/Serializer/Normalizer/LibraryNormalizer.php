@@ -49,6 +49,10 @@ class LibraryNormalizer implements NormalizerInterface
             return $a[0] - $b[0];
         });
 
+        usort($values['persons'], function($a, $b) {
+            return strcasecmp("{$a['firstName']} {$a['lastName']}", "{$b['firstName']} {$b['lastName']}");
+        });
+
         $values['pictures'] = array_column($sortedPictures, 1);
         $values['coverPhoto'] = $values['pictures'][0]['files'] ?? null;
         $values['coordinates'] = $values['address']['coordinates'];
