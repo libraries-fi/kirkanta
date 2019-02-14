@@ -142,11 +142,12 @@ class ScheduleBuilder
         $to = clone $to;
         $range = new DatePeriod($from, new DateInterval('P1D'), $to->add(new DateInterval('P1D')));
         $source = array_values($period->getDays());
-        $index = $this->getWeight($period) < 7 ? 0 : $from->format('N') - 1;
         $schedules = [];
 
         $department = $period->getDepartment();
         $organisation = $period->getParent();
+
+        $index = $period->getValidFrom()->diff($from)->format('%a') % count($period->getDays());
 
         foreach ($range as $date) {
             $day = [
