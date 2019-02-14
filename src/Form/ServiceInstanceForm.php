@@ -7,6 +7,7 @@ use App\Entity\ServiceInstance;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -32,7 +33,7 @@ class ServiceInstanceForm extends EntityFormType
             ->add('email', EmailType::class, [
                 'required' => false,
             ])
-            ->add('phone_number', null, [
+            ->add('phone_number', TelType::class, [
                 'required' => false
             ])
             ->add('translations', I18n\EntityDataCollectionType::class, [

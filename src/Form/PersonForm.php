@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -44,7 +45,7 @@ class PersonForm extends EntityFormType
                 'label' => 'Email address can be published',
                 'required' => false
             ])
-            ->add('phone', null, [
+            ->add('phone', TelType::class, [
                 'required' => false
             ])
             ->add('head', CheckboxType::class, [
