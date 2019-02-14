@@ -64,11 +64,12 @@ class UpdateSchedules
             $entity = $event->getEntity();
 
             if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
+                $monday = new DateTime('Monday this week');
                 if ($event->hasChangedField('valid_from')) {
                     $begin = min($event->getOldValue('valid_from'), $event->getNewValue('valid_from'));
-                    $begin = max($begin, new DateTime);
+                    $begin = max($begin, $monday);
                 } else {
-                    $begin = max($entity->getValidFrom(), new DateTime);
+                    $begin = max($entity->getValidFrom(), $monday);
                 }
 
                 if ($event->hasChangedField('valid_until')) {
