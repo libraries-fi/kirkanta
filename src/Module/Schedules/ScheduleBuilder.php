@@ -147,9 +147,9 @@ class ScheduleBuilder
         $department = $period->getDepartment();
         $organisation = $period->getParent();
 
-        $offset = $period->getValidFrom()->format('N');
+        $offset = $period->getValidFrom()->format('N') - 1;
         $delta = $period->getValidFrom()->diff($from)->format('%a');
-        $index =  ($delta + $offset - 1) % count($period->getDays());
+        $index =  ($delta + $offset) % count($period->getDays());
 
         foreach ($range as $date) {
             $day = [
