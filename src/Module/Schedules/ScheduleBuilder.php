@@ -169,11 +169,42 @@ class ScheduleBuilder
                 return !empty($time['opens']) && !empty($time['closes']);
             });
 
-            foreach ($day['times'] as $i => $time) {
+            // Reset keys after filtering.
+            $day['times'] = array_values($day['times']);
+
+            foreach ($day['times'] as $i => &$time) {
                 if (!isset($time['staff'])) {
-                    $day['times'][$i]['staff'] = true;
+                    $time['staff'] = true;
                 }
             }
+
+            foreach ($day['times'] as $i => &$time) {
+                $time['status'] = $time['staff'] ? 1 : 2;
+
+                if ($i == 0) {
+                    continue;
+                }
+
+                if (!isset($day['times'][$i - 1])) {
+                    print_r($day['times']);
+                    exit;
+                }
+                $prev = $day['times'][$i - 1];
+
+                if ($prev['closes'] < $time['opens']) {
+                    array_splice($day['times'], $i, 0, [[
+                        'opens' => $prev['closes'],
+                        'closes' => $time['opens'],
+                        'status' => 0,
+
+                        // The time entries should contain 'staff' because it is
+                        // present on the form too, for data coherency.
+                        'staff' => 0,
+                    ]]);
+                }
+            }
+
+            unset($time);
 
             if (empty($day['times'])) {
                 $day['closed'] = true;

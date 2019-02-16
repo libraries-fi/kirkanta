@@ -35,7 +35,7 @@ class ScheduleManager
         }
 
         $smt = $this->db->prepare('
-            SELECT opens, closes, staff, live_status, info, period
+            SELECT opens, closes, status, live_status, info, period
             FROM schedules
             WHERE library = ? AND date(opens) BETWEEN ? AND ?
             ORDER BY opens
@@ -77,8 +77,8 @@ class ScheduleManager
         $delete->execute([$library->getId(), $begin->format('Y-m-d'), $end->format('Y-m-d')]);
 
         $insert = $this->db->prepare('
-            INSERT INTO schedules (period, library, department, info, opens, closes, staff)
-            VALUES (:period_id, :library_id, :department_id, :info, :opens, :closes, :staff)
+            INSERT INTO schedules (period, library, department, info, opens, closes, status)
+            VALUES (:period_id, :library_id, :department_id, :info, :opens, :closes, :status)
         ');
 
         foreach ($schedules as $date => $day_group) {
@@ -94,14 +94,14 @@ class ScheduleManager
                     $row += [
                         'opens' => (new DateTime("{$date} 00:00:00"))->format(DateTime::RFC3339),
                         'closes' => null,
-                        'staff' => 'f',
+                        'status' => 0,
                     ];
                     $insert->execute($row);
                 } else {
                     foreach ($day['times'] as $tuple) {
                         $row['opens'] = (new DateTime("{$date} {$tuple['opens']}"))->format(DateTime::RFC3339);
                         $row['closes'] = (new DateTime("{$date} {$tuple['closes']}"))->format(DateTime::RFC3339);
-                        $row['staff'] = isset($tuple['staff']) ? ($tuple['staff'] ? 't' : 'f') : 't';
+                        $row['status'] = $tuple['status'];
 
                         $insert->execute($row);
                         $row['info'] = null;
