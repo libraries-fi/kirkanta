@@ -147,7 +147,7 @@ class ScheduleBuilder
         $department = $period->getDepartment();
         $organisation = $period->getParent();
 
-        if ($period->getWeight() < 7) {
+        if ($this->getWeight($period) < 7) {
             $index = 0;
         } else {
             $offset = $period->getValidFrom()->format('N') - 1;
