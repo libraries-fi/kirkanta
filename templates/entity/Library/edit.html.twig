@@ -86,7 +86,7 @@
     </div>
   </fieldset>
 
-  {% if library is defined or service_point is defined %}
+  {% if not entity.new %}
     <fieldset class="form-section">
       <legend>{% trans %}Primary contact info{% endtrans %}</legend>
       <p class="text-muted">{% trans %}This information could e.g. be displayed in a summary.{% endtrans %}</p>

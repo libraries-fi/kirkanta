@@ -120,6 +120,10 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             $entity = $this->typeManager->getRepository($entity_type)->findOneById($entity);
         }
 
+        if (!$entity) {
+            return $menu;
+        }
+
         $resources = [
             'periods' => 'Periods',
             'services' => 'Services',
