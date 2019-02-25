@@ -439,12 +439,10 @@ class SyncLegacyDatabase extends Command
 
             $row['group_id'] = self::GROUP_NOBODY;
 
-
             if ($row['qualities']) {
-                $row['qualities'] = json_encode($row['qualities']);
-                // var_dump($row);
-                // exit('stop');
-
+                $qualities = explode(',', substr($row['qualities'], 1, -1));
+                $qualities = array_values(array_filter($qualities));
+                $row['qualities'] = json_encode($qualities);
             }
         });
 
