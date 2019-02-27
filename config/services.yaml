@@ -46,8 +46,9 @@ services:
     App\Module\Schedules\EventListener\UpdateSchedules:
         tags:
             - { name: doctrine.event_listener, event: postPersist, lazy: true }
-            - { name: doctrine.event_listener, event: preDelete, lazy: true }
+            - { name: doctrine.event_listener, event: preRemove, lazy: true }
             - { name: doctrine.event_listener, event: preUpdate, lazy: true }
+            - { name: kernel.event_listener, event: kernel.terminate }
 
     App\Module\ApiCache\EventListener\CacheEntity:
         tags:
@@ -97,7 +98,7 @@ services:
     App\Doctrine\EventListener\WeightInitializer:
         tags:
             - { name: doctrine.event_subscriber }
-    App\Doctrine\EventListener\ClearSchedulesOnPeriodRemove:
+    App\Module\Schedules\EventListener\ClearSchedulesOnPeriodRemove:
         tags:
             - { name: doctrine.orm.entity_listener }
     App\Doctrine\EntityListener\ConsortiumGroupOwnershipInitializer:

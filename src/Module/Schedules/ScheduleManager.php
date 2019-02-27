@@ -13,7 +13,7 @@ class ScheduleManager
 {
     const DATE_FORMAT = 'Y-m-d';
 
-    private $db;
+    public $db;
 
     public function __construct(Connection $database)
     {
@@ -67,7 +67,7 @@ class ScheduleManager
         $builder = new ScheduleBuilder;
         $schedules = $builder->build($periods, $begin, $end);
 
-        $this->db->beginTransaction();
+        // $this->db->beginTransaction();
 
         $delete = $this->db->prepare('
             DELETE FROM schedules
@@ -110,6 +110,6 @@ class ScheduleManager
             }
         }
 
-        $this->db->commit();
+        // $this->db->commit();
     }
 }
