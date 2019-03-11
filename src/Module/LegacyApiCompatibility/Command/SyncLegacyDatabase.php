@@ -670,6 +670,10 @@ class SyncLegacyDatabase extends Command
                     $mapper($document);
                 }
 
+                if (isset($document['state']) && $document['state'] == -1) {
+                    throw new SkipSynchronizationException;
+                }
+
                 $document = merge_primary_translation($document);
                 $document['translations'] = json_encode($document['translations']);
                 insert_query($this->legacyDb, $legacy_table, $document, $insert_id);
