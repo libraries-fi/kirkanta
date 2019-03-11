@@ -187,6 +187,11 @@ class SyncLegacyDatabase extends Command
             $role = $row['role'];
             unset($row['role']);
 
+            $row['force_no_consortium'] = in_array($row['type'], [
+                'municipal',
+                'mobile',
+            ]) ? 'f' : 't';
+
             if (!in_array($role, ['library', 'foreign'])) {
                 throw new SkipSynchronizationException;
             }
