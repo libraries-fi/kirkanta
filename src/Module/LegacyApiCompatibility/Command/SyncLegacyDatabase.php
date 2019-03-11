@@ -472,7 +472,6 @@ class SyncLegacyDatabase extends Command
             // $self['days'] = json_decode(json_encode($self['days']));
             $self['days'] = [];
             $self['section'] = 'selfservice';
-            $self['description'] = null;
 
             $hasSelf = false;
 
@@ -570,6 +569,11 @@ class SyncLegacyDatabase extends Command
                         }
                     }
                 }
+            }
+
+            foreach ($self['translations'] as &$data) {
+                $data['description'] = null;
+                unset($data);
             }
 
             return [$regular, $self];
