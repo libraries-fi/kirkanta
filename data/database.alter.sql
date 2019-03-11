@@ -2168,3 +2168,5 @@ UPDATE schedules SET status = 1 WHERE staff = true;
 UPDATE schedules SET status = 2 WHERE staff = false AND closes IS NOT NULL;
 UPDATE schedules SET status = 0 WHERE staff = false AND closes IS NULL;
 ALTER TABLE schedules ALTER COLUMN status SET NOT NULL;
+
+ALTER TABLE schedules DROP COLUMN staff;
