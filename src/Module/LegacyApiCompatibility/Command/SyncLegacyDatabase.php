@@ -416,6 +416,8 @@ class SyncLegacyDatabase extends Command
     {
         $this->legacyDb->beginTransaction();
 
+        $this->legacyDb->query('DELETE FROM persons');
+
         $this->synchronize('persons', 'persons', [
             'first_name',
             'last_name',
@@ -655,7 +657,6 @@ class SyncLegacyDatabase extends Command
 
             $this->legacyDb->commit();
         }
-
     }
 
     private function synchronize(string $current_table, string $legacy_table, array $fields, callable $mapper = null, array $options = [])
