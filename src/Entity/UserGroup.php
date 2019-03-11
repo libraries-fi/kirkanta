@@ -56,7 +56,7 @@ class UserGroup extends EntityBase
         return $this->getName();
     }
 
-    public function getName() : string
+    public function getName() : ?string
     {
         return $this->name;
     }
