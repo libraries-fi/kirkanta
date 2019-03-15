@@ -168,7 +168,6 @@ class SyncLegacyDatabase extends Command
             'type',
             'main_library',
             'id',
-            'group_id',
             'city_id',
             'address_id',
             'mail_address_id',
@@ -186,6 +185,9 @@ class SyncLegacyDatabase extends Command
         ], function(&$row) use($smtContact) {
             $role = $row['role'];
             unset($row['role']);
+
+            // Set to 'nobody'.
+            $row['group_id'] = 2;
 
             $row['force_no_consortium'] = in_array($row['type'], [
                 'municipal',
