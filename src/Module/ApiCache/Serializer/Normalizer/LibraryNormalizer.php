@@ -2,6 +2,7 @@
 
 namespace App\Module\ApiCache\Serializer\Normalizer;
 
+use App\Entity\Feature\StateAwareness;
 use App\Entity\LibraryInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -31,6 +32,10 @@ class LibraryNormalizer implements NormalizerInterface
         $object->getEmailAddresses()->setInitialized(false);
 
         $values = $this->inner->normalize($object, $format, $context);
+
+        $values['persons'] = array_filter($values['persons'], function($person) {
+            return $person['state'] == StateAwareness::PUBLISHED;
+        });
 
         $sortedPictures = [];
 
