@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 use Html2Text\Html2Text;
 use Swift_Mailer as Mailer;
@@ -30,12 +31,13 @@ class TasksController extends Controller
     private $mailer;
     private $auth;
 
-    public function __construct(EntityManagerInterface $entities, Mailer $mailer, AuthorizationCheckerInterface $auth)
+    public function __construct(EntityManagerInterface $entities, Mailer $mailer, AuthorizationCheckerInterface $auth, TranslatorInterface $translator)
     {
         $this->entities = $entities;
         $this->storage = $entities->getRepository(OneTimeToken::class);
         $this->mailer = $mailer;
         $this->auth = $auth;
+        $this->translator = $translator;
     }
 
     /**
@@ -158,7 +160,7 @@ class TasksController extends Controller
             'token' => $nonce,
         ]);
 
-        $message = (new Email('Password recovery'))
+        $message = (new Email('Kirkanta: ' . $this->translator->trans('Password recovery')))
             ->setFrom('noreply@kirjastot.fi')
             ->setTo($user->getEmail())
             ->setBody($content, 'text/html')
