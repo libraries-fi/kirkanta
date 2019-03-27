@@ -106,18 +106,18 @@ class TasksController extends Controller
     }
 
     /**
-     * @Route("/reset-password/{token}", name="user_management.reset_password")
+     * @Route("/reset-password/{nonce}", name="user_management.reset_password")
      * @Template("user_management/change-password.html.twig")
      */
-    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwords, string $token)
+    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwords, string $nonce)
     {
-        $token_entity = $this->storage->findToken('activate_account', $token);
+        $token = $this->storage->findToken('activate_account', (new OneTimeToken('', $nonce))->getToken());
 
-        if (!$token_entity) {
+        if (!$token) {
             throw new AccessDeniedHttpException;
         }
 
-        $user = $token_entity->getUser();
+        $user = $token->getUser();
 
         $form = $this->createFormBuilder()
             ->add('new_password', RepeatedType::class, [
@@ -139,8 +139,7 @@ class TasksController extends Controller
             $password = $passwords->encodePassword($user, $raw_password);
             $user->setPassword($password);
 
-            $this->storage->eraseToken($token_entity);
-
+            $this->storage->eraseToken($token);
             $this->entities->flush();
 
             $this->addFlash('success', 'Password was changed. You may now login.');
