@@ -111,7 +111,7 @@ class TasksController extends Controller
      */
     public function resetPassword(Request $request, UserPasswordEncoderInterface $passwords, string $nonce)
     {
-        $token = $this->storage->findToken('activate_account', (new OneTimeToken('', $nonce))->getToken());
+        $token = $this->storage->findToken('reset_password', (new OneTimeToken('', $nonce))->getToken());
 
         if (!$token) {
             throw new AccessDeniedHttpException;
