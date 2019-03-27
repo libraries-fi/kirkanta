@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+use Html2Text\Html2Text;
 use Swift_Mailer as Mailer;
 use Swift_Message as Email;
 
@@ -45,7 +46,10 @@ class TasksController extends Controller
     {
         $form = $this->createFormBuilder()
             ->add('email', EmailType::class, [
-                'label' => 'Email address'
+                'label' => 'Email address',
+                'attr' => [
+                    'readonly' => true
+                ]
             ])
             ->getForm();
 
@@ -80,15 +84,17 @@ class TasksController extends Controller
 
                 $this->entities->persist($token);
                 $this->entities->flush();
-            }
 
-
-            if ($requestUser) {
-                $this->addFlash('success', 'Recoery link was sent to the user.');
-                return $this->redirectToRoute('entity.user.collection');
+                if ($requestUser) {
+                    $this->addFlash('success', 'Recovery link was sent to the user.');
+                    return $this->redirectToRoute('entity.user.collection');
+                } else {
+                    $this->addFlash('success', 'If there was an account with this email address, you will be emailed with a recovery link.');
+                    return $this->redirectToRoute('user_management.request_reset_password');
+                }
             } else {
-                $this->addFlash('success', 'If there was an account with this email address, you will be emailed with a recovery link.');
-                return $this->redirectToRoute('user_management.request_reset_password');
+                $this->addFlash('danger', 'Given email address does not match any user.');
+                $this->addFlash('danger', 'This tool cannot be used with municipal accounts.');
             }
         }
 
@@ -154,7 +160,10 @@ class TasksController extends Controller
 
         $message = (new Email('Password recovery'))
             ->setFrom('noreply@kirjastot.fi')
-            ->setTo($user->getEmail());
+            ->setTo($user->getEmail())
+            ->setBody($content, 'text/html')
+            ->addPart((new Html2Text($content))->getText(), 'text/plain')
+            ;
 
         $this->mailer->send($message);
     }
