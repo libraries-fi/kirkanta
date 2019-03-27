@@ -148,7 +148,12 @@ class ExportController extends Controller
             'Last-Modified' => $lastModified->format('D, d M Y H:i:s \G\M\T'),
         ];
 
-        $content = $this->serializer->encode($export, 'csv');
+        $content = $this->serializer->encode($export, 'csv', [
+            'csv_delimiter' => ';'
+        ]);
+
+        // Ugly MS Office hack.
+        $content = utf8_decode($content);
 
         return new Response($content, 200, $headers);
     }
