@@ -169,6 +169,7 @@ class SyncLegacyDatabase extends Command
             'main_library',
             'id',
             'city_id',
+            'consortium_id',
             'address_id',
             'mail_address_id',
             'founded',
