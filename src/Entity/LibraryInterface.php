@@ -87,4 +87,6 @@ interface LibraryInterface extends ApiCacheable
   public function setCustomData(array $entries) : void;
 
   public function getCoordinates() : ?string;
+
+  public function belongsToMunicipalConsortium() : bool;
 }

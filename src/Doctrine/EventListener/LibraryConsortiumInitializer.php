@@ -24,17 +24,16 @@ class LibraryConsortiumInitializer
 
     private function initializeConsortium(Library $library) : void
     {
-        $allowed_types = ['children', 'main_library', 'municipal', 'music', 'regional', 'mobile'];
-
-        if (in_array($library->getType(), $allowed_types)) {
+        if ($library->belongsToMunicipalConsortium()) {
             /**
              * Always set consortium. This way we can use this initializer to update
              * the consortium binding whenever the consortium for a city is changed.
              */
             $library->setConsortium($library->getCity()->getConsortium());
         } else {
-            // Maybe the library's type was changed and it doesn't qualify for a consortium anymore.
-            $library->setConsortium(null);
+            /**
+             * NOTE: Do not unset consortium here.
+             */
         }
     }
 }

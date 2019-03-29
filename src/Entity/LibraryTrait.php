@@ -410,4 +410,16 @@ trait LibraryTrait
             return $a->getCoordinates();
         }
     }
+
+    public function belongsToMunicipalConsortium() : bool
+    {
+        return in_array($this->getType(), [
+            'children',
+            'main_library',
+            'mobile',
+            'municipal',
+            'music',
+            'regional',
+        ]);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Feature\StateAwareness;
+use App\Entity\Consortium;
 use App\Entity\Library;
 use App\Entity\LibraryData;
 use App\Entity\Organisation;
@@ -14,6 +15,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -127,7 +129,32 @@ class LibraryForm extends EntityFormType
                             ;
                     }
                 ]);
+
+                if ($this->auth->isGranted('ROLE_FINNA') && !$library->belongsToMunicipalConsortium()) {
+                    $event->getForm()->add('consortium', EntityType::class, [
+                        'class' => Consortium::class,
+                        'label' => 'Finna organisation',
+                        'required' => false,
+                        'placeholder' => '-- Automatic --',
+                        'help' => 'Select only if this library is not a municipal library.',
+                        'query_builder' => function($repo) use($groups) {
+                            return $repo->createQueryBuilder('e')
+                            ->join('e.translations', 'd', 'WITH', 'd.langcode = :langcode')
+                            ->join('e.finna_data', 'f')
+                            ->orderBy('d.name')
+                            ->andWhere('e.group IN (:groups)')
+                            ->setParameter('groups', $groups)
+                            ->setParameter('langcode', 'fi')
+                            ;
+                        }
+                    ]);
+                } else {
+                    $event->getForm()->add('consortium', HiddenType::class, [
+                        'data' => null
+                    ]);
+                }
             }
+
         });
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
