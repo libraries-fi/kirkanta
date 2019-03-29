@@ -159,8 +159,8 @@ class TasksController extends Controller
             'token' => $nonce,
         ]);
 
-        $message = (new Email('Kirkanta: ' . $this->translator->trans('Password recovery')))
-            ->setFrom('noreply@kirjastot.fi')
+        $message = (new Email($this->translator->trans('Password recovery')))
+            ->setFrom('Kirkanta <noreply@kirjastot.fi>')
             ->setTo($user->getEmail())
             ->setBody($content, 'text/html')
             ->addPart((new Html2Text($content))->getText(), 'text/plain')
