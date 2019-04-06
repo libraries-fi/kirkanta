@@ -130,22 +130,15 @@ class LibraryForm extends EntityFormType
                     }
                 ]);
 
-                if ($this->auth->isGranted('ROLE_FINNA') && !$library->belongsToMunicipalConsortium()) {
+                if (!$library->belongsToMunicipalConsortium()) {
                     $event->getForm()->add('consortium', EntityType::class, [
                         'class' => Consortium::class,
-                        'label' => 'Finna organisation',
+                        'label' => 'Consortium / Finna organisation',
                         'required' => false,
                         'placeholder' => '-- Automatic --',
                         'help' => 'Select only if this library is not a municipal library.',
                         'query_builder' => function($repo) use($groups) {
-                            return $repo->createQueryBuilder('e')
-                            ->join('e.translations', 'd', 'WITH', 'd.langcode = :langcode')
-                            ->join('e.finna_data', 'f')
-                            ->orderBy('d.name')
-                            ->andWhere('e.group IN (:groups)')
-                            ->setParameter('groups', $groups)
-                            ->setParameter('langcode', 'fi')
-                            ;
+                            return $repo->createNonMunicipalConsortiumsQueryBuilder();
                         }
                     ]);
                 } else {

@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Doctrine\ConsortiumRepository")
  * @ORM\Table(name="consortiums")
  */
 class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, ModifiedAwareness, Sluggable, StateAwareness, Translatable
