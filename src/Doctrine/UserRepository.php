@@ -7,7 +7,7 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class UserRepository extends EntityRepository  implements UserLoaderInterface
+class UserRepository extends EntityRepository implements UserLoaderInterface
 {
     public function loadUserByUsername($username) : ?UserInterface
     {
