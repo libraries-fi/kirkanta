@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -73,24 +74,24 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         return $this->getName();
     }
 
-    public function isActive(DateTimeInterface $DateTimeImmutable = null) : bool
+    public function isActive(DateTimeInterface $datetime = null) : bool
     {
-        if (!$DateTimeImmutable) {
-            $DateTimeImmutable = new DateTimeImmutable;
+        if (!$datetime) {
+            $datetime = new DateTimeImmutable;
         }
-        if ($this->valid_from > $DateTimeImmutable) {
+        if ($this->valid_from > $datetime) {
             return false;
         }
-        return !$this->isExpired($DateTimeImmutable);
+        return !$this->isExpired($datetime);
     }
 
-    public function isExpired(DateTimeInterface $DateTimeImmutable = null) : bool
+    public function isExpired(DateTimeInterface $datetime = null) : bool
     {
         if (!$this->valid_until) {
             return false;
         }
 
-        $ref = ($DateTimeImmutable ?? new \DateTimeImmutable)->format('Ymd');
+        $ref = ($datetime ?? new \DateTimeImmutable)->format('Ymd');
         return $this->valid_until->format('Ymd') < $ref;
     }
 
@@ -141,9 +142,9 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         return $this->valid_from;
     }
 
-    public function setValidFrom(DateTimeImmutable $date) : void
+    public function setValidFrom(DateTimeInterface $date) : void
     {
-        $this->valid_from = $date;
+        $this->valid_from = $this->toDateTimeImmutable($date);
     }
 
     public function getValidUntil() : ?DateTimeImmutable
@@ -151,9 +152,9 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         return $this->valid_until;
     }
 
-    public function setValidUntil(?DateTimeImmutable $date) : void
+    public function setValidUntil(?DateTimeInterface $date) : void
     {
-        $this->valid_until = $date;
+        $this->valid_until = $this->toDateTimeImmutable($date);
     }
 
     public function isContinuous() : bool
@@ -218,5 +219,16 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     public function setLibrary(LibraryInterface $library) : void
     {
         $this->setParent($library);
+    }
+
+    private function toDateTimeImmutable(?DateTimeInterface $date) : ?DateTimeImmutable
+    {
+        if (is_null($date)) {
+            return null;
+        } elseif ($date instanceof DateTimeImmutable) {
+            return $date;
+        } else {
+            return new DateTimeImmutable($date->format(DateTime::RFC3339));
+        }
     }
 }

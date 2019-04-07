@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use DateTime;
+use DateTimeImmutable;
 use App\Entity\Department;
 use App\Entity\Library;
 use App\Entity\Period;
@@ -101,7 +101,7 @@ class PeriodForm extends EntityFormType
             $from = $event->getForm()->get('valid_from');
 
             if (!$from->getData()) {
-                $from->setData(new DateTime);
+                $from->setData(new DateTimeImmutable);
             }
         });
 
