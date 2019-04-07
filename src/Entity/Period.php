@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Feature\GroupOwnership;
@@ -22,12 +22,12 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     use Feature\TranslatableTrait;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date_immutable")
      */
     private $valid_from;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date_immutable")
      */
     private $valid_until;
 
@@ -73,24 +73,24 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         return $this->getName();
     }
 
-    public function isActive(DateTimeInterface $datetime = null) : bool
+    public function isActive(DateTimeInterface $DateTimeImmutable = null) : bool
     {
-        if (!$datetime) {
-            $datetime = new DateTime;
+        if (!$DateTimeImmutable) {
+            $DateTimeImmutable = new DateTimeImmutable;
         }
-        if ($this->valid_from > $datetime) {
+        if ($this->valid_from > $DateTimeImmutable) {
             return false;
         }
-        return !$this->isExpired($datetime);
+        return !$this->isExpired($DateTimeImmutable);
     }
 
-    public function isExpired(DateTimeInterface $datetime = null) : bool
+    public function isExpired(DateTimeInterface $DateTimeImmutable = null) : bool
     {
         if (!$this->valid_until) {
             return false;
         }
 
-        $ref = ($datetime ?? new \DateTime)->format('Ymd');
+        $ref = ($DateTimeImmutable ?? new \DateTimeImmutable)->format('Ymd');
         return $this->valid_until->format('Ymd') < $ref;
     }
 
@@ -136,22 +136,22 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         $this->section = $section;
     }
 
-    public function getValidFrom() : ?DateTime
+    public function getValidFrom() : ?DateTimeImmutable
     {
         return $this->valid_from;
     }
 
-    public function setValidFrom(DateTime $date) : void
+    public function setValidFrom(DateTimeImmutable $date) : void
     {
         $this->valid_from = $date;
     }
 
-    public function getValidUntil() : ?DateTime
+    public function getValidUntil() : ?DateTimeImmutable
     {
         return $this->valid_until;
     }
 
-    public function setValidUntil(?DateTime $date) : void
+    public function setValidUntil(?DateTimeImmutable $date) : void
     {
         $this->valid_until = $date;
     }

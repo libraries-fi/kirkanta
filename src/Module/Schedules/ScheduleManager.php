@@ -3,7 +3,7 @@
 namespace App\Module\Schedules;
 
 use DateTime;
-use DateTimeInterface;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use InvalidArgumentException;
 use App\Entity\LibraryInterface;
@@ -24,14 +24,14 @@ class ScheduleManager
      * NOTE: Field 'opens' is used to deduce the date for a row. If 'closes' is NULL, then
      * the library is closed on that day. Live status is updated via a cron script.
      */
-    public function loadSchedules(LibraryInterface $library, DateTimeInterface $begin = NULL, DateTimeInterface $end = NULL) : array
+    public function loadSchedules(LibraryInterface $library, DateTimeImmutable $begin = NULL, DateTimeImmutable $end = NULL) : array
     {
         if (is_null($begin)) {
-            $begin = new DateTime('Monday this week');
+            $begin = new DateTimeImmutable('Monday this week');
         }
 
         if (is_null($end)) {
-            $end = new DateTime('+3 months');
+            $end = new DateTimeImmutable('+3 months');
         }
 
         $smt = $this->db->prepare('
@@ -48,15 +48,15 @@ class ScheduleManager
             $date = substr($row->opens, 0, 10);
             $schedules[$date] = $row;
 
-            $row->opens = new DateTime($row->opens);
-            $row->closes = $row->closes ? new DateTime($row->closes) : null;
+            $row->opens = new DateTimeImmutable($row->opens);
+            $row->closes = $row->closes ? new DateTimeImmutable($row->closes) : null;
             $row->info = json_decode($row->info);
         }
 
         return $schedules;
     }
 
-    public function updateSchedules(LibraryInterface $library, DateTimeInterface $begin, DateTimeInterface $end) : void
+    public function updateSchedules(LibraryInterface $library, DateTimeImmutable $begin, DateTimeImmutable $end) : void
     {
         /*
          * NOTE: We're using a Doctrine Connection class here so commit() does not actually
@@ -67,7 +67,7 @@ class ScheduleManager
         $builder = new ScheduleBuilder;
         $schedules = $builder->build($periods, $begin, $end);
 
-        // $this->db->beginTransaction();
+        $this->db->beginTransaction();
 
         $delete = $this->db->prepare('
             DELETE FROM schedules
@@ -92,15 +92,15 @@ class ScheduleManager
 
                 if ($day['closed']) {
                     $row += [
-                        'opens' => (new DateTime("{$date} 00:00:00"))->format(DateTime::RFC3339),
+                        'opens' => (new DateTimeImmutable("{$date} 00:00:00"))->format(DateTime::RFC3339),
                         'closes' => null,
                         'status' => 0,
                     ];
                     $insert->execute($row);
                 } else {
                     foreach ($day['times'] as $tuple) {
-                        $row['opens'] = (new DateTime("{$date} {$tuple['opens']}"))->format(DateTime::RFC3339);
-                        $row['closes'] = (new DateTime("{$date} {$tuple['closes']}"))->format(DateTime::RFC3339);
+                        $row['opens'] = (new DateTimeImmutable("{$date} {$tuple['opens']}"))->format(DateTime::RFC3339);
+                        $row['closes'] = (new DateTimeImmutable("{$date} {$tuple['closes']}"))->format(DateTime::RFC3339);
                         $row['status'] = $tuple['status'];
 
                         $insert->execute($row);
@@ -110,6 +110,6 @@ class ScheduleManager
             }
         }
 
-        // $this->db->commit();
+        $this->db->commit();
     }
 }

@@ -9,6 +9,7 @@ use App\Module\Schedules\ScheduleManager;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -59,18 +60,14 @@ class BuildSchedules extends Command
              * If processed range contains a legacy period, schedules cannot be generated.
              */
             foreach ($result as $library) {
-                $begin = new DateTime('Monday this week');
-                $end = new DateTime('Sunday +12 months');
-                $interval = new DateInterval('P1M');
-                $iterator = new DatePeriod($begin, $interval, $end);
+                $begin = new DateTimeImmutable('Monday this week');
+                $end = new DateTimeImmutable('Sunday +12 months');
 
-                foreach ($iterator as $end) {
-                    try {
-                        $this->schedules->updateSchedules($library, $begin, $end);
-                        $begin = $end;
-                    } catch (LegacyPeriodException $e) {
-                        // pass
-                    }
+                try {
+                    $this->schedules->updateSchedules($library, $begin, $end);
+                    $begin = $end;
+                } catch (LegacyPeriodException $e) {
+                    // pass
                 }
             }
 
