@@ -12,6 +12,8 @@ class ContactInfoForm extends EntityFormType
 {
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+        
         if ($options['context_entity'] instanceof Library) {
             $builder->add('department', EntityType::class, [
                 'required' => false,

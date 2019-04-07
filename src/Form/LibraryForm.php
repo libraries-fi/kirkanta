@@ -27,6 +27,7 @@ class LibraryForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => Library::class,
         ]);

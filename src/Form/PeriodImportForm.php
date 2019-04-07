@@ -12,7 +12,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PeriodImportForm extends FormType
 {
-
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         $builder->add('templates', EntityType::class, [

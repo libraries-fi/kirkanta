@@ -15,6 +15,7 @@ class ConsortiumForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => \App\Entity\Consortium::class,
         ]);

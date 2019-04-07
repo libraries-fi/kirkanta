@@ -18,6 +18,7 @@ class ServicePointForm extends LibraryForm
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => ServicePoint::class,
         ]);

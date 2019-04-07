@@ -23,6 +23,7 @@ class PersonForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => Person::class,
         ]);
@@ -30,6 +31,8 @@ class PersonForm extends EntityFormType
 
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('state', StateChoiceType::class)
             ->add('first_name', null, [

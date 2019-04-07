@@ -15,6 +15,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ServiceInstanceForm extends EntityFormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+
+        $options->setDefaults([
+            'data_class' => ServiceInstance::class
+        ]);
+    }
+    
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         parent::form($builder, $options);
@@ -47,13 +56,5 @@ class ServiceInstanceForm extends EntityFormType
                 $event->getForm()->remove('template');
             }
         });
-    }
-
-    public function configureOptions(OptionsResolver $options) : void
-    {
-        parent::configureOptions($options);
-        $options->setDefaults([
-            'data_class' => ServiceInstance::class
-        ]);
     }
 }

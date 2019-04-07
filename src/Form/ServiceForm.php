@@ -12,6 +12,7 @@ class ServiceForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => \App\Entity\Service::class,
         ]);
@@ -19,6 +20,8 @@ class ServiceForm extends EntityFormType
 
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('translations', I18n\EntityDataCollectionType::class, [
                 'entry_type' => EntityData\ServiceDataType::class

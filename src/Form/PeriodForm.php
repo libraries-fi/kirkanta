@@ -27,6 +27,7 @@ class PeriodForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => Period::class,
         ]);

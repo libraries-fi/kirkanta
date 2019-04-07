@@ -29,6 +29,7 @@ abstract class EntityFormType extends FormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             // e.g. parent entity like Library or something.
             'context_entity' => null,

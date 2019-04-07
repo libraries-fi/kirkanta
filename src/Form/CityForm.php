@@ -15,6 +15,7 @@ class CityForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => \App\Entity\City::class,
         ]);
@@ -22,6 +23,8 @@ class CityForm extends EntityFormType
 
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('region', EntityType::class, [
                 'class' => Region::class,

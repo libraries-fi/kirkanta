@@ -16,6 +16,7 @@ class LibraryPhotoForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => LibraryPhoto::class,
         ]);
@@ -23,6 +24,8 @@ class LibraryPhotoForm extends EntityFormType
 
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('filename', null, [
                 'label' => 'File',

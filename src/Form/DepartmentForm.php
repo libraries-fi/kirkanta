@@ -12,6 +12,7 @@ class DepartmentForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => \App\Entity\Department::class,
         ]);
@@ -19,6 +20,8 @@ class DepartmentForm extends EntityFormType
 
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('type', ChoiceType::class, [
                 'choices' => new \App\Util\DepartmentTypes,

@@ -11,6 +11,7 @@ class EmailAddressForm extends ContactInfoForm
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+        
         $options->setDefaults([
             'data_class' => \App\Entity\EmailAddress::class,
         ]);
