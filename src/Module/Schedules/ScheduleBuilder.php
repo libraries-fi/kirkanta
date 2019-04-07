@@ -154,8 +154,16 @@ class ScheduleBuilder
         $organisation = $period->getParent();
 
         if ($this->getWeight($period) < 7) {
-            $index = 0;
+            /**
+             * With less than seven days, the first day in the period equals to the first date
+             * when the period is in effect.
+             */
+            $index = $period->getValidFrom()->diff($from)->d;
         } else {
+            /**
+             * When there are at least seven days in the period, the first day is always Monday
+             * but the period's validity might start on another day.
+             */
             $offset = $period->getValidFrom()->format('N') - 1;
             $delta = $period->getValidFrom()->diff($from)->d;
             $index = ($delta + $offset) % count($period->getDays());
