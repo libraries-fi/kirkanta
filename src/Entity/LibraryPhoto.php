@@ -11,6 +11,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"App\Doctrine\EntityListener\DefaultPictureListener"})
  * @Vich\Uploadable
  */
 class LibraryPhoto extends Picture implements Translatable, Weight
@@ -113,5 +114,25 @@ class LibraryPhoto extends Picture implements Translatable, Weight
     public function getLibrary() : LibraryInterface
     {
         return $this->getParent();
+    }
+
+    public function setDefaultPicture($state = true) : void
+    {
+        $this->cover = $state;
+
+        if ($state) {
+            $this->setWeight(0);
+        }
+    }
+
+    public function isDefaultPicture() : bool
+    {
+        return $this->cover;
+    }
+
+    public function setWeight(int $weight) : void
+    {
+        $this->weight = $weight;
+        $this->cover = $weight == 0;
     }
 }

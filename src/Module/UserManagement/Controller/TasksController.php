@@ -14,7 +14,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
+use Html2Text\Html2Text;
 use Swift_Mailer as Mailer;
 use Swift_Message as Email;
 
@@ -24,12 +28,16 @@ class TasksController extends Controller
 {
     private $entities;
     private $storage;
+    private $mailer;
+    private $auth;
 
-    public function __construct(EntityManagerInterface $entities, Mailer $mailer)
+    public function __construct(EntityManagerInterface $entities, Mailer $mailer, AuthorizationCheckerInterface $auth, TranslatorInterface $translator)
     {
         $this->entities = $entities;
         $this->storage = $entities->getRepository(OneTimeToken::class);
         $this->mailer = $mailer;
+        $this->auth = $auth;
+        $this->translator = $translator;
     }
 
     /**
@@ -40,9 +48,28 @@ class TasksController extends Controller
     {
         $form = $this->createFormBuilder()
             ->add('email', EmailType::class, [
-                'label' => 'Email address'
+                'label' => 'Email address',
+                'attr' => [
+                    'readonly' => true
+                ]
             ])
             ->getForm();
+
+        $requestUser = null;
+
+        if ($this->auth->isGranted('IS_AUTHENTICATED_FULLY')) {
+            /**
+             * Autofill email only when an admin requests password on behalf of
+             * other users. Attempt at preventing leaking of email addresses.
+             */
+            if ($uid = $request->query->get('user')) {
+                $requestUser = $this->entities->getRepository('App:User')->findOneById($uid);
+
+                if ($requestUser) {
+                    $form->setData(['email' => $requestUser->getEmail()]);
+                }
+            }
+        }
 
         $form->handleRequest($request);
 
@@ -59,11 +86,18 @@ class TasksController extends Controller
 
                 $this->entities->persist($token);
                 $this->entities->flush();
+
+                if ($requestUser) {
+                    $this->addFlash('success', 'Recovery link was sent to the user.');
+                    return $this->redirectToRoute('entity.user.collection');
+                } else {
+                    $this->addFlash('success', 'If there was an account with this email address, you will be emailed with a recovery link.');
+                    return $this->redirectToRoute('user_management.request_reset_password');
+                }
+            } else {
+                $this->addFlash('danger', 'Given email address does not match any user.');
+                $this->addFlash('danger', 'This tool cannot be used with municipal accounts.');
             }
-
-            $this->addFlash('success', 'If there was an account with this email address, you will be emailed with a recovery link.');
-
-            return $this->redirectToRoute('user_management.request_reset_password');
         }
 
         return [
@@ -72,18 +106,18 @@ class TasksController extends Controller
     }
 
     /**
-     * @Route("/reset-password/{token}", name="user_management.reset_password")
+     * @Route("/reset-password/{nonce}", name="user_management.reset_password")
      * @Template("user_management/change-password.html.twig")
      */
-    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwords, string $token)
+    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwords, string $nonce)
     {
-        $token_entity = $this->storage->findToken('activate_account', $token);
+        $token = $this->storage->findToken('reset_password', $nonce);
 
-        if (!$token_entity) {
+        if (!$token) {
             throw new AccessDeniedHttpException;
         }
 
-        $user = $token_entity->getUser();
+        $user = $token->getUser();
 
         $form = $this->createFormBuilder()
             ->add('new_password', RepeatedType::class, [
@@ -105,8 +139,7 @@ class TasksController extends Controller
             $password = $passwords->encodePassword($user, $raw_password);
             $user->setPassword($password);
 
-            $this->storage->eraseToken($token_entity);
-
+            $this->storage->eraseToken($token);
             $this->entities->flush();
 
             $this->addFlash('success', 'Password was changed. You may now login.');
@@ -126,9 +159,12 @@ class TasksController extends Controller
             'token' => $nonce,
         ]);
 
-        $message = (new Email('Password recovery'))
-            ->setFrom('noreply@kirjastot.fi')
-            ->setTo($user->getEmail());
+        $message = (new Email($this->translator->trans('Password recovery')))
+            ->setFrom('Kirkanta <noreply@kirjastot.fi>')
+            ->setTo($user->getEmail())
+            ->setBody($content, 'text/html')
+            ->addPart((new Html2Text($content))->getText(), 'text/plain')
+            ;
 
         $this->mailer->send($message);
     }

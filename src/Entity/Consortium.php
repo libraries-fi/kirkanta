@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Doctrine\ConsortiumRepository")
  * @ORM\Table(name="consortiums")
  */
 class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, ModifiedAwareness, Sluggable, StateAwareness, Translatable
@@ -157,12 +157,14 @@ class Consortium extends EntityBase implements ApiCacheable, GroupOwnership, Mod
         }
     }
 
-    public function setOwner(UserGroup $owner) : void
+    public function setOwner(UserGroup $group) : void
     {
-        $this->group = $owner;
+        if ($this->getOwner() != $group) {
+            $this->group = $group;
 
-        if ($finna = $this->getFinnaData()) {
-            $finna->setOwner($owner);
+            if ($finna = $this->getFinnaData()) {
+                $finna->setOwner($group);
+            }
         }
     }
 }

@@ -85,7 +85,7 @@ class User extends EntityBase implements CreatedAwareness, Serializable, UserInt
         }
     }
 
-     public function getGroup() : UserGroup
+     public function getGroup() : ?UserGroup
     {
         return $this->group;
     }

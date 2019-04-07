@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\ContactInfoData;
 use App\Entity\Department;
 use App\Entity\Library;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -23,6 +24,9 @@ class ContactInfoForm extends EntityFormType
 
         $builder->add('translations', I18n\EntityDataCollectionType::class, [
             'entry_type' => EntityData\ContactInfoDataType::class,
+            'entry_options' => [
+                'data_class' => ContactInfoData::class
+            ]
         ]);
     }
 }

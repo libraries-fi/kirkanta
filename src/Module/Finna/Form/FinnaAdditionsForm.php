@@ -6,7 +6,6 @@ use App\Entity\Consortium;
 use App\Form\ConsortiumForm;
 use App\Form\EntityFormType;
 use App\Form\I18n\EntityDataCollectionType;
-use App\Form\Type\RichtextType;
 use App\Form\Type\StateChoiceType;
 use App\Module\Finna\Entity\DefaultServicePointBinding;
 use App\Module\Finna\Entity\FinnaAdditions;
@@ -15,7 +14,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -23,8 +21,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FinnaAdditionsForm extends EntityFormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => FinnaAdditions::class,
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('state', StateChoiceType::class, [
                 // 'property_path' => 'consortium.state'
@@ -48,18 +56,6 @@ class FinnaAdditionsForm extends EntityFormType
             ])
             ->add('finna_coverage', IntegerType::class, [
                 'required' => false
-            ])
-            ->add('usage_info', RichtextType::class, [
-                'required' => false,
-                'attr' => [
-                    'rows' => 8,
-                ]
-            ])
-            ->add('notification', TextareaType::class, [
-                'required' => false,
-                'attr' => [
-                    'rows' => 4,
-                ]
             ])
             ->add('translations', EntityDataCollectionType::class, [
                 'entry_type' => FinnaAdditionsDataType::class
@@ -104,39 +100,6 @@ class FinnaAdditionsForm extends EntityFormType
                     'translation_domain' => false,
                 ]);
             }
-
-            return;
-
-            $user_group = $data instanceof FinnaAdditions
-                ? $data->getOwner()
-                : $this->auth->getUser()->getGroup();
-
-            $service_points = $this->types->getRepository('service_point')->findBy([
-                'group' => $user_group->getTree()
-            ]);
-
-            $libraries = $this->types->getRepository('library')->findBy([
-                'group' => $user_group->getTree()
-            ]);
-
-            $choices = [];
-
-            foreach (array_merge($libraries, $service_points) as $entity) {
-                $choices[$entity->getId()] = $entity;
-            }
-
-            if ($chosen = $data->getServicePoint()) {
-                $choices[$chosen->getId()] = $chosen;
-            }
-
-            $form->add('service_point', ChoiceType::class, [
-                'label' => 'Default service point',
-                'placeholder' => '-- Select --',
-                'choices' => $choices,
-                'choice_label' => 'name',
-                'required' => false,
-                'translation_domain' => false,
-            ]);
         });
     }
 }

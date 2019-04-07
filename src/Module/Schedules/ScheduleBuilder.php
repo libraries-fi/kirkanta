@@ -5,25 +5,27 @@ namespace App\Module\Schedules;
 use App\Entity\Period;
 use DateInterval;
 use DatePeriod;
-use DateTime;
-use DateTimeInterface;
+use DateTimeImmutable;
 
 class ScheduleBuilder
 {
-    public function buildRange(Period $period, DateTimeInterface $begin, DateTimeInterface $end) : array
+    public function buildRange(Period $period, DateTimeImmutable $begin, DateTimeImmutable $end) : array
     {
         return $this->iteratePeriod($period, $begin, $end);
     }
 
-    public function build(iterable $periods, DateTimeInterface $begin = null, DateTimeInterface $end = null) : array
+    public function build(iterable $periods, DateTimeImmutable $begin = null, DateTimeImmutable $end = null) : array
     {
         if (is_null($begin)) {
-            $begin = new DateTime('Monday this week');
+            $begin = new DateTimeImmutable('Monday this week');
         }
 
         if (is_null($end)) {
-            $end = new DateTime('+6 months');
+            $end = new DateTimeImmutable('+3 months');
         }
+
+        $end = clone $end;
+        $end->setTime(23, 59, 59);
 
         $groups = $this->grouped($periods);
         $schedules = [];
@@ -52,6 +54,7 @@ class ScheduleBuilder
 
             foreach ($days as $date => $day) {
                 if (!$department) {
+                    // NOTE: Here '0' is a pseudo department ID.
                     $schedules[$date][0] = $day;
                 } else {
                     if (!isset($schedules[$date])) {
@@ -107,7 +110,7 @@ class ScheduleBuilder
         return $periods;
     }
 
-    private function filter(array $periods, DateTimeInterface $begin, DateTimeInterface $end) : array
+    private function filter(array $periods, DateTimeImmutable $begin, DateTimeImmutable $end) : array
     {
         $periods = array_filter($periods, function(Period $p) use($begin, $end) {
             if ($p->getSection() != 'default') {
@@ -124,6 +127,7 @@ class ScheduleBuilder
             }
             return $p->getValidFrom() <= $end && (!$p->getValidUntil() || $p->getValidUntil() >= $begin);
         });
+
         return $periods;
     }
 
@@ -136,17 +140,34 @@ class ScheduleBuilder
         }
     }
 
-    private function iteratePeriod(Period $period, DateTimeInterface $from, DateTimeInterface $to) : array
+    /**
+     * NOTE: This function requires that the passed dates $from and $to are also valid dates
+     * in the context of $period, i.e. $period->getValidFrom() >= $from and $period->getValidUntil() <= $to.
+     */
+    private function iteratePeriod(Period $period, DateTimeImmutable $from, DateTimeImmutable $to) : array
     {
-        $from = clone $from;
-        $to = clone $to;
-        $range = new DatePeriod($from, new DateInterval('P1D'), $to->add(new DateInterval('P1D')));
+        $range = new DatePeriod($from->setTime(0, 0, 0), new DateInterval('P1D'), $to->setTime(23, 59, 59));
         $source = array_values($period->getDays());
-        $index = $this->getWeight($period) < 7 ? 0 : $from->format('N') - 1;
         $schedules = [];
 
         $department = $period->getDepartment();
         $organisation = $period->getParent();
+
+        if ($this->getWeight($period) < 7) {
+            /**
+             * With less than seven days, the first day in the period equals to the first date
+             * when the period is in effect.
+             */
+            $index = $period->getValidFrom()->diff($from)->d;
+        } else {
+            /**
+             * When there are at least seven days in the period, the first day is always Monday
+             * but the period's validity might start on another day.
+             */
+            $offset = $period->getValidFrom()->format('N') - 1;
+            $delta = $period->getValidFrom()->diff($from)->d;
+            $index = ($delta + $offset) % count($period->getDays());
+        }
 
         foreach ($range as $date) {
             $day = [
@@ -166,11 +187,38 @@ class ScheduleBuilder
                 return !empty($time['opens']) && !empty($time['closes']);
             });
 
-            foreach ($day['times'] as $i => $time) {
+            // Reset keys after filtering.
+            $day['times'] = array_values($day['times']);
+
+            foreach ($day['times'] as $i => &$time) {
                 if (!isset($time['staff'])) {
-                    $day['times'][$i]['staff'] = true;
+                    $time['staff'] = true;
                 }
             }
+
+            foreach ($day['times'] as $i => &$time) {
+                $time['status'] = $time['staff'] ? 1 : 2;
+
+                if ($i == 0) {
+                    continue;
+                }
+
+                $prev = $day['times'][$i - 1];
+
+                if ($prev['closes'] < $time['opens']) {
+                    array_splice($day['times'], $i, 0, [[
+                        'opens' => $prev['closes'],
+                        'closes' => $time['opens'],
+                        'status' => 0,
+
+                        // The time entries should contain 'staff' because it is
+                        // present on the form too, for data coherency.
+                        'staff' => 0,
+                    ]]);
+                }
+            }
+
+            unset($time);
 
             if (empty($day['times'])) {
                 $day['closed'] = true;

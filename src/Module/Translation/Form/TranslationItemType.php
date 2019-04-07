@@ -98,7 +98,7 @@ class TranslationItemType extends AbstractType
 
     private function prepareForForm(array $message) : array
     {
-        if (strpos($message['id'], '|')) {
+        if ((strpos($message['id'], '|') !== false) && (strpos($message['id'], '{') !== false)) {
             $sources = preg_split('/(\s*)\|(\s*)/', $message['id']);
             $translations = preg_split('/(\s*)\|(\s*)/', $message['translation']);
             $values = [];

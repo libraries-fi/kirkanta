@@ -13,6 +13,10 @@
   {% endif %}
 {% endblock %}
 
+{% block translate_button_outer %}
+  {# Disabled for custom data #}
+{% endblock %}
+
 {% block _custom_data_form_title_widget %}
   <fieldset class="tr-group collapsed" data-app-group="content-language">
     {% for child in form %}

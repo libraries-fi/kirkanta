@@ -11,6 +11,7 @@ use App\Entity\Library;
 use App\Entity\Period;
 use App\Entity\Person;
 use App\Entity\ServiceInstance;
+use App\Entity\ServicePoint;
 use App\Module\Finna\Entity\FinnaAdditions;
 use App\Security\Authorization\SystemRoles;
 
@@ -25,6 +26,7 @@ class EntityTypeVoter extends Voter
         Person::class => [],
         ServiceInstance::class => [],
         FinnaAdditions::class => ['ROLE_FINNA'],
+        ServicePoint::class => ['ROLE_FINNA'],
     ];
 
     public function __construct(EntityTypeManager $types)

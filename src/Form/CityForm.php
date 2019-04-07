@@ -8,9 +8,18 @@ use App\Entity\RegionalLibrary;
 use App\Util\PersonQualities;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CityForm extends EntityFormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => \App\Entity\City::class,
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         $builder

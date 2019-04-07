@@ -47,7 +47,9 @@ class SlugType extends TextType
                 'data-slug-langcode' => $options['langcode'],
                 'data-slug-url' => $this->urlBuilder->generate('entity.slugger', [
                     'entity_type' => $options['entity_type']
-                ])
+                ]),
+                'pattern' => '[a-zåöä][a-z0-9åöä\-]{3,50}',
+                'title' => 'Allowed characters are lower-case letters and numbers and a dash. Must start with a letter and be at least four characters long.'
             ];
         }
     }

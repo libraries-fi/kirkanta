@@ -6,11 +6,27 @@
   {{ form_start(form) }}
   {{ block("form_header") }}
 
+  <div class="row form-section-grid">
+    <div class="col-md">
+      <fieldset class="form-section">
+        <legend>{% trans %}Basic information{% endtrans %}</legend>
+        {{ form_row(form.name) }}
+        {{ form_row(form.homepage) }}
+      </fieldset>
+    </div>
+    <aside class="col-md">
+      <fieldset class="form-section">
+        <legend>{% trans %}Administrators{% endtrans %}</legend>
+        {{ form_row(form.slug) }}
+        {% if form.owner is defined %}
+          {{ form_row(form.owner) }}
+        {% endif %}
+      </fieldset>
+    </aside>
+  </div>
+
   <fieldset class="form-section">
-    <legend>{% trans %}Basic information{% endtrans %}</legend>
-    {{ form_row(form.name) }}
-    {{ form_row(form.slug) }}
-    {{ form_row(form.homepage) }}
+    <legend>{% trans %}Description{% endtrans %}</legend>
     {{ form_row(form.description) }}
   </fieldset>
 

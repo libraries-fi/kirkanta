@@ -14,6 +14,7 @@ class Mailer
         $this->backend = $backend;
         $this->renderer = $renderer;
     }
+    
     public function send(EmailInterface $email) : void
     {
         $content = $this->renderer->render($email->getTemplate(), $email->getTemplateParameters());

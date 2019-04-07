@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block title_text %}
+  {% trans %}Library contact info{% endtrans %}
+{% endblock %}
+
+{% block content %}
+  {{ form_start(form) }}
+
+  <fieldset class="form-section pb-3">
+    <legend>{% trans %}Types{% endtrans %}</legend>
+    {{ form_widget(form.types) }}
+  </fieldset>
+
+  <fieldset class="form-section pb-3">
+    <legend>{% trans %}Options{% endtrans %}</legend>
+    {{ form_widget(form.group) }}
+    {{ form_widget(form.coordinates) }}
+  </fieldset>
+
+  {{ form_end(form) }}
+{% endblock %}

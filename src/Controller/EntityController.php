@@ -36,7 +36,7 @@ class EntityController extends Controller
         $types = $this->entityTypeManager;
         $list_builder = $this->entityTypeManager->getListBuilder($entity_type);
 
-        if ($this->entityTypeManager->hasForm($entity_type, 'search')) {
+        if ($this->entityTypeManager->hasForm($entity_type, 'search', new FormData)) {
             $search_form = $this->entityTypeManager->getForm($entity_type, 'search', null, ['admin' => true]);
             $search_form->handleRequest($request);
 
@@ -51,7 +51,6 @@ class EntityController extends Controller
 
         $result = $list_builder->load();
         $table = $list_builder->build($result);
-        $template = $this->resolveTemplate('collection', $entity_type);
 
         $actions = [
             'add' => [
@@ -78,20 +77,14 @@ class EntityController extends Controller
 
     public function add(Request $request, string $entity_type)
     {
-        $form = $this->entityTypeManager->getForm($entity_type, 'add', new FormData, [
+        $entity = $this->entityTypeManager->create($entity_type);
+        $form = $this->entityTypeManager->getForm($entity_type, 'edit', $entity, [
             'current_langcode' => SystemLanguages::TEMPORARY_LANGCODE
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $this->entityTypeManager
-                ->getRepository($entity_type)
-                ->create($form->getData()->getValues());
-
-            // var_dump($entity->getTranslations()->getKeys());
-            // var_dump($entity->getDefaultLangcode());
-            // exit('stop');
-
+            $entity = $form->getData();
             $this->entityTypeManager->getEntityManager()->persist($entity);
             $this->entityTypeManager->getEntityManager()->flush();
             $this->addFlash('form.success', 'Record was created.');
@@ -102,16 +95,11 @@ class EntityController extends Controller
         }
 
         return [
-            'form' => $form->createView(),
-        ];
-
-        $template = $this->resolveTemplate('edit', $entity_type);
-
-        return $this->render($template, [
             'type_label' => $this->entityTypeManager->getTypeLabel($entity_type),
             'form' => $form->createView(),
             'entity_type' => $entity_type,
-        ]);
+            $entity_type => $entity,
+        ];
     }
 
     /**
@@ -193,7 +181,6 @@ class EntityController extends Controller
                     ]);
 
             }
-            exit('POST');
         }
 
         return [

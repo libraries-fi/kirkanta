@@ -1,0 +1,10 @@
+html {
+  // Fix content shift when vertical scrollbar is toggled.
+  margin-left: calc(100vw - 100%);
+}
+
+#nav-main,
+#l-breadcrumb {
+  margin-left: calc(100% - 100vw);
+  padding-left: calc(#{$grid-gutter-width / 2} + 100vw - 100%);
+}

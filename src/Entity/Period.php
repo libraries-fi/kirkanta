@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Feature\GroupOwnership;
@@ -13,7 +14,7 @@ use App\I18n\Translations;
 /**
  * @ORM\Entity
  * @ORM\Table(name="periods")
- * @ORM\EntityListeners({"App\Doctrine\EventListener\ClearSchedulesOnPeriodRemove"})
+ * @ORM\EntityListeners({"App\Module\Schedules\EventListener\ClearSchedulesOnPeriodRemove"})
  */
 class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Translatable
 {
@@ -22,12 +23,12 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     use Feature\TranslatableTrait;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date_immutable")
      */
     private $valid_from;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date_immutable")
      */
     private $valid_until;
 
@@ -76,7 +77,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     public function isActive(DateTimeInterface $datetime = null) : bool
     {
         if (!$datetime) {
-            $datetime = new DateTime;
+            $datetime = new DateTimeImmutable;
         }
         if ($this->valid_from > $datetime) {
             return false;
@@ -90,11 +91,11 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
             return false;
         }
 
-        $ref = ($datetime ?? new \DateTime)->format('Ymd');
+        $ref = ($datetime ?? new \DateTimeImmutable)->format('Ymd');
         return $this->valid_until->format('Ymd') < $ref;
     }
 
-    public function getName() : string
+    public function getName() : ?string
     {
         return $this->translations[$this->langcode]->getName();
     }
@@ -116,7 +117,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
 
     public function getDays() : array
     {
-        return $this->days;
+        return $this->days ?? [];
     }
 
     public function setDays(array $days) : void
@@ -124,7 +125,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         $this->days = $days;
     }
 
-    public function getSection() : string
+    public function getSection() : ?string
     {
         // trigger_error('Period::getSection() is deprecated', E_USER_DEPRECATED);
         return $this->section;
@@ -136,24 +137,24 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
         $this->section = $section;
     }
 
-    public function getValidFrom() : DateTime
+    public function getValidFrom() : ?DateTimeImmutable
     {
         return $this->valid_from;
     }
 
-    public function setValidFrom(DateTime $date) : void
+    public function setValidFrom(DateTimeInterface $date) : void
     {
-        $this->valid_from = $date;
+        $this->valid_from = $this->toDateTimeImmutable($date);
     }
 
-    public function getValidUntil() : ?DateTime
+    public function getValidUntil() : ?DateTimeImmutable
     {
         return $this->valid_until;
     }
 
-    public function setValidUntil(?DateTime $date) : void
+    public function setValidUntil(?DateTimeInterface $date) : void
     {
-        $this->valid_until = $date;
+        $this->valid_until = $this->toDateTimeImmutable($date);
     }
 
     public function isContinuous() : bool
@@ -218,5 +219,16 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     public function setLibrary(LibraryInterface $library) : void
     {
         $this->setParent($library);
+    }
+
+    private function toDateTimeImmutable(?DateTimeInterface $date) : ?DateTimeImmutable
+    {
+        if (is_null($date)) {
+            return null;
+        } elseif ($date instanceof DateTimeImmutable) {
+            return $date;
+        } else {
+            return new DateTimeImmutable($date->format(DateTime::RFC3339));
+        }
     }
 }

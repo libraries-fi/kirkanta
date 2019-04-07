@@ -120,6 +120,10 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             $entity = $this->typeManager->getRepository($entity_type)->findOneById($entity);
         }
 
+        if (!$entity) {
+            return $menu;
+        }
+
         $resources = [
             'periods' => 'Periods',
             'services' => 'Services',
@@ -221,7 +225,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             'region',
             'regional_library',
             'service',
-            // 'user',
+            'user',
             'user_group'
         ];
 
@@ -233,9 +237,9 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
             ]);
         }
 
-        $menu->addChild('Users', [
-            'route' => 'user_management.create_user'
-        ]);
+        // $menu->addChild('Users', [
+        //     'route' => 'user_management.create_user'
+        // ]);
 
         return $menu;
     }
@@ -254,6 +258,9 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         ]);
         $menu->addChild('Service tree', [
             'route' => 'entity.service_category.collection',
+        ]);
+        $menu->addChild('Export contact info', [
+            'route' => 'export.library-contact-info'
         ]);
 
         return $menu;

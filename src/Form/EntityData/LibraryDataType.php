@@ -25,6 +25,14 @@ class LibraryDataType extends EntityDataType
 {
     protected $dataClass = LibraryData::class;
 
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'is_library_form' => true,
+        ]);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         parent::buildForm($builder, $options);
@@ -43,7 +51,7 @@ class LibraryDataType extends EntityDataType
                 'langcode' => $options['langcode'],
             ])
             ->add('slogan', null, [
-                'required' => true,
+                'required' => $options['is_library_form'],
                 'label' => 'Slogan',
             ])
             ->add('description', RichtextType::class, [

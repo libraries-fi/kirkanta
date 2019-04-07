@@ -60,21 +60,27 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
     /**
      * @ORM\Column(type="boolean")
      */
-    private $shared = false;
+    private $shared = true;
 
     /**
      * @ORM\OneToMany(targetEntity="ServiceInstanceData", mappedBy="entity", orphanRemoval=true, cascade={"persist", "remove"}, fetch="EXTRA_LAZY", indexBy="langcode")
      */
     private $translations;
 
-    public function getStandardName() : string
+    public function getStandardName() : ?string
     {
-        return $this->getTemplate()->getName();
+        if ($template = $this->getTemplate()) {
+            return $template->getName();
+        }
+        return null;
     }
 
-    public function getType() : string
+    public function getType() : ?string
     {
-        return $this->getTemplate()->getType();
+        if ($template = $this->getTemplate()) {
+            return $template->getType();
+        }
+        return null;
     }
 
     public function isShared() : bool
@@ -162,7 +168,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
         $this->translations[$this->langcode]->setWebsite($url);
     }
 
-    public function getTemplate() : Service
+    public function getTemplate() : ?Service
     {
         return $this->template;
     }
@@ -195,6 +201,7 @@ class ServiceInstance extends EntityBase implements CreatedAwareness, GroupOwner
     {
         $this->parent = $library;
         $this->parent->getServices()->add($this);
+        $this->shared = false;
     }
 
     public function getLibrary() : ?Library

@@ -2,11 +2,13 @@
 
 namespace App\Module\Finna\Form;
 
-use App\Module\Finna\Entity\FinnaAdditionsData;
+use App\Form\EntityData\EntityDataTransformer;
 use App\Form\I18n\EntityDataType;
+use App\Form\Type\RichtextType;
+use App\Module\Finna\Entity\FinnaAdditionsData;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Form\EntityData\EntityDataTransformer;
 
 class FinnaAdditionsDataType extends EntityDataType
 {
@@ -17,13 +19,21 @@ class FinnaAdditionsDataType extends EntityDataType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('usage_info', null, [
+            ->add('usage_info', RichtextType::class, [
+                'required' => false,
                 'label' => 'Usage info',
                 'langcode' => $options['langcode'],
+                'attr' => [
+                    'rows' => 8,
+                ]
             ])
-            ->add('notification', null, [
+            ->add('notification', TextareaType::class, [
+                'required' => false,
                 'label' => 'Notification',
                 'langcode' => $options['langcode'],
+                'attr' => [
+                    'rows' => 4,
+                ]
             ]);
     }
 }

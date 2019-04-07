@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use DateTime;
+use DateTimeImmutable;
 use App\Entity\Department;
 use App\Entity\Library;
 use App\Entity\Period;
@@ -20,11 +20,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PeriodForm extends EntityFormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => Period::class,
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
+        parent::form($builder, $options);
+
         $builder
             ->add('valid_from', DateType::class, [
                 'widget' => 'single_text',
@@ -60,9 +71,8 @@ class PeriodForm extends EntityFormType
             $form = $event->getForm();
             $period = $event->getData();
 
-            if ($period instanceof FormData) {
-                $organisation = $period->getValues()['library'] ?? null;
-                $event->setData(null);
+            if (!$period) {
+                $organisation = $options['context_entity'];
             } else {
                 $this->fixLegacyFormatDayTranslations($period);
                 $organisation = $period->getParent();
@@ -91,7 +101,7 @@ class PeriodForm extends EntityFormType
             $from = $event->getForm()->get('valid_from');
 
             if (!$from->getData()) {
-                $from->setData(new DateTime);
+                $from->setData(new DateTimeImmutable);
             }
         });
 

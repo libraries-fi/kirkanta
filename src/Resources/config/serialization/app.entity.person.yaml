@@ -18,6 +18,8 @@ App\Entity\Person:
       groups: ['default']
     head:
       groups: ['default']
+    state:
+      groups: ['default']
 
 App\Entity\PersonData:
   attributes:

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Library;
 use App\Entity\Person;
+use App\Form\DataTransformer\PhoneNumberTransformer;
 use App\Form\Type\SimpleEntityType;
 use App\Form\Type\StateChoiceType;
 use App\Util\PersonQualities;
@@ -11,12 +12,22 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PersonForm extends EntityFormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => Person::class,
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         $builder
@@ -34,7 +45,7 @@ class PersonForm extends EntityFormType
                 'label' => 'Email address can be published',
                 'required' => false
             ])
-            ->add('phone', null, [
+            ->add('phone', TelType::class, [
                 'required' => false
             ])
             ->add('head', CheckboxType::class, [
@@ -52,6 +63,8 @@ class PersonForm extends EntityFormType
             ])
             ;
 
+        $builder->get('phone')->addModelTransformer(new PhoneNumberTransformer);
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
             if ($event->getData()->isNew()) {
                 $event->getData()->setEmailPublic(true);
@@ -64,10 +77,10 @@ class PersonForm extends EntityFormType
             } else {
                 $person = $event->getData();
 
-                if ($person instanceof Person) {
-                    $groups = $person->getGroup()->getTree();
-                } else {
+                if ($person->isNew()) {
                     $groups = $this->auth->getUser()->getGroup()->getTree();
+                } else {
+                    $groups = $person->getGroup()->getTree();
                 }
 
                 if ($groups) {

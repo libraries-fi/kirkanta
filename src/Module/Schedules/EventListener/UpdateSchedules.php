@@ -18,6 +18,8 @@ class UpdateSchedules
     private $manager;
     private $flashes;
 
+    private $queue = [];
+
     public function __construct(ScheduleManager $schedule_manager, FlashBagInterface $flashes)
     {
         $this->manager = $schedule_manager;
@@ -26,64 +28,72 @@ class UpdateSchedules
 
     public function postPersist(LifecycleEventArgs $event) : void
     {
-        try {
-            $entity = $event->getEntity();
-            if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
-                $begin = $entity->getValidFrom();
-                $end = $entity->getValidUntil();
-                $fallback = new DateTime('+12 months');
-                $end = $end ? min($end, $fallback) : $fallback;
+        $entity = $event->getEntity();
 
-                $this->manager->updateSchedules($entity->getParent(), $begin, $end);
-            }
-        } catch (LegacyPeriodException $e) {
-            $this->error();
-        }
-    }
+        if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
+            $begin = $entity->getValidFrom();
+            $end = $entity->getValidUntil();
+            $fallback = new DateTime('+12 months');
+            $end = $end ? min($end, $fallback) : $fallback;
 
-    public function preDelete(LifecycleEventArgs $event) : void
-    {
-        try {
-            $entity = $event->getEntity();
-            if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
-                $begin = $entity->getValidFrom();
-                $end = $entity->getValidUntil();
-                $fallback = new DateTime('+12 months');
-                $end = $end ? min($end, $fallback) : $fallback;
-
-                $this->manager->updateSchedules($entity->getParent(), $begin, $end);
-            }
-        } catch (LegacyPeriodException $e) {
-            $this->error();
+            $this->queue[] = [$entity->getParent(), $begin, $end];
         }
     }
 
     public function preUpdate(PreUpdateEventArgs $event) : void
     {
-        try {
-            $entity = $event->getEntity();
+        $entity = $event->getEntity();
 
-            if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
-                if ($event->hasChangedField('valid_from')) {
-                    $begin = min($event->getOldValue('valid_from'), $event->getNewValue('valid_from'));
-                    $begin = max($begin, new DateTime);
-                } else {
-                    $begin = max($entity->getValidFrom(), new DateTime);
-                }
-
-                if ($event->hasChangedField('valid_until')) {
-                    $end = max($event->getOldValue('valid_until'), $event->getNewValue('valid_until'));
-                } else {
-                    $fallback = new DateTime('+12 months');
-                    $end = $entity->getValidUntil();
-                    $end = $end ? min($end, $fallback) : $fallback;
-                }
-
-                $this->manager->updateSchedules($entity->getParent(), $begin, $end);
+        if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
+            $monday = new DateTime('Monday this week');
+            if ($event->hasChangedField('valid_from')) {
+                $begin = min($event->getOldValue('valid_from'), $event->getNewValue('valid_from'));
+                $begin = max($begin, $monday);
+            } else {
+                $begin = max($entity->getValidFrom(), $monday);
             }
-        } catch (LegacyPeriodException $e) {
-            $this->error();
+
+            if ($event->hasChangedField('valid_until')) {
+                $end = max($event->getOldValue('valid_until'), $event->getNewValue('valid_until'));
+            } else {
+                $fallback = new DateTime('+12 months');
+                $end = $entity->getValidUntil();
+                $end = $end ? min($end, $fallback) : $fallback;
+            }
+
+            $this->queue[] = [$entity->getParent(), $begin, $end];
         }
+    }
+
+    public function preRemove(LifecycleEventArgs $event) : void
+    {
+        $entity = $event->getEntity();
+        if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
+            $begin = $entity->getValidFrom();
+            $end = $entity->getValidUntil();
+            $fallback = new DateTime('+12 months');
+            $end = $end ? min($end, $fallback) : $fallback;
+
+            $this->queue[] = [$entity->getParent(), $begin, $end];
+        }
+    }
+
+    public function onKernelTerminate() : void
+    {
+        if (!$this->queue) {
+            return;
+        }
+
+        foreach ($this->queue as $entry) {
+            try {
+                list($library, $begin, $end) = $entry;
+                $this->manager->updateSchedules($library, $begin, $end);
+            } catch (LegacyPeriodException $e) {
+                $this->error();
+            }
+        }
+
+        $this->queue = [];
     }
 
     private function error() : void

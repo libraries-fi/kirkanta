@@ -153,6 +153,7 @@ label.required:after {
   background-color: rgba(255, 255, 150, 0.35);
 }
 
+@import "overflow";
 @import "actions";
 @import "icons";
 @import "service_tree/service-tree-edit";
@@ -161,3 +162,4 @@ label.required:after {
 @import "entity.library";
 @import "entity.period";
 @import "entity.person";
+@import "entity.user";

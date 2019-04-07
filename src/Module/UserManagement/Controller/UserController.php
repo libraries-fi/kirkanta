@@ -29,9 +29,10 @@ class UserController extends Controller
 {
     private $types;
 
-    public function __construct(EntityTypeManager $types)
+    public function __construct(EntityTypeManager $types, UserPasswordEncoderInterface $passwords)
     {
         $this->types = $types;
+        $this->passwords = $passwords;
     }
 
     /**
@@ -76,106 +77,51 @@ class UserController extends Controller
 
     /**
      * @Route("/user_management/add", name="user_management.create_user", defaults={"entity_type": "user"})
+     * @Route("/admin/user/add", name="entity.user.add", defaults={"entity_type": "user"})
      * @Template("user_management/create-user.html.twig")
      */
-    public function createUser(Request $request, UserPasswordEncoderInterface $passwords, Mailer $mailer)
+    public function createUser(Request $request, Mailer $mailer)
     {
-        $builder = $this->createFormBuilder()
-            ->add('email', EmailType::class)
-            ->add('username', null, [
-                'label' => 'Personal name',
-                'help' => 'Real name of the employee, not a nickname.'
-            ])
-            ->add('group', EntityType::class, [
-                'label' => 'User group',
-                'data' => $this->getUser()->getGroup(),
-                'class' => UserGroup::class,
-                'choice_label' => 'name',
-                'attr' => [
-                    'readonly' => true,
-                    'class' => 'form-control-plaintext'
-                ]
-            ])
-            ->add('group_manager', CheckboxType::class, [
-                'label' => 'Make this account a group administrator',
-                'required' => false,
-                'constraints' => [new GroupManagerCount([
-                    'payload' => $this->getUser()->getGroup()
-                ])]
-            ])
-            ->add('actions', FormType::class, [
-                'mapped' => false,
-                'required' => false,
-            ]);
-
-        if ($this->isGranted('ROLE_ROOT')) {
-            $builder->add('group', EntityType::class, [
-                'label' => 'User group',
-                'class' => UserGroup::class,
-                'choice_label' => 'name',
-                'placeholder' => '-- Select --',
-            ]);
-        }
-
-        if ($this->getUser()->isMunicipalAccount()) {
-            $builder->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'property_path' => '[raw_password]',
-                'required' => false,
-                'invalid_message' => 'Passwords did not match',
-                'first_options' => [
-                    'label' => 'Password'
-                ],
-                'second_options' => [
-                    'label' => 'Password again'
-                ],
-                'constraints' => [
-                    new Constraints\Length(['min' => 8, 'max' => 100])
-                ]
-            ]);
-        }
-
-        $builder->get('actions')->add('submit', SubmitType::class);
-        $form = $builder->getForm();
+        $account = new \App\Entity\User;
+        $form = $this->types->getForm('user', 'add', $account);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $account = $this->types->getRepository('user')->create($form->getData());
-            // $account->setGroup($this->getUser()->getGroup());
-
             if ($account->getRawPassword()) {
-                $password = $passwords->encodePassword($account, $account->getRawPassword());
+                $password = $this->passwords->encodePassword($account, $account->getRawPassword());
                 $account->setPassword($password);
             }
 
-            $token = new OneTimeToken('activate_account');
-            $token->setUser($account);
-
-            $message = new AccountCreatedEmail($token);
-            $mailer->send($message);
+            // $token = new OneTimeToken('activate_account');
+            // $token->setUser($account);
+            //
+            // $message = new AccountCreatedEmail($token);
+            // $mailer->send($message);
 
             $em = $this->types->getEntityManager();
             $em->persist($account);
-            $em->persist($token);
+            // $em->persist($token);
             $em->flush();
 
             $this->addFlash('success', 'Account was created.');
-            $this->addFlash('success', 'Activation email sent.');
+            // $this->addFlash('success', 'Activation email sent.');
             // $this->addFlash('success', $token->getNonce());
             return $this->redirectToRoute('user_management.own_group');
         }
 
         return [
             'form' => $form->createView(),
+            'user' => $account,
         ];
     }
 
     /**
      * @Route("/user_management/{user}", name="user_management.manage_user", defaults={"entity_type": "user"})
+     * @Route("/admin/user/{user}", name="entity.user.edit", defaults={"entity_type": "user", "is_admin": true})
      * @ParamConverter("user", converter="entity_from_type_and_id")
      * @Template("user_management/manage-user.html.twig")
      */
-    public function manageUser(Request $request, UserInterface $user)
+    public function manageUser(Request $request, UserInterface $user, bool $is_admin = false)
     {
         $form = $this->types
             ->getForm('user', 'edit', $user)
@@ -189,10 +135,16 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($user->getRawPassword()) {
+                $password = $this->passwords->encodePassword($user, $user->getRawPassword());
+                $user->setPassword($password);
+
+                $this->addFlash('success', 'Password was changed.');
+            }
             $this->types->getEntityManager()->flush();
             $this->addFlash('success', 'Changes were saved.');
 
-            return $this->redirectToRoute('user_management.own_group');
+            return $this->redirectToRoute($is_admin ? 'entity.user.collection' : 'user_management.own_group');
         }
 
         return [

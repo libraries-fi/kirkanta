@@ -193,15 +193,14 @@ class OrganisationController extends Controller
     public function addResource(Request $request, $library, string $entity_type, string $resource)
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
-        $form = $this->types->getForm($type_id, 'edit', null, [
+        $entity = $this->types->create($type_id);
+        $form = $this->types->getForm($type_id, 'edit', $entity, [
             'context_entity' => $library,
-            // 'current_langcode' => $library->getDefaultLangcode(),
+            'disable_ownership' => true,
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $this->types->getRepository($type_id)->create($form->getData()->getValues());
-
             if (method_exists($entity, 'setParent')) {
                 $entity->setParent($library);
             }
@@ -223,6 +222,9 @@ class OrganisationController extends Controller
 
         return [
             'form' => $form->createView(),
+            'type_label' => $this->types->getTypeLabel($type_id),
+            'entity_type' => $type_id,
+            $type_id => $entity,
         ];
     }
 
@@ -237,6 +239,7 @@ class OrganisationController extends Controller
         $form = $this->types->getForm($type_id, 'edit', $entity, [
             'context_entity' => $library,
             'current_langcode' => $entity->getDefaultLangcode(),
+            'disable_ownership' => true,
         ]);
         $form->handleRequest($request);
 
@@ -247,6 +250,11 @@ class OrganisationController extends Controller
             return $this->redirectToRoute("entity.{$entity_type}.{$resource}", [
                 $entity_type => $library->getId(),
             ]);
+        }
+
+        $langcode = $request->query->get('langcode');
+        if ($langcode && !$entity->hasTranslation($langcode)) {
+            $this->addFlash('form.warning', 'Creating a new translation');
         }
 
         return [
@@ -273,6 +281,21 @@ class OrganisationController extends Controller
             $type_id => $resource_id,
         ]);
 
+        return $response;
+    }
+
+    /**
+     * @ParamConverter("library", converter="entity_from_type_and_id")
+     * @ParamConverter("service_point", converter="entity_from_type_and_id")
+     */
+    public function translateResource(Request $request, $library, string $entity_type, string $resource, int $resource_id)
+    {
+        $type_id = $this->resolveResourceTypeId($entity_type, $resource);
+
+        $response = $this->forward(EntityController::class . '::translate', [
+            'entity_type' => $type_id,
+            $type_id => $resource_id,
+        ]);
         return $response;
     }
 
@@ -463,13 +486,15 @@ class OrganisationController extends Controller
      */
     public function addCustomData(Request $request, string $entity_type, LibraryInterface $entity)
     {
-        $form = $this->createForm(\App\Form\CustomDataForm::class, (object)[
-            'title' => null,
-            'id' => null,
-            'value' => null,
-        ]);
-
         $langcodes = $entity->getTranslations()->getKeys();
+        $form = $this->createForm(\App\Form\CustomDataForm::class, (object)[
+            'id' => null,
+            'title' => (object)[],
+            'value' => (object)[],
+        ], [
+            'available_languages' => $langcodes,
+            'current_langcode' => SystemLanguages::DEFAULT_LANGCODE
+        ]);
 
         $form->handleRequest($request);
 

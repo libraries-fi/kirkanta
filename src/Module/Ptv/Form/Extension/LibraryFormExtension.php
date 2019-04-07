@@ -12,6 +12,7 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Handles processing of PTV configuration for Library entities.
@@ -21,9 +22,11 @@ class LibraryFormExtension extends AbstractTypeExtension
     const REQUIRED_ROLE = 'ROLE_PTV';
 
     private $types;
+    private $auth;
 
-    public function __construct(EntityTypeManager $types) {
+    public function __construct(EntityTypeManager $types, Security $auth) {
         $this->types = $types;
+        $this->auth = $auth;
     }
 
     public function getExtendedType() : string
@@ -71,7 +74,10 @@ class LibraryFormExtension extends AbstractTypeExtension
 
     protected function isPtvAllowed(GroupOwnership $entity)
     {
-        $roles = $entity->getOwner()->getRoles();
+        $roles = $entity->isNew()
+            ? $this->auth->getUser()->getGroup()->getRoles()
+            : $entity->getOwner()->getRoles()
+            ;
         return in_array(self::REQUIRED_ROLE, $roles, true);
     }
 }

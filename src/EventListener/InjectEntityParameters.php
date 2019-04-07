@@ -65,7 +65,7 @@ class InjectEntityParameters implements EventSubscriberInterface
             }
         } elseif ($entity_type = $attributes->get('entity_type')) {
             // Probably processing a forwarded request.
-            
+
             $action = substr(strrchr($attributes->get('_controller'), '::'), 1);
             $values = $event->getControllerResult();
             $values['entity_type'] = $entity_type;

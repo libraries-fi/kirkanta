@@ -2129,3 +2129,44 @@ UPDATE organisations SET type = 'municipal' WHERE type = 'library';
 
 UPDATE consortiums SET created = modified WHERE created IS NULL;
 ALTER TABLE consortiums ALTER created SET NOT NULL;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+-- Delete empty address entities created after change to using entities instead of FormData.
+DELETE FROM addresses WHERE id IN (SELECT a.id FROM addresses a LEFT JOIN addresses_data b ON a.id = b.entity_id WHERE b.entity_id IS NULL);
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+
+
+
+UPDATE service_instances SET shared = true WHERE parent_id IS NULL AND shared = false;
+
+
+
+
+-- COMMIT PLACEHOLDER --
+
+ALTER TABLE persons RENAME COLUMN qualities TO qualities_old;
+ALTER TABLE persons ADD COLUMN qualities text[];
+
+-- Convert person qualities from JSON array to text[].
+UPDATE persons SET qualities = array(SELECT jsonb_array_elements_text(qualities_old)) WHERE jsonb_typeof(qualities_old) = 'array';
+
+
+
+
+
+ALTER TABLE schedules ADD COLUMN status int;
+UPDATE schedules SET status = 1 WHERE staff = true;
+UPDATE schedules SET status = 2 WHERE staff = false AND closes IS NOT NULL;
+UPDATE schedules SET status = 0 WHERE staff = false AND closes IS NULL;
+ALTER TABLE schedules ALTER COLUMN status SET NOT NULL;
+
+ALTER TABLE schedules DROP COLUMN staff;

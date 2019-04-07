@@ -46,7 +46,7 @@ class EntityTemplateResolver implements EventSubscriberInterface
         if (!$attributes->get('_template')) {
             if (!$route_name) {
                 // Probably processing a forwarded request.
-                
+
                 $match = $this->urlMatcher->match($event->getRequest()->getPathInfo());
                 $route_name = $match['_route'];
             }

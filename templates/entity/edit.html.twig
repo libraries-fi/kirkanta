@@ -7,10 +7,10 @@
 {% set entity_is_trashed = entity.deleted|default(false) %}
 
 {% block title_text %}
-  {% if entity is defined %}
-    {% trans with {"%type%": type_label|trans|lower, "%id%": entity.id} %}Edit %type% #%id%{% endtrans %}
-  {% else %}
+  {% if entity.new %}
     {% trans with {"%type%": type_label|trans|lower} %}Add new %type%{% endtrans %}
+  {% else %}
+    {% trans with {"%type%": type_label|trans|lower, "%id%": entity.id} %}Edit %type% #%id%{% endtrans %}
   {% endif %}
 {% endblock %}
 
@@ -46,13 +46,19 @@
   <div class="hud position-sticky">
     <h1 class="hud-legend">{{ block("title_text") }}</h1>
 
-    {% if form.content_language is defined and entity is defined %}
+    {% if form.content_language is defined and not entity.new %}
       <div class="hud-group">
         <div class="input-group">
           <div class="input-group-prepend">
-            <a href="{{ path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) }}" class="btn btn-link" aria-label="{{ 'Manage translations'|trans }}" title="{{ 'Manage translations'|trans }}" id="btn-manage-entity-translations">
-              <i class="fas fa-globe" aria-hidden="true"></i>
-            </a>
+            {% block translate_button_outer %}
+              {% set translate_button_url = path('entity.%s.translate'|format(entity_type), {(entity_type): entity.id}) %}
+
+              {% block translate_button %}
+                <a href="{{ translate_button_url }}" class="btn btn-link" aria-label="{{ 'Manage translations'|trans }}" title="{{ 'Manage translations'|trans }}" id="btn-manage-entity-translations">
+                  <i class="fas fa-globe" aria-hidden="true"></i>
+                </a>
+              {% endblock %}
+            {% endblock %}
           </div>
           {{ form_widget(form.content_language, {"attr": {"data-app": "content-language"}}) }}
         </div>
@@ -68,7 +74,7 @@
     {% endif %}
 
     <div class="hud-actions">
-      {% if entity is defined and entity_type and entity.id %}
+      {% if entity is defined and entity_type and not entity.new %}
         {% if not entity_is_trashed %}
           {% block delete_button_outer %}
             {% if entity is defined and not entity_is_trashed %}
@@ -91,6 +97,10 @@
       {% endblock %}
     </div>
   </div>
+
+  {% block form_header_appendix %}
+
+  {% endblock %}
 
   {% with {flash_namespace: "form"} %}
     {{ block("flashes", "common-blocks.html.twig") }}

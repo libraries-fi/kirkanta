@@ -28,7 +28,7 @@ class RegionalLibraryData extends EntityDataBase
      */
     protected $entity;
 
-    public function getName() : string
+    public function getName() : ?string
     {
         return $this->name;
     }
@@ -38,7 +38,7 @@ class RegionalLibraryData extends EntityDataBase
         $this->name = $name;
     }
 
-    public function getProvince() : string
+    public function getProvince() : ?string
     {
         return $this->province;
     }

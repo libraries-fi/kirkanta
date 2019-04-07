@@ -18,11 +18,10 @@
     {% endif %}
   {% endif %}
 
-  <div class="container">
-    <div class="row">
-      <fieldset class="col-lg-6 form-section">
-        <legend>{% trans %}Basic details{% endtrans %}</legend>
-
+  <div class="row form-section-grid">
+    <div class="col-md">
+      <fieldset class="form-section">
+        <legend>{% trans %}Basic information{% endtrans %}</legend>
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
 
@@ -30,25 +29,35 @@
           {{ form_row(form.department) }}
         {% endif %}
       </fieldset>
-
-      {#
-      {% with { library: app.request.get('library') } %}
-        {% if library is null and entity is defined %}
-          {% set library = entity.parent %}
-        {% endif %}
-
-        {% if library %}
-          <fieldset class="col-lg-6 form-section">
-            <legend>{% trans %}Preview{% endtrans %}</legend>
-            <div data-app="organisation-calendar" data-organisation="{{ library.id }}">
-              calendar here...
-            </div>
-          </fieldset>
-        {% endif %}
-      {% endwith %}
-      #}
     </div>
+    <aside class="col-md">
+      {% if form.owner is defined %}
+        <fieldset class="form-section">
+          <legend>{% trans %}Administrators{% endtrans %}</legend>
+          {{ form_row(form.owner) }}
+        </fieldset>
+      {% else %}
+
+        {#
+        {% with { library: app.request.get('library') } %}
+          {% if library is null and entity is defined %}
+            {% set library = entity.parent %}
+          {% endif %}
+
+          {% if library %}
+            <fieldset class="col-lg-6 form-section">
+              <legend>{% trans %}Preview{% endtrans %}</legend>
+              <div data-app="organisation-calendar" data-organisation="{{ library.id }}">
+                calendar here...
+              </div>
+            </fieldset>
+          {% endif %}
+        {% endwith %}
+        #}
+      {% endif %}
+    </aside>
   </div>
+
   <fieldset class="form-section period-schedules">
     <legend>{% trans %}Schedules{% endtrans %}</legend>
 

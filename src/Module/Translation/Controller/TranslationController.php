@@ -5,6 +5,7 @@ namespace App\Module\Translation\Controller;
 use App\Module\Translation\Form\SearchForm;
 use App\Module\Translation\Form\TranslationForm;
 use App\Module\Translation\TranslationManager;
+use App\Util\FormData;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -18,6 +18,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomDataForm extends FormType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        $options->setDefaults([
+            'data_class' => \stdClass::class,
+            'available_languages' => []
+        ]);
+    }
+
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         $builder
@@ -43,15 +52,15 @@ class CustomDataForm extends FormType
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
             $entry = $event->getData();
-            $langcodes = [$event->getForm()->getRoot()->getConfig()->getOptions()['current_langcode']];
-
             $entry->title = get_object_vars($entry->title);
             $entry->value = get_object_vars($entry->value);
         });
 
         $builder->get('title')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
             $form = $event->getForm();
-            $langcodes = $form->getRoot()->getConfig()->getOption('available_languages');
+            $config = $form->getRoot()->getConfig();
+            $langcodes = $config->getOption('available_languages') ?: [];
+            $langcodes[] = $config->getOption('current_langcode');
 
             foreach ($langcodes as $langcode) {
                 $form->add($langcode, null, [
@@ -63,7 +72,9 @@ class CustomDataForm extends FormType
 
         $builder->get('value')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
             $form = $event->getForm();
-            $langcodes = $form->getRoot()->getConfig()->getOption('available_languages');
+            $config = $form->getRoot()->getConfig();
+            $langcodes = $config->getOption('available_languages') ?: [];
+            $langcodes[] = $config->getOption('current_langcode');
 
             foreach ($langcodes as $langcode) {
                 $form->add($langcode, TextareaType::class, [
@@ -75,13 +86,5 @@ class CustomDataForm extends FormType
                 ]);
             }
         });
-    }
-
-    public function configureOptions(OptionsResolver $options) : void
-    {
-        parent::configureOptions($options);
-        $options->setDefaults([
-            'available_languages' => []
-        ]);
     }
 }

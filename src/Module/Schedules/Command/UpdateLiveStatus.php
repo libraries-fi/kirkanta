@@ -41,9 +41,9 @@ class UpdateLiveStatus extends Command
             UPDATE schedules
             SET live_status =
                 CASE
-                    WHEN opens <= NOW() AND closes > NOW() AND staff = true
+                    WHEN opens <= NOW() AND closes > NOW() AND status = 1
                         THEN 1
-                    WHEN opens <= NOW() AND closes > NOW() AND staff = false
+                    WHEN opens <= NOW() AND closes > NOW() AND status = 2
                         THEN 2
                     ELSE 0
                 END

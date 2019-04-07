@@ -81,6 +81,13 @@ class LibraryRouteLoader extends Loader
                     'resource_id' => '\d+'
                 ]);
 
+                $translate_resource = new Route("{$base_path}/{$resource}/{resource_id}/translate", $defaults + [
+                    'resource' => $resource,
+                    '_controller' => sprintf('%s:translateResource', OrganisationController::class)
+                ], $requirements + [
+                    'resource_id' => '\d+'
+                ]);
+
                 $table_sort = new Route("{$base_path}/{$resource}/tablesort", $defaults + [
                     'resource' => $resource,
                     '_controller' => sprintf('%s:tableSort', OrganisationController::class)
@@ -95,6 +102,7 @@ class LibraryRouteLoader extends Loader
                 $routes->add("entity.{$type_id}.{$resource}.add", $add_resource);
                 $routes->add("entity.{$type_id}.{$resource}.edit", $edit_resource);
                 $routes->add("entity.{$type_id}.{$resource}.delete", $delete_resource);
+                $routes->add("entity.{$type_id}.{$resource}.translate", $translate_resource);
                 $routes->add("entity.{$type_id}.{$resource}.table_sort", $table_sort);
                 $routes->add("entity.{$type_id}.{$resource}.from_template", $from_template);
             }

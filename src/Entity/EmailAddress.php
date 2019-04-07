@@ -29,7 +29,7 @@ class EmailAddress extends ContactInfo
      */
     public function validate(ExecutionContextInterface $context, $payload) : void
     {
-        if (!preg_match('/^[\w\.]+@[a-z\.]+$/', $this->getEmail())) {
+        if (!preg_match('/^[\w\.\-]+@[a-z\.\-]+$/', $this->getEmail())) {
             $context->buildViolation('Not a valid email address')
                 ->atPath('contact')
                 ->addViolation();

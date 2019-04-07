@@ -38,10 +38,13 @@ trait TranslatableTrait
     public function setTranslations(iterable $data) : void
     {
         if (!($data instanceof Collection)) {
-            $data = new ArrayCollection($data);
+            $data = new ArrayCollection(array_filter($data));
         }
+
         foreach ($data as $data_entity) {
-            $data_entity->setEntity($this);
+            if ($data_entity) {
+                $data_entity->setEntity($this);
+            }
         }
         $this->translations = $data;
     }

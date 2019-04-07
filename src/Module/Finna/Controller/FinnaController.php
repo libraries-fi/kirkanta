@@ -38,21 +38,15 @@ class FinnaController extends Controller
         $entity = new FinnaAdditions;
         $entity->setConsortium($consortium);
 
-        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', new FormData([
-            'consortium' => $consortium,
-            'service_point' => null,
-        ]));
+        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', $entity);
 
         $form->remove('exclusive');
-
-        // $form->get('consortium')->setData($consortium);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $entity->setExclusive(false);
+
             $em = $this->types->getEntityManager();
-
-            $entity = $em->getRepository(FinnaAdditions::class)->create($form->getData()->getValues());
-
             $em->persist($entity);
             $em->flush();
 
@@ -81,14 +75,12 @@ class FinnaController extends Controller
      */
     public function createFinnaOrganisation(Request $request)
     {
-        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE);
+        $finna_data = $this->types->create(self::FINNA_ENTITY_TYPE);
+        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', $finna_data);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $values = $form->getData()->getValues();
-            $finna_data = $this->types->getRepository(self::FINNA_ENTITY_TYPE)->create($values);
             $consortium = $finna_data->getConsortium();
-
             $consortium->setFinnaData(null);
 
             $em = $this->types->getEntityManager();
@@ -109,7 +101,17 @@ class FinnaController extends Controller
                 self::FINNA_ENTITY_TYPE => $finna_data->getId(),
             ]);
         } else {
-            return $this->redirectToRoute('entity.finna_organisation.add');
+            $this->addFlash('form.danger', 'Validation failed');
+
+            var_dump($_POST);
+
+            // var_Dump($form->getErrors(true));
+
+            foreach ($form->getErrors() as $error) {
+                var_dump($error);
+            }
+            exit;
+            // return $this->redirectToRoute('entity.finna_organisation.add');
         }
     }
 
@@ -208,7 +210,7 @@ class FinnaController extends Controller
      * @Route("/finna_organisation/{finna_organisation}/links/add", name="entity.finna_organisation.add_link")
      * @Template("entity/FinnaAdditions/links.edit.html.twig")
      */
-    public function addLink(Request $request, FinnaAdditions $finna_organisation)
+    public function addWebLink(Request $request, FinnaAdditions $finna_organisation)
     {
         $type_id = 'finna_organisation_web_link';
         $form = $this->types->getForm($type_id, 'edit');

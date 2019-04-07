@@ -14,9 +14,9 @@ finna_additions:
     type: annotation
     resource: '../../src/Module/Finna/Controller/'
 
-controllers:
+export_library_contact_info:
     type: annotation
-    resource: '../../src/Controller/'
+    resource: '../../src/Module/ExportLibraryContactInfo/Controller/'
 
 user_management:
     type: annotation
@@ -26,15 +26,19 @@ service_tool:
     type: annotation
     resource: '../../src/Module/ServiceMergeTool/Controller/'
 
-entity_routes:
-    type: entity_routes
-    resource: 'App\Routing\EntityRouteLoader:load'
-
-library_routes:
-    type: library_routes
-    resource: 'App\Routing\LibraryRouteLoader:load'
+controllers:
+    type: annotation
+    resource: '../../src/Controller/'
 
 # NOTE: Put this last to allow other controllers to override generic functionality.
 entity_controller:
     resource: ../../src/Controller/EntityController.php
     type: annotation
+
+entity_routes:
+  type: entity_routes
+  resource: 'App\Routing\EntityRouteLoader:load'
+
+library_routes:
+  type: library_routes
+  resource: 'App\Routing\LibraryRouteLoader:load'
