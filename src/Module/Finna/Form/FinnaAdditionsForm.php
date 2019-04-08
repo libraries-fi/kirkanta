@@ -24,6 +24,7 @@ class FinnaAdditionsForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
+
         $options->setDefaults([
             'data_class' => FinnaAdditions::class,
         ]);
@@ -67,6 +68,18 @@ class FinnaAdditionsForm extends EntityFormType
             ;
 
         $builder->get('consortium')->remove('state');
+
+        $builder->get('consortium')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+            if (!$event->getData()) {
+                $event->setData(new Consortium);
+            }
+        }, true);
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+            $data = $event->getData();
+            $data['consortium']['langcode'] = $data['langcode'];
+            $event->setData($data);
+        });
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
             $form = $event->getForm();

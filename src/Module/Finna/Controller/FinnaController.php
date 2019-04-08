@@ -7,7 +7,7 @@ use App\Entity\Consortium;
 use App\Module\Finna\Entity\FinnaAdditions;
 use App\Module\Finna\Entity\FinnaOrganisationWebsiteLink;
 use App\Module\Finna\WebsiteLinkCategories;
-use App\Util\FormData;
+use App\Util\SystemLanguages;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -76,7 +76,9 @@ class FinnaController extends Controller
     public function createFinnaOrganisation(Request $request)
     {
         $finna_data = $this->types->create(self::FINNA_ENTITY_TYPE);
-        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', $finna_data);
+        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', $finna_data, [
+            'current_langcode' => SystemLanguages::TEMPORARY_LANGCODE
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -102,16 +104,7 @@ class FinnaController extends Controller
             ]);
         } else {
             $this->addFlash('form.danger', 'Validation failed');
-
-            var_dump($_POST);
-
-            // var_Dump($form->getErrors(true));
-
-            foreach ($form->getErrors() as $error) {
-                var_dump($error);
-            }
-            exit;
-            // return $this->redirectToRoute('entity.finna_organisation.add');
+            return $this->redirectToRoute('entity.finna_organisation.add');
         }
     }
 
