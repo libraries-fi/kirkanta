@@ -13,7 +13,7 @@ class FinnaAdditionsListBuilder extends EntityListBuilder
             ->addSelect('c')
             ->addSelect('cd')
             ->join('e.consortium', 'c')
-            ->join('c.translations', 'cd', 'WITH', 'cd.langcode = :langcode')
+            ->join('c.translations', 'cd', 'WITH', 'cd.langcode = e.default_langcode')
             ->andWhere('c.state >= 0')
             ;
 
