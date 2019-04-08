@@ -158,14 +158,14 @@ class ScheduleBuilder
              * With less than seven days, the first day in the period equals to the first date
              * when the period is in effect.
              */
-            $index = $period->getValidFrom()->diff($from)->d;
+            $index = $period->getValidFrom()->diff($from)->format('%a');
         } else {
             /**
              * When there are at least seven days in the period, the first day is always Monday
              * but the period's validity might start on another day.
              */
             $offset = $period->getValidFrom()->format('N') - 1;
-            $delta = $period->getValidFrom()->diff($from)->d;
+            $delta = $period->getValidFrom()->diff($from)->format('%a');
             $index = ($delta + $offset) % count($period->getDays());
         }
 
