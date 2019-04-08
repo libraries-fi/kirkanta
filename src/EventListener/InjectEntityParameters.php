@@ -57,6 +57,10 @@ class InjectEntityParameters implements EventSubscriberInterface
                     $values['entity_type'] = $entity_type;
 
                     if ($entity = $attributes->get($entity_type)) {
+                        if (!is_object($entity)) {
+                            // FIXME: Unsure why for some routes 'entity' is not automatically converted to an object. Too tired to dig further...
+                            $entity = $this->types->getRepository($entity_type)->findOneById($entity);
+                        }
                         $values[$entity_type] = $entity;
                     }
 

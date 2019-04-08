@@ -179,7 +179,6 @@ class EntityController extends Controller
                         $entity_type => $entity->getId(),
                         'langcode' => $langcode,
                     ]);
-
             }
         }
 

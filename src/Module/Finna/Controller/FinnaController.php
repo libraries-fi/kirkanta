@@ -108,7 +108,6 @@ class FinnaController extends Controller
         }
     }
 
-
     /**
      * Handles form submission when creating FinnaAdditions AND Consortium entities at the same time.
      * This is because the Consortium has to be persisted first in order to have access to its ID for
