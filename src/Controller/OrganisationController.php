@@ -197,6 +197,7 @@ class OrganisationController extends Controller
         $form = $this->types->getForm($type_id, 'edit', $entity, [
             'context_entity' => $library,
             'disable_ownership' => true,
+            'current_langcode' => $library->getDefaultLangcode(),
         ]);
         $form->handleRequest($request);
 

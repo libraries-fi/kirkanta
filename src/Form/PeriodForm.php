@@ -27,7 +27,7 @@ class PeriodForm extends EntityFormType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
-        
+
         $options->setDefaults([
             'data_class' => Period::class,
         ]);
@@ -80,7 +80,7 @@ class PeriodForm extends EntityFormType
             }
         });
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
             $langcodes = [$event->getForm()->getRoot()->getConfig()->getOptions()['current_langcode']];
 
             $period = $event->getData();
@@ -89,11 +89,15 @@ class PeriodForm extends EntityFormType
                 $langcodes = array_merge($langcodes, $period->getTranslations()->getKeys());
             }
 
+            if (isset($options['context_entity'])) {
+                $langcodes[] = $options['context_entity']->getDefaultLangcode();
+            }
+
             $event->getForm()->add('days', PeriodDayCollectionType::class, [
                 'allow_add' => true,
                 'allow_delete' => true,
                 'entry_options' => [
-                    'available_languages' => $langcodes
+                    'available_languages' => array_unique(array_filter($langcodes))
                 ],
             ]);
         });

@@ -19,6 +19,15 @@ use Symfony\Component\Form\FormView;
 
 class PeriodDayType extends BaseType
 {
+    public function configureOptions(OptionsResolver $options) : void
+    {
+        parent::configureOptions($options);
+        
+        $options->setDefaults([
+            'available_languages' => []
+        ]);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $builder
@@ -53,13 +62,5 @@ class PeriodDayType extends BaseType
                 ]);
             }
         });
-    }
-
-    public function configureOptions(OptionsResolver $options) : void
-    {
-        parent::configureOptions($options);
-        $options->setDefaults([
-            'available_languages' => []
-        ]);
     }
 }

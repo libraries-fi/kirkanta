@@ -82,6 +82,6 @@ trait TranslatableTrait
 
     public function getDefaultLangcode() : ?string
     {
-        return $this->default_langcode ?: SystemLanguages::DEFAULT_LANGCODE;
+        return $this->default_langcode;
     }
 }

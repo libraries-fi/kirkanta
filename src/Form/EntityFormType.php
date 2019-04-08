@@ -119,6 +119,9 @@ abstract class EntityFormType extends FormType
                     $translations[$langcode]->setLangcode($langcode);
                     unset($translations[$tmplang]);
 
+                }
+
+                if (!$data->getDefaultLangcode()) {
                     $data->setDefaultLangcode($langcode);
                 }
 
