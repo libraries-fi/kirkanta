@@ -43,7 +43,7 @@ class EntityDataCollectionType extends AbstractType
             // } elseif ($form_options['context_entity']) {
                 // $current_langcode = $options['default_langcode'];
             } else {
-                $current_langcode = $event->getForm()->getParent()->getData()->getDefaultLangcode();
+                $current_langcode = $event->getForm()->getRoot()->getData()->getDefaultLangcode();
             }
 
             // $current_langcode = $event->getForm()->getParent()->get('content_language')->getData();
