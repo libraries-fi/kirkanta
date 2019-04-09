@@ -2,6 +2,7 @@
 
 namespace App\Module\ApiCache\Serializer\Normalizer;
 
+use stdClass;
 use App\Entity\Feature\StateAwareness;
 use App\Entity\LibraryInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -33,10 +34,6 @@ class LibraryNormalizer implements NormalizerInterface
 
         $values = $this->inner->normalize($object, $format, $context);
 
-        $values['persons'] = array_filter($values['persons'], function($person) {
-            return $person['state'] == StateAwareness::PUBLISHED;
-        });
-
         $sortedPictures = [];
 
         /**
@@ -52,10 +49,6 @@ class LibraryNormalizer implements NormalizerInterface
 
         usort($sortedPictures, function($a, $b) {
             return $a[0] - $b[0];
-        });
-
-        usort($values['persons'], function($a, $b) {
-            return strcasecmp("{$a['firstName']} {$a['lastName']}", "{$b['firstName']} {$b['lastName']}");
         });
 
         $values['pictures'] = array_column($sortedPictures, 1);
@@ -92,6 +85,9 @@ class LibraryNormalizer implements NormalizerInterface
             unset($values['mailAddress']['coordinates']);
         }
 
+        $this->processPersons($values);
+        $this->buildBuildingInfo($values);
+
         return $values;
     }
 
@@ -126,7 +122,8 @@ class LibraryNormalizer implements NormalizerInterface
         return $entries;
     }
 
-    private function convertLegacyData(\stdClass $legacyItem) {
+    private function convertLegacyData(stdClass $legacyItem) : stdClass
+    {
         $item = (object)[
             'id' => $legacyItem->id,
             'title' => (object)['fi' => $legacyItem->title],
@@ -139,5 +136,34 @@ class LibraryNormalizer implements NormalizerInterface
         }
 
         return $item;
+    }
+
+    private function buildBuildingInfo(array &$document) : array
+    {
+        $document['buildingInfo'] = [
+            'buildingName' => $document['buildingName'],
+            'architect' => $document['buildingArchitect'],
+            'interiorDesigner' => $document['interiorDesigner'],
+            'constructionYear' => $document['constructionYear'] ?: null,
+        ];
+
+        unset($document['buildingName'], $document['buildingArchitect'], $document['interiorDesigner'], $document['constructionYear']);
+
+        return $document;
+    }
+
+    private function processPersons(array &$document) : array
+    {
+        if (isset($document['persons'])) {
+            $document['persons'] = array_filter($document['persons'], function($person) {
+                return $person['state'] == StateAwareness::PUBLISHED;
+            });
+
+            usort($document['persons'], function($a, $b) {
+                return strcasecmp("{$a['firstName']} {$a['lastName']}", "{$b['firstName']} {$b['lastName']}");
+            });
+        }
+
+        return $document;
     }
 }

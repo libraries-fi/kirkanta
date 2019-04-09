@@ -23,7 +23,8 @@ trait TranslatableTrait
             $this->langcode = $this->getDefaultLangcode();
             return $this->langcode;
         }
-        exit('GET');
+
+        throw new \RuntimeException("Tried to access non-existent property '{$property}'");
     }
 
     public function getTranslations() : Collection

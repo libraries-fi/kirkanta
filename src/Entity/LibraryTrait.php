@@ -246,6 +246,16 @@ trait LibraryTrait
         $this->translations[$this->langcode]->setHomepage($homepage);
     }
 
+    public function getFounded() : ?int
+    {
+        return $this->founded;
+    }
+
+    public function setFounded(?int $year) : void
+    {
+        $this->founded = $year;
+    }
+
     public function getConstructionYear() : ?int
     {
         return $this->construction_year;
