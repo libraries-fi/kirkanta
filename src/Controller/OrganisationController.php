@@ -324,7 +324,17 @@ class OrganisationController extends Controller
                 $instance = new $entity_class;
                 $instance->setOwner($library->getOwner());
                 $instance->setLibrary($library);
+                $instance->setDefaultLangcode($template->getDefaultLangcode());
 
+                $preferred_langcode = $library->getTranslations()->getKeys();
+                $fallback_langcode = $template->getDefaultLangcode();
+
+                if (in_array($preferred_langcode, $template->getTranslations()->getKeys())) {
+                    $instance->setDefaultLangcode($preferred_langcode);
+                } else {
+                    $instance->setDefaultLangcode($fallback_langcode);
+                }
+                
                 switch ($type_id) {
                     case 'period':
                         $instance->setIsLegacyFormat($template->isLegacyFormat());
