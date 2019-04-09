@@ -1,1 +1,5 @@
 {% extends "entity/edit.html.twig" %}
+
+{% block title_text %}
+  {% trans with {"%type%": type_label|trans|lower} %}Copy %type%{% endtrans %}
+{% endblock %}
