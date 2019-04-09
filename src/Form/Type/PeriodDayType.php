@@ -22,7 +22,7 @@ class PeriodDayType extends BaseType
     public function configureOptions(OptionsResolver $options) : void
     {
         parent::configureOptions($options);
-        
+
         $options->setDefaults([
             'available_languages' => []
         ]);
@@ -54,6 +54,15 @@ class PeriodDayType extends BaseType
          */
         $builder->get('info')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($langcodes) {
             $form = $event->getForm();
+
+            /**
+             * FIXME: Sometimes forms seem pre-populated with multiple fields
+             * but they don't have the 'langcode' property set and don't match
+             * available languages...
+             */
+            foreach ($form as $name => $_) {
+                $form->remove($name);
+            }
 
             foreach ($langcodes as $langcode) {
                 $form->add($langcode, null, [

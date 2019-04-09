@@ -93,11 +93,13 @@ class PeriodForm extends EntityFormType
                 $langcodes[] = $options['context_entity']->getDefaultLangcode();
             }
 
+            $langcodes = array_unique(array_filter($langcodes));
+
             $event->getForm()->add('days', PeriodDayCollectionType::class, [
                 'allow_add' => true,
                 'allow_delete' => true,
                 'entry_options' => [
-                    'available_languages' => array_unique(array_filter($langcodes))
+                    'available_languages' => $langcodes
                 ],
             ]);
         });
