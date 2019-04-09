@@ -1,7 +1,7 @@
 stdClass:
   attributes: ~
 
-App\Entity\Library:
+App\Entity\Facility:
   attributes:
     translations:
       groups: ['default', 'index']
@@ -17,8 +17,6 @@ App\Entity\Library:
       groups: ['default']
     mail_address:
       groups: ['mail_address', 'api_cache']
-    departments:
-      groups: ['departments', 'api_cache']
     phone_numbers:
       groups: ['phone_numbers', 'api_cache']
     links:
@@ -27,12 +25,8 @@ App\Entity\Library:
       groups: ['phone_numbers', 'api_cache']
     custom_data:
       groups: ['custom_data', 'api_cache']
-    persons:
-      groups: ['persons', 'api_cache']
     pictures:
       groups: ['pictures', 'api_cache']
-    services:
-      groups: ['services', 'api_cache']
     created:
       groups: ['default', 'api_cache']
     modified:
@@ -43,6 +37,25 @@ App\Entity\Library:
       groups: ['default']
     trams:
       groups: ['default']
+    building_architect:
+      groups: ['default']
+    interior_designer:
+      groups: ['default']
+    founded:
+      groups: ['default']
+    construction_year:
+      groups: ['default']
+
+App\Entity\Library:
+  attributes:
+    main_library:
+      groups: ['default']
+    departments:
+      groups: ['departments', 'api_cache']
+    persons:
+      groups: ['persons', 'api_cache']
+    services:
+      groups: ['services', 'api_cache']
 
 App\Entity\LibraryData:
   attributes:
@@ -65,6 +78,8 @@ App\Entity\LibraryData:
     transit_directions:
       groups: ['default']
     parking_instructions:
+      groups: ['default']
+    building_name:
       groups: ['default']
 
 App\Entity\Address:
