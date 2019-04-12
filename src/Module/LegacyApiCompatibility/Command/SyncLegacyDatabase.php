@@ -591,6 +591,7 @@ class SyncLegacyDatabase extends Command
                 created,
                 modified,
                 days,
+                default_langcode,
                 (valid_until IS NULL)::int AS continuous,
                 0 AS shared,
                 jsonb_object_agg(t.langcode, to_jsonb(t) - \'langcode\' - \'entity_id\') AS translations,
@@ -698,9 +699,8 @@ class SyncLegacyDatabase extends Command
 }
 
 function merge_primary_translation(array &$document) : array {
-
     $langcode = $document['default_langcode'] ?? 'fi';
-    $document += $document['translations'][$langcode] ?? [];
+    $document += $document['translations'][$langcode];
     unset($document['translations'][$langcode]);
     unset($document['default_langcode']);
     return $document;
