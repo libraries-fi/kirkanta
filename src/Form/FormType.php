@@ -78,10 +78,6 @@ abstract class FormType extends AbstractType
         parent::configureOptions($options);
 
         $request = $this->requestStack->getCurrentRequest();
-
-        // FIXME: Replace with $this->currentLangcode (also in child elements)
-        // $langcode = $request->query->get('langcode') ?? SystemLanguages::TEMPORARY_LANGCODE;
-
         $langcode = $request->query->get('langcode') ?? null;
 
         $options->setDefaults([

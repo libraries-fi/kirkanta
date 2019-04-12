@@ -334,7 +334,7 @@ class OrganisationController extends Controller
                 } else {
                     $instance->setDefaultLangcode($fallback_langcode);
                 }
-                
+
                 switch ($type_id) {
                     case 'period':
                         $instance->setIsLegacyFormat($template->isLegacyFormat());

@@ -17,10 +17,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EntityDataCollectionType extends AbstractType
 {
+    private $currentLangcode;
+
     public function __construct(FormFactoryInterface $form_factory)
     {
         $this->formFactory = $form_factory;
-        $this->currentLangcode = null;
     }
 
     public function configureOptions(OptionsResolver $resolver) : void
@@ -46,10 +47,7 @@ class EntityDataCollectionType extends AbstractType
                 $current_langcode = $event->getForm()->getRoot()->getData()->getDefaultLangcode();
             }
 
-            // $current_langcode = $event->getForm()->getParent()->get('content_language')->getData();
             $this->currentLangcode = $current_langcode;
-
-            // var_dump($this->currentLangcode);
 
             $form = $event->getForm();
             $translations = $event->getData();

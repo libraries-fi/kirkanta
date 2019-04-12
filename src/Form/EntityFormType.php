@@ -90,18 +90,27 @@ abstract class EntityFormType extends FormType
                     $languages = array_intersect($languages, $enabled);
                 }
 
-                $event->getForm()->add('langcode', ChoiceType::class, [
-                    'label' => 'Language',
-                    'placeholder' => '-- Select --',
-                    'mapped' => false,
-                    'choices' => $languages,
-                    'help' => 'Default language for this record.',
-                    'preferred_choices' => ['fi', 'sv'],
-                    'attr' => [
-                        // Slugger (in JS) uses this attribute to get default langcode.
-                        'data-default-langcode' => true
-                    ]
-                ]);
+                /**
+                 * Display language selector iff there is no explicit langcode defined.
+                 * Otherwise that explicit langcode is used for the initial translation
+                 * of a newly-created entity.
+                 *
+                 * Langcode might be explicit e.g. when a resource is added to a library.
+                 */
+                if (empty($options['current_langcode']) || $options['current_langcode'] == SystemLanguages::TEMPORARY_LANGCODE) {
+                    $event->getForm()->add('langcode', ChoiceType::class, [
+                        'label' => 'Language',
+                        'placeholder' => '-- Select --',
+                        'mapped' => false,
+                        'choices' => $languages,
+                        'help' => 'Default language for this record.',
+                        'preferred_choices' => ['fi', 'sv'],
+                        'attr' => [
+                            // Slugger (in JS) uses this attribute to get default langcode.
+                            'data-default-langcode' => true
+                        ]
+                    ]);
+                }
             }
         });
 
@@ -109,23 +118,28 @@ abstract class EntityFormType extends FormType
             $data = $event->getData();
             $form = $event->getForm();
 
-            if ($data->isNew() && $form->has('translations')) {
+            if ($data->isNew()) {
                 $translations = $data->getTranslations();
-                $langcode = $form->get('langcode')->getData();
-                $tmplang = SystemLanguages::TEMPORARY_LANGCODE;
 
-                if (isset($translations[$tmplang])) {
-                    $translations[$langcode] = $translations[$tmplang];
-                    $translations[$langcode]->setLangcode($langcode);
-                    unset($translations[$tmplang]);
+                if ($form->has('translations') && $form->has('langcode')) {
+                    $langcode = $form->get('langcode')->getData();
+                    $tmplang = SystemLanguages::TEMPORARY_LANGCODE;
 
+                    if (isset($translations[$tmplang])) {
+                        $translations[$langcode] = $translations[$tmplang];
+                        $translations[$langcode]->setLangcode($langcode);
+                        unset($translations[$tmplang]);
+                    }
+
+                    $data->setTranslations($translations);
                 }
 
                 if (!$data->getDefaultLangcode()) {
-                    $data->setDefaultLangcode($langcode);
+                    /**
+                     * There should exist only a single translation when creating an entity.
+                     */
+                    $data->setDefaultLangcode(current($translations->getKeys()));
                 }
-
-                $data->setTranslations($translations);
             }
         });
     }
