@@ -163,6 +163,9 @@ class SyncLegacyDatabase extends Command
             unset($row['coordinates']);
         });
 
+        // Reset slugs to avoid conflicts.
+        $this->legacyDb->query("UPDATE organisations SET slug = 'deleted-' || ceil(99999999 * random()) WHERE state < 1");
+
         $this->synchronize('organisations', 'organisations', [
             'role',
             'type',
@@ -700,6 +703,11 @@ class SyncLegacyDatabase extends Command
 
 function merge_primary_translation(array &$document) : array {
     $langcode = $document['default_langcode'] ?? 'fi';
+
+    if (!isset($document['translations'][$langcode])) {
+        print_r($document);
+        exit('Migration failed due to invalid translations configuration');
+    }
     $document += $document['translations'][$langcode];
     unset($document['translations'][$langcode]);
     unset($document['default_langcode']);
