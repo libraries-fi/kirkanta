@@ -2,6 +2,7 @@
 
 namespace App\Module\LegacyApiCompatibility\Command;
 
+use App\Entity\Feature\StateAwareness;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 Use Doctrine\ORM\EntityManagerInterface;
@@ -152,7 +153,7 @@ class SyncLegacyDatabase extends Command
             $row['region_id'] = 1003;
         });
 
-        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates'], function(&$row) {
+        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates', 'default_langcode'], function(&$row) {
             if ($row['coordinates']) {
                 list($lon, $lat) = explode(' ', substr($row['coordinates'], 6, -1));
                 $row['coordinates'] = "{$lat}, {$lon}";
@@ -187,6 +188,10 @@ class SyncLegacyDatabase extends Command
             'default_langcode',
             'custom_data',
         ], function(&$row) use($smtContact) {
+            if ($row['state'] != StateAwareness::PUBLISHED) {
+                throw new SkipSynchronizationException;
+            }
+
             $role = $row['role'];
             unset($row['role']);
 
@@ -272,7 +277,7 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->query('DELETE FROM pictures WHERE organisation_id IS NOT NULL');
 
-        $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover'], function(&$row) {
+        $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover', 'default_langcode'], function(&$row) {
             $row['organisation_id'] = $row['parent_id'];
             unset($row['parent_id']);
 
