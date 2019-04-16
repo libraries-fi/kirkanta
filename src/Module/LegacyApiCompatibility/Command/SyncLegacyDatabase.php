@@ -188,10 +188,6 @@ class SyncLegacyDatabase extends Command
             'default_langcode',
             'custom_data',
         ], function(&$row) use($smtContact) {
-            if ($row['state'] != StateAwareness::PUBLISHED) {
-                throw new SkipSynchronizationException;
-            }
-
             $role = $row['role'];
             unset($row['role']);
 
@@ -209,6 +205,10 @@ class SyncLegacyDatabase extends Command
 
             if ($row['type'] == 'municipal') {
                 $row['type'] = 'library';
+            }
+            
+            if ($row['state'] != StateAwareness::PUBLISHED) {
+                unset($row['slug']);
             }
 
             $row['branch_type'] = $row['type'];
