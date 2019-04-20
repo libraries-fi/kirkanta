@@ -77,8 +77,11 @@ class FinnaAdditionsForm extends EntityFormType
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
             $data = $event->getData();
-            $data['consortium']['langcode'] = $data['langcode'];
-            $event->setData($data);
+
+            if (isset($data['langcode'])) {
+                $data['consortium']['langcode'] = $data['langcode'];
+                $event->setData($data);
+            }
         });
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
