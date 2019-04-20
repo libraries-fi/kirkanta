@@ -193,11 +193,18 @@ class OrganisationController extends Controller
     public function addResource(Request $request, $library, string $entity_type, string $resource)
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
+
+        $force_langcode = !in_array($type_id, [
+            'phone',
+            'email_address',
+            'web_link',
+        ]);
+
         $entity = $this->types->create($type_id);
         $form = $this->types->getForm($type_id, 'edit', $entity, [
             'context_entity' => $library,
             'disable_ownership' => true,
-            'current_langcode' => $library->getDefaultLangcode(),
+            'current_langcode' => $force_langcode ? $library->getDefaultLangcode() : SystemLanguages::TEMPORARY_LANGCODE,
         ]);
         $form->handleRequest($request);
 
