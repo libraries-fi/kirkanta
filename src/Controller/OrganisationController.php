@@ -194,6 +194,11 @@ class OrganisationController extends Controller
     {
         $type_id = $this->resolveResourceTypeId($entity_type, $resource);
 
+        /**
+         * Allow custom language definition for contact info resources so that
+         * they can only have one language when necessary and so that the primary
+         * translation (most often Finnish) is optional as well.
+         */
         $force_langcode = !in_array($type_id, [
             'phone',
             'email_address',
