@@ -96,6 +96,9 @@ class EntityDataCollectionType extends AbstractType
         $view->setRendered(true);
         $parent = $view->parent;
 
+        // NOTE: Used in the parent form to set content_language combobox value!
+        $view->vars['current_langcode'] = $this->currentLangcode;
+
         foreach ($view->children as $langcode => $child) {
             foreach ($child as $name => $field) {
                 if (!isset($parent->children[$name])) {
@@ -114,21 +117,6 @@ class EntityDataCollectionType extends AbstractType
                 $field->parent = $parent->children[$name];
                 $parent->children[$name]->children[$langcode] = $field;
             }
-        }
-
-        $root = $parent;
-
-        while ($root->parent) {
-            $root = $root->parent;
-        }
-
-        if (!isset($root->children['content_language'])) {
-            $language = $this->formFactory->create(ContentLanguageChoiceType::class, null, [
-                'enabled_languages' => array_keys($view->children)
-            ]);
-
-            $language->setData($this->currentLangcode);
-            $root->children['content_language'] = $language->createView();
         }
     }
 }

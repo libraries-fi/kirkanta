@@ -31,14 +31,6 @@ class ContentLanguageChoiceType extends ChoiceType
         $languages = array_intersect($languages, $options['enabled_languages']);
         $options['choices'] = ['-- All --' => ''] + $languages;
 
-        // var_dump($options['choices']);
-        //
-        // $builder->addEventListener('form.post_set_data', function($event) {
-        //     var_dump($event->getData());
-        //     var_dump($event->getForm()->getConfig()->getOption('choices'));
-        //     exit('asdasd');
-        // });
-
         parent::buildForm($builder, $options);
     }
 }

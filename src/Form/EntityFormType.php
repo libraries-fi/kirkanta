@@ -11,6 +11,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
@@ -19,11 +22,13 @@ abstract class EntityFormType extends FormType
 {
     protected $types;
 
-    public function __construct(RequestStack $request_stack, Security $auth, EntityTypeManager $types, SystemLanguages $languages)
+    public function __construct(RequestStack $request_stack, Security $auth, EntityTypeManager $types, SystemLanguages $languages, FormFactoryInterface $form_factory)
     {
         parent::__construct($request_stack, $auth);
+
         $this->types = $types;
         $this->languages = $languages;
+        $this->formFactory = $form_factory;
     }
 
     public function configureOptions(OptionsResolver $options) : void
@@ -142,5 +147,18 @@ abstract class EntityFormType extends FormType
                 }
             }
         });
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options) : void
+    {
+        if (!isset($view->children['content_language']) && isset($view->children['translations'])) {
+            $langcodes = array_keys($view->children['translations']->children);
+            $language = $this->formFactory->create(I18n\ContentLanguageChoiceType::class, null, [
+                'enabled_languages' => $langcodes
+            ]);
+
+            $language->setData($view->children['translations']->vars['current_langcode']);
+            $view->children['content_language'] = $language->createView();
+        }
     }
 }
