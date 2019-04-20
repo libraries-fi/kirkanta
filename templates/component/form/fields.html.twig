@@ -13,26 +13,17 @@
 {%- endblock -%}
 
 {%- block choice_widget_collapsed -%}
-  {% if not multiple %}
-    {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}
+  {% if langcode is defined %}
+    <div class="input-group">
+      <span class="input-group-prepend">
+        <span class="input-group-text">{{ langcode }}</span>
+      </span>
+      {{- parent() -}}
+    </div>
+  {% else %}
+    {{- parent() -}}
   {% endif %}
-  {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
-      {% set required = false %}
-  {%- endif -%}
-  <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-      {%- if placeholder is not none -%}
-          <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
-      {%- endif -%}
-      {%- if preferred_choices|length > 0 -%}
-          {% set options = preferred_choices %}
-          {{- block('choice_widget_options') -}}
-          {%- if choices|length > 0 and separator is not none -%}
-              <option disabled="disabled">{{ separator }}</option>
-          {%- endif -%}
-      {%- endif -%}
-      {%- set options = choices -%}
-      {{- block('choice_widget_options') -}}
-  </select>
 {%- endblock %}
 
 {%- block file_widget -%}

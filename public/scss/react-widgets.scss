@@ -193,3 +193,19 @@ $multiselect-tag-color-hover:          $state-color-hover !default;
 
 @import "~react-widgets/lib/scss/popup.scss";
 @import "~react-widgets/lib/scss/state.scss";
+
+.tr-group {
+  .rw-container {
+    max-width: 27rem;
+    flex: 1 1 auto;
+  }
+
+  .rw-widget-container {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .rw-input {
+    height: calc(2.25rem + 1px);
+  }
+}
