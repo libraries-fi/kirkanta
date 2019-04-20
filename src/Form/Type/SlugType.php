@@ -40,6 +40,11 @@ class SlugType extends TextType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $view->vars['attr'] += [
+            'pattern' => '[a-zåöä][a-z0-9åöä\-]{3,50}',
+            'title' => 'Allowed characters are lower-case letters and numbers and a dash. Must start with a letter and be at least four characters long.'
+        ];
+
         if (!$form->getData()) {
             $view->vars['attr'] += [
                 'data-sluggable' => true,
@@ -48,8 +53,6 @@ class SlugType extends TextType
                 'data-slug-url' => $this->urlBuilder->generate('entity.slugger', [
                     'entity_type' => $options['entity_type']
                 ]),
-                'pattern' => '[a-zåöä][a-z0-9åöä\-]{3,50}',
-                'title' => 'Allowed characters are lower-case letters and numbers and a dash. Must start with a letter and be at least four characters long.'
             ];
         }
     }
