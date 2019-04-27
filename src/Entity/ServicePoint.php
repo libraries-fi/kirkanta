@@ -24,7 +24,7 @@ class ServicePoint extends Facility implements LibraryInterface
     {
         parent::__construct();
 
-        $this->accessibility = new ArrayCollection;
-        $this->periods = new ArrayCollection;
+        $this->accessibility = new ArrayCollection();
+        $this->periods = new ArrayCollection();
     }
 }

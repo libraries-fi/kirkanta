@@ -25,7 +25,7 @@ class UpdateModifiedTime implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof ModifiedAwareness) {
-            $entity->setModified(new DateTime);
+            $entity->setModified(new DateTime());
         }
     }
 }

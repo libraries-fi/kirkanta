@@ -28,7 +28,7 @@ class ServiceForm extends EntityFormType
             ])
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Select --',
-                'choices' => new ServiceTypes
+                'choices' => new ServiceTypes()
             ])
             ;
     }

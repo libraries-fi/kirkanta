@@ -16,6 +16,5 @@ abstract class FacilityForm extends EntityFormType
 
         $builder
             ->add('state', StateChoiceType::class);
-
     }
 }

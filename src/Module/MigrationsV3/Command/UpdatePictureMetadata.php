@@ -4,7 +4,7 @@ namespace App\Module\MigrationsV3\Command;
 
 use App\Entity\ConsortiumLogo;
 use App\Entity\LibraryPhoto;
-Use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

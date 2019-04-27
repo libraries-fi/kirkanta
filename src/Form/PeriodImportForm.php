@@ -21,7 +21,7 @@ class PeriodImportForm extends FormType
             'choice_label' => 'name',
             'class' => $options['entity_type'],
 
-            'query_builder' => function(EntityRepository $repo) use($options) {
+            'query_builder' => function (EntityRepository $repo) use ($options) {
                 $qb = $repo->createQueryBuilder('e')
                     ->andWhere('e.group IN (:groups)')
                     ->andWhere('e.parent IS NULL')
@@ -32,10 +32,9 @@ class PeriodImportForm extends FormType
             }
         ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             // var_dump($event->getData());
         });
-
     }
 
     public function configureOptions(OptionsResolver $options) : void

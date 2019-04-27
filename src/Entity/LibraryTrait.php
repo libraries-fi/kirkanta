@@ -104,11 +104,11 @@ trait LibraryTrait
     {
         parent::__construct();
 
-        $this->accessibility = new ArrayCollection;
-        $this->mobile_stops = new ArrayCollection;
-        $this->periods = new ArrayCollection;
-        $this->phone_numbers = new ArrayCollection;
-        $this->pictures = new ArrayCollection;
+        $this->accessibility = new ArrayCollection();
+        $this->mobile_stops = new ArrayCollection();
+        $this->periods = new ArrayCollection();
+        $this->phone_numbers = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
     }
 
     public function __toString()
@@ -398,7 +398,7 @@ trait LibraryTrait
          * NOTE: Using array_values() to ensure proper indexing so that data is serialized
          * as '[...]' and not '{...}'.
          */
-        $this->custom_data = $entries ? array_values($entries): null;
+        $this->custom_data = $entries ? array_values($entries) : null;
     }
 
     public function getApiKeywords() : array
@@ -407,8 +407,8 @@ trait LibraryTrait
         $keywords = self::extractApiKeywords($document, ['name'], ['shortName'], ['slug'], ['address', 'city'], ['address', 'area'], ['address', 'zipcode']);
 
         if (isset($document['services'])) {
-          $k2 = self::extractApiKeywordsArray($document['services'], ['name'], ['standardName']);
-          $keywords = array_merge($keywords, $k2);
+            $k2 = self::extractApiKeywordsArray($document['services'], ['name'], ['standardName']);
+            $keywords = array_merge($keywords, $k2);
         }
 
         return $keywords;

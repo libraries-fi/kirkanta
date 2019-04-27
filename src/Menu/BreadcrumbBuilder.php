@@ -23,7 +23,7 @@ class BreadcrumbBuilder
         $this->factory = $factory;
         $this->types = $types;
         $this->matcher = $matcher;
-        $this->providers = new \SplPriorityQueue;
+        $this->providers = new \SplPriorityQueue();
     }
 
     public function addProvider(BreadcrumbProviderInterface $provider, int $priority = 0) : void
@@ -43,7 +43,7 @@ class BreadcrumbBuilder
 
         $current_path = $request_stack->getCurrentRequest()->getPathInfo();
 
-        while (($i = strpos($current_path, '/', ($i ?? 0) + 1)) !== FALSE) {
+        while (($i = strpos($current_path, '/', ($i ?? 0) + 1)) !== false) {
             try {
                 $path = substr($current_path, 0, $i);
                 $match = $this->matcher->match($path);

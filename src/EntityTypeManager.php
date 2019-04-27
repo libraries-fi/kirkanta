@@ -15,7 +15,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-final class EntityTypeManager {
+final class EntityTypeManager
+{
     private $entity_manager;
     private $form_factory;
     private $paginator;
@@ -115,7 +116,8 @@ final class EntityTypeManager {
         return $this->form_factory->create($form_class, $data, $options);
     }
 
-    public function create(string $type_id, array $values = []) {
+    public function create(string $type_id, array $values = [])
+    {
         return $this->getRepository($type_id)->create($values);
     }
 

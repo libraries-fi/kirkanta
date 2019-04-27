@@ -35,7 +35,7 @@ class GroupManagerCountValidator extends ConstraintValidator
                 'group' => $group
             ]);
 
-            $managers = array_filter($users, (function($u) use($object) {
+            $managers = array_filter($users, (function ($u) use ($object) {
                 if ($u == $object) {
                     return false;
                 }

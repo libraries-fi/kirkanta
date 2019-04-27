@@ -49,7 +49,7 @@ class LibraryResourceRedirectSubscriber implements EventSubscriberInterface
 
                 $url = $this->urls->generate($target_route, $params + $query);
                 $response->setTargetUrl($url);
-            } else if (preg_match('/^entity\.(library|service_point)\.(\w+)\.(\w+)$/', $route_name, $match)) {
+            } elseif (preg_match('/^entity\.(library|service_point)\.(\w+)\.(\w+)$/', $route_name, $match)) {
                 $target_route = "entity.{$match[1]}.{$match[2]}";
                 $entity_id = $request->attributes->get($match[1]);
 

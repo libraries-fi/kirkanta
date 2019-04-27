@@ -50,7 +50,7 @@ class ServiceInstanceForm extends EntityFormType
             ])
             ;
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) use($builder) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($builder) {
             // Template field should be enabled only when creating new service instances.
             if ($event->getForm()->get('template')->getData()) {
                 $event->getForm()->remove('template');

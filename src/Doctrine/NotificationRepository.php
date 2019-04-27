@@ -11,7 +11,7 @@ class NotificationRepository extends EntityRepository
 {
     public function findUnreadByUser(User $user)
     {
-        $limit = (new DateTime)->sub(new DateInterval('P14D'));
+        $limit = (new DateTime())->sub(new DateInterval('P14D'));
         $dql = '
             SELECT n
             FROM App\Entity\Notification n

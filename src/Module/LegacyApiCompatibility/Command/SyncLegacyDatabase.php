@@ -5,7 +5,7 @@ namespace App\Module\LegacyApiCompatibility\Command;
 use App\Entity\Feature\StateAwareness;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
-Use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -45,7 +45,7 @@ class SyncLegacyDatabase extends Command
         $this->currentDb->getConfiguration()->setSQLLogger(null);
         $this->legacyDb->getConfiguration()->setSQLLogger(null);
 
-        $this->cache = new \stdClass;
+        $this->cache = new \stdClass();
 
         $entity_type = $input->getArgument('entity_type');
 
@@ -87,7 +87,7 @@ class SyncLegacyDatabase extends Command
             'state',
             'default_langcode',
             'logo_id'
-        ], function(&$row) {
+        ], function (&$row) {
             if ($row['logo_id']) {
                 $logoname = $this->currentDb->query("SELECT filename FROM pictures WHERE id = {$row['logo_id']}")->fetchColumn();
                 $row['logo'] = $logoname;
@@ -96,7 +96,7 @@ class SyncLegacyDatabase extends Command
             unset($row['logo_id']);
         });
 
-        $cache = new \stdClass;
+        $cache = new \stdClass();
 
         $result = $this->currentDb->query('
             SELECT
@@ -115,7 +115,7 @@ class SyncLegacyDatabase extends Command
             'finna_coverage',
             'exclusive',
             'default_langcode'
-        ], function(&$row) use($cache) {
+        ], function (&$row) use ($cache) {
             $row['service_point_id'] = $cache->bindings[$row['id']] ?? null;
 
             $cache->exclusive[$row['id']] = $row['exclusive'];
@@ -123,7 +123,6 @@ class SyncLegacyDatabase extends Command
 
             $row['consortium_id'] = $row['id'];
             unset($row['id']);
-
         }, [
             'insert_id' => 'consortium_id'
         ]);
@@ -147,13 +146,13 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->beginTransaction();
 
-        $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function(&$row) {
+        $this->synchronize('cities', 'cities', ['id', 'consortium_id', 'default_langcode'], function (&$row) {
             // Set a fallback value because API users don't really care about this,
             // so we don't bother syncing regions.
             $row['region_id'] = 1003;
         });
 
-        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates', 'default_langcode'], function(&$row) {
+        $this->synchronize('addresses', 'addresses', ['id', 'city_id', 'zipcode', 'box_number', 'ST_AsText(coordinates) AS coordinates', 'default_langcode'], function (&$row) {
             if ($row['coordinates']) {
                 list($lon, $lat) = explode(' ', substr($row['coordinates'], 6, -1));
                 $row['coordinates'] = "{$lat}, {$lon}";
@@ -187,7 +186,7 @@ class SyncLegacyDatabase extends Command
             'state',
             'default_langcode',
             'custom_data',
-        ], function(&$row) use($smtContact) {
+        ], function (&$row) use ($smtContact) {
             $role = $row['role'];
             unset($row['role']);
 
@@ -200,7 +199,7 @@ class SyncLegacyDatabase extends Command
             ]) ? 'f' : 't';
 
             if (!in_array($role, ['library', 'foreign'])) {
-                throw new SkipSynchronizationException;
+                throw new SkipSynchronizationException();
             }
 
             if ($row['type'] == 'municipal') {
@@ -277,7 +276,7 @@ class SyncLegacyDatabase extends Command
 
         $this->legacyDb->query('DELETE FROM pictures WHERE organisation_id IS NOT NULL');
 
-        $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover', 'default_langcode'], function(&$row) {
+        $this->synchronize('pictures', 'pictures', ['id', 'filename', 'created', 'parent_id', 'cover', 'default_langcode'], function (&$row) {
             $row['organisation_id'] = $row['parent_id'];
             unset($row['parent_id']);
 
@@ -285,7 +284,7 @@ class SyncLegacyDatabase extends Command
             unset($row['cover']);
 
             foreach ($row['translations'] as $langcode => &$data) {
-              unset($data['entity_type']);
+                unset($data['entity_type']);
             }
         });
 
@@ -295,24 +294,24 @@ class SyncLegacyDatabase extends Command
          * Handle phone numbers and email addresses.
          * Email addresses are copied as "phone numbers" of legacy reasons.
          */
-        $this->synchronize('contact_info', 'phone_numbers', ['id', 'type', 'weight', 'contact', 'parent_id'], function(&$row) {
+        $this->synchronize('contact_info', 'phone_numbers', ['id', 'type', 'weight', 'contact', 'parent_id'], function (&$row) {
             if (!isset($row['parent_id'])) {
                 /**
                  * Contact info can be bound to a Finna organisation also.
                  */
-                throw new SkipSynchronizationException;
+                throw new SkipSynchronizationException();
             }
 
             if (!isset($row['translations']['fi'])) {
-                throw new SkipSynchronizationException;
+                throw new SkipSynchronizationException();
             }
 
             if (mb_strlen($row['contact']) > 90) {
-                throw new SkipSynchronizationException;
+                throw new SkipSynchronizationException();
             }
 
             if ($row['type'] == 'website') {
-                throw new SkipSynchronizationException;
+                throw new SkipSynchronizationException();
             }
 
             $row['organisation_id'] = $row['parent_id'];
@@ -339,17 +338,17 @@ class SyncLegacyDatabase extends Command
         /**
          * Handle website links.
          */
-        $this->synchronize('contact_info', 'web_links', ['id', 'type', 'weight', 'contact', 'parent_id'], function(&$row) {
+        $this->synchronize('contact_info', 'web_links', ['id', 'type', 'weight', 'contact', 'parent_id'], function (&$row) {
             if ($row['type'] != 'website') {
-                throw new SkipSynchronizationException;
+                throw new SkipSynchronizationException();
             }
 
             if (empty($row['parent_id'])) {
-                throw new SkipSynchronizationException;
+                throw new SkipSynchronizationException();
             }
 
             if (!isset($row['translations']['fi'])) {
-                throw new SkipSynchronizationException;
+                throw new SkipSynchronizationException();
             }
 
             $row['organisation_id'] = $row['parent_id'];
@@ -417,7 +416,7 @@ class SyncLegacyDatabase extends Command
             'modified',
             'shared',
             'default_langcode'
-        ], function(&$row) {
+        ], function (&$row) {
             $row['organisation_id'] = $row['parent_id'];
             unset($row['parent_id']);
 
@@ -448,7 +447,7 @@ class SyncLegacyDatabase extends Command
             'library_id',
             'state',
             'default_langcode'
-        ], function(&$row) {
+        ], function (&$row) {
             $row['organisation_id'] = $row['library_id'];
             unset($row['library_id']);
 
@@ -469,7 +468,7 @@ class SyncLegacyDatabase extends Command
 
     private function syncPeriods(OutputInterface $output) : void
     {
-        $splitSelfService = function(array $period) {
+        $splitSelfService = function (array $period) {
             // $hasGap = function($a, $b) {
             //     return $a->closes != $b->closes;
             // };
@@ -523,7 +522,8 @@ class SyncLegacyDatabase extends Command
                                 $self['days'][$i]->times = [(object)[
                                     'opens' => reset($day->times)->opens,
                                     'closes' => end($day->times)->closes,
-                                ]];
+                                ]
+                                ];
                                 $self['days'][$i]->opens = reset($day->times)->opens;
                                 $self['days'][$i]->closes = end($day->times)->closes;
                                 $self['days'][$i]->closed = false;
@@ -538,7 +538,7 @@ class SyncLegacyDatabase extends Command
                     $day->times = array_values($day->times);
 
                     for ($j = 1; $j < count($period['days'][$i]->times); $j++) {
-                        $a = $period['days'][$i]->times[$j-1];
+                        $a = $period['days'][$i]->times[$j - 1];
                         $b = $period['days'][$i]->times[$j];
 
                         if ($a->closes < $b->opens && !empty($self['days'][$i]->times)) {
@@ -693,7 +693,7 @@ class SyncLegacyDatabase extends Command
                 }
 
                 if (isset($document['state']) && $document['state'] == -1) {
-                    throw new SkipSynchronizationException;
+                    throw new SkipSynchronizationException();
                 }
 
                 $document = merge_primary_translation($document);
@@ -706,7 +706,8 @@ class SyncLegacyDatabase extends Command
     }
 }
 
-function merge_primary_translation(array &$document) : array {
+function merge_primary_translation(array &$document) : array
+{
     $langcode = $document['default_langcode'] ?? 'fi';
 
     if (!isset($document['translations'][$langcode])) {
@@ -719,7 +720,8 @@ function merge_primary_translation(array &$document) : array {
     return $document;
 }
 
-function result_iterator(Statement $statement, array $values = [], $encode_translations = true) {
+function result_iterator(Statement $statement, array $values = [], $encode_translations = true)
+{
     $BATCH_SIZE = 100;
     $values['limit'] = $BATCH_SIZE;
 
@@ -751,8 +753,9 @@ function result_iterator(Statement $statement, array $values = [], $encode_trans
     }
 }
 
-function read_query(Connection $db, string $table, array $fields) : Statement {
-    $fields = array_map(function($f) {
+function read_query(Connection $db, string $table, array $fields) : Statement
+{
+    $fields = array_map(function ($f) {
         if (strpos($f, ' AS ')) {
             return $f;
         } else {
@@ -777,14 +780,19 @@ function read_query(Connection $db, string $table, array $fields) : Statement {
     return $db->prepare($sql);
 }
 
-function insert_query(Connection $db, string $table, array $values, string $id_field = 'id') : void {
+function insert_query(Connection $db, string $table, array $values, string $id_field = 'id') : void
+{
     if (empty($values[$id_field])) {
         throw new \InvalidArgumentException('Document ID is required');
     }
 
     $fields = array_keys($values);
-    $placeholders = array_map(function($f) { return ":{$f}"; }, $fields);
-    $updates = array_map(function($f) { return "{$f} = EXCLUDED.{$f}"; }, $fields);
+    $placeholders = array_map(function ($f) {
+        return ":{$f}";
+    }, $fields);
+    $updates = array_map(function ($f) {
+        return "{$f} = EXCLUDED.{$f}";
+    }, $fields);
 
     $fields = implode(', ', $fields);
     $placeholders = implode(', ', $placeholders);

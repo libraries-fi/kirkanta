@@ -31,7 +31,7 @@ class Region extends EntityBase implements Sluggable, Translatable
     public function __construct()
     {
         parent::__construct();
-        $this->cities = new ArrayCollection;
+        $this->cities = new ArrayCollection();
     }
 
     public function __toString()

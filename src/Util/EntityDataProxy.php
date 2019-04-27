@@ -8,7 +8,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use App\Entity\EntityBase;
 use App\Entity\EntityDataBase;
 
-class EntityDataProxy {
+class EntityDataProxy
+{
     public static function create($entity) : self
     {
         return new EntityDataProxy($entity);

@@ -9,7 +9,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $builder = new TreeBuilder;
+        $builder = new TreeBuilder();
         $root = $builder->root('kirkanta');
         $root->children()
             ->arrayNode('content_languages')

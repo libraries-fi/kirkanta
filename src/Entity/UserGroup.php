@@ -48,7 +48,7 @@ class UserGroup extends EntityBase
         parent::__construct();
 
         $this->name = $name;
-        $this->children = new ArrayCollection;
+        $this->children = new ArrayCollection();
     }
 
     public function __toString()

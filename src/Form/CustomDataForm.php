@@ -51,13 +51,13 @@ class CustomDataForm extends FormType
 
         $builder->get('content_language')->setData($options['current_langcode']);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $entry = $event->getData();
             $entry->title = get_object_vars($entry->title);
             $entry->value = get_object_vars($entry->value);
         });
 
-        $builder->get('title')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->get('title')->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $config = $form->getRoot()->getConfig();
             $langcodes = $config->getOption('available_languages') ?: [];
@@ -71,7 +71,7 @@ class CustomDataForm extends FormType
             }
         });
 
-        $builder->get('value')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->get('value')->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $config = $form->getRoot()->getConfig();
             $langcodes = $config->getOption('available_languages') ?: [];

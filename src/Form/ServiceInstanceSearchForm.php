@@ -16,7 +16,7 @@ class ServiceInstanceSearchForm extends SearchFormType
             ->add('name')
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Any --',
-                'choices' => new ServiceTypes
+                'choices' => new ServiceTypes()
             ]);
     }
 }

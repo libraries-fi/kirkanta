@@ -25,7 +25,7 @@ class SimpleEntityExtension extends AbstractTypeExtension
 
     public function configureOptions(OptionsResolver $options) : void
     {
-        $loader_normalizer = function(Options $options, $loader) {
+        $loader_normalizer = function (Options $options, $loader) {
             if ($loader) {
                 return $loader;
             }

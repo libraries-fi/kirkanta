@@ -34,7 +34,7 @@ class EntityRouteLoader extends Loader
         $this->loaded = true;
 
         $types = $this->types->getTypes();
-        $routes = new RouteCollection;
+        $routes = new RouteCollection();
 
         $public_entities = [
             'consortium',

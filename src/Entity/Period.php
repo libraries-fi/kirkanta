@@ -77,7 +77,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
     public function isActive(DateTimeInterface $datetime = null) : bool
     {
         if (!$datetime) {
-            $datetime = new DateTimeImmutable;
+            $datetime = new DateTimeImmutable();
         }
         if ($this->valid_from > $datetime) {
             return false;
@@ -91,7 +91,7 @@ class Period extends EntityBase implements GroupOwnership, ModifiedAwareness, Tr
             return false;
         }
 
-        $ref = ($datetime ?? new \DateTimeImmutable)->format('Ymd');
+        $ref = ($datetime ?? new \DateTimeImmutable())->format('Ymd');
         return $this->valid_until->format('Ymd') < $ref;
     }
 

@@ -27,7 +27,7 @@ class ServiceListBuilder extends EntityListBuilder
 
     public function build(iterable $entities) : iterable
     {
-        $types = new ServiceTypes;
+        $types = new ServiceTypes();
         $table = parent::build($entities)
             ->setColumns([
                 'name' => ['mapping' => ['d.name']],
@@ -37,7 +37,7 @@ class ServiceListBuilder extends EntityListBuilder
             ->setSortable('name')
             ->useAsTemplate('name')
             ->useAsTemplate('instances')
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '
                     <a href="{{ path("entity.service.edit", {service: row.id}) }}">{{ row.name }}</a>
                     {% if row.description|length %}
@@ -45,10 +45,10 @@ class ServiceListBuilder extends EntityListBuilder
                     {% endif %}
                 ';
             })
-            ->transform('type', function($s) use ($types) {
+            ->transform('type', function ($s) use ($types) {
                 return $types->search($s->getType());
             })
-            ->transform('instances', function($s) {
+            ->transform('instances', function ($s) {
                 $count = count($s->getInstances());
 
                 return "

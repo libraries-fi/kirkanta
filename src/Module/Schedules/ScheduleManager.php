@@ -24,7 +24,7 @@ class ScheduleManager
      * NOTE: Field 'opens' is used to deduce the date for a row. If 'closes' is NULL, then
      * the library is closed on that day. Live status is updated via a cron script.
      */
-    public function loadSchedules(LibraryInterface $library, DateTimeImmutable $begin = NULL, DateTimeImmutable $end = NULL) : array
+    public function loadSchedules(LibraryInterface $library, DateTimeImmutable $begin = null, DateTimeImmutable $end = null) : array
     {
         if (is_null($begin)) {
             $begin = new DateTimeImmutable('Monday this week');
@@ -64,7 +64,7 @@ class ScheduleManager
          */
 
         $periods = $library->getPeriods();
-        $builder = new ScheduleBuilder;
+        $builder = new ScheduleBuilder();
         $schedules = $builder->build($periods, $begin, $end);
 
         $this->db->beginTransaction();

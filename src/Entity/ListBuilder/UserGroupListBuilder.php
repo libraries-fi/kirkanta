@@ -26,7 +26,7 @@ class UserGroupListBuilder extends EntityListBuilder
         $table = parent::build($entities)
             ->setColumns(['name', 'parent', 'description'])
             ->useAsTemplate('name')
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.user_group.edit", {user_group: row.id}) }}">{{ row.name }}</a>';
             });
 

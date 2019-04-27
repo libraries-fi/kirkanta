@@ -33,7 +33,7 @@ class RouteLoader extends Loader
 
         $this->loaded = true;
 
-        $routes = new RouteCollection;
+        $routes = new RouteCollection();
         // $resources = ['links', 'link_groups'];
         // $base_path = '/finna_organisation/{finna_organisation}';
         //

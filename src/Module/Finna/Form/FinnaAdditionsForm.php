@@ -69,13 +69,13 @@ class FinnaAdditionsForm extends EntityFormType
 
         $builder->get('consortium')->remove('state');
 
-        $builder->get('consortium')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->get('consortium')->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             if (!$event->getData()) {
-                $event->setData(new Consortium);
+                $event->setData(new Consortium());
             }
         }, true);
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
             if (isset($data['langcode'])) {
@@ -84,7 +84,7 @@ class FinnaAdditionsForm extends EntityFormType
             }
         });
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
 

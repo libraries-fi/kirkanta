@@ -46,7 +46,7 @@ class Service extends EntityBase implements ApiCacheable, Translatable
     public function __construct()
     {
         parent::__construct();
-        $this->instances = new ArrayCollection;
+        $this->instances = new ArrayCollection();
     }
 
     public function __toString()

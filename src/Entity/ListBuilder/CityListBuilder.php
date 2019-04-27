@@ -55,7 +55,7 @@ class CityListBuilder extends EntityListBuilder
             ])
             ->setSortable('name')
             ->useAsTemplate('name')
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.city.edit", {city: row.id}) }}">{{ row.name }}</a>';
             });
 

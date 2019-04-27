@@ -6,7 +6,7 @@ use App\Entity\Consortium;
 use App\Entity\ConsortiumLogo;
 use App\Entity\LibraryPhoto;
 use Doctrine\Common\Collections\Criteria;
-Use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,9 +44,9 @@ class CreateConsortiumLogoEntities extends Command
         /**
          * In old Kirkanta the files were stored with all uploads.
          */
-        $old_upload_dir = sprintf('%s/%s', self::WEBROOT, $this->mappings->fromField(new LibraryPhoto, 'file')->getUploadDestination());
+        $old_upload_dir = sprintf('%s/%s', self::WEBROOT, $this->mappings->fromField(new LibraryPhoto(), 'file')->getUploadDestination());
 
-        $new_upload_dir = sprintf('%s/%s', self::WEBROOT, $this->mappings->fromField(new ConsortiumLogo, 'file')->getUploadDestination());
+        $new_upload_dir = sprintf('%s/%s', self::WEBROOT, $this->mappings->fromField(new ConsortiumLogo(), 'file')->getUploadDestination());
 
         // $criteria = Criteria::create()->where(Criteria::expr()->neq('old_logo_filename', null));
         // $consortiums = $this->em->getRepository(Consortium::class)->matching($criteria);
@@ -87,7 +87,7 @@ class CreateConsortiumLogoEntities extends Command
 
                         $output->writeln("COPY: {$new_dirname}/{$new_filename} -> {$original_filepath}");
 
-                        $logo = new ConsortiumLogo;
+                        $logo = new ConsortiumLogo();
                         $logo->setFilename($new_filename);
                         $logo->setOriginalName(basename($old_filepath));
 

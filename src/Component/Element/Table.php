@@ -57,7 +57,7 @@ class Table implements IteratorAggregate
 
     public function getIterator() : Iterator
     {
-        return new TransformIterator($this->data, function($row, $i) {
+        return new TransformIterator($this->data, function ($row, $i) {
             return new Table\Row($this, $row);
         });
     }
@@ -204,7 +204,7 @@ class Table implements IteratorAggregate
     {
         $this->columns[$column]->setSize(10);
 
-        return $this->useAsTemplate($column)->transform($column, function() {
+        return $this->useAsTemplate($column)->transform($column, function () {
             return '
                 <a class="drag-handle" title="{{ \'Drag row\'|trans }}" data-drag-id="{{ row.id }}">
                     <i class="fas fa-arrows-alt"></i>

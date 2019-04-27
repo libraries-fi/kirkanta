@@ -25,7 +25,7 @@ class PeriodListBuilder extends EntityListBuilder
         // CheckboxType always returns a value.
         if (empty($search['past_periods'])) {
             $builder->andWhere('(e.valid_from >= :now OR e.valid_until IS NULL) OR e.valid_until >= :now');
-            $builder->setParameter('now', (new DateTime)->format('Y-m-d'));
+            $builder->setParameter('now', (new DateTime())->format('Y-m-d'));
         }
 
         if (isset($search['department'])) {
@@ -55,7 +55,7 @@ class PeriodListBuilder extends EntityListBuilder
             ->useAsTemplate('state')
             ->useAsTemplate('name')
             ->useAsTemplate('type')
-            ->transform('state', function($p) {
+            ->transform('state', function ($p) {
                 if ($p->isActive()) {
                     $class = 'text-success';
                     $label = 'Active';
@@ -68,18 +68,18 @@ class PeriodListBuilder extends EntityListBuilder
                 }
                 return "<i class=\"fa fa-square {$class}\" title=\"{$label}\"></i>";
             })
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.period.edit", {period: row.id}) }}">{{ row.name }}</a>';
             })
-            ->transform('valid_from', function($p) {
+            ->transform('valid_from', function ($p) {
                 return $p->getValidFrom()->format('Y-m-d');
             })
-            ->transform('valid_until', function($p) {
+            ->transform('valid_until', function ($p) {
                 if ($p->getValidUntil()) {
                     return $p->getValidUntil()->format('Y-m-d');
                 }
             })
-            ->transform('type', function($p) {
+            ->transform('type', function ($p) {
                 if ($p->isLegacyFormat()) {
                     // FIXME: Remove this condition after dropping the section field!
                     return '<span class="badge badge-pill badge-danger">{% trans %}Legacy period{% endtrans %}</span>';

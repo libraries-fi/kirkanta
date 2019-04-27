@@ -76,7 +76,7 @@ class ProxyCollection implements Collection
 
     public function remove($key)
     {
-        if ( ! isset($this->elements[$key]) && ! array_key_exists($key, $this->elements)) {
+        if (! isset($this->elements[$key]) && ! array_key_exists($key, $this->elements)) {
             return null;
         }
 
@@ -111,7 +111,7 @@ class ProxyCollection implements Collection
 
     public function offsetSet($offset, $value)
     {
-        if ( ! isset($offset)) {
+        if (! isset($offset)) {
             $this->add($value);
             return;
         }
@@ -205,7 +205,7 @@ class ProxyCollection implements Collection
     public function forAll(Closure $p)
     {
         foreach ($this->elements as $key => $element) {
-            if ( ! $p($key, $element)) {
+            if (! $p($key, $element)) {
                 return false;
             }
         }

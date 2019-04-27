@@ -32,14 +32,14 @@ class FinnaAdditionsListBuilder extends EntityListBuilder
             ->useAsTemplate('state')
             ->useAsTemplate('name')
             ->setSortable('name')
-            ->transform('state', function($o) {
+            ->transform('state', function ($o) {
                 if ($o->isPublished()) {
                     return '<i class="fa fa-square text-success" title="{{ \'Published\'|trans }}"></i>';
                 } else {
                     return '<i class="fa fa-square text-warning" title="{{ \'Draft\'|trans }}"></i>';
                 }
             })
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.finna_organisation.edit", {finna_organisation: row.id}) }}">{{ row.consortium.name }}</a>';
             });
 

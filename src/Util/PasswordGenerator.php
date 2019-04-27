@@ -8,7 +8,7 @@ class PasswordGenerator
 
     public static function password() : string
     {
-        return (new static)->generate();
+        return (new static())->generate();
     }
 
     public function generate() : string

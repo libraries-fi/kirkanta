@@ -19,7 +19,7 @@ class ServiceTemplateType extends BaseType
             ])
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Any --',
-                'choices' => new ServiceTypes,
+                'choices' => new ServiceTypes(),
             ])
             ;
     }

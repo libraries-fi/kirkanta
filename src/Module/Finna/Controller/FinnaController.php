@@ -35,7 +35,7 @@ class FinnaController extends Controller
      */
     public function addFinnaAdditionsAction(Request $request, Consortium $consortium)
     {
-        $entity = new FinnaAdditions;
+        $entity = new FinnaAdditions();
         $entity->setConsortium($consortium);
 
         $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', $entity);
@@ -154,11 +154,11 @@ class FinnaController extends Controller
         $result = $list_builder->load();
         $table = $list_builder->build($result);
 
-        $groups = new WebsiteLinkCategories;
+        $groups = new WebsiteLinkCategories();
         $table
             ->addColumn('category', 'Category')
             ->useAsTemplate('category')
-            ->transform('category', function($o) use($groups) {
+            ->transform('category', function ($o) use ($groups) {
                 if ($label = $groups->search($o->getCategory())) {
                     return "{% trans %}{$label}{% endtrans %}";
                 }
@@ -170,14 +170,14 @@ class FinnaController extends Controller
 
         $table
             ->useAsTemplate('name')
-            ->transform('name', function($entity) {
-            return '
+            ->transform('name', function ($entity) {
+                return '
                 <a href="{{ path("entity.finna_organisation.edit_link", {
                     finna_organisation: row.finnaOrganisation.id,
                     link: row.id
                 }) }}">{{ row.name }}</a>
             ';
-        });
+            });
 
         $actions = [
             'add' => [
@@ -245,7 +245,7 @@ class FinnaController extends Controller
             $this->addFlash('success', 'Changed were saved.');
 
             return $this->redirectToRoute('entity.finna_organisation.link_collection', [
-              'finna_organisation' => $finna_organisation->getId(),
+                'finna_organisation' => $finna_organisation->getId(),
             ]);
         }
 
@@ -267,7 +267,7 @@ class FinnaController extends Controller
         $entities = $this->types->getRepository('finna_organisation_web_link')->findById($ids);
 
         if ($entities) {
-            usort($entities, function($a, $b) {
+            usort($entities, function ($a, $b) {
                 return $a->getWeight() - $b->getWeight();
             });
 

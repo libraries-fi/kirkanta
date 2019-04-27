@@ -9,6 +9,5 @@ class PhoneNumberValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint) : void
     {
-        
     }
 }

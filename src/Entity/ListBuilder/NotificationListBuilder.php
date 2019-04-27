@@ -25,10 +25,10 @@ class NotificationListBuilder extends EntityListBuilder
             ->setColumns(['subject', 'created' => 'Posted'])
             ->setSorting('created', 'desc')
             ->useAsTemplate('subject')
-            ->transform('subject', function() {
+            ->transform('subject', function () {
                 return '<a href="{{ path("entity.notification.edit", {notification: row.id}) }}">{{ row.subject }}</a>';
             })
-            ->transform('created', function($date) {
+            ->transform('created', function ($date) {
                 return $date->getCreated()->format('Y-m-d');
             });
 

@@ -36,12 +36,12 @@ class EntityController extends Controller
         $types = $this->entityTypeManager;
         $list_builder = $this->entityTypeManager->getListBuilder($entity_type);
 
-        if ($this->entityTypeManager->hasForm($entity_type, 'search', new FormData)) {
+        if ($this->entityTypeManager->hasForm($entity_type, 'search', new FormData())) {
             $search_form = $this->entityTypeManager->getForm($entity_type, 'search', null, ['admin' => true]);
             $search_form->handleRequest($request);
 
             if ($search_form->isSubmitted() && $search_form->isValid()) {
-              $list_builder->setSearch($search_form->getData()->getValues());
+                $list_builder->setSearch($search_form->getData()->getValues());
             }
         } else {
             $search_form = null;
@@ -141,14 +141,14 @@ class EntityController extends Controller
      */
     public function translate(Request $request, string $entity_type, $entity)
     {
-        $languages = (new SystemLanguages)->getData();
+        $languages = (new SystemLanguages())->getData();
         $available = array_diff($languages, $entity->getTranslations()->getKeys());
         $protected_translations = [$entity->getDefaultLangcode()];
 
         if ($request->isMethod('post')) {
             $langcode = $request->request->get('langcode');
 
-            switch($request->request->get('action')) {
+            switch ($request->request->get('action')) {
                 case 'delete':
                     $translation = $entity->getTranslations()->remove($langcode);
                     $this->entityTypeManager->getEntityManager()->remove($translation);

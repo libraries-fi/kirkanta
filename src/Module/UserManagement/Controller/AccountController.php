@@ -79,7 +79,8 @@ class AccountController extends Controller
      * @IsGranted("CHANGE_EMAIL")
      * @Template("account/change-email.html.twig")
      */
-    public function changeEmail(Request $request, UserInterface $user) {
+    public function changeEmail(Request $request, UserInterface $user)
+    {
         $form = $this->createFormBuilder($user)
             ->add('email', EmailType::class, [
                 'help' => 'Give a valid email address.'

@@ -51,7 +51,7 @@ class User extends EntityBase implements CreatedAwareness, Serializable, UserInt
     public function __construct()
     {
         parent::__construct();
-        $this->read_notifications = new ArrayCollection;
+        $this->read_notifications = new ArrayCollection();
     }
 
     public function getLastLogin() : ?DateTime
@@ -85,7 +85,7 @@ class User extends EntityBase implements CreatedAwareness, Serializable, UserInt
         }
     }
 
-     public function getGroup() : ?UserGroup
+    public function getGroup() : ?UserGroup
     {
         return $this->group;
     }

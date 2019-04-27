@@ -25,15 +25,15 @@ class ServiceCategoryListBuilder extends EntityListBuilder
             ->setColumns(['name', 'parent', 'items'])
             ->useAsTemplate('name')
             ->useAsTemplate('items')
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.service_category.edit", {"service_category": row.id}) }}">{{ row.name }}</a>';
             })
-            ->transform('parent', function($category) {
+            ->transform('parent', function ($category) {
                 if ($parent = $category->getParent()) {
                     return $parent->getName();
                 }
             })
-            ->transform('items', function($category) {
+            ->transform('items', function ($category) {
                 return '{{ "%count% services"|trans({"%count%": row.items|length}) }}';
             });
 

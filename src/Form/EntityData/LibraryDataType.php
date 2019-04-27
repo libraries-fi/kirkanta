@@ -78,10 +78,10 @@ class LibraryDataType extends EntityDataType
             ])
             ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             $data = $event->getData();
 
-            $qb = function($repo) use($data) {
+            $qb = function ($repo) use ($data) {
                 // var_dump($repo);
                 // exit('ok');
                 return $repo->createQueryBuilder('e')

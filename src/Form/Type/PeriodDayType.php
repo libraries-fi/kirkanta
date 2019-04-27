@@ -42,7 +42,7 @@ class PeriodDayType extends BaseType
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'prototype_data' => [
-                  'staff' => true
+                    'staff' => true
                 ]
             ]);
 
@@ -52,7 +52,7 @@ class PeriodDayType extends BaseType
          * NOTE: Adding fields has to be done in an event listener in order
          * to add the fields also on the prototype element.
          */
-        $builder->get('info')->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($langcodes) {
+        $builder->get('info')->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($langcodes) {
             $form = $event->getForm();
 
             /**

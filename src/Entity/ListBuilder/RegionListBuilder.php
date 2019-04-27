@@ -25,7 +25,7 @@ class RegionListBuilder extends EntityListBuilder
             ->setColumns(['name' => ['mapping' => ['d.name']]])
             ->setSortable('name')
             ->useAsTemplate('name')
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.region.edit", {region: row.id}) }}">{{ row.name }}</a>';
             });
 

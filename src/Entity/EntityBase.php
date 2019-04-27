@@ -18,11 +18,11 @@ abstract class EntityBase
     public function __construct()
     {
         if ($this instanceof Feature\CreatedAwareness) {
-            $this->created = new DateTime;
+            $this->created = new DateTime();
         }
 
         if ($this instanceof Feature\Translatable) {
-            $this->setTranslations(new ArrayCollection);
+            $this->setTranslations(new ArrayCollection());
         }
     }
 

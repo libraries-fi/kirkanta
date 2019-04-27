@@ -35,7 +35,7 @@ class ServiceCategoryForm extends FormType
             ->add('state', StateChoiceType::class)
             ;
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
 
             $form->add('services', EntityType::class, [

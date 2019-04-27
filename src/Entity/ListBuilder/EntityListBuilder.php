@@ -155,11 +155,11 @@ abstract class EntityListBuilder
         if (($sort_key = $request->query->get('s')) && isset($columns[$sort_key])) {
             $columns = [$sort_key => $columns[$sort_key]];
         } else {
-            $filtered = array_filter($columns, function($column) {
+            $filtered = array_filter($columns, function ($column) {
                 return $column->getSorting();
             });
             if (!$filtered) {
-                $filtered = array_filter($columns, function($column) {
+                $filtered = array_filter($columns, function ($column) {
                     return $column->isSortable();
                 });
             }

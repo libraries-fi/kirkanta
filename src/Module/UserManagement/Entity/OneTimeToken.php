@@ -40,7 +40,7 @@ class OneTimeToken
 
     public function __construct(string $purpose, string $nonce = null)
     {
-        $this->created = new DateTime;
+        $this->created = new DateTime();
         $this->nonce = $nonce ?? self::nonce();
         $this->token = hash('sha256', $this->nonce);
         $this->purpose = $purpose;

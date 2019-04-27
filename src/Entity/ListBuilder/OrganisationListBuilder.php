@@ -9,7 +9,7 @@ class OrganisationListBuilder extends LibraryListBuilder
 {
     public function build(iterable $entities) : iterable
     {
-        $branch_types = new LibraryTypes;
+        $branch_types = new LibraryTypes();
 
         $table = parent::build($entities)
             ->setColumns([
@@ -22,14 +22,14 @@ class OrganisationListBuilder extends LibraryListBuilder
             ->setSortable('group')
             ->useAsTemplate('state')
             ->useAsTemplate('name')
-            ->transform('state', function($o) {
+            ->transform('state', function ($o) {
                 if ($o->isPublished()) {
                     return '<i class="fa fa-square text-success" title="{{ \'Published\'|trans }}"></i>';
                 } else {
                     return '<i class="fa fa-square text-warning" title="{{ \'Draft\'|trans }}"></i>';
                 }
             })
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.organisation.edit", {organisation: row.id}) }}">{{ row.name }}</a>';
             })
             ;

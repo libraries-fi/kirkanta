@@ -24,7 +24,7 @@ class DepartmentForm extends EntityFormType
 
         $builder
             ->add('type', ChoiceType::class, [
-                'choices' => new \App\Util\DepartmentTypes,
+                'choices' => new \App\Util\DepartmentTypes(),
                 'placeholder' => '-- Select --',
             ])
             ->add('translations', I18n\EntityDataCollectionType::class, [

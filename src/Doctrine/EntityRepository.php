@@ -21,7 +21,7 @@ class EntityRepository extends BaseRepository
          */
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
         $class = $this->getEntityName();
-        $entity = new $class;
+        $entity = new $class();
         $definitions = $this->getClassMetadata();
 
         foreach ($values as $field => $value) {
@@ -77,7 +77,7 @@ class EntityRepository extends BaseRepository
 
         $data = $collection->toArray();
 
-        usort($data, function($a, $b) use ($weights) {
+        usort($data, function ($a, $b) use ($weights) {
             $pa = $a->getWeight() ?? 9999;
             $pb = $b->getWeight() ?? 9999;
             $delta = $pa - $pb;

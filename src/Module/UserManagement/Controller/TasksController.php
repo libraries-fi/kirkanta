@@ -114,7 +114,7 @@ class TasksController extends Controller
         $token = $this->storage->findToken('reset_password', $nonce);
 
         if (!$token) {
-            throw new AccessDeniedHttpException;
+            throw new AccessDeniedHttpException();
         }
 
         $user = $token->getUser();

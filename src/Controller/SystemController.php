@@ -63,7 +63,7 @@ class SystemController extends Controller
         $unread = $manager->getRepository('notification')->findUnreadByUser($this->getUser());
 
         $table = $list_builder->build($result)
-            ->transform('subject', function($n) use($unread) {
+            ->transform('subject', function ($n) use ($unread) {
                 $template = '<a href="{{ path("user.show_notification", {"type": "notification", "notification": row.id}) }}">{{ row.subject }}</a>';
 
                 if (in_array($n, $unread)) {
@@ -110,6 +110,5 @@ class SystemController extends Controller
      */
     public function helpAction()
     {
-
     }
 }

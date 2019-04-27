@@ -18,7 +18,7 @@ class ConsortiumLogoType extends BaseType
             ->add('file', FileType::class)
             ;
 
-        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
             if ($entity = $event->getData()) {
                 if ($entity->getFile()) {
                     $event->getData()->setFilename('');

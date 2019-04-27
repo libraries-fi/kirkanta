@@ -20,7 +20,7 @@ class TranslationItemType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $message = $this->prepareForForm($event->getData());
             $event->setData($message);
             $form = $event->getForm();
@@ -46,20 +46,20 @@ class TranslationItemType extends AbstractType
             }
         });
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
             // exit('POST SUBMIT');
         });
 
         $builder->addModelTransformer(new CallbackTransformer(
-            function(array $message) {
+            function (array $message) {
               /**
                * Transformation cannot be done here so it's implemented in
                * an event listener.
                */
 
-               return $message;
+                return $message;
             },
-            function(array $message) {
+            function (array $message) {
                 /**
                  * Convert submitted translation chunks back to single-string values.
                  */

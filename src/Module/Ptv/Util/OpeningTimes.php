@@ -16,7 +16,7 @@ class OpeningTimes
             return false;
         }
 
-        if (($ends = $period->getValidUntil()) && $ends < (new DateTime)) {
+        if (($ends = $period->getValidUntil()) && $ends < (new DateTime())) {
             return false;
         }
 
@@ -44,6 +44,6 @@ class OpeningTimes
         $from = DateTime::createFromFormat('U', $start_time);
         $to = DateTime::createFromFormat('U', $end_time);
 
-        return (new ScheduleBuilder)->buildRange($period, $from, $to);
+        return (new ScheduleBuilder())->buildRange($period, $from, $to);
     }
 }

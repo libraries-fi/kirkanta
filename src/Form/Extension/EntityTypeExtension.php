@@ -19,7 +19,7 @@ class EntityTypeExtension extends AbstractTypeExtension
 
     public function configureOptions(OptionsResolver $options) : void
     {
-        $options->setDefault('query_builder', function($repository) {
+        $options->setDefault('query_builder', function ($repository) {
             $this->queryBuilder = $repository->createQueryBuilder('e');
             return $this->queryBuilder;
         });

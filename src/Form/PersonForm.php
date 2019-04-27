@@ -56,7 +56,7 @@ class PersonForm extends EntityFormType
                 'label' => 'Head of organisation',
             ])
             ->add('qualities', ChoiceType::class, [
-                'choices' => new PersonQualities,
+                'choices' => new PersonQualities(),
                 'multiple' => true,
                 'required' => false,
                 'expanded' => true,
@@ -66,15 +66,15 @@ class PersonForm extends EntityFormType
             ])
             ;
 
-        $builder->get('phone')->addModelTransformer(new PhoneNumberTransformer);
+        $builder->get('phone')->addModelTransformer(new PhoneNumberTransformer());
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             if ($event->getData()->isNew()) {
                 $event->getData()->setEmailPublic(true);
             }
         });
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             if ($options['context_entity']) {
                 $event->getData()->setLibrary($options['context_entity']);
             } else {
@@ -89,7 +89,7 @@ class PersonForm extends EntityFormType
                 if ($groups) {
                     $event->getForm()->add('library', EntityType::class, [
                         'class' => Library::class,
-                        'query_builder' => function($repo) use($groups) {
+                        'query_builder' => function ($repo) use ($groups) {
                             return $repo->createQueryBuilder('e')
                             ->join('e.translations', 'd')
                             ->orderBy('d.name')

@@ -72,7 +72,7 @@ class StringMap implements ArrayAccess, IteratorAggregate
             $this->sorted = true;
             if ($this->mode == self::SORT_KEYS) {
                 uksort($this->data, [$this, 'compareStrings']);
-            } else if ($this->mode == self::SORT_VALUES) {
+            } elseif ($this->mode == self::SORT_VALUES) {
                 uasort($this->data, [$this, 'compareStrings']);
             }
         }

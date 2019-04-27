@@ -35,7 +35,7 @@ class EntityDataCollectionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($builder, $options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder, $options) {
             $form_options = $event->getForm()->getParent()->getConfig()->getOptions();
             // $current_langcode = $form_options['current_langcode'] ?? $event->getForm()->getRoot()->getData()->getDefaultLangcode();
 
@@ -75,7 +75,7 @@ class EntityDataCollectionType extends AbstractType
             }
         });
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
             $translations = $event->getData();
             $entity = $event->getForm()->getParent()->getData();
 

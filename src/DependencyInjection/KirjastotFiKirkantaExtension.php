@@ -9,7 +9,7 @@ class KirjastotFiKirkantaExtension extends Extension
 {
     public function load(array $config, ContainerBuilder $container)
     {
-        $configuration = new Configuration;
+        $configuration = new Configuration();
         $processed = $this->processConfiguration($configuration, $config);
 
         $container->setParameter('kirkanta.entity_types', $processed['entity_types']);

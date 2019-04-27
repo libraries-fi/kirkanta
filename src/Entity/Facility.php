@@ -70,11 +70,11 @@ abstract class Facility extends EntityBase implements GroupOwnership, ModifiedAw
     public function __construct()
     {
         parent::__construct();
-        $this->links = new ArrayCollection;
-        $this->email_addresses = new ArrayCollection;
-        $this->phone_numbers = new ArrayCollection;
-        $this->pictures = new ArrayCollection;
+        $this->links = new ArrayCollection();
+        $this->email_addresses = new ArrayCollection();
+        $this->phone_numbers = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
 
-        $this->translations = new ArrayCollection;
+        $this->translations = new ArrayCollection();
     }
 }

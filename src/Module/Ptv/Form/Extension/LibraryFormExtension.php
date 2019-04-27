@@ -24,7 +24,8 @@ class LibraryFormExtension extends AbstractTypeExtension
     private $types;
     private $auth;
 
-    public function __construct(EntityTypeManager $types, Security $auth) {
+    public function __construct(EntityTypeManager $types, Security $auth)
+    {
         $this->types = $types;
         $this->auth = $auth;
     }
@@ -36,7 +37,7 @@ class LibraryFormExtension extends AbstractTypeExtension
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) use($builder) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($builder) {
             $library = $event->getData();
             $form = $event->getForm();
 
@@ -59,7 +60,7 @@ class LibraryFormExtension extends AbstractTypeExtension
             }
         });
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
 
             if ($form->isValid() && $form->has('ptv')) {

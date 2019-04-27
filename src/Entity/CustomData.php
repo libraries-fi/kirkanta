@@ -19,7 +19,7 @@ class CustomData implements Translatable
 
     public static function fromArray(array $values) : CustomData
     {
-        $instance = new static;
+        $instance = new static();
         $instance->setId($values['id']);
         $instance->setValue($values['value'] ?? null);
         $instance->setTranslations($values['translations'] ?? []);
@@ -29,7 +29,7 @@ class CustomData implements Translatable
 
     public function __constructor()
     {
-        $this->translations = new ArrayCollection;
+        $this->translations = new ArrayCollection();
     }
 
     public function getPos() : int

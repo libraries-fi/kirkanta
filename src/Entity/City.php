@@ -51,8 +51,8 @@ class City extends EntityBase implements Sluggable, Translatable
     public function __construct()
     {
         parent::__construct();
-        $this->libraries = new ArrayCollection;
-        $this->organisations = new ArrayCollection;
+        $this->libraries = new ArrayCollection();
+        $this->organisations = new ArrayCollection();
     }
 
     public function __toString()

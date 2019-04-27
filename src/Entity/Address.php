@@ -144,10 +144,10 @@ class Address extends EntityBase implements Translatable
             $old_coords = $this->coordinates;
             list($lat, $lon) = explode(',', $coordinates);
 
-                // NOTE: Six decimals are enough for precision of one meter.
-                $this->coordinates = sprintf('SRID=4326;POINT(%2.6F %3.6F)', $lon, $lat);
-            } else {
-                $this->coordinates = null;
-            }
+            // NOTE: Six decimals are enough for precision of one meter.
+            $this->coordinates = sprintf('SRID=4326;POINT(%2.6F %3.6F)', $lon, $lat);
+        } else {
+            $this->coordinates = null;
         }
+    }
 }

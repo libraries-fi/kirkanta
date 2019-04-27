@@ -26,7 +26,7 @@ class EntityNormalizer extends ObjectNormalizer
 
     public static function create(ClassMetadataFactoryInterface $metadata, PropertyAccessorInterface $accessor)
     {
-        $normalizer = new static($metadata, new SnakesToCamelsConverter, $accessor, null);
+        $normalizer = new static($metadata, new SnakesToCamelsConverter(), $accessor, null);
 
         $normalizer->setOverride(Address::class, 'city', [$normalizer, 'cityName']);
         $normalizer->setOverride(Address::class, 'coordinates', [__CLASS__, 'splitCoordinates']);

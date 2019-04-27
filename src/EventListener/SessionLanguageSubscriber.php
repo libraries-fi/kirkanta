@@ -19,7 +19,7 @@ class SessionLanguageSubscriber implements EventSubscriberInterface
     public function __construct(SystemLanguages $languages)
     {
         $this->languages = $languages;
-        $this->session = new Session;
+        $this->session = new Session();
     }
 
     public static function getSubscribedEvents() : array

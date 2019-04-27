@@ -32,7 +32,7 @@ class ExportController extends Controller
         $form = $this->createFormBuilder()
             ->add('types', ChoiceType::class, [
                 'label' => 'Types',
-                'choices' => new LibraryTypes,
+                'choices' => new LibraryTypes(),
                 'required' => true,
                 'multiple' => true,
                 'expanded' => true
@@ -137,7 +137,7 @@ class ExportController extends Controller
         }
 
         if (!$lastModified) {
-            $lastModified = new \DateTime;
+            $lastModified = new \DateTime();
         }
 
         $date = date('Y-m-d');

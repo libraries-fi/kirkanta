@@ -49,8 +49,8 @@ class ServiceCategory extends EntityBase implements GroupOwnership, StateAwarene
     public function __construct()
     {
         $this->sticky = false;
-        $this->children = new ArrayCollection;
-        $this->items = new ArrayCollection;
+        $this->children = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
     public function getName() : string

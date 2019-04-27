@@ -5,7 +5,7 @@ namespace App\Module\ApiCache;
 use App\Entity\Feature\Translatable;
 use App\Module\ApiCache\Entity\Feature\ApiCacheable;
 use Doctrine\DBAL\Driver\Connection;
-Use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use OutOfBoundsException;
 use Symfony\Component\Serializer\SerializerInterface;
 

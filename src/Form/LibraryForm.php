@@ -41,7 +41,7 @@ class LibraryForm extends EntityFormType
             ->add('state', StateChoiceType::class)
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Select --',
-                'choices' => new LibraryTypes,
+                'choices' => new LibraryTypes(),
                 'preferred_choices' => ['municipal'],
             ])
             ->add('main_library', CheckboxType::class, [
@@ -108,7 +108,7 @@ class LibraryForm extends EntityFormType
 
             ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             $library = $event->getData();
 
             if ($library->isNew()) {
@@ -123,7 +123,7 @@ class LibraryForm extends EntityFormType
                     'required' => false,
                     'label' => 'Parent organisation',
                     'placeholder' => '-- Select --',
-                    'query_builder' => function($repo) use($groups) {
+                    'query_builder' => function ($repo) use ($groups) {
                         return $repo->createQueryBuilder('e')
                             ->join('e.translations', 'd')
                             ->orderBy('d.name')
@@ -140,7 +140,7 @@ class LibraryForm extends EntityFormType
                         'required' => false,
                         'placeholder' => '-- Automatic --',
                         'help' => 'Select only if this library is not a municipal library.',
-                        'query_builder' => function($repo) use($groups) {
+                        'query_builder' => function ($repo) use ($groups) {
                             return $repo->createNonMunicipalConsortiumsQueryBuilder();
                         }
                     ]);
@@ -150,10 +150,9 @@ class LibraryForm extends EntityFormType
                     ]);
                 }
             }
-
         });
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
             $library = $event->getData();
             $mailAddress = $library->getMailAddress();
 
@@ -162,7 +161,7 @@ class LibraryForm extends EntityFormType
             }
         });
 
-        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
             $form = $event->getForm();
 

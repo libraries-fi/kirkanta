@@ -20,7 +20,7 @@ class CreatedTimeInitializer implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof CreatedAwareness && !$entity->getCreated()) {
-            $entity->setCreated(new DateTime);
+            $entity->setCreated(new DateTime());
         }
     }
 }

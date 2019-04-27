@@ -35,11 +35,11 @@ class ServicePointForm extends LibraryForm
             ->remove('main_library')
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Select --',
-                'choices' => new ServicePointTypes
+                'choices' => new ServicePointTypes()
             ])
             ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             $library = $event->getData();
 
             if ($library->isNew()) {
@@ -54,7 +54,7 @@ class ServicePointForm extends LibraryForm
                     'label' => 'Finna organisation',
                     'required' => false,
                     'placeholder' => '-- Select --',
-                    'query_builder' => function($repo) use($groups) {
+                    'query_builder' => function ($repo) use ($groups) {
                         return $repo->createQueryBuilder('e')
                         ->join('e.translations', 'd', 'WITH', 'd.langcode = :langcode')
                         ->orderBy('d.name')

@@ -15,7 +15,7 @@ class StateChoiceType extends ChoiceType
     {
         parent::buildForm($builder, $options);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             if ($event->getData() === null) {
                 $event->setData(StateAwareness::DRAFT);
             }

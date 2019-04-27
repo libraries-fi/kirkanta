@@ -29,15 +29,15 @@ class UserListBuilder extends EntityListBuilder
         $table = parent::build($entities)
             ->setColumns(['name', 'email', 'group', 'roles', 'last_login'])
             ->useAsTemplate('name')
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.user.edit", {user: row.id}) }}">{{ row.username }}</a>';
             })
-            ->transform('last_login', function($user) {
+            ->transform('last_login', function ($user) {
                 if ($time = $user->getLastLogin()) {
                     return $time->format('Y-m-d H:i');
                 }
             })
-            ->transform('roles', function($user) {
+            ->transform('roles', function ($user) {
                 return implode(', ', $user->getRoles());
             });
 

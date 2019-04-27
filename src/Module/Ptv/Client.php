@@ -72,7 +72,7 @@ class Client
             $type = $converter->getDocumentType($entity);
             $ptv_id = $this->push($type, $document, $meta->getPtvIdentifier());
 
-            $meta->setLastExport(new DateTime);
+            $meta->setLastExport(new DateTime());
 
             if (!$meta->getPtvIdentifier()) {
                 $meta->setPtvIdentifier($ptv_id);
@@ -150,7 +150,7 @@ class Client
                 throw new AuthenticationException($e);
             }
 
-            throw new AuthenticationException;
+            throw new AuthenticationException();
         }
     }
 

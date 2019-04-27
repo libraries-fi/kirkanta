@@ -39,9 +39,9 @@ class CollectionNormalizer implements NormalizerInterface
     private function getBaseClassName($object) : ?string
     {
         if (is_object($object)) {
-          return strtolower(substr(strrchr(get_class($object), '\\'), 1));
+            return strtolower(substr(strrchr(get_class($object), '\\'), 1));
         } else {
-          return null;
+            return null;
         }
     }
 }

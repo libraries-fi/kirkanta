@@ -45,7 +45,8 @@ class FormData
         return SystemLanguages::TEMPORARY_LANGCODE;
     }
 
-    public function __call($method, $params) {
+    public function __call($method, $params)
+    {
         $op = substr($method, 0, 3);
         $prop = strtolower(preg_replace('/([A-Z])/', '_$1', $method));
         $prop = substr($prop, 4);
@@ -60,7 +61,8 @@ class FormData
         }
     }
 
-    public function __get($key) {
+    public function __get($key)
+    {
         return $this->data[$key] ?? null;
     }
 
@@ -69,7 +71,8 @@ class FormData
         $this->data[$key] = $value;
     }
 
-    public function __isset($key) {
+    public function __isset($key)
+    {
         return isset($this->data);
     }
 }

@@ -31,7 +31,7 @@ class PeriodDayTimeType extends BaseType
                 'required' => false,
             ]);
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             $staff = $event->getForm()->get('staff');
 
             if ($staff->getData() === null) {

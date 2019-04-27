@@ -36,12 +36,12 @@ class ScheduleBuilder
 
             foreach ($periods as $i => $period) {
                 if ($period->isContinuous() && $period->isLegacyFormat()) {
-                    throw new Exception\LegacyPeriodException;
+                    throw new Exception\LegacyPeriodException();
                 }
 
                 if ($period->isContinuous()) {
-                    if (isset($periods[$i+1]) and $periods[$i+1]->isContinuous()) {
-                        $to = min($periods[$i+1]->getValidFrom(), $end);
+                    if (isset($periods[$i + 1]) and $periods[$i + 1]->isContinuous()) {
+                        $to = min($periods[$i + 1]->getValidFrom(), $end);
                     } else {
                         $to = $end;
                     }
@@ -93,7 +93,7 @@ class ScheduleBuilder
         /*
          * Sort periods by start date and so that fixed-term periods come first.
          */
-        usort($periods, function(Period $a, Period $b) : int {
+        usort($periods, function (Period $a, Period $b) : int {
             if ($a->isContinuous() ^ $b->isContinuous()) {
                 return (int)$b->isContinuous() - (int)$a->isContinuous();
             }
@@ -112,7 +112,7 @@ class ScheduleBuilder
 
     private function filter(array $periods, DateTimeImmutable $begin, DateTimeImmutable $end) : array
     {
-        $periods = array_filter($periods, function(Period $p) use($begin, $end) {
+        $periods = array_filter($periods, function (Period $p) use ($begin, $end) {
             if ($p->getSection() != 'default') {
                 /*
                  * FIXME: Remove this check after removing support for legacy periods.
@@ -183,7 +183,7 @@ class ScheduleBuilder
             $day = array_replace($day, $source[$index % count($source)]);
 
             // Probably unneeded by now but some legacy data contained invalid, empty time entries.
-            $day['times'] = array_filter($day['times'], function($time) {
+            $day['times'] = array_filter($day['times'], function ($time) {
                 return !empty($time['opens']) && !empty($time['closes']);
             });
 
@@ -214,7 +214,8 @@ class ScheduleBuilder
                         // The time entries should contain 'staff' because it is
                         // present on the form too, for data coherency.
                         'staff' => 0,
-                    ]]);
+                    ]
+                    ]);
                 }
             }
 

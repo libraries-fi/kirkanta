@@ -22,6 +22,6 @@ trait ModifiedAwarenessTrait
 
     public function setModified(DateTime $modified = null) : void
     {
-        $this->modified = $modified ?: new DateTime;
+        $this->modified = $modified ?: new DateTime();
     }
 }

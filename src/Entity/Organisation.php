@@ -40,7 +40,7 @@ class Organisation extends Facility
     public function __construct()
     {
         parent::__construct();
-        $this->libraries = new ArrayCollection;
+        $this->libraries = new ArrayCollection();
     }
 
     public function __toString()

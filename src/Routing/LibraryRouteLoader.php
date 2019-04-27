@@ -33,7 +33,7 @@ class LibraryRouteLoader extends Loader
 
         $this->loaded = true;
 
-        $routes = new RouteCollection;
+        $routes = new RouteCollection();
         $derivatives = ['library', 'service_point'];
         $resources = [
             'departments',

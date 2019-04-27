@@ -10,6 +10,5 @@ class ExportController extends Controller
 {
     public function export()
     {
-
     }
 }

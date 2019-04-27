@@ -19,7 +19,7 @@ class EntityTranslationForm extends FormType
 
     public function form(FormBuilderInterface $builder, array $options) : void
     {
-        $languages = (new SystemLanguages)->getData();
+        $languages = (new SystemLanguages())->getData();
         $available = array_diff($languages, $options['existing_translations']);
 
         $builder->add('langcode', ChoiceType::class, [

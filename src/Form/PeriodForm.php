@@ -68,7 +68,7 @@ class PeriodForm extends EntityFormType
             'data' => false
         ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             $form = $event->getForm();
             $period = $event->getData();
 
@@ -80,7 +80,7 @@ class PeriodForm extends EntityFormType
             }
         });
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             $langcodes = [$event->getForm()->getRoot()->getConfig()->getOptions()['current_langcode']];
 
             $period = $event->getData();
@@ -104,15 +104,15 @@ class PeriodForm extends EntityFormType
             ]);
         });
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             $from = $event->getForm()->get('valid_from');
 
             if (!$from->getData()) {
-                $from->setData(new DateTimeImmutable);
+                $from->setData(new DateTimeImmutable());
             }
         });
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             $days = $event->getForm()->get('days');
 
             if (!$days->getData()) {

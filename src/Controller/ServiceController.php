@@ -28,7 +28,7 @@ class ServiceController extends Controller
 
         $this->preloadAssociations($service->getInstances());
 
-        $instances = array_filter($service->getInstances()->toArray(), function($s) use(&$templates, &$library_ids) {
+        $instances = array_filter($service->getInstances()->toArray(), function ($s) use (&$templates, &$library_ids) {
             if (!$s->getLibrary()) {
                 $templates[] = $s;
                 return false;
@@ -38,7 +38,7 @@ class ServiceController extends Controller
             }
         });
 
-        usort($instances, function($a, $b) {
+        usort($instances, function ($a, $b) {
             if ($d = strcasecmp($a->getLibrary()->getName(), $b->getLibrary()->getName())) {
                 return $d;
             }

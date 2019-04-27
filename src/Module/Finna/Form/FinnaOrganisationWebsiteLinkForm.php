@@ -15,7 +15,7 @@ class FinnaOrganisationWebsiteLinkForm extends WebsiteLinkForm
 
         $builder->add('category', ChoiceType::class, [
             'placeholder' => '-- Select --',
-            'choices' => new WebsiteLinkCategories,
+            'choices' => new WebsiteLinkCategories(),
         ]);
     }
 }

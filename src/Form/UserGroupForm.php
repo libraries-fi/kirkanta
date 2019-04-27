@@ -31,8 +31,8 @@ class UserGroupForm extends EntityFormType
                 'placeholder' => '-- Select --',
                 'expanded' => true,
                 'multiple' => true,
-                'choices' => (new SystemRoles)->getGroupRoles(),
-                'choice_attr' => function($key, $label) {
+                'choices' => (new SystemRoles())->getGroupRoles(),
+                'choice_attr' => function ($key, $label) {
                     if ($key == 'ROLE_USER') {
                         // return ['disabled' => true];
                     }

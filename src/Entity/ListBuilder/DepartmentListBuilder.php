@@ -46,7 +46,7 @@ class DepartmentListBuilder extends EntityListBuilder
             //         return '<i class="fa fa-square text-warning" title="{{ \'Draft\'|trans }}"></i>';
             //     }
             // })
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.department.edit", {department: row.id}) }}">{{ row.name }}</a>';
             });
 

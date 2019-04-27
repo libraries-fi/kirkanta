@@ -50,10 +50,10 @@ class UserController extends Controller
             ->removeColumn('group')
             ->useAsTemplate('roles')
             ->setLabel('roles', 'Role')
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("user_management.manage_user", {user: row.id}) }}">{{ row.username }}</a>';
             })
-            ->transform('roles', function($user) {
+            ->transform('roles', function ($user) {
                 $label = in_array(GroupManagerCount::GROUP_MANAGER_ROLE, $user->getRoles(true)) ? 'Group manager' : 'User';
                 return "{% trans %}{$label}{% endtrans %}";
             });
@@ -82,7 +82,7 @@ class UserController extends Controller
      */
     public function createUser(Request $request, Mailer $mailer)
     {
-        $account = new \App\Entity\User;
+        $account = new \App\Entity\User();
         $form = $this->types->getForm('user', 'add', $account);
         $form->handleRequest($request);
 

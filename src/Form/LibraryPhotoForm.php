@@ -55,7 +55,7 @@ class LibraryPhotoForm extends EntityFormType
             ])
             ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             if ($event->getData()->isNew()) {
                 $event->getForm()->remove('filename');
             } else {
@@ -64,7 +64,7 @@ class LibraryPhotoForm extends EntityFormType
             }
         });
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
             if ($event->getForm()->has('filename')) {
                 $event->getForm()->get('filename')->setData($event->getData()->getFilename());
             }

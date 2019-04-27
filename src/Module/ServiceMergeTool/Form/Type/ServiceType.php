@@ -18,7 +18,7 @@ class ServiceType extends AbstractType
         $builder
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Select --',
-                'choices' => new ServiceTypes
+                'choices' => new ServiceTypes()
             ])
             ->add('translations', EntityDataCollectionType::class, [
                 'entry_type' => ServiceDataType::class

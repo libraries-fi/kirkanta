@@ -198,7 +198,7 @@ class LibraryConverter implements Converter
                 continue;
             }
 
-            if ($last_period_begins && $last_period_begins < new DateTime) {
+            if ($last_period_begins && $last_period_begins < new DateTime()) {
                 continue;
             }
 

@@ -40,7 +40,7 @@ class LibraryListBuilder extends EntityListBuilder
 
     public function build(iterable $entities) : iterable
     {
-        $types = new LibraryTypes;
+        $types = new LibraryTypes();
 
         $table = parent::build($entities)
             ->setColumns([
@@ -55,17 +55,17 @@ class LibraryListBuilder extends EntityListBuilder
             ->useAsTemplate('state')
             ->useAsTemplate('name')
             ->useAsTemplate('type')
-            ->transform('state', function($o) {
+            ->transform('state', function ($o) {
                 if ($o->isPublished()) {
                     return '<i class="fa fa-square text-success" title="{{ \'Published\'|trans }}"></i>';
                 } else {
                     return '<i class="fa fa-square text-warning" title="{{ \'Draft\'|trans }}"></i>';
                 }
             })
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.library.edit", {library: row.id}) }}">{{ row.name }}</a>';
             })
-            ->transform('type', function($o) use($types) {
+            ->transform('type', function ($o) use ($types) {
                 $label = $types->search($o->getType());
                 return "{% trans %}{$label}{% endtrans %}";
             });

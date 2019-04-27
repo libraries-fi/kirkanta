@@ -47,7 +47,7 @@ class LibraryNormalizer implements NormalizerInterface
             $sortedPictures[] = [$picture->getWeight(), $values['pictures'][$i]];
         }
 
-        usort($sortedPictures, function($a, $b) {
+        usort($sortedPictures, function ($a, $b) {
             return $a[0] - $b[0];
         });
 
@@ -155,11 +155,11 @@ class LibraryNormalizer implements NormalizerInterface
     private function processPersons(array &$document) : array
     {
         if (isset($document['persons'])) {
-            $document['persons'] = array_filter($document['persons'], function($person) {
+            $document['persons'] = array_filter($document['persons'], function ($person) {
                 return $person['state'] == StateAwareness::PUBLISHED;
             });
 
-            usort($document['persons'], function($a, $b) {
+            usort($document['persons'], function ($a, $b) {
                 return strcasecmp("{$a['firstName']} {$a['lastName']}", "{$b['firstName']} {$b['lastName']}");
             });
         }

@@ -57,7 +57,7 @@ class UserForm extends FormType
                 'placeholder' => '-- Select --',
                 'expanded' => true,
                 'multiple' => true,
-                'choices' => (new SystemRoles)->getUserRoles(),
+                'choices' => (new SystemRoles())->getUserRoles(),
             ])
             ->add('expires', DateType::class, [
                 'label' => 'Expiration date',
@@ -77,7 +77,7 @@ class UserForm extends FormType
             $builder->remove('group');
         }
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($options) {
             $user = $event->getData();
             $form = $event->getForm();
 
@@ -107,7 +107,7 @@ class UserForm extends FormType
 
                 if ($user->isNew()) {
                     $form->get('password')->setData(PasswordGenerator::password());
-                } else if (!$this->auth->isGranted('ROLE_ROOT')) {
+                } elseif (!$this->auth->isGranted('ROLE_ROOT')) {
                     $form->remove('password');
                 }
             }

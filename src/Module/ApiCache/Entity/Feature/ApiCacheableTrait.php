@@ -61,7 +61,8 @@ trait ApiCacheableTrait
     }
 
 
-    public static function extractApiKeywordsArray(array $documents, ...$paths) : array {
+    public static function extractApiKeywordsArray(array $documents, ...$paths) : array
+    {
         $values = [];
 
         foreach ($documents as $document) {

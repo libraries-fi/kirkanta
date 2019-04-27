@@ -18,7 +18,7 @@ class LibrarySearchForm extends SearchFormType
             ->add('name')
             ->add('type', ChoiceType::class, [
                 'placeholder' => '-- Any --',
-                'choices' => new LibraryTypes
+                'choices' => new LibraryTypes()
             ])
             ->add('state', ChoiceType::class, [
                 'placeholder' => '-- Any --',

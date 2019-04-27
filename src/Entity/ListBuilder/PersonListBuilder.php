@@ -55,20 +55,20 @@ class PersonListBuilder extends EntityListBuilder
             ->setSortable('name', true, ['last_name', 'first_name'])
             ->setSortable('job_title')
             ->setSorting('name')
-            ->transform('email', function() {
+            ->transform('email', function () {
                 return '
                     {{ row.email }}
                     <span class="d-block">{{ row.phone }}</span>
                 ';
             })
-            ->transform('state', function($p) {
+            ->transform('state', function ($p) {
                 if ($p->isPublished()) {
                     return '<i class="fa fa-square text-success" aria-label="{{ \'Published\'|trans }}"></i>';
                 } else {
                     return '<i class="fa fa-square text-warning" aria-label="{{ \'Hidden\'|trans }}"></i>';
                 }
             })
-            ->transform('name', function() {
+            ->transform('name', function () {
                 return '<a href="{{ path("entity.person.edit", {person: row.id}) }}">{{ row.listName }}</a>';
             });
 

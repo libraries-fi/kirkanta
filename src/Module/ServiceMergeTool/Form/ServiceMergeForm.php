@@ -30,11 +30,13 @@ class ServiceMergeForm extends FormType
             ])
             ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
             $services = $event->getData()->getServices();
-            $choices = array_map(function($s) { return $s->getId(); }, $services);
+            $choices = array_map(function ($s) {
+                return $s->getId();
+            }, $services);
 
             $form->add('keep', EntityType::class, [
                 'label' => 'Keep this instance',

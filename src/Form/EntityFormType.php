@@ -45,7 +45,7 @@ abstract class EntityFormType extends FormType
     public function form(FormBuilderInterface $builder, array $options) : void
     {
         if (!$options['disable_ownership']) {
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $entity = $event->getData();
                 $form = $event->getForm();
 
@@ -59,7 +59,7 @@ abstract class EntityFormType extends FormType
                         $form->add('owner', EntityType::class, [
                             'help' => $help,
                             'class' => UserGroup::class,
-                            'query_builder' => function($repo) {
+                            'query_builder' => function ($repo) {
                                 return $repo->createQueryBuilder('e')
                                     ->orderBy('e.parent');
                             },
@@ -86,7 +86,7 @@ abstract class EntityFormType extends FormType
             });
         }
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use($options) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
             if ($event->getData()->isNew()) {
                 $languages = $this->languages->getData();
 
@@ -119,7 +119,7 @@ abstract class EntityFormType extends FormType
             }
         });
 
-        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
             $form = $event->getForm();
 

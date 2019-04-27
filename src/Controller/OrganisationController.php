@@ -89,7 +89,7 @@ class OrganisationController extends Controller
             case 'departments':
             case 'pictures':
                 $table->useAsTemplate('name');
-                $table->transform('name', function($entity) use ($entity_type, $resource) {
+                $table->transform('name', function ($entity) use ($entity_type, $resource) {
                     return str_replace(['%entity_type%', '%resource%'], [$entity_type, $resource], '
                         <a href="{{ path("entity.%entity_type%.%resource%.edit", {
                             %entity_type%: row.parent.id,
@@ -105,7 +105,7 @@ class OrganisationController extends Controller
             case 'phone_numbers':
             case 'periods':
                 $table->useAsTemplate('name');
-                $table->transform('name', function($entity) use($entity_type) {
+                $table->transform('name', function ($entity) use ($entity_type) {
                     return '
                         {% set entity_type = app.request.get("entity_type") %}
                         {% set resource = app.request.get("resource") %}
@@ -126,7 +126,7 @@ class OrganisationController extends Controller
 
             case 'persons':
                 $table->useAsTemplate('name');
-                $table->transform('name', function($entity) {
+                $table->transform('name', function ($entity) {
                     return '
                         {% set entity_type = app.request.get("entity_type") %}
                         {% set resource = app.request.get("resource") %}
@@ -143,7 +143,7 @@ class OrganisationController extends Controller
 
             case 'services':
                 $table->useAsTemplate('standard_name');
-                $table->transform('standard_name', function($entity) {
+                $table->transform('standard_name', function ($entity) {
                     return '
                         {% set entity_type = app.request.get("entity_type") %}
                         {% set resource = app.request.get("resource") %}
@@ -172,12 +172,12 @@ class OrganisationController extends Controller
         switch ($resource) {
             case 'periods':
             case 'services':
-              $actions['import'] = [
+                $actions['import'] = [
                   'title' => 'From template',
                   'route' => "entity.{$entity_type}.{$resource}.from_template",
                   'params' => [$entity_type => $library->getId(), 'resource' => $resource],
                   'icon' => 'fas fa-copy',
-              ];
+                ];
         }
 
         return [
@@ -332,7 +332,7 @@ class OrganisationController extends Controller
             $em = $this->types->getEntityManager();
 
             foreach ($templates as $template) {
-                $instance = new $entity_class;
+                $instance = new $entity_class();
                 $instance->setOwner($library->getOwner());
                 $instance->setLibrary($library);
                 $instance->setDefaultLangcode($template->getDefaultLangcode());
@@ -399,7 +399,7 @@ class OrganisationController extends Controller
             $this->addFlash('success', 'Resources imported successfully.');
 
             return $this->redirectToRoute("entity.{$entity_type}.{$resource}", [
-              $entity_type => $library->getId(),
+                $entity_type => $library->getId(),
             ]);
         }
 
@@ -420,7 +420,7 @@ class OrganisationController extends Controller
         $resources = $accessor->getValue($library, $resource);
         $reorder = $request->request->get('rows') ?: [];
 
-        $matched = $resources->filter(function($r) use($reorder) {
+        $matched = $resources->filter(function ($r) use ($reorder) {
             return in_array($r->getId(), $reorder);
         });
 
@@ -434,7 +434,7 @@ class OrganisationController extends Controller
             $weights = [];
         }
 
-        $this->types->getRepository((new \App\Util\LibraryResources)->offsetGet($resource))
+        $this->types->getRepository((new \App\Util\LibraryResources())->offsetGet($resource))
             ->updateWeights($resources, $weights);
 
         /*
@@ -456,10 +456,10 @@ class OrganisationController extends Controller
     {
         $entries = $entity->getCustomData();
 
-        $table = (new \App\Component\Element\Table)
+        $table = (new \App\Component\Element\Table())
             ->setColumns(['name', 'value'])
             ->useAsTemplate('name')
-            ->transform('name', function($entry) use($entity, $entity_type) {
+            ->transform('name', function ($entry) use ($entity, $entity_type) {
                 static $i = 0;
                 $i++;
 
@@ -478,7 +478,7 @@ class OrganisationController extends Controller
 
                 return str_replace(array_keys($tokens), array_values($tokens), '<a href="{{ path("entity.{$entity_type}.custom_data.edit", {{$entity_type}: {$library_id}, custom_data: {$i}})}}">{$label}</a>');
             })
-            ->transform('value', function($entry) {
+            ->transform('value', function ($entry) {
                 return '';
                 return $entry->value->fi ?? 'NULL';
             })
@@ -626,7 +626,6 @@ class OrganisationController extends Controller
      */
     public function contactsTab(Library $library)
     {
-
     }
 
     protected function resolveResourceTypeId(string $parent_type, string $resource_name) : string

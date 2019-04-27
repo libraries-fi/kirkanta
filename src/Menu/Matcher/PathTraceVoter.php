@@ -23,14 +23,14 @@ class PathTraceVoter implements VoterInterface
         $current_path = $this->requests->getCurrentRequest()->getPathInfo();
 
         $siblings = $item->getParent()->getChildren();
-        $matching = array_filter($siblings, function($item) use($current_path) {
+        $matching = array_filter($siblings, function ($item) use ($current_path) {
             // Appending item URI with a slash ensures only full names match.
             // Appending $current_path with a slash allows to match the exact URI, too.
             return strpos($current_path . '/', $item->getUri() . '/') === 0;
         });
 
         if (!empty($matching)) {
-            usort($matching, function($a, $b) {
+            usort($matching, function ($a, $b) {
                 return strlen($b->getUri()) - strlen($a->getUri());
             });
 

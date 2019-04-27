@@ -14,7 +14,7 @@ class IdentityIterator implements Iterator
             $this->iterator = $data;
         } elseif ($data instanceof IteratorAggregate) {
             $this->iterator = $data->getIterator();
-        } else if (is_array($data)) {
+        } elseif (is_array($data)) {
             $this->iterator = new ArrayIterator($data);
         }
     }

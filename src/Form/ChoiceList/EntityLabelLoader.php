@@ -46,13 +46,13 @@ class EntityLabelLoader implements ChoiceLoaderInterface
         $result = $builder->getQuery()->execute();
         $choices = [];
 
-        $generator = function(array $result) {
+        $generator = function (array $result) {
             foreach ($result as $row) {
                 yield (object)$row;
             }
         };
 
-        return new ArrayChoiceList($generator($result), function($object) {
+        return new ArrayChoiceList($generator($result), function ($object) {
             return $object->id;
         });
 
@@ -64,7 +64,6 @@ class EntityLabelLoader implements ChoiceLoaderInterface
         if (!is_null($value)) {
             throw new RuntimeException('Unsupported argument');
         }
-
     }
 
     public function loadValuesForChoices(array $choices, $value = null) : array

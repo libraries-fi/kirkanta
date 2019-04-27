@@ -201,7 +201,7 @@ class Person extends EntityBase implements CreatedAwareness, GroupOwnership, Sta
 
     public function getUrl() : ?string
     {
-      return $this->url;
+        return $this->url;
     }
 
     public function setUrl(?string $url) : void

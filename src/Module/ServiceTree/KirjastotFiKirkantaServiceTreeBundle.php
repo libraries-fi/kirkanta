@@ -4,6 +4,7 @@ namespace App\Module\ServiceTree;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class KirjastotFiKirkantaServiceTreeBundle extends Bundle {
+class KirjastotFiKirkantaServiceTreeBundle extends Bundle
+{
 
 }

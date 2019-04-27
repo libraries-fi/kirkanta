@@ -43,13 +43,13 @@ class Library extends Facility implements LibraryInterface
     {
         parent::__construct();
 
-        $this->services = new ArrayCollection;
-        $this->departments = new ArrayCollection;
-        $this->persons = new ArrayCollection;
+        $this->services = new ArrayCollection();
+        $this->departments = new ArrayCollection();
+        $this->persons = new ArrayCollection();
 
-        $this->accessibility = new ArrayCollection;
-        $this->mobile_stops = new ArrayCollection;
-        $this->periods = new ArrayCollection;
+        $this->accessibility = new ArrayCollection();
+        $this->mobile_stops = new ArrayCollection();
+        $this->periods = new ArrayCollection();
     }
 
     public function getDepartments() : Collection

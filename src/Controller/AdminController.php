@@ -14,7 +14,7 @@ class AdminController extends Controller
      * @Route("/admin", name="admin")
      * @Template("admin/index.html.twig")
      */
-    public function frontAction(Request $request) {
-
+    public function frontAction(Request $request)
+    {
     }
 }

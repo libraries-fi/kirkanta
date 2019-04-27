@@ -24,10 +24,10 @@ class RichtextType extends TextareaType
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $builder->addModelTransformer(new CallbackTransformer(
-            function($db_value) {
+            function ($db_value) {
                 return $db_value;
             },
-            function($user_input) {
+            function ($user_input) {
                 if ($user_input == '<p>&nbsp;</p>' || $user_input == '') {
                     return null;
                 } else {

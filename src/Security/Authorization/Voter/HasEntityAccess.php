@@ -51,7 +51,6 @@ class HasEntityAccess extends Voter
 
                 exit('sad');
             } catch (OutOfBoundsException $e) {
-
             }
         }
         exit('vote on entity access');

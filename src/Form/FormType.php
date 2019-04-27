@@ -50,7 +50,7 @@ abstract class FormType extends AbstractType
             $this->actions($builder);
         }
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $entity = $event->getData();
             // $this->current_langcode = $this->requestStack->getCurrentRequest()->query->get('langcode') ?? $entity->getDefaultLangcode();
 

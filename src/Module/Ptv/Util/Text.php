@@ -8,7 +8,6 @@ class Text
     {
         if (is_null($text)) {
             return $text;
-
         }
         $offset = 0;
         $matches = [];

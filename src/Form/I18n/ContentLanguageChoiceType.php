@@ -27,7 +27,7 @@ class ContentLanguageChoiceType extends ChoiceType
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
-        $languages = (new SystemLanguages)->getData();
+        $languages = (new SystemLanguages())->getData();
         $languages = array_intersect($languages, $options['enabled_languages']);
         $options['choices'] = ['-- All --' => ''] + $languages;
 
