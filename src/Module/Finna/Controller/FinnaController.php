@@ -35,25 +35,32 @@ class FinnaController extends Controller
      */
     public function addFinnaAdditionsAction(Request $request, Consortium $consortium)
     {
-        $entity = new FinnaAdditions();
-        $entity->setConsortium($consortium);
+        $finna_organisation = new FinnaAdditions();
+        $finna_organisation->setConsortium($consortium);
 
-        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', $entity);
+        $form = $this->types->getForm(self::FINNA_ENTITY_TYPE, 'edit', $finna_organisation, [
+            'current_langcode' => $consortium->getDefaultLangcode()
+        ]);
 
         $form->remove('exclusive');
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity->setExclusive(false);
+            $finna_organisation->setExclusive(false);
+
+            /**
+             * FIXME: Translations are initialized automatically but default_langcode is not...
+             */
+            $finna_organisation->setDefaultLangcode($consortium->getDefaultLangcode());
 
             $em = $this->types->getEntityManager();
-            $em->persist($entity);
+            $em->persist($finna_organisation);
             $em->flush();
 
             $this->addFlash('form.success', 'Record was created');
 
             return $this->redirectToRoute('entity.finna_organisation.edit', [
-                self::FINNA_ENTITY_TYPE => $entity->getId(),
+                self::FINNA_ENTITY_TYPE => $finna_organisation->getId(),
             ]);
         }
 
