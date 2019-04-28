@@ -1,6 +1,24 @@
+# Method overrides have to be first because route matching is based on path and takes first PATH that matches.
+entity.finna_organisation.add.post:
+    path: /finna_organisation/add
+    methods: [POST]
+    controller: 'App\Module\Finna\Controller\FinnaController::createFinnaOrganisation'
+
 user.login:
     path: '/login'
     controller: 'UserAccountsBundle:Account:login'
+
+entity_routes:
+    type: entity_routes
+    resource: 'App\Routing\EntityRouteLoader:load'
+
+library_routes:
+    type: library_routes
+    resource: 'App\Routing\LibraryRouteLoader:load'
+
+entity_controller:
+    resource: ../../src/Controller/EntityController.php
+    type: annotation
 
 translation:
     type: annotation
@@ -26,19 +44,7 @@ service_tool:
     type: annotation
     resource: '../../src/Module/ServiceMergeTool/Controller/'
 
+# NOTE: Put this last to allow other controllers to override generic functionality.
 controllers:
     type: annotation
     resource: '../../src/Controller/'
-
-# NOTE: Put this last to allow other controllers to override generic functionality.
-entity_controller:
-    resource: ../../src/Controller/EntityController.php
-    type: annotation
-
-entity_routes:
-  type: entity_routes
-  resource: 'App\Routing\EntityRouteLoader:load'
-
-library_routes:
-  type: library_routes
-  resource: 'App\Routing\LibraryRouteLoader:load'
