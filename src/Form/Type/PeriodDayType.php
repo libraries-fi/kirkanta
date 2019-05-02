@@ -71,5 +71,15 @@ class PeriodDayType extends BaseType
                 ]);
             }
         });
+
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+            $day = $event->getData();
+
+            usort($day['times'], function (array $a, array $b) {
+                return strcasecmp($a['opens'], $b['opens']);
+            });
+
+            $event->setData($day);
+        });
     }
 }
