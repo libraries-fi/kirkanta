@@ -21,3 +21,5 @@ framework:
         log: true
 
     cache: ~
+    assets:
+        version_strategy: 'App\Asset\FilemtimeAssetVersionStrategy'
