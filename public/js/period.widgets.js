@@ -14,7 +14,7 @@ $.fn.datePicker = function() {
       footer: false,
 
       onChange: (value) => {
-        input.value = moment(value).format("YYYY-MM-DD");
+        input.value = value ? moment(value).format("YYYY-MM-DD") : null;
         this.first().trigger("kirkantaDateChange");
       }
     });

@@ -47,7 +47,9 @@ let date_localizer = {
       value = "2000-01-01T" + value;
     }
 
-    return datefns.parse(value, format);
+    let parsed = datefns.parse(value, format);
+
+    return isNaN(parsed.getTime()) ? null : parsed;
   }
 };
 
