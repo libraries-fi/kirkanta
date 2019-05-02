@@ -6,7 +6,7 @@ use App\Entity\Period;
 use App\Entity\PeriodData;
 use App\Module\Schedules\Exception\LegacyPeriodException;
 use App\Module\Schedules\ScheduleManager;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -33,7 +33,7 @@ class UpdateSchedules
         if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
             $begin = $entity->getValidFrom();
             $end = $entity->getValidUntil();
-            $fallback = new DateTime('+12 months');
+            $fallback = new DateTimeImmutable('+12 months');
             $end = $end ? min($end, $fallback) : $fallback;
 
             $this->queue[] = [$entity->getParent(), $begin, $end];
@@ -44,8 +44,12 @@ class UpdateSchedules
     {
         $entity = $event->getEntity();
 
+        if ($entity instanceof PeriodData) {
+            $entity = $entity->getEntity();
+        }
+
         if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
-            $monday = new DateTime('Monday this week');
+            $monday = new DateTimeImmutable('Monday this week');
             if ($event->hasChangedField('valid_from')) {
                 $begin = min($event->getOldValue('valid_from'), $event->getNewValue('valid_from'));
                 $begin = max($begin, $monday);
@@ -56,13 +60,16 @@ class UpdateSchedules
             if ($event->hasChangedField('valid_until')) {
                 $end = max($event->getOldValue('valid_until'), $event->getNewValue('valid_until'));
             } else {
-                $fallback = new DateTime('+12 months');
+                $fallback = new DateTimeImmutable('+12 months');
                 $end = $entity->getValidUntil();
                 $end = $end ? min($end, $fallback) : $fallback;
             }
 
             $this->queue[] = [$entity->getParent(), $begin, $end];
         }
+
+        // $this->onKernelTerminate();
+        // exit('asd');
     }
 
     public function preRemove(LifecycleEventArgs $event) : void
@@ -71,7 +78,7 @@ class UpdateSchedules
         if ($entity instanceof Period && $entity->getParent() && $entity->getParent()->isPublished()) {
             $begin = $entity->getValidFrom();
             $end = $entity->getValidUntil();
-            $fallback = new DateTime('+12 months');
+            $fallback = new DateTimeImmutable('+12 months');
             $end = $end ? min($end, $fallback) : $fallback;
 
             $this->queue[] = [$entity->getParent(), $begin, $end];
