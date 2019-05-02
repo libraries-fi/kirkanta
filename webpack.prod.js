@@ -28,8 +28,7 @@ module.exports = merge(config, {
             plugins: ["@babel/plugin-transform-runtime"]
           }
         }
-      },
+      }
     ]
-  },
-  plugins: [new UglifyJsPlugin]
+  }
 });
