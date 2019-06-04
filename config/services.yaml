@@ -209,7 +209,8 @@ services:
 
 
 
-
+    App\Module\KirkantaEntityCommands\Command\DeleteKirkantaEntity:
+        arguments: ['@entity_type_manager']
 
     # NOTE: The built-in object normalizer has a priority -1000 so this must have a higher value.
     App\Module\ApiCache\Serializer\Normalizer\EntityNormalizer:
