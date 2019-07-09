@@ -337,7 +337,13 @@ class FinnaController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $toObject = function ($entry) {
+                $entry = json_decode(json_encode($entry), JSON_OBJECT_AS_ARRAY);
+                return (object)$entry;
+            };
+
             $entries = $finna_organisation->getCustomData();
+            $entries = array_map($toObject, $entries);
             $entries[] = $form->getData();
             $finna_organisation->setCustomData($entries);
 
@@ -378,9 +384,15 @@ class FinnaController extends Controller
              * Doctrine does not detect a change to a single stdClass instance so we have to
              * replace the whole data source.
              */
-            $data = unserialize(serialize($finna_organisation->getCustomData()));
+            $toObject = function ($entry) {
+                $entry = json_decode(json_encode($entry), JSON_OBJECT_AS_ARRAY);
+                return (object)$entry;
+            };
 
-            $finna_organisation->setCustomData($data);
+            $entries = $finna_organisation->getCustomData();
+            $entries = array_map($toObject, $entries);
+
+            $finna_organisation->setCustomData($entries);
             $this->types->getEntityManager()->flush();
             $this->addFlash('success', 'Changes were saved.');
 

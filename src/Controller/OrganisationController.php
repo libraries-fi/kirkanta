@@ -520,7 +520,13 @@ class OrganisationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $toObject = function ($entry) {
+                $entry = json_decode(json_encode($entry), JSON_OBJECT_AS_ARRAY);
+                return (object)$entry;
+            };
+
             $entries = $entity->getCustomData();
+            $entries = array_map($toObject, $entries);
             $entries[] = $form->getData();
             $entity->setCustomData($entries);
 
@@ -561,9 +567,16 @@ class OrganisationController extends Controller
              * Doctrine does not detect a change to a single stdClass instance so we have to
              * replace the whole data source.
              */
-            $data = unserialize(serialize($entity->getCustomData()));
+            $toObject = function ($entry) {
+                $entry = json_decode(json_encode($entry), JSON_OBJECT_AS_ARRAY);
+                return (object)$entry;
+            };
 
-            $entity->setCustomData($data);
+            $entries = $entity->getCustomData();
+            $entries = array_map($toObject, $entries);
+
+            $entity->setCustomData($entries);
+
             $this->getEntityTypeManager()->getEntityManager()->flush();
             $this->addFlash('success', 'Changes were saved.');
 

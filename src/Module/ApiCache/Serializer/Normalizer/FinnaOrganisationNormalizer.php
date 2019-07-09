@@ -26,6 +26,38 @@ class FinnaOrganisationNormalizer implements NormalizerInterface
         $values = $this->inner->normalize($object, $format, $context);
         $values += $values['consortium'];
         unset($values['consortium']);
+
+        if (isset($values['customData'])) {
+            $values['customData'] = $this->extractCustomData($object->getCustomData());
+        }
+
         return $values;
+    }
+
+    private function extractCustomData(array $customData)
+    {
+        $entries = [];
+
+        foreach ($customData as $item) {
+            $entry = get_object_vars($item);
+            $fallback = null;
+
+            foreach ($item->value as $value) {
+                if (strlen($value) > 0) {
+                    $fallback = $value;
+                    break;
+                }
+            }
+
+            foreach ($entry['value'] as $langcode => $value) {
+                if (strlen($value) === 0) {
+                    $entry['value'][$langcode] = $fallback;
+                }
+            }
+
+            $entries[] = $entry;
+        }
+
+        return $entries;
     }
 }
