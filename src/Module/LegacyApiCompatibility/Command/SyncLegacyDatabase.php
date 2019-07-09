@@ -114,6 +114,7 @@ class SyncLegacyDatabase extends Command
             'finna_id',
             'finna_coverage',
             'exclusive',
+            'custom_data',
             'default_langcode'
         ], function (&$row) use ($cache) {
             $row['service_point_id'] = $cache->bindings[$row['id']] ?? null;
@@ -205,7 +206,7 @@ class SyncLegacyDatabase extends Command
             if ($row['type'] == 'municipal') {
                 $row['type'] = 'library';
             }
-            
+
             if ($row['state'] != StateAwareness::PUBLISHED) {
                 unset($row['slug']);
             }
