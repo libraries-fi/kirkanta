@@ -209,11 +209,13 @@ class FinnaController extends Controller
     public function addWebLink(Request $request, FinnaAdditions $finna_organisation)
     {
         $type_id = 'finna_organisation_web_link';
-        $form = $this->types->getForm($type_id, 'edit');
+        $entity = $this->types->create($type_id);
+        $form = $this->types->getForm($type_id, 'edit', $entity, [
+            'current_langcode' => $finna_organisation->getDefaultLangcode()
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $this->types->getRepository($type_id)->create($form->getData()->getValues());
             $entity->setFinnaOrganisation($finna_organisation);
 
             $this->types->getEntityManager()->persist($entity);
@@ -230,6 +232,8 @@ class FinnaController extends Controller
             'form' => $form->createView(),
             'entity_type' => $type_id,
             'type_label' => $this->types->getTypeLabel($type_id),
+            'entity' => $entity,
+            'entity_type' => $type_id
         ];
     }
 

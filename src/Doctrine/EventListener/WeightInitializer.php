@@ -3,6 +3,7 @@
 namespace App\Doctrine\EventListener;
 
 use App\Entity\Feature\Weight;
+use App\Module\Finna\Entity\FinnaOrganisationWebsiteLink;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -20,18 +21,36 @@ class WeightInitializer implements EventSubscriber
     {
         $entity = $args->getEntity();
 
-        if ($entity instanceof Weight) {
+        if ($entity instanceof FinnaOrganisationWebsiteLink) {
             if (is_null($entity->getWeight())) {
                 try {
                     $weight = $args->getEntityManager()->createQueryBuilder()
-                    ->select('e.weight')
-                    ->from(get_class($entity), 'e')
-                    ->where('e.parent = :library')
-                    ->setParameter('library', $entity->getParent())
-                    ->orderBy('e.weight', 'desc')
-                    ->setMaxResults(1)
-                    ->getQuery()
-                    ->getSingleScalarResult();
+                        ->select('e.weight')
+                        ->from(FinnaOrganisationWebsiteLink::class, 'e')
+                        ->where('e.finna_organisation = :library')
+                        ->setParameter('library', $entity->getFinnaOrganisation())
+                        ->orderBy('e.weight', 'desc')
+                        ->setMaxResults(1)
+                        ->getQuery()
+                        ->getSingleScalarResult();
+                } catch (\Doctrine\ORM\NoResultException $e) {
+                    $weight = -1;
+                }
+
+                $entity->setWeight($weight + 1);
+            }
+        } elseif ($entity instanceof Weight) {
+            if (is_null($entity->getWeight())) {
+                try {
+                    $weight = $args->getEntityManager()->createQueryBuilder()
+                        ->select('e.weight')
+                        ->from(get_class($entity), 'e')
+                        ->where('e.parent = :library')
+                        ->setParameter('library', $entity->getParent())
+                        ->orderBy('e.weight', 'desc')
+                        ->setMaxResults(1)
+                        ->getQuery()
+                        ->getSingleScalarResult();
                 } catch (\Doctrine\ORM\NoResultException $e) {
                     $weight = -1;
                 }
