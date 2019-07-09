@@ -12,8 +12,12 @@ class FinnaAdditionsListBuilder extends EntityListBuilder
         $builder = parent::createQueryBuilder()
             ->addSelect('c')
             ->addSelect('cd')
+            ->addSelect('sp')
+            ->addSelect('ug')
             ->join('e.consortium', 'c')
             ->join('c.translations', 'cd', 'WITH', 'cd.langcode = e.default_langcode')
+            ->join('e.service_point', 'sp')
+            ->join('e.group', 'ug')
             ->andWhere('c.state >= 0')
             ;
 
