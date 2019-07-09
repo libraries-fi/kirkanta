@@ -2170,3 +2170,9 @@ UPDATE schedules SET status = 0 WHERE staff = false AND closes IS NULL;
 ALTER TABLE schedules ALTER COLUMN status SET NOT NULL;
 
 ALTER TABLE schedules DROP COLUMN staff;
+
+
+
+
+
+ALTER TABLE finna_additions ADD COLUMN custom_data jsonb;

@@ -41,6 +41,13 @@ class MenuBuilder
                     'finna_organisation' => $entity->getId(),
                 ]
             ]);
+
+            $menu->addChild('Custom data', [
+                'route' => 'entity.finna_organisation.custom_data.collection',
+                'routeParameters' => [
+                    'finna_organisation' => $entity->getId(),
+                ]
+            ]);
         }
 
         return $menu;

@@ -266,6 +266,139 @@ class FinnaController extends Controller
     }
 
     /**
+     * @Route("/finna_organisation/{finna_organisation}/custom-data", name="entity.finna_organisation.custom_data.collection")
+     * @Template("entity/FinnaAdditions/links.collection.html.twig")
+     */
+    public function listCustomData(FinnaAdditions $finna_organisation, \Knp\Component\Pager\PaginatorInterface $pager)
+    {
+        $entries = $finna_organisation->getCustomData();
+        $langcode = $finna_organisation->getDefaultLangcode();
+
+        $table = (new \App\Component\Element\Table())
+            ->setColumns(['name', 'value'])
+            ->useAsTemplate('name')
+            ->transform('name', function ($entry) use ($finna_organisation, $langcode) {
+                static $i = 0;
+                $i++;
+
+                $values = array_filter([$entry->title->{$langcode} ?? null, $entry->id]);
+                $values = array_values($values);
+                $label = count($values) == 2 ? "{$values[0]} ({$values[1]})" : reset($values);
+
+                $label = htmlspecialchars($label) ?: 'NULL';
+
+                $tokens = [
+                    '{$label}' => $label,
+                    '{$library_id}' => $finna_organisation->getId(),
+                    '{$i}' => $i,
+                ];
+
+                return str_replace(array_keys($tokens), array_values($tokens), '<a href="{{ path("entity.finna_organisation.custom_data.edit", {finna_organisation: {$library_id}, custom_data: {$i}})}}">{$label}</a>');
+            })
+            ->transform('value', function ($entry) use ($langcode) {
+                return $entry->value->{$langcode} ?? 'NULL';
+            })
+            ;
+
+        $result = $pager->paginate($entries);
+        $table->setData($result);
+
+        return [
+            'type_label' => 'Custom data',
+            'entity_type' => 'custom_data',
+            'table' => $table,
+            'actions' => [
+                'add' => [
+                    'icon' => 'fas fa-plus-circle',
+                    'title' => 'Create new',
+                    'route' => "entity.finna_organisation.custom_data.add",
+                    'params' => ['finna_organisation' => $finna_organisation->getId()]
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @Route("/finna_organisation/{finna_organisation}/custom-data/add", name="entity.finna_organisation.custom_data.add")
+     * @Template("entity/FinnaAdditions/custom-data.edit.html.twig")
+     */
+    public function addCustomData(Request $request, FinnaAdditions $finna_organisation)
+    {
+        $langcodes = $finna_organisation->getTranslations()->getKeys();
+        $form = $this->createForm(\App\Form\CustomDataForm::class, (object)[
+            'id' => null,
+            'title' => (object)[],
+            'value' => (object)[],
+        ], [
+            'available_languages' => $langcodes,
+            'current_langcode' => $finna_organisation->getDefaultLangcode()
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entries = $finna_organisation->getCustomData();
+            $entries[] = $form->getData();
+            $finna_organisation->setCustomData($entries);
+
+            $this->types->getEntityManager()->flush();
+            $this->addFlash('success', 'Resource created successfully.');
+
+            return $this->redirectToRoute('entity.finna_organisation.custom_data.collection', [
+                'finna_organisation' => $finna_organisation->getId()
+            ]);
+        }
+
+        return [
+            'type_label' => 'Custom data',
+            'form' => $form->createView(),
+            'entity' => $finna_organisation,
+        ];
+    }
+
+    /**
+     * @Route("/finna_organisation/{finna_organisation}/custom-data/{custom_data}", name="entity.finna_organisation.custom_data.edit")
+     * @Template("entity/FinnaAdditions/custom-data.edit.html.twig")
+     */
+    public function editCustomData(Request $request, FinnaAdditions $finna_organisation, int $custom_data)
+    {
+        // $id is just a 1-indexed key.
+        $entry = $finna_organisation->getCustomData()[$custom_data - 1];
+
+        $langcodes = $finna_organisation->getTranslations()->getKeys();
+
+        $form = $this->createForm(\App\Form\CustomDataForm::class, $entry, [
+            'current_langcode' => SystemLanguages::DEFAULT_LANGCODE,
+            'available_languages' => $langcodes
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /**
+             * Doctrine does not detect a change to a single stdClass instance so we have to
+             * replace the whole data source.
+             */
+            $data = unserialize(serialize($finna_organisation->getCustomData()));
+
+            $finna_organisation->setCustomData($data);
+            $this->types->getEntityManager()->flush();
+            $this->addFlash('success', 'Changes were saved.');
+
+            return $this->redirectToRoute("entity.finna_organisation.custom_data.collection", [
+                'finna_organisation' => $finna_organisation->getId()
+            ]);
+        }
+
+        return [
+            'type_label' => 'Custom data',
+            'entity' => $finna_organisation,
+            'custom_data' => $entry,
+            'custom_data_pos' => $custom_data,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
      * @Route("/finna_organisation/{finna_organisation}/links/tablesort", name="entity.finna_organisation.table_sort")
      */
     public function tableSort(Request $request, FinnaAdditions $finna_organisation)

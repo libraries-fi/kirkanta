@@ -1,0 +1,11 @@
+{% extends "entity/edit.html.twig" %}
+
+{% block form_header %}
+  {{ parent() }}
+
+  {% block form_tabs %}
+    <nav class="nav-form-tabs">
+      {{ knp_menu_render("finna_organisation_tabs", {depth: 1}) }}
+    </nav>
+  {% endblock %}
+{% endblock %}

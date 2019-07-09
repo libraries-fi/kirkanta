@@ -116,7 +116,7 @@ class Builder implements ContainerAwareInterface, ExtensionInterface
         $entity = $request->attributes->get($entity_type);
         $menu = $this->factory->createItem('root');
 
-        if (!is_object($entity)) {
+        if ($entity_type && !is_object($entity)) {
             $entity = $this->typeManager->getRepository($entity_type)->findOneById($entity);
         }
 

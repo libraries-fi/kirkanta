@@ -479,7 +479,6 @@ class OrganisationController extends Controller
                 return str_replace(array_keys($tokens), array_values($tokens), '<a href="{{ path("entity.{$entity_type}.custom_data.edit", {{$entity_type}: {$library_id}, custom_data: {$i}})}}">{$label}</a>');
             })
             ->transform('value', function ($entry) {
-                return '';
                 return $entry->value->fi ?? 'NULL';
             })
             ;

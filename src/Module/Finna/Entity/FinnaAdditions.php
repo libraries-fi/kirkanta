@@ -76,6 +76,12 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
      */
     private $exclusive;
 
+    /**
+     * @ORM\Column(type="custom_data_collection")
+     */
+    private $custom_data;
+
+
     public function __construct()
     {
         parent::__construct();
@@ -231,5 +237,26 @@ class FinnaAdditions extends EntityBase implements ApiCacheable, GroupOwnership,
     public function setModified(DateTime $time) : void
     {
         $this->getConsortium()->setModified($time);
+    }
+
+    public function getCustomData() : array
+    {
+        /**
+         * NOTE: Workaround to an issue where some blobs have been serialized as JS objects
+         * and not arrays.
+         */
+        if ($this->custom_data instanceof \stdClass) {
+            $this->setCustomData(get_object_vars($this->custom_data));
+        }
+        return $this->custom_data ?? [];
+    }
+
+    public function setCustomData(array $entries) : void
+    {
+        /**
+         * NOTE: Using array_values() to ensure proper indexing so that data is serialized
+         * as '[...]' and not '{...}'.
+         */
+        $this->custom_data = $entries ? array_values($entries) : null;
     }
 }
