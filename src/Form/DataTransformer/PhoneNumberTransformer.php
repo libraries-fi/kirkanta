@@ -9,7 +9,7 @@ class PhoneNumberTransformer implements DataTransformerInterface
 {
     public function transform($source) : ?string
     {
-        if($source === null) {
+        if ($source === null) {
             return '';
         }
 
@@ -21,15 +21,14 @@ class PhoneNumberTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-
-        if(!$value) {
+        if (!$value) {
             return;
         }
 
         $regions = ['02', '03', '05', '06', '08', '09', '013', '014', '015', '016', '017', '018', '019'];
         $operators = ['040', '041', '042', '043', '044', '045', '046', '049', '050'];
         $extra = ['0100', '0200', '0700', '0800'];
-        $input = preg_replace('/[\s\(\)]/', '', $value);
+        $input = preg_replace('/[\s\(\)-]/', '', $value);
         $output = '';
 
         if (!ctype_digit($input)) {
