@@ -112,7 +112,7 @@ class LibraryNormalizer implements NormalizerInterface
 
             foreach ($entry['value'] as $langcode => $value) {
                 if (strlen($value) === 0) {
-                    $entry['value'][$langcode] = $fallback;
+                    $entry['value']->$langcode = $fallback;
                 }
             }
 
