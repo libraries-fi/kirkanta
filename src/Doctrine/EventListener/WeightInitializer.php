@@ -92,16 +92,24 @@ class WeightInitializer implements EventSubscriber
 
     private function loadRelatedEntities(LifecycleEventArgs $args) : ArrayCollection
     {
-        $entities = $args->getEntityManager()->createQueryBuilder()
+        $builder = $args->getEntityManager()->createQueryBuilder()
             ->select('e')
-            ->from(get_class($args->getEntity()), 'e')
-            ->where('e.parent = :library')
-            ->setParameter('library', $args->getEntity()->getParent())
-            ->orderBy('e.weight', 'desc')
-            ->indexBy('e', 'e.id')
-            ->getQuery()
-            ->getResult();
+            ->from(get_class($args->getEntity()), 'e');
+        
+        if ($args->getEntity() instanceof FinnaOrganisationWebsiteLink) {
+            $builder->where('e.id = :organisation')
+                ->setParameter('organisation', $args->getEntity()->getFinnaOrganisation());
+        } else {
+            $builder->where('e.parent = :library')
+                ->setParameter('library', $args->getEntity()->getParent());
+        }
+        
+        
+        $builder->orderBy('e.weight', 'desc')
+                ->indexBy('e', 'e.id');
 
+        $entities = $builder->getQuery()->getResult();
+        
         return new ArrayCollection($entities);
     }
 }

@@ -1,0 +1,14 @@
+{% extends "entity/delete.html.twig" %}
+
+{% block title_text %}
+  {% trans with {"%type%": "Custom data"|trans|lower, "%id%": custom_data_pos} %}Delete %type% #%id%{% endtrans %}
+{% endblock %}
+
+{% block delete_button_outer %}
+  {% set entity_delete_url = path("entity.%s.custom_data.delete"|format(entity_type), {
+    (entity_type): entity.id,
+    custom_data: custom_data_pos
+  }) %}
+
+  {{ block("delete_button") }}
+{% endblock %}
