@@ -430,9 +430,9 @@ class FinnaController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $data = $finna_organisation->getCustomData();
-            unset($data[$custom_data - 1]);
-            $finna_organisation->setCustomData($data);
+            $entries = $finna_organisation->getCustomData();
+            unset($entries[$custom_data - 1]);
+            $finna_organisation->setCustomData($entries);
 
             $this->types->getEntityManager()->flush();
             $this->addFlash('success', 'Record was deleted.');
