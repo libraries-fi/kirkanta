@@ -411,6 +411,48 @@ class FinnaController extends Controller
     }
 
     /**
+     * @Route("/finna_organisation/{finna_organisation}/custom-data/{custom_data}/delete", name="entity.finna_organisation.custom_data.delete")
+     * @Template("entity/FinnaAdditions/custom-data.delete.html.twig")
+     */
+    public function deleteCustomData(Request $request, FinnaAdditions $finna_organisation, int $custom_data)
+    {
+        
+        $form = $this->createFormBuilder()
+            ->add('submit', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class, [
+                'label' => 'Delete',
+                'attr' => [
+                    'class' => 'btn btn-primary'
+                ]
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entries = $finna_organisation->getCustomData();
+            unset($entries[$custom_data - 1]);
+            $finna_organisation->setCustomData($entries);
+
+            $this->types->getEntityManager()->flush();
+            $this->addFlash('success', 'Record was deleted.');
+
+            return $this->redirectToRoute("entity.finna_organisation.custom_data.collection", [
+                'finna_organisation' => $finna_organisation->getId()
+            ]);
+        }
+
+        return [
+            'type_label' => 'Custom data',
+            'entity' => $finna_organisation,
+            'custom_data_pos' => $custom_data,
+            'form' => $form->createView(),
+        ];
+
+        
+    }
+
+    /**
      * @Route("/finna_organisation/{finna_organisation}/links/tablesort", name="entity.finna_organisation.table_sort")
      */
     public function tableSort(Request $request, FinnaAdditions $finna_organisation)
