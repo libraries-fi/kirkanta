@@ -30,12 +30,12 @@
     <fieldset class="form-section">
       <legend>{% trans %}Default language{% endtrans %}</legend>
       <p class="text-muted">
-        Selected language will be set as default language for this record. It will also be used as the language in list views.
+        {% trans %}Selected language will be set as default language for this record. It will also be used as the language in list views.
 
-        Default language can later be changed in translation settings.
+        Default language can later be changed in translation settings.{% endtrans %}
       </p>
 
-      <p class="text-danger mt-3">Default language should always be either Finnish or Swedish depending on the region!</p>
+      <p class="text-danger mt-3">{% trans %}Default language should always be either Finnish or Swedish depending on the region!{% endtrans %}</p>
 
       {{ form_row(form.langcode) }}
     </fieldset>
