@@ -3,6 +3,8 @@
 namespace App\Module\KirkantaEntityCommands\Command;
 
 use App\Entity\Library;
+use App\Entity\Organisation;
+use App\Entity\ServicePoint;
 use App\EntityTypeManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,13 +42,24 @@ class DeleteKirkantaEntity extends Command
         switch ($entity_type) {
             case 'library':
                 $em = $this->entityTypeManager->getEntityManager();
-                $library = $em->getRepository(Library::class)
+                $entity = $em->getRepository(Library::class)
                     ->find($entity_id);
-                if($library) {
-                    $em->remove($library);
-                    $em->flush($library);
+                if($entity) {
+                    $em->remove($entity);
+                    $em->flush($entity);
                 } else {
                     throw new \Exception('No library with id: ' . $entity_id);
+                }
+                break;
+            case 'service_point':
+                $em = $this->entityTypeManager->getEntityManager();
+                $entity = $em->getRepository(ServicePoint::class)
+                    ->find($entity_id);
+                if($entity) {
+                    $em->remove($entity);
+                    $em->flush($entity);
+                } else {
+                    throw new \Exception('No service point with id: ' . $entity_id);
                 }
                 break;
 
