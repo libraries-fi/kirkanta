@@ -55,6 +55,10 @@ class FinnaOrganisationNormalizer implements NormalizerInterface
                 }
             }
 
+            // Cast to associative array for serialization
+            $entry['value'] = (array) $entry['value'];
+            $entry['title'] = (array) $entry['title'];
+
             $entries[] = $entry;
         }
 
