@@ -7815,8 +7815,7 @@ form.period_form .fa-plus-circle {
   color: green; }
 
 form.period_form fieldset.period-schedules {
-  background-color: rgba(0, 0, 0, 0.05);
-  overflow: hidden; }
+  background-color: rgba(0, 0, 0, 0.05); }
   form.period_form fieldset.period-schedules > .container-fluid {
     padding: 2rem 0 0;
     margin: -37px 0 0; }
