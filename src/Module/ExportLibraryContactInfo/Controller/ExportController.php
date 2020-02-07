@@ -110,7 +110,7 @@ class ExportController extends Controller
             $lastModified = max($lastModified, $lmod);
 
             if ($values->group) {
-                if ($lastCity != $library->getCity()) {
+                if (is_null($lastCity) || $lastCity->getId() !== $library->getCity()->getId()) {
                     if ($lastCity) {
                         $export[] = [];
                     }
