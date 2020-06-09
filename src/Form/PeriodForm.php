@@ -10,6 +10,7 @@ use App\Util\FormData;
 use App\Util\PeriodSections;
 use App\Form\Type\PeriodDayCollectionType;
 use App\Form\Type\PeriodDayType;
+use App\Util\SystemLanguages;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -117,6 +118,34 @@ class PeriodForm extends EntityFormType
 
             if (!$days->getData()) {
                 $days->setData(array_fill(0, 7, []));
+            }
+        });
+
+        // Days info language needs to be reset to match the period. 
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+            $period = $event->getData();
+            $form = $event->getForm();
+            $temp_lang = SystemLanguages::TEMPORARY_LANGCODE;
+
+            if ($period->isNew() && $form->has('langcode')) {
+                $days = $period->getDays();
+                $langcode = $form->get('langcode')->getData();
+
+                // When creating a new period, depending on the context, the period's
+                // language is not known when form is created. This creates problem with
+                // the period's nested day forms, since they are keyed with the 
+                // temporary language code 'xx' inherited from the period.
+                // Only when the form is submitted, does the correct language code
+                // get populated. Hence, this fix is done in the submit handler and
+                // the correct languade code is added in the day object.
+                foreach ($days as $key => $day) {
+                    if(array_key_exists($temp_lang, $day['info'])) {
+                        $days[$key]['info'][$langcode] = $day['info'][$temp_lang];
+                        unset($days[$key]['info'][$temp_lang]);
+                    }
+                }
+
+                $period->setDays($days);
             }
         });
     }
