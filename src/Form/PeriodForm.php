@@ -121,7 +121,7 @@ class PeriodForm extends EntityFormType
             }
         });
 
-        // Days info language needs to be reset to match the period. 
+        // Days info language needs to be reset to match the period.
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
             $period = $event->getData();
             $form = $event->getForm();
