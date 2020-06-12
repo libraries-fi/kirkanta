@@ -133,7 +133,7 @@ class PeriodForm extends EntityFormType
 
                 // When creating a new period, depending on the context, the period's
                 // language is not known when form is created. This creates problem with
-                // the period's nested day forms, since they are keyed with the 
+                // the period's nested day forms, since they are keyed with the
                 // temporary language code 'xx' inherited from the period.
                 // Only when the form is submitted, does the correct language code
                 // get populated. Hence, this fix is done in the submit handler and
