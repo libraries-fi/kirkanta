@@ -137,7 +137,7 @@ class PeriodForm extends EntityFormType
                 // temporary language code 'xx' inherited from the period.
                 // Only when the form is submitted, does the correct language code
                 // get populated. Hence, this fix is done in the submit handler and
-                // the correct languade code is added in the day object.
+                // the correct language code is added in the day object.
                 foreach ($days as $key => $day) {
                     if(array_key_exists($temp_lang, $day['info'])) {
                         $days[$key]['info'][$langcode] = $day['info'][$temp_lang];
