@@ -175,6 +175,12 @@ class LibraryForm extends EntityFormType
                 if ($address = $data->getMailAddress()) {
                     FormData::persistTemporaryTranslation($address->getTranslations(), $langcode);
                 }
+            } else {
+                $mail_address = $data->getMailAddress();
+
+                if($mail_address && !$mail_address->getDefaultLangcode()) {
+                    $mail_address->setDefaultLangcode($data->getDefaultLangcode());
+                }
             }
         });
     }
