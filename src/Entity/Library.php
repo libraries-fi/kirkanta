@@ -87,16 +87,4 @@ class Library extends Facility implements LibraryInterface
         $this->main_library = $state;
     }
 
-    public function setDefaultLangcode(string $langcode) : void
-    {
-        parent::setDefaultLangcode($langcode);
-
-        if ($addr = $this->getAddress()) {
-            $addr->setDefaultLangcode($langcode);
-        }
-
-        if ($addr = $this->getMailAddress()) {
-            $addr->setDefaultLangcode($langcode);
-        }
-    }
 }

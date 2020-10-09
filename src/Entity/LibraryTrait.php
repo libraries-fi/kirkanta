@@ -432,4 +432,20 @@ trait LibraryTrait
             'regional',
         ]);
     }
+
+    /**
+     * Set default language code and also set it for all contained addresses.
+     */
+    public function setDefaultLangcode(string $langcode) : void
+    {
+        parent::setDefaultLangcode($langcode);
+
+        if ($addr = $this->getAddress()) {
+            $addr->setDefaultLangcode($langcode);
+        }
+
+        if ($addr = $this->getMailAddress()) {
+            $addr->setDefaultLangcode($langcode);
+        }
+    }
 }
