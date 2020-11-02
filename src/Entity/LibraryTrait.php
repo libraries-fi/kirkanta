@@ -36,6 +36,16 @@ trait LibraryTrait
     private $identificator;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $library_system_servicepoint_id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $library_system_name;
+
+    /**
      * @ORM\Column(type="integer")
      */
     private $founded;
@@ -164,6 +174,26 @@ trait LibraryTrait
     public function setIdentificator(?string $identificator) : void
     {
         $this->identificator = $identificator;
+    }
+
+    public function getLibrarySystemServicepointId() : ?string
+    {
+        return $this->library_system_servicepoint_id;
+    }
+
+    public function setLibrarySystemServicepointId(?string $library_system_servicepoint_id) : void
+    {
+        $this->library_system_servicepoint_id = $library_system_servicepoint_id;
+    }
+
+    public function getLibrarySystemName() : ?string
+    {
+        return $this->library_system_name;
+    }
+
+    public function setLibrarySystemName(?string $library_system_name) : void
+    {
+        $this->library_system_name = $library_system_name;
     }
 
     public function getSlogan() : ?string

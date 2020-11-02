@@ -26,6 +26,9 @@ interface LibraryInterface extends ApiCacheable
     public function getIdentificator() : ?string;
     public function setIdentificator(?string $identificator) : void;
 
+    public function getLibrarySystemServicepointId() : ?string;
+    public function setlibrarySystemServicepointId(?string $id) : void;
+
     public function getSlogan() : ?string;
     public function setSlogan(?string $slogan) : void;
 

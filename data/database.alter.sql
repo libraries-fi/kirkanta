@@ -2176,3 +2176,10 @@ ALTER TABLE schedules DROP COLUMN staff;
 
 
 ALTER TABLE finna_additions ADD COLUMN custom_data jsonb;
+
+
+ALTER TABLE organisations ADD library_system_name varchar(255);
+COMMENT ON COLUMN organisations.library_system_name IS 'Machine name of the library system that is used currently in the organisation (sierra, axiell, koha)';
+
+ALTER TABLE organisations ADD library_system_servicepoint_id varchar(255);
+COMMENT ON COLUMN organisations.library_system_servicepoint_id IS 'ID given by the library system to the organisation (Sierra, Axiell, Koha, etc.)';
