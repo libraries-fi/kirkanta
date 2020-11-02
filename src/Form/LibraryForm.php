@@ -63,6 +63,40 @@ class LibraryForm extends EntityFormType
                 'required' => false,
                 'label' => 'Official identifier',
             ])
+            ->add('library_system_name', ChoiceType::class, [
+                'placeholder' => '-- Select --',
+                'required' => false,
+                'label' => 'Library System',
+                'help' => 'Library system in use (Sierra, Axiell, Koha, etc.)',
+                'choices' => [
+                    'Abilita Kirjasto' => 'abilita',
+                    'Axiell Aurora' => 'axiell_aurora',
+                    'Axiell Arena' => 'axiell_arena',
+                    'Axiell Origo' => 'axiell_origo',
+                    'Axiell PallasPro' => 'axiell_pallaspro',
+                    'Axiell Micromarc' => 'axiell_micromarc',
+                    'Evergreen (os)' => 'evergreen',
+                    'Ex Libris: Aleph' => 'ex_libris_aleph',
+                    'Ex Libris: Alma' => 'ex_libris_alma',
+                    'Ex Libris: Metalib' => 'ex_libris_metalib',
+                    'Ex Libris: Voyager' => 'ex_libris_voyager',
+                    'Infor V-Smart' => 'infor_vsmart',
+                    'Innovative Interfaces: Sierra' => 'ii_sierra',
+                    'Innovative Interfaces: Millenium' => 'ii_millenium',
+                    'Innovative Interfaces: Polaris' => 'ii_polaris',
+                    'Innovative Interfaces: VTLS-Virtua' => 'ii_vtls_virtua',
+                    'Koha (os)' => 'koha',
+                    'Oclc Worldshare' => 'oclc_worldshare',
+                    'PrettyLib' => 'prettylib',
+                    'SirsiDynix: Symphony' => 'sirsidynix_symphony',
+                    'SirsiDynix: Horizon' => 'sirsidynix_horizon',
+                ],
+            ])
+            ->add('library_system_servicepoint_id', null, [
+                'required' => false,
+                'label' => 'Library System Servicepoint Identifier',
+                'help' => 'Identifier from the Library System (Sierra, Axiell, Koha, etc.)',
+            ])
             ->add('address', AddressType::class, [
                 'current_langcode' => $options['current_langcode'],
             ])

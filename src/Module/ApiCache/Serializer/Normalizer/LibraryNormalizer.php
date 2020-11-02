@@ -85,6 +85,15 @@ class LibraryNormalizer implements NormalizerInterface
             unset($values['mailAddress']['coordinates']);
         }
 
+        $values['librarySystem'] = [
+            'name' => $object->getLibrarySystemName(),
+            'servicepoint_id' => $object->getLibrarySystemServicepointId()
+        ];
+
+        if (empty($values['librarySystem']['name']) && empty($values['librarySystem']['servicepoint_id'])) {
+            $values['librarySystem'] = null;
+        }
+
         $this->processPersons($values);
         $this->buildBuildingInfo($values);
 
