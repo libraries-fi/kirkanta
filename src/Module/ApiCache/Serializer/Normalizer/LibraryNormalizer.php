@@ -52,7 +52,19 @@ class LibraryNormalizer implements NormalizerInterface
         });
 
         $values['pictures'] = array_column($sortedPictures, 1);
-        $values['coverPhoto'] = $values['pictures'][0]['files'] ?? null;
+        $coverPhoto = $values['pictures'][0] ?? null;
+
+        // For sake of backwards compatibility, we'll add the picture metadata
+        // alongside with file information instead just assigning the $coverPhoto
+        // as it is.
+        if($coverPhoto) {
+            $values['coverPhoto'] = $coverPhoto['files'] ?? null;
+            $values['coverPhoto']['name'] = $coverPhoto['name'];
+            $values['coverPhoto']['year'] = $coverPhoto['year'];
+            $values['coverPhoto']['author'] = $coverPhoto['author'];
+            $values['coverPhoto']['description'] = $coverPhoto['description'];
+        }
+
         $values['coordinates'] = $values['address']['coordinates'];
         unset($values['address']['coordinates']);
 
