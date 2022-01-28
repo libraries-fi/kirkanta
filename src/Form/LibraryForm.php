@@ -210,6 +210,15 @@ class LibraryForm extends EntityFormType
                     FormData::persistTemporaryTranslation($address->getTranslations(), $langcode);
                 }
             } else {
+                // Rarely an existing library without an address is found. If
+                // this is the case then the default language code needs to be
+                // set from the library otherwise the address insertion will fail.
+                $address = $data->getAddress();
+
+                if($address && !$address->getDefaultLangcode()) {
+                    $address->setDefaultLangcode($data->getDefaultLangcode());
+                }
+
                 $mail_address = $data->getMailAddress();
 
                 if($mail_address && !$mail_address->getDefaultLangcode()) {
