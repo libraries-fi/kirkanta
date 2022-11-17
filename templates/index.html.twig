@@ -23,14 +23,6 @@
     {% endif %}
   </div>
 
-  <div class="alert alert-warning h4" style="margin-top: 1em" role="alert">
-    <p>Valtioneuvoston päätöksellä kirjastotilat saa avata 1.6.2020 alkaen. Palveluissa saattaa olla rajoituksia.</p>
-
-    <p>Enligt statsrådets beslut får bibliotekslokalerna öppna fr.om. 1.6.2020. Servicen kan vara begränsad.</p>
-
-    <p>The Government has allowed access to library facilities from 1.6.2020. Services may be restricted.</p>
-  </div>
-
   {% if app.user.expires %}
     <div class="alert alert-warning">{% trans with {"%date%": app.user.expires|date()} %}This account is set to expire on %date%{% endtrans %}</div>
   {% endif %}
