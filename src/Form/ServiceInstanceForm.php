@@ -33,7 +33,6 @@ class ServiceInstanceForm extends EntityFormType
                 'class' => Service::class,
                 'placeholder' => '-- Select --',
                 'choice_label' => 'name',
-                'group_by' => 'type',
             ])
             ->add('for_loan', CheckboxType::class, [
                 'required' => false,
