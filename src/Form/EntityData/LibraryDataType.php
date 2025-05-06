@@ -51,7 +51,7 @@ class LibraryDataType extends EntityDataType
                 'langcode' => $options['langcode'],
             ])
             ->add('slogan', null, [
-                'required' => $options['is_library_form'],
+                'required' => false,
                 'label' => 'Slogan',
             ])
             ->add('description', RichtextType::class, [
