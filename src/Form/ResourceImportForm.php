@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResourceImportForm extends FormType
@@ -46,5 +48,23 @@ class ResourceImportForm extends FormType
             'user_groups' => [],
             'entity_type' => null,
         ]);
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        if (!isset($view->children['templates'])) {
+            return;
+        }
+
+        $templatesView = $view->children['templates'];
+        $children = $templatesView->children;
+
+        uasort($children, function (FormView $a, FormView $b) {
+            $labelA = (string) ($a->vars['label'] ?? '');
+            $labelB = (string) ($b->vars['label'] ?? '');
+            return strcasecmp($labelA, $labelB);
+        });
+
+        $templatesView->children = $children;
     }
 }
