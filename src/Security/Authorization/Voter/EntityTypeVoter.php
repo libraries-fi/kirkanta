@@ -26,7 +26,7 @@ class EntityTypeVoter extends Voter
         Person::class => [],
         ServiceInstance::class => [],
         FinnaAdditions::class => ['ROLE_FINNA'],
-        ServicePoint::class => ['ROLE_FINNA'],
+        ServicePoint::class => [],
     ];
 
     public function __construct(EntityTypeManager $types)
